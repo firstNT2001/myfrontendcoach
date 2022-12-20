@@ -4,6 +4,7 @@ import 'dart:developer';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:frontendfluttercoach/model/DTO/loginDTO.dart';
+import 'package:frontendfluttercoach/page/register.dart';
 import 'package:frontendfluttercoach/service/login.dart';
 import 'package:frontendfluttercoach/service/provider/appdata.dart';
 import 'package:provider/provider.dart';
@@ -90,7 +91,16 @@ class _LoginPageState extends State<LoginPage> {
             List<Customer> customer = await loginService.login(dto);
             log(jsonEncode(customer));
         }, 
-        child: Text('Login'))
+        child: Text('Login')),
+        ElevatedButton(
+          onPressed: (){
+            Navigator.push(context, MaterialPageRoute(
+              builder: (context){
+                return RegisterPage();
+            })
+            );
+          }, 
+        child: Text('สมัครสมาชิก'))
       ],
       ),);
   }

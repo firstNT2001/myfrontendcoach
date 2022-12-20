@@ -5,6 +5,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:frontendfluttercoach/model/DTO/loginDTO.dart';
 import 'package:frontendfluttercoach/page/login.dart';
+import 'package:frontendfluttercoach/page/register.dart';
 import 'package:frontendfluttercoach/service/login.dart';
 import 'package:frontendfluttercoach/service/provider/appdata.dart';
 import 'package:provider/provider.dart';
