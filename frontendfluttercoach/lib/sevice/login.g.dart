@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'destination.dart';
+part of 'login.dart';
 
 // **************************************************************************
 // RetrofitGenerator
@@ -8,8 +8,8 @@ part of 'destination.dart';
 
 // ignore_for_file: unnecessary_brace_in_string_interps,no_leading_underscores_for_local_identifiers
 
-class _DestinationService implements DestinationService {
-  _DestinationService(
+class _LoginService implements LoginService {
+  _LoginService(
     this._dio, {
     this.baseUrl,
   });
@@ -19,26 +19,26 @@ class _DestinationService implements DestinationService {
   String? baseUrl;
 
   @override
-  Future<List<Destination>> getDestinations() async {
+  Future<List<Login>> getLogins() async {
     const _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{};
     final _data = <String, dynamic>{};
     final _result = await _dio
-        .fetch<List<dynamic>>(_setStreamType<List<Destination>>(Options(
+        .fetch<List<dynamic>>(_setStreamType<List<Login>>(Options(
       method: 'GET',
       headers: _headers,
       extra: _extra,
     )
             .compose(
               _dio.options,
-              '/destination',
+              '/login',
               queryParameters: queryParameters,
               data: _data,
             )
             .copyWith(baseUrl: baseUrl ?? _dio.options.baseUrl)));
     var value = _result.data!
-        .map((dynamic i) => Destination.fromJson(i as Map<String, dynamic>))
+        .map((dynamic i) => Login.fromJson(i as Map<String, dynamic>))
         .toList();
     return value;
   }
@@ -54,5 +54,11 @@ class _DestinationService implements DestinationService {
       }
     }
     return requestOptions;
+  }
+  
+  @override
+  Future<List<Login>> getDestinations() {
+    // TODO: implement getDestinations
+    throw UnimplementedError();
   }
 }
