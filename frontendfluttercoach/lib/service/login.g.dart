@@ -19,26 +19,27 @@ class _LoginService implements LoginService {
   String? baseUrl;
 
   @override
-  Future<List<Login>> getLogins() async {
+  Future<List<Customer>> login(login) async {
     const _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{};
     final _data = <String, dynamic>{};
-    final _result = await _dio
-        .fetch<List<dynamic>>(_setStreamType<List<Login>>(Options(
-      method: 'GET',
+    _data.addAll(login.toJson());
+    final _result =
+        await _dio.fetch<List<dynamic>>(_setStreamType<List<Customer>>(Options(
+      method: 'POST',
       headers: _headers,
       extra: _extra,
     )
             .compose(
               _dio.options,
-              '/login',
+              '/user/login',
               queryParameters: queryParameters,
               data: _data,
             )
             .copyWith(baseUrl: baseUrl ?? _dio.options.baseUrl)));
     var value = _result.data!
-        .map((dynamic i) => Login.fromJson(i as Map<String, dynamic>))
+        .map((dynamic i) => Customer.fromJson(i as Map<String, dynamic>))
         .toList();
     return value;
   }
@@ -54,11 +55,5 @@ class _LoginService implements LoginService {
       }
     }
     return requestOptions;
-  }
-  
-  @override
-  Future<List<Login>> getDestinations() {
-    // TODO: implement getDestinations
-    throw UnimplementedError();
   }
 }

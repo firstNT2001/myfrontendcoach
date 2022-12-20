@@ -1,7 +1,8 @@
+import 'package:frontendfluttercoach/model/customer.dart';
 import 'package:retrofit/retrofit.dart';
 import 'package:dio/dio.dart';
-//import 'package:frontendfluttercoach/sevice/destination.dart';
-import 'package:frontendfluttercoach/model/login.dart';
+import 'package:frontendfluttercoach/model/DTO/loginDTO.dart';
+
 
 part 'login.g.dart';
 
@@ -9,8 +10,6 @@ part 'login.g.dart';
 abstract class LoginService {
   factory LoginService(Dio dio, {String baseUrl}) = _LoginService;
 
-  @GET("/login")
-  Future<List<Login>> getDestinations();
-
+  @POST("/user/login")
+  Future<List<Customer>> login(@Body() LoginDto login);
 }
-
