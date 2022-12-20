@@ -2,29 +2,32 @@
 //
 //     final login = loginFromJson(jsonString);
 
-import 'package:meta/meta.dart';
 import 'dart:convert';
 
-List<Login> loginFromJson(String str) => List<Login>.from(json.decode(str).map((x) => Login.fromJson(x)));
+LoginDto loginDtoFromJson(String str) => LoginDto.fromJson(json.decode(str));
 
-String loginToJson(List<Login> data) => json.encode(List<dynamic>.from(data.map((x) => x.toJson())));
+String loginDtoToJson(LoginDto data) => json.encode(data.toJson());
 
-class Login {
-    Login({
+class LoginDto {
+    LoginDto({
         required this.email,
         required this.password,
+        required this.type,
     });
 
     String email;
     String password;
+    int type;
 
-    factory Login.fromJson(Map<String, dynamic> json) => Login(
+    factory LoginDto.fromJson(Map<String, dynamic> json) => LoginDto(
         email: json["email"],
         password: json["password"],
+        type: json["type"],
     );
 
     Map<String, dynamic> toJson() => {
         "email": email,
         "password": password,
+        "type": type,
     };
 }
