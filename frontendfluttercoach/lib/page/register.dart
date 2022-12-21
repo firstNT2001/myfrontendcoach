@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:frontendfluttercoach/page/home.dart';
+
+import '../model/registerCus.dart';
 
 class RegisterPage extends StatefulWidget {
   const RegisterPage({super.key});
@@ -8,7 +11,9 @@ class RegisterPage extends StatefulWidget {
 }
 
 class _RegisterPageState extends State<RegisterPage> {
-  int _selectedChoice = 0;
+  int? _selectedChoice;
+  final formKey = GlobalKey<FormState>();
+  //RegisterCusFromJson profileCus = RegisterCusFromJson();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -16,9 +21,13 @@ class _RegisterPageState extends State<RegisterPage> {
         title: Text("สมัครสมาชิก"),
       ),
       body: Container(
+        child:Padding(
+          padding: const EdgeInsets.all(20.0),
         child: Form(
+          key: formKey,
           child: Column(
-            children: <Widget>[
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[          
               // ignore: prefer_const_constructors
               Text("ชื่อนามสกุล",style: TextStyle(fontSize: 20)),
               TextFormField(),
@@ -33,10 +42,14 @@ class _RegisterPageState extends State<RegisterPage> {
               TextFormField(),
               // ignore: prefer_const_constructors
               Text("E-mail",style: TextStyle(fontSize: 20)),
-              TextFormField(),
+              TextFormField(
+                keyboardType: TextInputType.emailAddress,
+              ),
               // ignore: prefer_const_constructors
               Text("รหัสผ่าน",style: TextStyle(fontSize: 20)),
-              TextFormField(),
+              TextFormField(
+                obscureText: true,
+              ),
               // ignore: prefer_const_constructors
               Text("เพศ",style: TextStyle(fontSize: 20)),
               ListTile(
@@ -44,7 +57,11 @@ class _RegisterPageState extends State<RegisterPage> {
                 leading: Radio(
                   value: 1, 
                   groupValue: _selectedChoice, 
-                  onChanged: ( value) {},
+                  onChanged: ( value) {
+                    setState(() {
+                      _selectedChoice = value;
+                    });
+                  },
                   ),
               ),  
               ListTile(
@@ -52,7 +69,11 @@ class _RegisterPageState extends State<RegisterPage> {
                 leading: Radio(
                   value: 2, 
                   groupValue: _selectedChoice, 
-                  onChanged: ( value) {},
+                  onChanged: (value) {
+                     setState(() {
+                      _selectedChoice = value;
+                    });
+                  },
                   ),
               ),
               Text("คุณเป็นผู็ใช้ประเภทใด",style: TextStyle(fontSize: 20)),
@@ -61,7 +82,11 @@ class _RegisterPageState extends State<RegisterPage> {
                 leading: Radio(
                   value: 3, 
                   groupValue: _selectedChoice, 
-                  onChanged: ( value) {},
+                  onChanged: ( value) {
+                     setState(() {
+                      _selectedChoice = value;
+                    });
+                  },
                   ),
               ),  
               ListTile(
@@ -69,16 +94,32 @@ class _RegisterPageState extends State<RegisterPage> {
                 leading: Radio(
                   value: 4, 
                   groupValue: _selectedChoice, 
-                  onChanged: ( value) {},
+                  onChanged: ( value) {
+                     setState(() {
+                      _selectedChoice = value;
+                    });
+                  },
                   ),
               ),
-              
+              SizedBox(
+                width: double.infinity,
+                child: ElevatedButton(
+                onPressed: (){
+                  Navigator.push(context, MaterialPageRoute(
+                    builder: (context){
+                      return HomePage();
+                    })
+                    );
+                }, 
+                child: Text('สมัครสมาชิก')),
+              ),
+           
             ]
             ),
           ),
       ),
 
-      
+      )
     );
   }
 }
