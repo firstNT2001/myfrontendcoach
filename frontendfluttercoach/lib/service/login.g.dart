@@ -19,14 +19,14 @@ class _LoginService implements LoginService {
   String? baseUrl;
 
   @override
-  Future<List<Customer>> login(login) async {
+  Future<HttpResponse<List<Customer>>> login(login) async {
     const _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{};
     final _data = <String, dynamic>{};
     _data.addAll(login.toJson());
-    final _result =
-        await _dio.fetch<List<dynamic>>(_setStreamType<List<Customer>>(Options(
+    final _result = await _dio.fetch<List<dynamic>>(
+        _setStreamType<HttpResponse<List<Customer>>>(Options(
       method: 'POST',
       headers: _headers,
       extra: _extra,
@@ -41,7 +41,8 @@ class _LoginService implements LoginService {
     var value = _result.data!
         .map((dynamic i) => Customer.fromJson(i as Map<String, dynamic>))
         .toList();
-    return value;
+    final httpResponse = HttpResponse(value, _result);
+    return httpResponse;
   }
 
   RequestOptions _setStreamType<T>(RequestOptions requestOptions) {
