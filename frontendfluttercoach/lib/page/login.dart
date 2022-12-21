@@ -86,10 +86,20 @@ class _LoginPageState extends State<LoginPage> {
         
         ElevatedButton(
           onPressed: () async{
+            log(this._email);
+            log(this._password);
             LoginDto dto = 
               LoginDto(email:this._email, password:this._password, type:1);
-            List<Customer> customer = await loginService.login(dto);
-            log(jsonEncode(customer));
+            // LoginDto dto = 
+            //   LoginDto(email:"Tpangpond@gmail.com", password:"15978", type:1);
+           var userLogin = await loginService.login(dto);
+          //  log("===============");
+          //  log(userLogin.data.length.toString());
+            if (userLogin.data.length  == 0) {
+              log("Login fail");
+              return;
+            }
+            log(jsonEncode(userLogin.data));
         }, 
         child: Text('Login')),
         ElevatedButton(
@@ -136,7 +146,7 @@ class _PasswordFieldState extends State<PasswordField> {
     return TextFormField(
       key: widget.fieldKey,
       obscureText: _obscureText,
-      maxLength: 8,
+      maxLength: 20,
       onSaved: widget.onSaved,
       validator: widget.validator,
       onFieldSubmitted: widget.onFieldSubmitted,
