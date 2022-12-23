@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:frontendfluttercoach/page/home.dart';
 
-import '../model/registerCus.dart';
 
 class RegisterPage extends StatefulWidget {
   const RegisterPage({super.key});

@@ -10,7 +10,7 @@ import 'package:frontendfluttercoach/service/provider/appdata.dart';
 import 'package:provider/provider.dart';
 import 'package:http/http.dart' as http;
 
-import 'package:frontendfluttercoach/model/customer.dart';
+import 'package:frontendfluttercoach/model/modelCustomer.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});

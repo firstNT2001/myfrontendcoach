@@ -1,17 +1,17 @@
 // To parse this JSON data, do
 //
-//     final registerCusFromJson = registerCusFromJsonFromJson(jsonString);
+//     final registerCusDto = registerCusDtoFromJson(jsonString);
 
-import 'package:meta/meta.dart';
 import 'dart:convert';
 
-List<RegisterCusFromJson> registerCusFromJsonFromJson(String str) => List<RegisterCusFromJson>.from(json.decode(str).map((x) => RegisterCusFromJson.fromJson(x)));
+RegisterCusDto registerCusDtoFromJson(String str) => RegisterCusDto.fromJson(json.decode(str));
 
-String registerCusFromJsonToJson(List<RegisterCusFromJson> data) => json.encode(List<dynamic>.from(data.map((x) => x.toJson())));
+String registerCusDtoToJson(RegisterCusDto data) => json.encode(data.toJson());
 
-class RegisterCusFromJson {
-    RegisterCusFromJson({
-        required this.username,
+class RegisterCusDto {
+    RegisterCusDto({
+        required this.uid,
+        required this.aliasName,
         required this.password,
         required this.email,
         required this.fullName,
@@ -21,47 +21,57 @@ class RegisterCusFromJson {
         required this.image,
         required this.weight,
         required this.height,
+        required this.facebookId,
         required this.price,
+        required this.buying,
     });
 
-    String username;
+    int uid;
+    String aliasName;
     String password;
     String email;
     String fullName;
-    DateTime birthday;
+    String birthday;
     String gender;
     String phone;
     String image;
     int weight;
     int height;
+    String facebookId;
     int price;
+    dynamic buying;
 
-    factory RegisterCusFromJson.fromJson(Map<String, dynamic> json) => RegisterCusFromJson(
-        username: json["Username"],
+    factory RegisterCusDto.fromJson(Map<String, dynamic> json) => RegisterCusDto(
+        uid: json["Uid"],
+        aliasName: json["AliasName"],
         password: json["Password"],
         email: json["Email"],
         fullName: json["FullName"],
-        birthday: DateTime.parse(json["Birthday"]),
+        birthday: json["Birthday"],
         gender: json["Gender"],
         phone: json["Phone"],
         image: json["Image"],
         weight: json["Weight"],
         height: json["Height"],
+        facebookId: json["FacebookID"],
         price: json["Price"],
+        buying: json["Buying"],
     );
 
     Map<String, dynamic> toJson() => {
-        "Username": username,
+        "Uid": uid,
+        "AliasName": aliasName,
         "Password": password,
         "Email": email,
         "FullName": fullName,
-        "Birthday": birthday.toIso8601String(),
+        "Birthday": birthday,
         "Gender": gender,
         "Phone": phone,
         "Image": image,
         "Weight": weight,
         "Height": height,
+        "FacebookID": facebookId,
         "Price": price,
+        "Buying": buying,
     };
-    //RegisterCusFromJson({this.username,required this.password,required this.email,required this.fullName,required this.birthday,required this.gender,required this.phone,required this.image,required this.weight,required this.height,required this.price});
 }
