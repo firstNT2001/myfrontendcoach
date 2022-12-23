@@ -1,4 +1,4 @@
-import 'package:frontendfluttercoach/model/customer.dart';
+import 'package:frontendfluttercoach/model/modelCustomer.dart';
 import 'package:retrofit/retrofit.dart';
 import 'package:dio/dio.dart';
 import 'package:frontendfluttercoach/model/DTO/loginDTO.dart';
