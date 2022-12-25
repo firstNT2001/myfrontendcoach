@@ -1,16 +1,18 @@
 // To parse this JSON data, do
 //
 //     final customer = customerFromJson(jsonString);
+
+import 'package:meta/meta.dart';
 import 'dart:convert';
 
-List<Customer> customerFromJson(String str) => List<Customer>.from(json.decode(str).map((x) => Customer.fromJson(x)));
+Customer customerFromJson(String str) => Customer.fromJson(json.decode(str));
 
-String customerToJson(List<Customer> data) => json.encode(List<dynamic>.from(data.map((x) => x.toJson())));
+String customerToJson(Customer data) => json.encode(data.toJson());
 
 class Customer {
     Customer({
         required this.uid,
-        required this.aliasName,
+        required this.username,
         required this.password,
         required this.email,
         required this.fullName,
@@ -26,7 +28,7 @@ class Customer {
     });
 
     int uid;
-    String aliasName;
+    String username;
     String password;
     String email;
     String fullName;
@@ -42,7 +44,7 @@ class Customer {
 
     factory Customer.fromJson(Map<String, dynamic> json) => Customer(
         uid: json["Uid"],
-        aliasName: json["AliasName"],
+        username: json["Username"],
         password: json["Password"],
         email: json["Email"],
         fullName: json["FullName"],
@@ -59,7 +61,7 @@ class Customer {
 
     Map<String, dynamic> toJson() => {
         "Uid": uid,
-        "AliasName": aliasName,
+        "Username": username,
         "Password": password,
         "Email": email,
         "FullName": fullName,
