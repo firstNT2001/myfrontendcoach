@@ -1,3 +1,4 @@
+import 'package:frontendfluttercoach/model/modelCoach.dart';
 import 'package:frontendfluttercoach/model/modelCustomer.dart';
 import 'package:retrofit/retrofit.dart';
 import 'package:dio/dio.dart';
@@ -11,6 +12,9 @@ abstract class LoginService {
   factory LoginService(Dio dio, {String baseUrl}) = _LoginService;
 
   @POST("/user/login")
-  Future<HttpResponse<List<Customer>>> login(@Body() LoginDto login);
+  Future<HttpResponse<Customer>> loginCus(@Body() LoginDto login);
+
+  @POST("/user/login")
+  Future<HttpResponse<Coach>> loginCoach(@Body() LoginDto login);
   
 }

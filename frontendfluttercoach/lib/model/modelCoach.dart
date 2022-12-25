@@ -2,16 +2,17 @@
 //
 //     final coach = coachFromJson(jsonString);
 
+import 'package:meta/meta.dart';
 import 'dart:convert';
 
-List<Coach> coachFromJson(String str) => List<Coach>.from(json.decode(str).map((x) => Coach.fromJson(x)));
+Coach coachFromJson(String str) => Coach.fromJson(json.decode(str));
 
-String coachToJson(List<Coach> data) => json.encode(List<dynamic>.from(data.map((x) => x.toJson())));
+String coachToJson(Coach data) => json.encode(data.toJson());
 
 class Coach {
     Coach({
-        required this.uid,
-        required this.aliasName,
+        required this.cid,
+        required this.username,
         required this.password,
         required this.email,
         required this.fullName,
@@ -19,15 +20,14 @@ class Coach {
         required this.gender,
         required this.phone,
         required this.image,
-        required this.weight,
-        required this.height,
+        required this.qualification,
+        required this.property,
         required this.facebookId,
-        required this.price,
-        required this.buying,
+        required this.chats,
     });
 
-    int uid;
-    String aliasName;
+    int cid;
+    String username;
     String password;
     String email;
     String fullName;
@@ -35,15 +35,14 @@ class Coach {
     String gender;
     String phone;
     String image;
-    int weight;
-    int height;
+    String qualification;
+    String property;
     String facebookId;
-    int price;
-    dynamic buying;
+    dynamic chats;
 
     factory Coach.fromJson(Map<String, dynamic> json) => Coach(
-        uid: json["Uid"],
-        aliasName: json["AliasName"],
+        cid: json["Cid"],
+        username: json["Username"],
         password: json["Password"],
         email: json["Email"],
         fullName: json["FullName"],
@@ -51,16 +50,15 @@ class Coach {
         gender: json["Gender"],
         phone: json["Phone"],
         image: json["Image"],
-        weight: json["Weight"],
-        height: json["Height"],
+        qualification: json["Qualification"],
+        property: json["Property"],
         facebookId: json["FacebookID"],
-        price: json["Price"],
-        buying: json["Buying"],
+        chats: json["Chats"],
     );
 
     Map<String, dynamic> toJson() => {
-        "Uid": uid,
-        "AliasName": aliasName,
+        "Cid": cid,
+        "Username": username,
         "Password": password,
         "Email": email,
         "FullName": fullName,
@@ -68,10 +66,9 @@ class Coach {
         "Gender": gender,
         "Phone": phone,
         "Image": image,
-        "Weight": weight,
-        "Height": height,
+        "Qualification": qualification,
+        "Property": property,
         "FacebookID": facebookId,
-        "Price": price,
-        "Buying": buying,
+        "Chats": chats,
     };
 }

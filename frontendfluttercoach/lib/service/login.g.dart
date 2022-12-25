@@ -19,14 +19,14 @@ class _LoginService implements LoginService {
   String? baseUrl;
 
   @override
-  Future<HttpResponse<List<Customer>>> login(login) async {
+  Future<HttpResponse<Customer>> loginCus(login) async {
     const _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{};
     final _data = <String, dynamic>{};
     _data.addAll(login.toJson());
-    final _result = await _dio.fetch<List<dynamic>>(
-        _setStreamType<HttpResponse<List<Customer>>>(Options(
+    final _result = await _dio.fetch<Map<String, dynamic>>(
+        _setStreamType<HttpResponse<Customer>>(Options(
       method: 'POST',
       headers: _headers,
       extra: _extra,
@@ -38,9 +38,32 @@ class _LoginService implements LoginService {
               data: _data,
             )
             .copyWith(baseUrl: baseUrl ?? _dio.options.baseUrl)));
-    var value = _result.data!
-        .map((dynamic i) => Customer.fromJson(i as Map<String, dynamic>))
-        .toList();
+    final value = Customer.fromJson(_result.data!);
+    final httpResponse = HttpResponse(value, _result);
+    return httpResponse;
+  }
+
+  @override
+  Future<HttpResponse<Coach>> loginCoach(login) async {
+    const _extra = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{};
+    final _headers = <String, dynamic>{};
+    final _data = <String, dynamic>{};
+    _data.addAll(login.toJson());
+    final _result = await _dio.fetch<Map<String, dynamic>>(
+        _setStreamType<HttpResponse<Coach>>(Options(
+      method: 'POST',
+      headers: _headers,
+      extra: _extra,
+    )
+            .compose(
+              _dio.options,
+              '/user/login',
+              queryParameters: queryParameters,
+              data: _data,
+            )
+            .copyWith(baseUrl: baseUrl ?? _dio.options.baseUrl)));
+    final value = Coach.fromJson(_result.data!);
     final httpResponse = HttpResponse(value, _result);
     return httpResponse;
   }
