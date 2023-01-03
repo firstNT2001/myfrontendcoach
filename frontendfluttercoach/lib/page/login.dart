@@ -11,8 +11,9 @@ import 'package:frontendfluttercoach/service/provider/appdata.dart';
 import 'package:provider/provider.dart';
 import 'package:http/http.dart' as http;
 
-import 'package:frontendfluttercoach/model/customer.dart';
+// import 'package:frontendfluttercoach/model/customer.dart';
 import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
+import 'package:frontendfluttercoach/model/modelCustomer.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -34,6 +35,10 @@ class _LoginPageState extends State<LoginPage> {
   
   bool _isLoggedIn = false;
   Map _userObj = {};
+  late int uid;
+  late int cid;
+  var userLoginCus;
+  var userLoginCoach;
   // 2. สร้าง initState เพื่อสร้าง object ของ service 
   // และ async method ที่จะใช้กับ FutureBuilder
   @override
@@ -91,18 +96,39 @@ class _LoginPageState extends State<LoginPage> {
           onPressed: () async{
             log(this._email);
             log(this._password);
-            LoginDto dto = 
-              LoginDto(email:this._email, password:this._password, type:1);
+            
+            this._type = 1;
             // LoginDto dto = 
             //   LoginDto(email:"Tpangpond@gmail.com", password:"15978", type:1);
-           var userLogin = await loginService.login(dto);
-          //  log("===============");
-          //  log(userLogin.data.length.toString());
-            if (userLogin.data.length  == 0) {
-              log("Login fail");
-              return;
+            if(this._type == 1){
+              LoginDto dtoCus = 
+                LoginDto(email:this._email, password:this._password, type:1);
+              userLoginCus = await loginService.loginCus(dtoCus);
+              uid = int.parse(jsonEncode(userLoginCus.data.uid));
+            }else if(this._type == 0){
+              LoginDto dtoCoach = 
+                LoginDto(email:this._email, password:this._password, type:0);
+              userLoginCoach = await loginService.loginCoach(dtoCoach);
+              cid = int.parse(jsonEncode(userLoginCus.data.cid));
             }
-            log(jsonEncode(userLogin.data));
+
+          
+          //  log("===============");
+
+          
+          
+          log(uid.toString());
+          //log(jsonEncode(userLoginCus.data));
+          if (uid > 0) {
+            log("Login Success");
+          }else if (cid > 0){
+            log("Login Success");
+          }else{
+              log("Login Fail");
+              return;
+          }
+            
+          
         }, 
         child: Text('Login')),
         ElevatedButton(
