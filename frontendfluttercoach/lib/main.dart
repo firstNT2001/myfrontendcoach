@@ -4,8 +4,10 @@ import 'dart:developer';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:frontendfluttercoach/model/DTO/loginDTO.dart';
+import 'package:frontendfluttercoach/page/chat.dart';
 import 'package:frontendfluttercoach/page/login.dart';
 import 'package:frontendfluttercoach/page/register.dart';
+
 import 'package:frontendfluttercoach/service/login.dart';
 import 'package:frontendfluttercoach/service/provider/appdata.dart';
 import 'package:provider/provider.dart';
@@ -30,7 +32,7 @@ class MyApp extends StatelessWidget {
       title: 'Flutter Demo',
       theme: ThemeData(
         
-        primarySwatch: Colors.blue,
+        primarySwatch: Colors.green,
       ),
       home: LoginPage(),
     );

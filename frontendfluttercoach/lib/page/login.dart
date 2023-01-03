@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:developer';
 
+
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:frontendfluttercoach/model/DTO/loginDTO.dart';
@@ -11,6 +12,7 @@ import 'package:provider/provider.dart';
 import 'package:http/http.dart' as http;
 
 import 'package:frontendfluttercoach/model/customer.dart';
+import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -29,6 +31,9 @@ class _LoginPageState extends State<LoginPage> {
   late String _email = "";
   late String _password = "";
   late int  _type = 0;
+  
+  bool _isLoggedIn = false;
+  Map _userObj = {};
   // 2. สร้าง initState เพื่อสร้าง object ของ service 
   // และ async method ที่จะใช้กับ FutureBuilder
   @override
@@ -40,7 +45,6 @@ class _LoginPageState extends State<LoginPage> {
   // 2.2 async method
     // loadDataMethod = loadData(); 
   }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -48,7 +52,8 @@ class _LoginPageState extends State<LoginPage> {
         title: const Text('Home Page'),
         
       ),
-      body : Column(children: <Widget>[
+      body : Column(
+        children: <Widget>[
         const SizedBox(height:  24.0),
        TextFormField(
             decoration: const InputDecoration(
@@ -81,9 +86,7 @@ class _LoginPageState extends State<LoginPage> {
                 log(this._password);
               });
             },
-          ),
-      
-        
+          ),       
         ElevatedButton(
           onPressed: () async{
             log(this._email);
@@ -110,9 +113,27 @@ class _LoginPageState extends State<LoginPage> {
             })
             );
           }, 
-        child: Text('สมัครสมาชิก'))
+        child: Text('สมัครสมาชิก')
+        ),
+        ElevatedButton(
+          child:Text("Login with Facebook") ,
+          onPressed: () async{
+            final LoginResult result = await FacebookAuth.instance.login(); // by default we request the email and the public profile
+            // or FacebookAuth.i.login()
+            if (result.status == LoginStatus.success) {
+                // you are logged
+                final AccessToken accessToken = result.accessToken!;
+            } else {
+                print(result.status);
+                print(result.message);
+            }
+          },
+          ),
+        
       ],
-      ),);
+      ),
+      
+      );
   }
 }
 class PasswordField extends StatefulWidget {
