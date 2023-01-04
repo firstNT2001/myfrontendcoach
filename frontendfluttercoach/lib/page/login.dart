@@ -60,7 +60,7 @@ class _LoginPageState extends State<LoginPage> {
       body : Column(
         children: <Widget>[
         const SizedBox(height:  24.0),
-       TextFormField(
+        TextFormField(
             decoration: const InputDecoration(
               border: UnderlineInputBorder(),
               filled: true,
@@ -101,13 +101,16 @@ class _LoginPageState extends State<LoginPage> {
             // LoginDto dto = 
             //   LoginDto(email:"Tpangpond@gmail.com", password:"15978", type:1);
             if(this._type == 1){
+
               LoginDto dtoCus = 
                 LoginDto(email:this._email, password:this._password, type:1);
+
               userLoginCus = await loginService.loginCus(dtoCus);
               uid = int.parse(jsonEncode(userLoginCus.data.uid));
             }else if(this._type == 0){
               LoginDto dtoCoach = 
                 LoginDto(email:this._email, password:this._password, type:0);
+
               userLoginCoach = await loginService.loginCoach(dtoCoach);
               cid = int.parse(jsonEncode(userLoginCus.data.cid));
             }
