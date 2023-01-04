@@ -2,6 +2,7 @@
 //
 //     final registerCusDto = registerCusDtoFromJson(jsonString);
 
+import 'package:meta/meta.dart';
 import 'dart:convert';
 
 RegisterCusDto registerCusDtoFromJson(String str) => RegisterCusDto.fromJson(json.decode(str));
@@ -10,8 +11,7 @@ String registerCusDtoToJson(RegisterCusDto data) => json.encode(data.toJson());
 
 class RegisterCusDto {
     RegisterCusDto({
-        required this.uid,
-        required this.aliasName,
+        required this.username,
         required this.password,
         required this.email,
         required this.fullName,
@@ -21,13 +21,10 @@ class RegisterCusDto {
         required this.image,
         required this.weight,
         required this.height,
-        required this.facebookId,
         required this.price,
-        required this.buying,
     });
 
-    int uid;
-    String aliasName;
+    String username;
     String password;
     String email;
     String fullName;
@@ -37,13 +34,10 @@ class RegisterCusDto {
     String image;
     int weight;
     int height;
-    String facebookId;
     int price;
-    dynamic buying;
 
     factory RegisterCusDto.fromJson(Map<String, dynamic> json) => RegisterCusDto(
-        uid: json["Uid"],
-        aliasName: json["AliasName"],
+        username: json["Username"],
         password: json["Password"],
         email: json["Email"],
         fullName: json["FullName"],
@@ -53,14 +47,11 @@ class RegisterCusDto {
         image: json["Image"],
         weight: json["Weight"],
         height: json["Height"],
-        facebookId: json["FacebookID"],
         price: json["Price"],
-        buying: json["Buying"],
     );
 
     Map<String, dynamic> toJson() => {
-        "Uid": uid,
-        "AliasName": aliasName,
+        "Username": username,
         "Password": password,
         "Email": email,
         "FullName": fullName,
@@ -70,8 +61,6 @@ class RegisterCusDto {
         "Image": image,
         "Weight": weight,
         "Height": height,
-        "FacebookID": facebookId,
         "Price": price,
-        "Buying": buying,
     };
 }
