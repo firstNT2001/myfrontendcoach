@@ -1,11 +1,15 @@
 import 'dart:convert';
 import 'dart:developer';
 
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:frontendfluttercoach/model/DTO/registerCoachDTO.dart';
 import 'package:frontendfluttercoach/model/DTO/registerCusDTO.dart';
-import 'package:frontendfluttercoach/page/home.dart';
+//import 'package:frontendfluttercoach/page/home.dart';
 import 'package:frontendfluttercoach/service/register.dart';
+import 'package:provider/provider.dart';
+import 'package:http/http.dart' as http;
+import '../service/provider/appdata.dart';
 
 
 class RegisterPage extends StatefulWidget {
@@ -16,6 +20,9 @@ class RegisterPage extends StatefulWidget {
 }
 
 class _RegisterPageState extends State<RegisterPage> {
+ final GlobalKey<FormFieldState<String>> _passwordFieldKey =
+      GlobalKey<FormFieldState<String>>();
+
   late String _username;
 	late String _password;      
 	late String _email;        
@@ -41,9 +48,19 @@ class _RegisterPageState extends State<RegisterPage> {
   late int cid;
 
   late RegisterService registerService;
+
   int? _selectedChoice;
   final formKey = GlobalKey<FormState>();
   //RegisterCusFromJson profileCus = RegisterCusFromJson();
+  @override
+  void initState() {
+    super.initState();
+  // 2.1 object ของ service โดยต้องส่ง baseUrl (จาก provider) เข้าไปด้วย
+    registerService = 
+        RegisterService(Dio(), baseUrl: context.read<AppData>().baseurl); 
+  // 2.2 async method
+    // loadDataMethod = loadData(); 
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -53,16 +70,49 @@ class _RegisterPageState extends State<RegisterPage> {
       body : Column(
         children: <Widget>[
         const SizedBox(height:  24.0),
+        TextFormField(
+            decoration: const InputDecoration(
+              border: UnderlineInputBorder(),
+              filled: true,
+              icon: Icon(Icons.person),
+              hintText: 'Your Usarname address',
+              labelText: 'Usarname',
+            ),
+            keyboardType: TextInputType.emailAddress,
+            onSaved: (String? value) {
+              this._username = value!;
+              log(_username);
+            },
+            //validator: _validateName,
+            // onFieldSubmitted: (String value) {
+            //   setState(() {
+            //     this._email = value;
+            //     log(this._email);
+            //   });
+            // },
+             
+          ),
           ElevatedButton(
           onPressed: () async{
+            this._username = "pp";
+            this._password = "1234";      
+            this._email = "p22sadqwe@gmail.com";        
+            this._fullName = "ppppp";    
+            this._birthday = "2002-03-14T00:00:00Z";     
+            this._gender = "2";       
+            this._phone = "084621238";       
+            this._image = "null";      
+
+            this._qualification = "tttt";
+            this._property = "dkaskodkaso"; 
+                  
            if (this._type == true) {
-                    RegisterCoachDto coachDTO = 
-                      RegisterCoachDto(username: this._username, 
+                    RegisterCoachDto coachDTO = RegisterCoachDto(username: this._username, 
                         password: this._password, email: this._email, fullName: this._fullName, 
                         birthday: this._birthday, gender: this._gender,phone: this._phone, 
                         image: this._image, qualification: this._qualification, property: this._property
                       );
-
+                  
                     regCoach = await registerService.regCoachService(coachDTO);
                     cid = int.parse(jsonEncode(regCoach.data.cid));
                   }else{

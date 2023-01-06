@@ -50,6 +50,18 @@ class _LoginPageState extends State<LoginPage> {
   // 2.2 async method
     // loadDataMethod = loadData(); 
   }
+
+
+  String? _validateName(String? value) {
+    if (value?.isEmpty ?? false) {
+      return 'Name is required.';
+    }
+    final RegExp nameExp = RegExp(r'^[A-Za-z ]+$');
+    if (!nameExp.hasMatch(value!)) {
+      return 'Please enter only alphabetical characters.';
+    }
+    return null;
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -69,27 +81,26 @@ class _LoginPageState extends State<LoginPage> {
               labelText: 'E-mail',
             ),
             keyboardType: TextInputType.emailAddress,
-            // onSaved: (String? value) {
-            //   this._email = myController.text.toString();
-            //   log(this._email);
-            // },
-            onFieldSubmitted: (String value) {
-              setState(() {
-                this._email = value;
-                log(this._email);
-              });
+            onSaved: (String? value) {
+              this._email = value!;
+              print('email = $_email');
             },
+            //validator: _validateName,
+            // onFieldSubmitted: (String value) {
+            //   setState(() {
+            //     this._email = value;
+            //     log(this._email);
+            //   });
+            // },
           ),
         const SizedBox(height:  24.0),
          PasswordField(
             fieldKey: _passwordFieldKey,
             helperText: 'No more than 8 characters.',
             labelText: 'Password *',
-            onFieldSubmitted: (String value) {
-              setState(() {
-                this._password = value;
-                log(this._password);
-              });
+            onSaved: (String? value) {
+              this._password = value!;
+              print('password = $_password');
             },
           ),       
         ElevatedButton(
