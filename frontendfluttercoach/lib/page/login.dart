@@ -149,6 +149,9 @@ class _LoginPageState extends State<LoginPage> {
             if (result.status == LoginStatus.success) {
                 // you are logged
                 final AccessToken accessToken = result.accessToken!;
+                log(accessToken.token);
+                final userData = await FacebookAuth.instance.getUserData();
+                log(userData['email']);
             } else {
                 print(result.status);
                 print(result.message);

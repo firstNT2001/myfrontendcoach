@@ -7,6 +7,7 @@ import 'package:frontendfluttercoach/model/DTO/loginDTO.dart';
 import 'package:frontendfluttercoach/page/chat.dart';
 import 'package:frontendfluttercoach/page/login.dart';
 import 'package:frontendfluttercoach/page/register.dart';
+import 'package:frontendfluttercoach/page/start.dart';
 
 import 'package:frontendfluttercoach/service/login.dart';
 import 'package:frontendfluttercoach/service/provider/appdata.dart';
@@ -34,7 +35,7 @@ class MyApp extends StatelessWidget {
         
         primarySwatch: Colors.green,
       ),
-      home: LoginPage(),
+      home: pageStart(),
     );
   }
 }
