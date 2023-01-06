@@ -22,8 +22,18 @@ class _pageStartState extends State<pageStart> {
           ),
           fit: BoxFit.cover
           )
+
       ),
-     
+      width: double.infinity,
+      child: ElevatedButton(
+          style: ElevatedButton.styleFrom(
+            primary: Color.fromARGB(255, 9, 131, 232),
+          ),
+          child: Text('Answer'),
+          onPressed: () {
+            
+          },
+          ),
     );
   }
 }
