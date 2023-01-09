@@ -1,19 +1,15 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
-import 'package:file_picker/file_picker.dart';
-import 'package:firebase_storage/firebase_storage.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:video_player/video_player.dart';
 
-class UploadVdoPage extends StatefulWidget {
-  const UploadVdoPage({super.key});
+/// Stateful widget to fetch and then display video content.
+class PlayVideoPage extends StatefulWidget {
+  const PlayVideoPage({Key? key}) : super(key: key);
 
   @override
-  State<UploadVdoPage> createState() => _UploadVdoPageState();
+  _PlayVideoPage createState() => _PlayVideoPage();
 }
 
-class _UploadVdoPageState extends State<UploadVdoPage> {
+class _PlayVideoPage extends State<PlayVideoPage> {
   late VideoPlayerController _controller;
 
   @override
@@ -27,81 +23,38 @@ class _UploadVdoPageState extends State<UploadVdoPage> {
       });
   }
 
-  PlatformFile? pickedFile;
-  UploadTask? uploadTask;
-  
-
-  Future selectFile() async{
-    final result = await FilePicker.platform.pickFiles();
-    if(result == null) return;
-
-    setState(() {
-      pickedFile = result.files.first;
-    });
-  }
-  Future uploadFile() async{
-    final path = 'files/${pickedFile!.name}';
-    final file = File(pickedFile!.path!);
-
-    final ref = FirebaseStorage.instance.ref().child(path);
-    uploadTask = ref.putFile(file);
-
-    final snapshot = await uploadTask!.whenComplete(() => {});
-
-    final urlDownload = await snapshot.ref.getDownloadURL();
-    print('Download Link: $urlDownload');
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      title: 'Video Demo',
+      home: Scaffold(
+        body: Center(
+          child: _controller.value.isInitialized
+              ? AspectRatio(
+                  aspectRatio: _controller.value.aspectRatio,
+                  child: VideoPlayer(_controller),
+                )
+              : Container(),
+        ),
+        floatingActionButton: FloatingActionButton(
+          onPressed: () {
+            setState(() {
+              _controller.value.isPlaying
+                  ? _controller.pause()
+                  : _controller.play();
+            });
+          },
+          child: Icon(
+            _controller.value.isPlaying ? Icons.pause : Icons.play_arrow,
+          ),
+        ),
+      ),
+    );
   }
 
   @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text("เล่นวิดีโอ"),      
-      ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            if(pickedFile != null)
-            Expanded(
-              child: Container(               
-                color: Colors.green,
-                
-                child: Image.file(
-                  File(pickedFile!.path!),
-                  width: double.infinity,
-                  fit: BoxFit.cover,)
-               ),
-               ),
-               const SizedBox(height: 12,),
-            ElevatedButton(             
-              child: const Text('Select File'),
-              onPressed: selectFile ,
-              ),
-              const SizedBox(height: 12,),
-              ElevatedButton(
-                child: const Text('Upload File'),
-              onPressed: uploadFile ,
-              ),
-              ElevatedButton(             
-              child: const Text('ดูรูปภาพที่เลือก'),
-              onPressed: (){
-                Expanded(
-              child: Container(
-                color: Colors.green,
-                child: Image.file(
-                  File(pickedFile!.path!),
-                  width: double.infinity,
-                  fit: BoxFit.cover,)
-               ),
-               );
-              } ,
-              ),
-              
-
-              
-          ],
-        ),)
-    );
+  void dispose() {
+    super.dispose();
+    _controller.dispose();
   }
 }
