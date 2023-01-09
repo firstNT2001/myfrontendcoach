@@ -35,7 +35,7 @@ class MyApp extends StatelessWidget {
         
         primarySwatch: Colors.green,
       ),
-      home: pageStart(),
+      home: RegisterPage(),
     );
   }
 }

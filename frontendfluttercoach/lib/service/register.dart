@@ -14,9 +14,9 @@ abstract class RegisterService {
   factory RegisterService(Dio dio, {String baseUrl}) = _RegisterService;
 
   @POST("/user/registerCus")
-  Future<HttpResponse<Customer>> regCusService(@Body() RegisterCusDto regCus);
+  Future<HttpResponse<Customer>> regCusService(@Body() RegisterCusDto reg);
 
   @POST("/user/registerCoach")
-  Future<HttpResponse<Coach>> regCoachService(@Body() RegisterCoachDto regCoach);
+  Future<HttpResponse<Coach>> regCoachService(@Body() RegisterCoachDto reg);
   
 }
