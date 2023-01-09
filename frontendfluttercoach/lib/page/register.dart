@@ -14,7 +14,10 @@ import 'package:http/http.dart' as http;
 import '../service/provider/appdata.dart';
 
 class RegisterPage extends StatefulWidget {
+  //final String nameFB;
+  //final String emailFB;
   const RegisterPage({super.key});
+  // const RegisterPage(this.nameFB, this.emailFB);
 
   @override
   State<RegisterPage> createState() => _RegisterPageState();
@@ -40,7 +43,8 @@ class _RegisterPageState extends State<RegisterPage> {
   late int _height;
   late int _price;
 
-  late bool _type = true;
+  late bool _typeCus = false;
+  late bool _typeCoach = false;
   late bool genderBool = true;
 
   late int type = 0;
@@ -236,15 +240,13 @@ class _RegisterPageState extends State<RegisterPage> {
                       lastDate: DateTime(2100));
 
                   if (pickedDate != null) {
-                    // this._birthday = pickedDate.toString();
-                    // log( this._birthday);
                     String formattedDate =
                         DateFormat('yyyy-MM-dd').format(pickedDate);
                     print(
-                        formattedDate); //formatted date output using intl package =>  2021-03-16
+                        formattedDate); 
                     setState(() {
                       dateInput.text =
-                          formattedDate; //set output date to TextField value.
+                          formattedDate; 
                     });
                   } else {}
                   this._birthday = dateInput.text + "T00:00:00Z";
@@ -293,7 +295,6 @@ class _RegisterPageState extends State<RegisterPage> {
             padding: EdgeInsets.only(left: 20, right: 20),
             alignment: Alignment.centerLeft,
             child: Row(
-              //mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: <Widget>[
                 Row(
                   children: <Widget>[
@@ -306,7 +307,7 @@ class _RegisterPageState extends State<RegisterPage> {
                             this._gender = "1";
                           });
                         }),
-                    const Text('ผู้ชาย')
+                    const Text('ผู้ชาย'),
                   ],
                 ),
                 Row(
@@ -342,64 +343,60 @@ class _RegisterPageState extends State<RegisterPage> {
               //mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: <Widget>[
                 Row(
-                  children: <Widget>[
-                    Radio<bool>(
-                        value: true,
-                        groupValue: this._type,
-                        onChanged: (bool? value) {
-                          setState(() {
-                            this._type = value!;
-                            log(this._type.toString());
-                          });
-                        }),
-                    const Text('Customer')
+                  children: [
+                    GestureDetector(
+                      onTap: () {
+                        setState(() {
+                          this._typeCus = !this._typeCus;
+                          this._typeCoach = false;
+                          this.type = 0;
+                          _displayTextField(this.type);
+                        });
+                      },
+                      child: this._typeCus
+                          ? Icon(
+                              Icons.radio_button_checked,
+                              color: Colors.blue,
+                              size: 20,
+                            )
+                          : Icon(
+                              Icons.radio_button_unchecked,
+                              color: Colors.grey,
+                              size: 20,
+                            ),
+                    ),
+                    SizedBox(width: 5),
+                    Text("Customer"),
                   ],
                 ),
                 Row(
-                  children: <Widget>[
-                    Radio<bool>(
-                        value: false,
-                        groupValue: this._type,
-                        onChanged: (bool? value) {
-                          setState(() {
-                            this._type = value!;
-                            log(this._type.toString());
-                          });
-                        }),
-                        
-                    const Text('Coach')
+                  children: [
+                    GestureDetector(
+                      onTap: () {
+                        setState(() {
+                          this._typeCoach = !this._typeCoach;
+                          this._typeCus = false;
+                          this.type = 1;
+                          _displayTextField(this.type);
+                        });
+                      },
+                      child: this._typeCoach
+                          ? Icon(
+                              Icons.radio_button_checked,
+                              color: Colors.blue,
+                              size: 20,
+                            )
+                          : Icon(
+                              Icons.radio_button_unchecked,
+                              color: Colors.grey,
+                              size: 20,
+                            ),
+                    ),
+                    SizedBox(width: 5),
+                    Text("Coach"),
                   ],
                 ),
               ],
-            ),
-          ),
-          Container(
-            margin: EdgeInsets.only(left: 20, right: 20, top: 20),
-            padding: EdgeInsets.only(left: 20, right: 20),
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(10),
-              color: Colors.grey[200],
-              boxShadow: [
-                BoxShadow(
-                  offset: Offset(0, 10),
-                  blurRadius: 50,
-                  color: Color(0xffEEEEEE),
-                )
-              ],
-            ),
-            alignment: Alignment.center,
-            child: TextField(
-              keyboardType: TextInputType.number,
-              cursorColor: Color(0xffF5591F),
-              decoration: InputDecoration(
-                labelText: 'Enter Phone',
-                enabledBorder: InputBorder.none,
-                focusedBorder: InputBorder.none,
-              ),
-              onChanged: (String value) {
-                this._phone = value;
-                log(this._phone);
-              },
             ),
           ),
           Container(
@@ -407,48 +404,53 @@ class _RegisterPageState extends State<RegisterPage> {
               padding: EdgeInsets.only(left: 20, right: 20),
               child: ElevatedButton(
                   onPressed: () async {
-                    this._username = "ppond";
-                    this._password = "1234";
-                    this._email = "p22sasdqwe@gmail.com";
-                    this._fullName = "Pondpond";
-                    this._birthday = "2002-03-14T00:00:00Z";
-                    this._gender = "2";
-                    this._phone = "080122221";
                     this._image = "null";
-
-                    this._qualification = "tttt";
-                    this._property = "dkaskodkaso";
-
-                    if (this._type == false) {
+                    log(_typeCoach.toString());
+                    log(_typeCus.toString());
+                    log("Username: " + this._username);
+                    log("Password:" + this._password);
+                    log("email: " + this._email);
+                    log("fullname: " + this._fullName);
+                    log("birthday: " + this._birthday);
+                    log("Gender: " + this._gender);
+                    log("Phone: " + this._phone);
+                    log("image: " + this._image);
+                    if (this._typeCoach == true) {
+                      log("_qualification: " + this._qualification);
+                      log("_property: " + this._property);
                       RegisterCoachDto coachDTO = RegisterCoachDto(
-                          username: this._username,
-                          password: this._password,
-                          email: this._email,
-                          fullName: this._fullName,
-                          birthday: this._birthday,
-                          gender: this._gender,
-                          phone: this._phone,
-                          image: this._image,
-                          qualification: this._qualification,
-                          property: this._property);
+                          username: _username,
+                          password: _password,
+                          email: _email,
+                          fullName: _fullName,
+                          birthday:_birthday,
+                          gender: _gender,
+                          phone: _phone,
+                          image: _image,
+                          qualification: _qualification,
+                          property: _property);
 
                       regCoach =
                           await registerService.regCoachService(coachDTO);
 
                       cid = int.parse(jsonEncode(regCoach.data.cid));
-                    }else {
+                    } else if (_typeCus == true) {
+                      this._price = 0;
+                      log("Weight: " + _weight.toString());
+                      log("height: " + _height.toString());
+                      log("price: " + _price.toString());
                       RegisterCusDto cusDTO = RegisterCusDto(
-                          username: this._username,
-                          password: this._password,
-                          email: this._email,
-                          fullName: this._fullName,
-                          birthday: this._birthday,
-                          gender: this._gender,
-                          phone: this._phone,
-                          image: this._image,
-                          weight: this._weight,
-                          height: this._height,
-                          price: this._price);
+                          username:_username,
+                          password: _password,
+                          email: _email,
+                          fullName:_fullName,
+                          birthday: _birthday,
+                          gender: _gender,
+                          phone: _phone,
+                          image: _image,
+                          weight: _weight,
+                          height: _height,
+                          price: _price);
                       regCus = await registerService.regCusService(cusDTO);
                       uid = int.parse(jsonEncode(regCus.data.uid));
                     }
@@ -463,5 +465,121 @@ class _RegisterPageState extends State<RegisterPage> {
                   },
                   child: Text('register'))),
         ]));
+  }
+
+  void _displayTextField(int types) {
+    if (type == 0) {
+      showDialog(
+          context: context,
+          builder: (BuildContext _context) {
+            return AlertDialog(
+              title: const Text('นํ้าหนัก/ส่วนสูง'),
+              content: TextField(
+                keyboardType: TextInputType.number,
+                cursorColor: Color(0xffF5591F),
+                decoration: InputDecoration(
+                  labelText: 'Enter Weight',
+                  enabledBorder: InputBorder.none,
+                  focusedBorder: InputBorder.none,
+                ),
+                onChanged: (String value) {
+                  this._weight = int.parse(value);
+                  log(this._weight.toString());
+                },
+              ),
+              actions: <Widget>[
+                Container(
+                  padding: EdgeInsets.only(left: 20, right: 20),
+                  child: TextField(
+                    keyboardType: TextInputType.number,
+                    cursorColor: Color(0xffF5591F),
+                    decoration: InputDecoration(
+                      labelText: 'Enter Height',
+                      enabledBorder: InputBorder.none,
+                      focusedBorder: InputBorder.none,
+                    ),
+                    onChanged: (String value) {
+                      this._height = int.parse(value);
+                      log(this._height.toString());
+                    },
+                  ),
+                ),
+                Container(
+                  child: ElevatedButton(
+                    onPressed: () {
+                      setState(() {
+                        //codeDialog = valueText;
+                        Navigator.pop(context);
+                      });
+                    },
+                    child: Text('OK'),
+                  ),
+                )
+              ],
+              // content: TextField(
+              //   keyboardType: TextInputType.number,
+              //   cursorColor: Color(0xffF5591F),
+              //   decoration: InputDecoration(
+              //     labelText: 'Enter Weight',
+              //     enabledBorder: InputBorder.none,
+              //     focusedBorder: InputBorder.none,
+              //   ),
+              //   onChanged: (String value) {
+              //     this._weight = int.parse(value);
+              //     log(this._weight.toString());
+              //   },
+
+              // ),
+            );
+          });
+    } else if (type == 1) {
+      showDialog(
+          context: context,
+          builder: (BuildContext _context) {
+            return AlertDialog(
+              title: const Text('ข้อมูลโค้ช'),
+              content: TextField(
+                cursorColor: Color(0xffF5591F),
+                decoration: InputDecoration(
+                  labelText: 'Enter Qualification',
+                  enabledBorder: InputBorder.none,
+                  focusedBorder: InputBorder.none,
+                ),
+                onChanged: (String value) {
+                  this._qualification = value;
+                  log(this._qualification);
+                },
+              ),
+              actions: <Widget>[
+                Container(
+                  padding: EdgeInsets.only(left: 20, right: 20),
+                  child: TextField(
+                    cursorColor: Color(0xffF5591F),
+                    decoration: InputDecoration(
+                      labelText: 'Enter Property',
+                      enabledBorder: InputBorder.none,
+                      focusedBorder: InputBorder.none,
+                    ),
+                    onChanged: (String value) {
+                      this._property = value;
+                      log(this._property.toString());
+                    },
+                  ),
+                ),
+                Container(
+                  child: ElevatedButton(
+                    onPressed: () {
+                      setState(() {
+                        //codeDialog = valueText;
+                        Navigator.pop(context);
+                      });
+                    },
+                    child: Text('OK'),
+                  ),
+                )
+              ],
+            );
+          });
+    }
   }
 }
