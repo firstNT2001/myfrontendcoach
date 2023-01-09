@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "712577517407",
+    "project_id": "logindailyworkout-26860",
+    "storage_bucket": "logindailyworkout-26860.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:712577517407:android:50894a9e5b6ccca33118ea",
+        "android_client_info": {
+          "package_name": "com.example.frontendfluttercoach"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "712577517407-pjendn0vgv8qgfv04hbpqv2ir61qv7vj.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAew_fEf-cfG8D8ZxDMKM7_EOPCqw7H7F8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "712577517407-pjendn0vgv8qgfv04hbpqv2ir61qv7vj.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

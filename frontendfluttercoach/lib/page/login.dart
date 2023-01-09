@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:frontendfluttercoach/model/DTO/loginDTO.dart';
 import 'package:frontendfluttercoach/page/register.dart';
 import 'package:frontendfluttercoach/service/login.dart';
+import 'package:frontendfluttercoach/page/vdo.dart';
 import 'package:frontendfluttercoach/service/provider/appdata.dart';
 import 'package:provider/provider.dart';
 import 'package:http/http.dart' as http;
@@ -172,6 +173,16 @@ class _LoginPageState extends State<LoginPage> {
             }
           },
           ),
+          ElevatedButton(
+          onPressed: (){
+            Navigator.push(context, MaterialPageRoute(
+              builder: (context){
+                return UploadVdoPage();
+            })
+            );
+          }, 
+        child: Text('อัพโหลดวิดีโอ')
+        ),
         
       ],
       ),

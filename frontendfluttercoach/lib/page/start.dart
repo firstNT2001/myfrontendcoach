@@ -24,14 +24,25 @@ class _pageStartState extends State<pageStart> {
           )
 
       ),
+      
+      margin: const EdgeInsets.all(5),
       width: double.infinity,
       child: ElevatedButton(
           style: ElevatedButton.styleFrom(
-            primary: Color.fromARGB(255, 9, 131, 232),
+            primary: Color.fromARGB(255, 10, 10, 10),
           ),
-          child: Text('Answer'),
+          child: Text(
+            'เริ่มต้น',
+            style: TextStyle(
+            color: Color.fromARGB(255, 255, 255, 255),
+          ),
+          ),
           onPressed: () {
-            
+            Navigator.push(context, MaterialPageRoute(
+              builder: (context){
+                return LoginPage();
+            })
+            );
           },
           ),
     );
