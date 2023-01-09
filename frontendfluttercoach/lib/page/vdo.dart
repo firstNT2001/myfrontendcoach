@@ -1,4 +1,9 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:file_picker/file_picker.dart';
+import 'package:firebase_storage/firebase_storage.dart';
+
 import 'package:video_player/video_player.dart';
 
 /// Stateful widget to fetch and then display video content.
@@ -11,45 +16,78 @@ class PlayVideoPage extends StatefulWidget {
 
 class _PlayVideoPage extends State<PlayVideoPage> {
   late VideoPlayerController _controller;
-
   @override
   void initState() {
     super.initState();
-    _controller = VideoPlayerController.network(
-        'https://flutter.github.io/assets-for-api-docs/assets/videos/bee.mp4')
+  }
+
+  PlatformFile? pickedFile;
+  UploadTask? uploadTask;
+
+  Future selectFile() async {
+    final result = await FilePicker.platform.pickFiles();
+    if (result == null) return;
+
+    // setState(() {
+      pickedFile = result.files.first;
+    // });
+  }
+
+  Future uploadFile() async {
+    final path = 'videos/${pickedFile!.name}';
+    final file = File(pickedFile!.path!);
+
+    final ref = FirebaseStorage.instance.ref().child(path);
+    uploadTask = ref.putFile(file);
+
+    final snapshot = await uploadTask!.whenComplete(() => {});
+
+    final urlDownload = await snapshot.ref.getDownloadURL();
+    print('Download Link: $urlDownload');
+    _controller = VideoPlayerController.network('$urlDownload')
       ..initialize().then((_) {
+
         // Ensure the first frame is shown after the video is initialized, even before the play button has been pressed.
         setState(() {});
+        _controller.play();
       });
   }
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Video Demo',
-      home: Scaffold(
+    return Scaffold(
+        appBar: AppBar(
+          title: Text("อัพโหลดวิดีโอ"),
+        ),
         body: Center(
-          child: _controller.value.isInitialized
-              ? AspectRatio(
-                  aspectRatio: _controller.value.aspectRatio,
-                  child: VideoPlayer(_controller),
-                )
-              : Container(),
-        ),
-        floatingActionButton: FloatingActionButton(
-          onPressed: () {
-            setState(() {
-              _controller.value.isPlaying
-                  ? _controller.pause()
-                  : _controller.play();
-            });
-          },
-          child: Icon(
-            _controller.value.isPlaying ? Icons.pause : Icons.play_arrow,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              if (pickedFile != null)
+                Expanded(
+                    child: _controller.value.isInitialized
+                        ? AspectRatio(
+                            aspectRatio: _controller.value.aspectRatio,
+                            child: VideoPlayer(_controller),
+                          )
+                        : Container()),
+              const SizedBox(
+                height: 12,
+              ),
+              ElevatedButton(
+                child: const Text('Select File'),
+                onPressed: selectFile,
+              ),
+              const SizedBox(
+                height: 12,
+              ),
+              ElevatedButton(
+                child: const Text('Upload File'),
+                onPressed: uploadFile,
+              ),
+            ],
           ),
-        ),
-      ),
-    );
+        ));
   }
 
   @override
