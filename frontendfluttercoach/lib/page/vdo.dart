@@ -1,9 +1,10 @@
 import 'dart:io';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:firebase_storage/firebase_storage.dart';
-
+import 'package:appinio_video_player/appinio_video_player.dart';
 import 'package:video_player/video_player.dart';
 
 /// Stateful widget to fetch and then display video content.
@@ -16,6 +17,7 @@ class PlayVideoPage extends StatefulWidget {
 
 class _PlayVideoPage extends State<PlayVideoPage> {
   late VideoPlayerController _controller;
+  late CustomVideoPlayerController _customVideoPlayerController;
   @override
   void initState() {
     super.initState();
@@ -29,7 +31,7 @@ class _PlayVideoPage extends State<PlayVideoPage> {
     if (result == null) return;
 
     // setState(() {
-      pickedFile = result.files.first;
+    pickedFile = result.files.first;
     // });
   }
 
@@ -46,10 +48,12 @@ class _PlayVideoPage extends State<PlayVideoPage> {
     print('Download Link: $urlDownload');
     _controller = VideoPlayerController.network('$urlDownload')
       ..initialize().then((_) {
-
         // Ensure the first frame is shown after the video is initialized, even before the play button has been pressed.
         setState(() {});
-        _controller.play();
+        _customVideoPlayerController = CustomVideoPlayerController(
+          context: context,
+          videoPlayerController: _controller,
+        );
       });
   }
 
@@ -65,12 +69,12 @@ class _PlayVideoPage extends State<PlayVideoPage> {
             children: [
               if (pickedFile != null)
                 Expanded(
-                    child: _controller.value.isInitialized
-                        ? AspectRatio(
-                            aspectRatio: _controller.value.aspectRatio,
-                            child: VideoPlayer(_controller),
-                          )
-                        : Container()),
+                  child: SafeArea(
+                    child: CustomVideoPlayer(
+                        customVideoPlayerController:
+                            _customVideoPlayerController),
+                  ),
+                ),
               const SizedBox(
                 height: 12,
               ),
@@ -93,6 +97,6 @@ class _PlayVideoPage extends State<PlayVideoPage> {
   @override
   void dispose() {
     super.dispose();
-    _controller.dispose();
+    _customVideoPlayerController.dispose();
   }
 }
