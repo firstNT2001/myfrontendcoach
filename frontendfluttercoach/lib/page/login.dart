@@ -165,12 +165,25 @@ class _LoginPageState extends State<LoginPage> {
                 //   builder: (context) => RegisterPage(
                 //     nameFB: nameFB, emailFB: emailFB, image: image
                 //   )));
-                 Navigator.push(
+                Map<String,dynamic> userData={
+                      "name": "",
+                      "email": "",
+                      "picture": {
+                        "data": {
+                          "height": 0,
+                          "url": "",
+                          "width": 0
+                        }
+                      },
+                      "id": ""
+                      } ;
+                context.read<AppData>().userFacebook = userData;
+                Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (_) => RegisterPage(
-                      nameFB: "", emailFB: "", image: ""
-                    ),),);
+                    builder: (_) => RegisterPage(),
+                  ),
+                );
               },
               child: Text('สมัครสมาชิก')),
           ElevatedButton(
@@ -182,13 +195,13 @@ class _LoginPageState extends State<LoginPage> {
               if (result.status == LoginStatus.success) {
                 // you are logged
                 final AccessToken accessToken = result.accessToken!;
-               //log(accessToken.token);
+                //log(accessToken.token);
                 final userData = await FacebookAuth.instance.getUserData();
                 //log(userData['email']);
                 //log(userData['name']);
-                fbName = userData['name'];
-                fbEmail = userData['email'];
-                fbImg = userData['picture']['data']['url'];
+                // fbName = userData['name'];
+                // fbEmail = userData['email'];
+                // fbImg = userData['picture']['data']['url'];
                 context.read<AppData>().userFacebook = userData;
                 log(fbImg);
                 // RegisterFbdto regFb = RegisterFbdto(
@@ -199,9 +212,9 @@ class _LoginPageState extends State<LoginPage> {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (_) => RegisterPage(
-                      nameFB: fbName, emailFB: fbEmail, image: fbImg
-                    ),),);
+                    builder: (_) => RegisterPage(),
+                  ),
+                );
                 // Navigator.of(context).push(MaterialPageRoute(
                 //   builder: (context) => RegisterPage(
                 //     nameFB: nameFB, emailFB: emailFB, image: image

@@ -20,16 +20,16 @@ import '../service/provider/appdata.dart';
 //   const regFB(this.nameFB, this.emailFB, this.image);
 // }
 class RegisterPage extends StatefulWidget {
-  final String nameFB;
-  final String emailFB;
-  final String image;
-  //const RegisterPage({super.key});
-  const RegisterPage(
-      {Key? key,
-      required this.nameFB,
-      required this.emailFB,
-      required this.image})
-      : super(key: key);
+  // final String nameFB;
+  // final String emailFB;
+  // final String image;
+  const RegisterPage({super.key});
+  // const RegisterPage(
+  //     {Key? key,
+  //     required this.nameFB,
+  //     required this.emailFB,
+  //     required this.image})
+  //     : super(key: key);
   //const RegisterPage(this.nameFB, this.emailFB, this.image);
 
   @override
@@ -49,14 +49,14 @@ class _RegisterPageState extends State<RegisterPage> {
   late String _email = "";
   late String _fullName = "";
   late String _birthday;
-  late String _gender;
+  late String _gender="1";
   late String _phone;
   late String _image;
 
   late String _qualification;
   late String _property;
 
-  late int _length;
+  late int _length = 0;
 
   late int _weight;
   late int _height;
@@ -65,7 +65,7 @@ class _RegisterPageState extends State<RegisterPage> {
   late bool _typeCus = false;
   late bool _typeCoach = false;
   late bool genderBool = true;
-  
+
   late int type = 0;
   var regCoach;
   var regCus;
@@ -76,7 +76,7 @@ class _RegisterPageState extends State<RegisterPage> {
   late bool _showPasswords = false;
 
   late RegisterService registerService;
-
+  late Map<String, dynamic> userFacebook;
   int? _selectedChoice;
   final formKey = GlobalKey<FormState>();
   //RegisterCusFromJson profileCus = RegisterCusFromJson();
@@ -88,21 +88,32 @@ class _RegisterPageState extends State<RegisterPage> {
     // 2.1 object ของ service โดยต้องส่ง baseUrl (จาก provider) เข้าไปด้วย
     registerService =
         RegisterService(Dio(), baseUrl: context.read<AppData>().baseurl);
-    // 2.2 async method
-    // loadDataMethod = loadData();
-    _length= widget.nameFB.length;
-    log(_length.toString());
-    if(_length > 0) {
-      _email = widget.emailFB;
-      _fullName = widget.nameFB;
-      regFBB();
-    }else{
+
+    userFacebook = context.read<AppData>().userFacebook;
+
+    
+    _length = userFacebook['name'].length;
+    if (_length > 0) {
+      _email = userFacebook['email'];
+      _fullName = userFacebook['name'];
+      _image = userFacebook['picture']['data']['url'];
+    } else {
       _email = "";
       _fullName = "";
+      _image = "";
     }
+    // _email = userFacebook['email'];
+    //   _fullName = userFacebook['name'];
+    //   _image = userFacebook['picture']['data']['url'];
+
+    // setState(() => this._email = userFacebook['email']);
+    // setState(() => this._image = userFacebook['picture']['data']['url']);
+    //log(userFacebook['name']);
+    regFBB();
+    // 2.2 async method
+    // loadDataMethod = loadData();
+
     dateInput.text = "";
-    
-    log(_fullName);
   }
 
   @override
@@ -434,7 +445,7 @@ class _RegisterPageState extends State<RegisterPage> {
               padding: EdgeInsets.only(left: 20, right: 20),
               child: ElevatedButton(
                   onPressed: () async {
-                    this._image = "null";
+                    //this._image = "null";
                     log(_typeCoach.toString());
                     log(_typeCus.toString());
                     log("Username: " + _username);
@@ -496,11 +507,13 @@ class _RegisterPageState extends State<RegisterPage> {
                   child: Text('register'))),
         ]));
   }
-  void regFBB(){
-    textControllerFullName.text = widget.nameFB;
-    textControllerEmail.text = widget.emailFB;
-    textControllerImg.text = widget.image;
+
+  void regFBB() {
+    textControllerFullName.text = _fullName;
+    textControllerEmail.text = _email;
+    textControllerImg.text = _image;
   }
+
   void _displayTextField(int types) {
     if (type == 0) {
       showDialog(
