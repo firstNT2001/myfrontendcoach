@@ -7,266 +7,579 @@ import 'package:frontendfluttercoach/model/DTO/registerCoachDTO.dart';
 import 'package:frontendfluttercoach/model/DTO/registerCusDTO.dart';
 //import 'package:frontendfluttercoach/page/home.dart';
 import 'package:frontendfluttercoach/service/register.dart';
+import 'package:get/get.dart';
+import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:http/http.dart' as http;
 import '../service/provider/appdata.dart';
 
-
 class RegisterPage extends StatefulWidget {
+  //final String nameFB;
+  //final String emailFB;
   const RegisterPage({super.key});
+  // const RegisterPage(this.nameFB, this.emailFB);
 
   @override
   State<RegisterPage> createState() => _RegisterPageState();
 }
 
 class _RegisterPageState extends State<RegisterPage> {
- final GlobalKey<FormFieldState<String>> _passwordFieldKey =
+  final GlobalKey<FormFieldState<String>> _passwordFieldKey =
       GlobalKey<FormFieldState<String>>();
 
   late String _username;
-	late String _password;      
-	late String _email;        
-	late String _fullName;    
-	late String _birthday;     
-	late String _gender;       
-	late String _phone;       
-	late String _image;      
+  late String _password;
+  late String _email;
+  late String _fullName;
+  late String _birthday;
+  late String _gender;
+  late String _phone;
+  late String _image;
 
-	late String _qualification;
-	late String _property; 
+  late String _qualification;
+  late String _property;
 
   late int _weight;
-	late int _height;     
-	late int _price;           
+  late int _height;
+  late int _price;
 
-  late bool _type = true;
+  late bool _typeCus = false;
+  late bool _typeCoach = false;
+  late bool genderBool = true;
 
+  late int type = 0;
   var regCoach;
   var regCus;
 
-  late int uid;
-  late int cid;
+  late int uid = 0;
+  late int cid = 0;
+
+  late bool _showPasswords = false;
 
   late RegisterService registerService;
 
   int? _selectedChoice;
   final formKey = GlobalKey<FormState>();
   //RegisterCusFromJson profileCus = RegisterCusFromJson();
+  //Input date
+  TextEditingController dateInput = TextEditingController();
   @override
   void initState() {
     super.initState();
-  // 2.1 object ของ service โดยต้องส่ง baseUrl (จาก provider) เข้าไปด้วย
-    registerService = 
-        RegisterService(Dio(), baseUrl: context.read<AppData>().baseurl); 
-  // 2.2 async method
-    // loadDataMethod = loadData(); 
+    // 2.1 object ของ service โดยต้องส่ง baseUrl (จาก provider) เข้าไปด้วย
+    registerService =
+        RegisterService(Dio(), baseUrl: context.read<AppData>().baseurl);
+    // 2.2 async method
+    // loadDataMethod = loadData();
+
+    dateInput.text = "";
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text("สมัครสมาชิก"),
-      ),
-      body : Column(
-        children: <Widget>[
-        const SizedBox(height:  24.0),
-        TextFormField(
-            decoration: const InputDecoration(
-              border: UnderlineInputBorder(),
-              filled: true,
-              icon: Icon(Icons.person),
-              hintText: 'Your Usarname address',
-              labelText: 'Usarname',
+        appBar: AppBar(
+          title: Text("สมัครสมาชิก"),
+        ),
+        body: ListView(children: <Widget>[
+          const SizedBox(height: 24.0),
+          Container(
+            margin: EdgeInsets.only(left: 20, right: 20, top: 20),
+            padding: EdgeInsets.only(left: 20, right: 20),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(10),
+              color: Colors.grey[200],
+              boxShadow: [
+                BoxShadow(
+                  offset: Offset(0, 10),
+                  blurRadius: 50,
+                  color: Color(0xffEEEEEE),
+                )
+              ],
             ),
-            keyboardType: TextInputType.emailAddress,
-            onSaved: (String? value) {
-              this._username = value!;
-              log(_username);
-            },
-            //validator: _validateName,
-            // onFieldSubmitted: (String value) {
-            //   setState(() {
-            //     this._email = value;
-            //     log(this._email);
-            //   });
-            // },
-             
+            alignment: Alignment.center,
+            child: TextField(
+              cursorColor: Color(0xffF5591F),
+              decoration: InputDecoration(
+                labelText: 'Enter Username',
+                enabledBorder: InputBorder.none,
+                focusedBorder: InputBorder.none,
+              ),
+              onChanged: (String value) {
+                this._username = value;
+                log(_username);
+              },
+            ),
           ),
-          ElevatedButton(
-          onPressed: () async{
-            this._username = "pp";
-            this._password = "1234";      
-            this._email = "p22sadqwe@gmail.com";        
-            this._fullName = "ppppp";    
-            this._birthday = "2002-03-14T00:00:00Z";     
-            this._gender = "2";       
-            this._phone = "084621238";       
-            this._image = "null";      
+          Container(
+            margin: EdgeInsets.only(left: 20, right: 20, top: 20),
+            padding: EdgeInsets.only(left: 20, right: 20),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(10),
+              color: Colors.grey[200],
+              boxShadow: [
+                BoxShadow(
+                  offset: Offset(0, 10),
+                  blurRadius: 50,
+                  color: Color(0xffEEEEEE),
+                )
+              ],
+            ),
+            alignment: Alignment.center,
+            child: TextField(
+              cursorColor: Color(0xffF5591F),
+              obscureText: !this._showPasswords,
+              decoration: InputDecoration(
+                labelText: 'Enter Password',
+                enabledBorder: InputBorder.none,
+                focusedBorder: InputBorder.none,
+                suffixIcon: IconButton(
+                  icon: Icon(
+                    Icons.remove_red_eye,
+                    color: this._showPasswords ? Colors.blue : Colors.green,
+                  ),
+                  onPressed: () {
+                    setState(() => this._showPasswords = !this._showPasswords);
+                  },
+                ),
+              ),
+              onChanged: (String value) {
+                this._password = value;
+                log(_password);
+              },
+            ),
+          ),
+          Container(
+            margin: EdgeInsets.only(left: 20, right: 20, top: 20),
+            padding: EdgeInsets.only(left: 20, right: 20),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(10),
+              color: Colors.grey[200],
+              boxShadow: [
+                BoxShadow(
+                  offset: Offset(0, 10),
+                  blurRadius: 50,
+                  color: Color(0xffEEEEEE),
+                )
+              ],
+            ),
+            alignment: Alignment.center,
+            child: TextField(
+              cursorColor: Color(0xffF5591F),
+              decoration: InputDecoration(
+                labelText: 'Enter Email',
+                enabledBorder: InputBorder.none,
+                focusedBorder: InputBorder.none,
+              ),
+              onChanged: (String value) {
+                this._email = value;
+                log(this._email);
+              },
+            ),
+          ),
+          Container(
+            margin: EdgeInsets.only(left: 20, right: 20, top: 20),
+            padding: EdgeInsets.only(left: 20, right: 20),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(10),
+              color: Colors.grey[200],
+              boxShadow: [
+                BoxShadow(
+                  offset: Offset(0, 10),
+                  blurRadius: 50,
+                  color: Color(0xffEEEEEE),
+                )
+              ],
+            ),
+            alignment: Alignment.center,
+            child: TextField(
+              cursorColor: Color(0xffF5591F),
+              decoration: InputDecoration(
+                labelText: 'Enter Fullname',
+                enabledBorder: InputBorder.none,
+                focusedBorder: InputBorder.none,
+              ),
+              onChanged: (String value) {
+                this._fullName = value;
+                log(this._fullName);
+              },
+            ),
+          ),
+          Container(
+              margin: EdgeInsets.only(left: 20, right: 20, top: 20),
+              padding: EdgeInsets.only(left: 20, right: 20),
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(10),
+                color: Colors.grey[200],
+                boxShadow: [
+                  BoxShadow(
+                    offset: Offset(0, 10),
+                    blurRadius: 50,
+                    color: Color(0xffEEEEEE),
+                  )
+                ],
+              ),
+              alignment: Alignment.center,
+              child: TextField(
+                controller: dateInput,
+                //editing controller of this TextField
+                decoration: InputDecoration(
+                  icon: Icon(Icons.calendar_today), //icon of text field
+                  labelText: "Enter Date", //label text of field
+                  enabledBorder: InputBorder.none,
+                  focusedBorder: InputBorder.none,
+                ),
+                readOnly: true,
+                //set it true, so that user will not able to edit text
+                onTap: () async {
+                  DateTime? pickedDate = await showDatePicker(
+                      context: context,
+                      initialDate: DateTime.now(),
+                      firstDate: DateTime(1950),
+                      //DateTime.now() - not to allow to choose before today.
+                      lastDate: DateTime(2100));
 
-            this._qualification = "tttt";
-            this._property = "dkaskodkaso"; 
-                  
-           if (this._type == true) {
-                    RegisterCoachDto coachDTO = RegisterCoachDto(username: this._username, 
-                        password: this._password, email: this._email, fullName: this._fullName, 
-                        birthday: this._birthday, gender: this._gender,phone: this._phone, 
-                        image: this._image, qualification: this._qualification, property: this._property
-                      );
-                  
-                    regCoach = await registerService.regCoachService(coachDTO);
-                    cid = int.parse(jsonEncode(regCoach.data.cid));
-                  }else{
-                    RegisterCusDto cusDTO = RegisterCusDto(username: this._username, 
-                      password: this._password, email: this._email, fullName: this._fullName, 
-                      birthday: this._birthday, gender: this._gender,phone: this._phone, 
-                      image: this._image, weight: this._weight, height: this._height, price: this._price
-                    );
-                    regCus = await registerService.regCusService(cusDTO);
-                    uid = int.parse(jsonEncode(regCus.data.uid));
-                  }    
-                  if (uid > 0) {
-                    log("Register Success");
-                  }else if (cid > 0){
-                    log("Register Success");
-                  }else{
-                    log("Register Fail");
-                    return;
-                  }
-        }, 
-        child: Text('register')),
-        ]
-      )
-      // body: Container(
-        
-      //   child:Padding(
-      //     padding: const EdgeInsets.all(20.0),
-        
-      //   child: Form(
-      //     key: formKey,
-      //     child: Column(
-      //       crossAxisAlignment: CrossAxisAlignment.start,
-      //       children: <Widget>[          
-      //         // ignore: prefer_const_constructors
-      //         Text("ชื่อนามสกุล",style: TextStyle(fontSize: 20)),
-      //         TextFormField(),
-      //         // ignore: prefer_const_constructors
-      //         Text("วันเกิด",style: TextStyle(fontSize: 20)),
-      //         TextFormField(),
-      //         // ignore: prefer_const_constructors
-      //         Text("เบอร์โทรศัพท์",style: TextStyle(fontSize: 20)),
-      //         TextFormField(),
-      //         // ignore: prefer_const_constructors
-      //         Text("username",style: TextStyle(fontSize: 20)),
-      //         TextFormField(),
-      //         // ignore: prefer_const_constructors
-      //         Text("E-mail",style: TextStyle(fontSize: 20)),
-      //         TextFormField(
-      //           keyboardType: TextInputType.emailAddress,
-      //         ),
-      //         // ignore: prefer_const_constructors
-      //         Text("รหัสผ่าน",style: TextStyle(fontSize: 20)),
-      //         TextFormField(
-      //           obscureText: true,
-      //         ),
-      //         // ignore: prefer_const_constructors
-      //         Text("เพศ",style: TextStyle(fontSize: 20)),
-      //         ListTile(
-      //           title: const Text('ชาย'),
-      //           leading: Radio(
-      //             value: 1, 
-      //             groupValue: _selectedChoice, 
-      //             onChanged: ( value) {
-      //               setState(() {
-      //                 _selectedChoice = value;
-      //               });
-      //             },
-      //             ),
-      //         ),  
-      //         ListTile(
-      //           title: const Text('หญิง'),
-      //           leading: Radio(
-      //             value: 2, 
-      //             groupValue: _selectedChoice, 
-      //             onChanged: (value) {
-      //                setState(() {
-      //                 _selectedChoice = value;
-      //               });
-      //             },
-      //             ),
-      //         ),
-      //         Text("คุณเป็นผู็ใช้ประเภทใด",style: TextStyle(fontSize: 20)),
-      //         ListTile(
-      //           title: const Text('ผู้ใช้'),
-      //           leading: Radio(
-      //             value: 3, 
-      //             groupValue: _selectedChoice, 
-      //             onChanged: ( value) {
-      //                setState(() {
-      //                 _selectedChoice = value;
-      //               });
-      //             },
-      //             ),
-      //         ),  
-      //         ListTile(
-      //           title: const Text('โค้ช'),
-      //           leading: Radio(
-      //             value: 4, 
-      //             groupValue: _selectedChoice, 
-      //             onChanged: ( value) {
-      //                setState(() {
-      //                 _selectedChoice = value;
-      //               });
-      //             },
-      //             ),
-      //         ),
-      //         SizedBox(
-      //           width: double.infinity,
-      //           child: ElevatedButton(
-      //           onPressed: ()async{
-      //             if (this._type == true) {
-      //               RegisterCoachDto coachDTO = 
-      //                 RegisterCoachDto(username: this._username, 
-      //                   password: this._password, email: this._email, fullName: this._fullName, 
-      //                   birthday: this._birthday, gender: this._gender,phone: this._phone, 
-      //                   image: this._image, qualification: this._qualification, property: this._property
-      //                 );
+                  if (pickedDate != null) {
+                    String formattedDate =
+                        DateFormat('yyyy-MM-dd').format(pickedDate);
+                    print(
+                        formattedDate); 
+                    setState(() {
+                      dateInput.text =
+                          formattedDate; 
+                    });
+                  } else {}
+                  this._birthday = dateInput.text + "T00:00:00Z";
+                  log(this._birthday);
+                },
+              )),
+          Container(
+            margin: EdgeInsets.only(left: 20, right: 20, top: 20),
+            padding: EdgeInsets.only(left: 20, right: 20),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(10),
+              color: Colors.grey[200],
+              boxShadow: [
+                BoxShadow(
+                  offset: Offset(0, 10),
+                  blurRadius: 50,
+                  color: Color(0xffEEEEEE),
+                )
+              ],
+            ),
+            alignment: Alignment.center,
+            child: TextField(
+              keyboardType: TextInputType.number,
+              cursorColor: Color(0xffF5591F),
+              decoration: InputDecoration(
+                labelText: 'Enter Phone',
+                enabledBorder: InputBorder.none,
+                focusedBorder: InputBorder.none,
+              ),
+              onChanged: (String value) {
+                this._phone = value;
+                log(this._phone);
+              },
+            ),
+          ),
+          Container(
+            margin: EdgeInsets.only(left: 20, right: 20, top: 20),
+            padding: EdgeInsets.only(left: 20, right: 20),
+            alignment: Alignment.centerLeft,
+            child: GestureDetector(
+              child: Text("เลือกเพศผู้ใช้"),
+            ),
+          ),
+          Container(
+            margin: EdgeInsets.only(left: 20, right: 20, top: 20),
+            padding: EdgeInsets.only(left: 20, right: 20),
+            alignment: Alignment.centerLeft,
+            child: Row(
+              children: <Widget>[
+                Row(
+                  children: <Widget>[
+                    Radio<bool>(
+                        value: true,
+                        groupValue: this.genderBool,
+                        onChanged: (bool? value) {
+                          setState(() {
+                            this.genderBool = value!;
+                            this._gender = "1";
+                          });
+                        }),
+                    const Text('ผู้ชาย'),
+                  ],
+                ),
+                Row(
+                  children: <Widget>[
+                    Radio<bool>(
+                        value: false,
+                        groupValue: this.genderBool,
+                        onChanged: (bool? value) {
+                          setState(() {
+                            this.genderBool = value!;
+                            this._gender = "2";
+                          });
+                        }),
+                    const Text('ผู้หญิง')
+                  ],
+                ),
+              ],
+            ),
+          ),
+          Container(
+            margin: EdgeInsets.only(left: 20, right: 20, top: 20),
+            padding: EdgeInsets.only(left: 20, right: 20),
+            alignment: Alignment.centerLeft,
+            child: GestureDetector(
+              child: Text("เลือกประเภทผู้ใช้"),
+            ),
+          ),
+          Container(
+            margin: EdgeInsets.only(left: 20, right: 20, top: 20),
+            padding: EdgeInsets.only(left: 20, right: 20),
+            alignment: Alignment.centerLeft,
+            child: Row(
+              //mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: <Widget>[
+                Row(
+                  children: [
+                    GestureDetector(
+                      onTap: () {
+                        setState(() {
+                          this._typeCus = !this._typeCus;
+                          this._typeCoach = false;
+                          this.type = 0;
+                          _displayTextField(this.type);
+                        });
+                      },
+                      child: this._typeCus
+                          ? Icon(
+                              Icons.radio_button_checked,
+                              color: Colors.blue,
+                              size: 20,
+                            )
+                          : Icon(
+                              Icons.radio_button_unchecked,
+                              color: Colors.grey,
+                              size: 20,
+                            ),
+                    ),
+                    SizedBox(width: 5),
+                    Text("Customer"),
+                  ],
+                ),
+                Row(
+                  children: [
+                    GestureDetector(
+                      onTap: () {
+                        setState(() {
+                          this._typeCoach = !this._typeCoach;
+                          this._typeCus = false;
+                          this.type = 1;
+                          _displayTextField(this.type);
+                        });
+                      },
+                      child: this._typeCoach
+                          ? Icon(
+                              Icons.radio_button_checked,
+                              color: Colors.blue,
+                              size: 20,
+                            )
+                          : Icon(
+                              Icons.radio_button_unchecked,
+                              color: Colors.grey,
+                              size: 20,
+                            ),
+                    ),
+                    SizedBox(width: 5),
+                    Text("Coach"),
+                  ],
+                ),
+              ],
+            ),
+          ),
+          Container(
+              margin: EdgeInsets.only(left: 20, right: 20, top: 20),
+              padding: EdgeInsets.only(left: 20, right: 20),
+              child: ElevatedButton(
+                  onPressed: () async {
+                    this._image = "null";
+                    log(_typeCoach.toString());
+                    log(_typeCus.toString());
+                    log("Username: " + this._username);
+                    log("Password:" + this._password);
+                    log("email: " + this._email);
+                    log("fullname: " + this._fullName);
+                    log("birthday: " + this._birthday);
+                    log("Gender: " + this._gender);
+                    log("Phone: " + this._phone);
+                    log("image: " + this._image);
+                    if (this._typeCoach == true) {
+                      log("_qualification: " + this._qualification);
+                      log("_property: " + this._property);
+                      RegisterCoachDto coachDTO = RegisterCoachDto(
+                          username: _username,
+                          password: _password,
+                          email: _email,
+                          fullName: _fullName,
+                          birthday:_birthday,
+                          gender: _gender,
+                          phone: _phone,
+                          image: _image,
+                          qualification: _qualification,
+                          property: _property);
 
-      //               regCoach = await registerService.regCoachService(coachDTO);
-      //               cid = int.parse(jsonEncode(regCoach.data.cid));
-      //             }else{
-      //               RegisterCusDto cusDTO = RegisterCusDto(username: this._username, 
-      //                 password: this._password, email: this._email, fullName: this._fullName, 
-      //                 birthday: this._birthday, gender: this._gender,phone: this._phone, 
-      //                 image: this._image, weight: this._weight, height: this._height, price: this._price
-      //               );
-      //               regCus = await registerService.regCusService(cusDTO);
-      //               uid = int.parse(jsonEncode(regCus.data.uid));
-      //             }    
-      //             if (uid > 0) {
-      //               log("Register Success");
-      //             }else if (cid > 0){
-      //               log("Register Success");
-      //             }else{
-      //               log("Register Fail");
-      //               return;
-      //             }
-      //             // Navigator.push(context, MaterialPageRoute(
-      //             //   builder: (context){
-      //             //     return HomePage();
-                    
+                      regCoach =
+                          await registerService.regCoachService(coachDTO);
 
-      //             //   })
-      //               // );
-      //           }, 
-      //           child: Text('สมัครสมาชิก')),
-      //         ),
-           
-      //       ]
-      //       ),
-      //     ),
-      // ),
+                      cid = int.parse(jsonEncode(regCoach.data.cid));
+                    } else if (_typeCus == true) {
+                      this._price = 0;
+                      log("Weight: " + _weight.toString());
+                      log("height: " + _height.toString());
+                      log("price: " + _price.toString());
+                      RegisterCusDto cusDTO = RegisterCusDto(
+                          username:_username,
+                          password: _password,
+                          email: _email,
+                          fullName:_fullName,
+                          birthday: _birthday,
+                          gender: _gender,
+                          phone: _phone,
+                          image: _image,
+                          weight: _weight,
+                          height: _height,
+                          price: _price);
+                      regCus = await registerService.regCusService(cusDTO);
+                      uid = int.parse(jsonEncode(regCus.data.uid));
+                    }
+                    if (uid > 0) {
+                      log("Register Success");
+                    } else if (cid > 0) {
+                      log("Register Success");
+                    } else {
+                      log("Register Fail");
+                      return;
+                    }
+                  },
+                  child: Text('register'))),
+        ]));
+  }
 
-      // )
-    );
+  void _displayTextField(int types) {
+    if (type == 0) {
+      showDialog(
+          context: context,
+          builder: (BuildContext _context) {
+            return AlertDialog(
+              title: const Text('นํ้าหนัก/ส่วนสูง'),
+              content: TextField(
+                keyboardType: TextInputType.number,
+                cursorColor: Color(0xffF5591F),
+                decoration: InputDecoration(
+                  labelText: 'Enter Weight',
+                  enabledBorder: InputBorder.none,
+                  focusedBorder: InputBorder.none,
+                ),
+                onChanged: (String value) {
+                  this._weight = int.parse(value);
+                  log(this._weight.toString());
+                },
+              ),
+              actions: <Widget>[
+                Container(
+                  padding: EdgeInsets.only(left: 20, right: 20),
+                  child: TextField(
+                    keyboardType: TextInputType.number,
+                    cursorColor: Color(0xffF5591F),
+                    decoration: InputDecoration(
+                      labelText: 'Enter Height',
+                      enabledBorder: InputBorder.none,
+                      focusedBorder: InputBorder.none,
+                    ),
+                    onChanged: (String value) {
+                      this._height = int.parse(value);
+                      log(this._height.toString());
+                    },
+                  ),
+                ),
+                Container(
+                  child: ElevatedButton(
+                    onPressed: () {
+                      setState(() {
+                        //codeDialog = valueText;
+                        Navigator.pop(context);
+                      });
+                    },
+                    child: Text('OK'),
+                  ),
+                )
+              ],
+              // content: TextField(
+              //   keyboardType: TextInputType.number,
+              //   cursorColor: Color(0xffF5591F),
+              //   decoration: InputDecoration(
+              //     labelText: 'Enter Weight',
+              //     enabledBorder: InputBorder.none,
+              //     focusedBorder: InputBorder.none,
+              //   ),
+              //   onChanged: (String value) {
+              //     this._weight = int.parse(value);
+              //     log(this._weight.toString());
+              //   },
+
+              // ),
+            );
+          });
+    } else if (type == 1) {
+      showDialog(
+          context: context,
+          builder: (BuildContext _context) {
+            return AlertDialog(
+              title: const Text('ข้อมูลโค้ช'),
+              content: TextField(
+                cursorColor: Color(0xffF5591F),
+                decoration: InputDecoration(
+                  labelText: 'Enter Qualification',
+                  enabledBorder: InputBorder.none,
+                  focusedBorder: InputBorder.none,
+                ),
+                onChanged: (String value) {
+                  this._qualification = value;
+                  log(this._qualification);
+                },
+              ),
+              actions: <Widget>[
+                Container(
+                  padding: EdgeInsets.only(left: 20, right: 20),
+                  child: TextField(
+                    cursorColor: Color(0xffF5591F),
+                    decoration: InputDecoration(
+                      labelText: 'Enter Property',
+                      enabledBorder: InputBorder.none,
+                      focusedBorder: InputBorder.none,
+                    ),
+                    onChanged: (String value) {
+                      this._property = value;
+                      log(this._property.toString());
+                    },
+                  ),
+                ),
+                Container(
+                  child: ElevatedButton(
+                    onPressed: () {
+                      setState(() {
+                        //codeDialog = valueText;
+                        Navigator.pop(context);
+                      });
+                    },
+                    child: Text('OK'),
+                  ),
+                )
+              ],
+            );
+          });
+    }
   }
 }
