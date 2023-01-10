@@ -182,15 +182,14 @@ class _LoginPageState extends State<LoginPage> {
               if (result.status == LoginStatus.success) {
                 // you are logged
                 final AccessToken accessToken = result.accessToken!;
-                log(accessToken.token);
+               //log(accessToken.token);
                 final userData = await FacebookAuth.instance.getUserData();
-                log(userData['email']);
-                log(userData['name']);
+                //log(userData['email']);
+                //log(userData['name']);
                 fbName = userData['name'];
                 fbEmail = userData['email'];
-                fbImg = userData['picture'];
-                fbImg = userData['data'];
-                fbImg = userData['url'];
+                fbImg = userData['picture']['data']['url'];
+                
                 log(fbImg);
                 // RegisterFbdto regFb = RegisterFbdto(
                 //    username: nameFB,
