@@ -12,12 +12,22 @@ import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:http/http.dart' as http;
 import '../service/provider/appdata.dart';
-
+// class regFB{
+//   final String nameFB;
+//   final String emailFB;
+//   final String image;
+  
+//   const regFB(this.nameFB, this.emailFB, this.image);
+// }
 class RegisterPage extends StatefulWidget {
-  //final String nameFB;
-  //final String emailFB;
-  const RegisterPage({super.key});
-  // const RegisterPage(this.nameFB, this.emailFB);
+  final String nameFB;
+  final String emailFB;
+  final String image;
+  //const RegisterPage({super.key});
+  const RegisterPage({
+    Key? key,required this.nameFB, required this.emailFB, required this.image
+    }) : super(key: key);
+  //const RegisterPage(this.nameFB, this.emailFB, this.image);
 
   @override
   State<RegisterPage> createState() => _RegisterPageState();
@@ -26,7 +36,7 @@ class RegisterPage extends StatefulWidget {
 class _RegisterPageState extends State<RegisterPage> {
   final GlobalKey<FormFieldState<String>> _passwordFieldKey =
       GlobalKey<FormFieldState<String>>();
-
+  
   late String _username;
   late String _password;
   late String _email;
@@ -35,6 +45,7 @@ class _RegisterPageState extends State<RegisterPage> {
   late String _gender;
   late String _phone;
   late String _image;
+
 
   late String _qualification;
   late String _property;
@@ -80,9 +91,11 @@ class _RegisterPageState extends State<RegisterPage> {
     return Scaffold(
         appBar: AppBar(
           title: Text("สมัครสมาชิก"),
+          
         ),
         body: ListView(children: <Widget>[
           const SizedBox(height: 24.0),
+          
           Container(
             margin: EdgeInsets.only(left: 20, right: 20, top: 20),
             padding: EdgeInsets.only(left: 20, right: 20),
@@ -102,11 +115,13 @@ class _RegisterPageState extends State<RegisterPage> {
               cursorColor: Color(0xffF5591F),
               decoration: InputDecoration(
                 labelText: 'Enter Username',
+      
                 enabledBorder: InputBorder.none,
                 focusedBorder: InputBorder.none,
               ),
               onChanged: (String value) {
                 this._username = value;
+               _username = widget.nameFB;
                 log(_username);
               },
             ),
