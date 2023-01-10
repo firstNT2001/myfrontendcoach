@@ -16,7 +16,7 @@ import '../service/provider/appdata.dart';
 //   final String nameFB;
 //   final String emailFB;
 //   final String image;
-  
+
 //   const regFB(this.nameFB, this.emailFB, this.image);
 // }
 class RegisterPage extends StatefulWidget {
@@ -24,9 +24,12 @@ class RegisterPage extends StatefulWidget {
   final String emailFB;
   final String image;
   //const RegisterPage({super.key});
-  const RegisterPage({
-    Key? key,required this.nameFB, required this.emailFB, required this.image
-    }) : super(key: key);
+  const RegisterPage(
+      {Key? key,
+      required this.nameFB,
+      required this.emailFB,
+      required this.image})
+      : super(key: key);
   //const RegisterPage(this.nameFB, this.emailFB, this.image);
 
   @override
@@ -36,19 +39,24 @@ class RegisterPage extends StatefulWidget {
 class _RegisterPageState extends State<RegisterPage> {
   final GlobalKey<FormFieldState<String>> _passwordFieldKey =
       GlobalKey<FormFieldState<String>>();
-  
+
+  var textControllerFullName = new TextEditingController();
+  var textControllerEmail = new TextEditingController();
+  var textControllerImg = new TextEditingController();
+
   late String _username;
   late String _password;
-  late String _email;
-  late String _fullName;
+  late String _email = "";
+  late String _fullName = "";
   late String _birthday;
   late String _gender;
   late String _phone;
   late String _image;
 
-
   late String _qualification;
   late String _property;
+
+  late int _length;
 
   late int _weight;
   late int _height;
@@ -57,7 +65,7 @@ class _RegisterPageState extends State<RegisterPage> {
   late bool _typeCus = false;
   late bool _typeCoach = false;
   late bool genderBool = true;
-
+  
   late int type = 0;
   var regCoach;
   var regCus;
@@ -82,8 +90,19 @@ class _RegisterPageState extends State<RegisterPage> {
         RegisterService(Dio(), baseUrl: context.read<AppData>().baseurl);
     // 2.2 async method
     // loadDataMethod = loadData();
-
+    _length= widget.nameFB.length;
+    log(_length.toString());
+    if(_length > 0) {
+      _email = widget.emailFB;
+      _fullName = widget.nameFB;
+      regFBB();
+    }else{
+      _email = "";
+      _fullName = "";
+    }
     dateInput.text = "";
+    
+    log(_fullName);
   }
 
   @override
@@ -91,11 +110,9 @@ class _RegisterPageState extends State<RegisterPage> {
     return Scaffold(
         appBar: AppBar(
           title: Text("สมัครสมาชิก"),
-          
         ),
         body: ListView(children: <Widget>[
           const SizedBox(height: 24.0),
-          
           Container(
             margin: EdgeInsets.only(left: 20, right: 20, top: 20),
             padding: EdgeInsets.only(left: 20, right: 20),
@@ -115,13 +132,11 @@ class _RegisterPageState extends State<RegisterPage> {
               cursorColor: Color(0xffF5591F),
               decoration: InputDecoration(
                 labelText: 'Enter Username',
-      
                 enabledBorder: InputBorder.none,
                 focusedBorder: InputBorder.none,
               ),
               onChanged: (String value) {
                 this._username = value;
-               _username = widget.nameFB;
                 log(_username);
               },
             ),
@@ -181,6 +196,7 @@ class _RegisterPageState extends State<RegisterPage> {
             alignment: Alignment.center,
             child: TextField(
               cursorColor: Color(0xffF5591F),
+              controller: textControllerEmail,
               decoration: InputDecoration(
                 labelText: 'Enter Email',
                 enabledBorder: InputBorder.none,
@@ -209,6 +225,7 @@ class _RegisterPageState extends State<RegisterPage> {
             alignment: Alignment.center,
             child: TextField(
               cursorColor: Color(0xffF5591F),
+              controller: textControllerFullName,
               decoration: InputDecoration(
                 labelText: 'Enter Fullname',
                 enabledBorder: InputBorder.none,
@@ -255,12 +272,11 @@ class _RegisterPageState extends State<RegisterPage> {
                       lastDate: DateTime(2100));
 
                   if (pickedDate != null) {
-                    String formattedDate = new
-                        DateFormat('yyyy-MM-dd').format(pickedDate);
-                    print(formattedDate); 
+                    String formattedDate =
+                        new DateFormat('yyyy-MM-dd').format(pickedDate);
+                    print(formattedDate);
                     setState(() {
-                      dateInput.text =
-                          formattedDate; 
+                      dateInput.text = formattedDate;
                     });
                   } else {}
                   this._birthday = dateInput.text + "T00:00:00Z";
@@ -437,7 +453,7 @@ class _RegisterPageState extends State<RegisterPage> {
                           password: _password,
                           email: _email,
                           fullName: _fullName,
-                          birthday:_birthday,
+                          birthday: _birthday,
                           gender: _gender,
                           phone: _phone,
                           image: _image,
@@ -454,10 +470,10 @@ class _RegisterPageState extends State<RegisterPage> {
                       log("height: " + _height.toString());
                       log("price: " + _price.toString());
                       RegisterCusDto cusDTO = RegisterCusDto(
-                          username:_username,
+                          username: _username,
                           password: _password,
                           email: _email,
-                          fullName:_fullName,
+                          fullName: _fullName,
                           birthday: _birthday,
                           gender: _gender,
                           phone: _phone,
@@ -480,7 +496,11 @@ class _RegisterPageState extends State<RegisterPage> {
                   child: Text('register'))),
         ]));
   }
-
+  void regFBB(){
+    textControllerFullName.text = widget.nameFB;
+    textControllerEmail.text = widget.emailFB;
+    textControllerImg.text = widget.image;
+  }
   void _displayTextField(int types) {
     if (type == 0) {
       showDialog(

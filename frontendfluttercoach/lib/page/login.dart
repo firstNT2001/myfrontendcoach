@@ -169,7 +169,7 @@ class _LoginPageState extends State<LoginPage> {
                   context,
                   MaterialPageRoute(
                     builder: (_) => RegisterPage(
-                      nameFB: fbName, emailFB: fbEmail, image: fbImg
+                      nameFB: "", emailFB: "", image: ""
                     ),),);
               },
               child: Text('สมัครสมาชิก')),
@@ -188,7 +188,10 @@ class _LoginPageState extends State<LoginPage> {
                 log(userData['name']);
                 fbName = userData['name'];
                 fbEmail = userData['email'];
-                
+                fbImg = userData['picture'];
+                fbImg = userData['data'];
+                fbImg = userData['url'];
+                log(fbImg);
                 // RegisterFbdto regFb = RegisterFbdto(
                 //    username: nameFB,
                 //    email: emailFB,
