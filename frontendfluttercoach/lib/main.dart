@@ -5,6 +5,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:frontendfluttercoach/model/DTO/loginDTO.dart';
 import 'package:frontendfluttercoach/page/chat.dart';
+import 'package:frontendfluttercoach/page/homePage.dart';
 import 'package:frontendfluttercoach/page/login.dart';
 import 'package:frontendfluttercoach/page/register.dart';
 import 'package:frontendfluttercoach/page/start.dart';
@@ -40,7 +41,7 @@ class MyApp extends StatelessWidget {
         
         primarySwatch: Colors.green,
       ),
-      home: LoginPage(),
+      home: HomePage(),
     );
   }
 }

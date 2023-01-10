@@ -195,39 +195,15 @@ class _LoginPageState extends State<LoginPage> {
                   context,
                   MaterialPageRoute(builder: (context) => const RegisterPage()),
                 );
-                
+
                 log(username.length.toString());
               } else {
                 print(result.status);
                 print(result.message);
               }
-              
-              
-              
             },
           ),
-          ElevatedButton(
-          onPressed: (){
-            Navigator.push(context, MaterialPageRoute(
-              builder: (context){
-                return PlayVideoPage();
-            })
-            );
-          }, 
-        child: Text('อัพโหลดวิดีโอ')
-        ),
-        ElevatedButton(
-          onPressed: (){
-            Navigator.push(context, MaterialPageRoute(
-              builder: (context){
-                return UploadpicturePage();
-            })
-            );
-          }, 
-        child: Text('อัพโหลดรูปภาพ')
-        ),
-        
-      ],
+        ],
       ),
     );
   }
