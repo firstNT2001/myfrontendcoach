@@ -4,6 +4,7 @@ import 'dart:developer';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:frontendfluttercoach/model/DTO/loginDTO.dart';
+import 'package:frontendfluttercoach/model/DTO/registerFBDTO.dart';
 import 'package:frontendfluttercoach/page/picture.dart';
 import 'package:frontendfluttercoach/page/register.dart';
 import 'package:frontendfluttercoach/service/login.dart';
@@ -49,9 +50,9 @@ class _LoginPageState extends State<LoginPage> {
   late String _qualification;
   late String _property;
 
-  late String emailFB = "";
-  late String nameFB = "";
-  late String imgFB = "";
+  late String fbEmail = "";
+  late String fbName = "";
+  late String fbImg = "null";
 
   bool _isLoggedIn = false;
   Map _userObj = {};
@@ -160,9 +161,16 @@ class _LoginPageState extends State<LoginPage> {
               child: Text('Login')),
           ElevatedButton(
               onPressed: () {
-                Navigator.push(context, MaterialPageRoute(builder: (context) {
-                  return RegisterPage();
-                }));
+                // Navigator.of(context).push(MaterialPageRoute(
+                //   builder: (context) => RegisterPage(
+                //     nameFB: nameFB, emailFB: emailFB, image: image
+                //   )));
+                 Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (_) => RegisterPage(
+                      nameFB: fbName, emailFB: fbEmail, image: fbImg
+                    ),),);
               },
               child: Text('สมัครสมาชิก')),
           ElevatedButton(
@@ -178,23 +186,27 @@ class _LoginPageState extends State<LoginPage> {
                 final userData = await FacebookAuth.instance.getUserData();
                 log(userData['email']);
                 log(userData['name']);
-                username = userData['name'];
-                email = userData['email'];
-                // RegisterCoachDto coachDTO = RegisterCoachDto(
-                //           username: username,
-                //           password: password,
-                //           email: email,
-                //           fullName: fullName,
-                //           birthday:birthday,
-                //           gender: gender,
-                //           phone: phone,
-                //           image: image,
-                //           qualification: _qualification,
-                //           property: _property);
+                fbName = userData['name'];
+                fbEmail = userData['email'];
+                
+                // RegisterFbdto regFb = RegisterFbdto(
+                //    username: nameFB,
+                //    email: emailFB,
+                //    image: image
+                // );
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => const RegisterPage()),
-                );
+                  MaterialPageRoute(
+                    builder: (_) => RegisterPage(
+                      nameFB: fbName, emailFB: fbEmail, image: fbImg
+                    ),),);
+                // Navigator.of(context).push(MaterialPageRoute(
+                //   builder: (context) => RegisterPage(
+                //     nameFB: nameFB, emailFB: emailFB, image: image
+                //   )));
+                // Navigator.push(context, MaterialPageRoute(builder: (context) {
+                //   return RegisterPage(nameFB,emailFB,imgFB);
+                // }));
 
                 log(username.length.toString());
               } else {
