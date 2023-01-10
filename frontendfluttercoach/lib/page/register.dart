@@ -240,10 +240,9 @@ class _RegisterPageState extends State<RegisterPage> {
                       lastDate: DateTime(2100));
 
                   if (pickedDate != null) {
-                    String formattedDate =
+                    String formattedDate = new
                         DateFormat('yyyy-MM-dd').format(pickedDate);
-                    print(
-                        formattedDate); 
+                    print(formattedDate); 
                     setState(() {
                       dateInput.text =
                           formattedDate; 
