@@ -406,8 +406,8 @@ class _RegisterPageState extends State<RegisterPage> {
                     this._image = "null";
                     log(_typeCoach.toString());
                     log(_typeCus.toString());
-                    log("Username: " + this._username);
-                    log("Password:" + this._password);
+                    log("Username: " + _username);
+                    log("Password:" + _password);
                     log("email: " + this._email);
                     log("fullname: " + this._fullName);
                     log("birthday: " + this._birthday);
