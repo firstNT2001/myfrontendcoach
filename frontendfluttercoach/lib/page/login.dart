@@ -189,7 +189,7 @@ class _LoginPageState extends State<LoginPage> {
                 fbName = userData['name'];
                 fbEmail = userData['email'];
                 fbImg = userData['picture']['data']['url'];
-                
+                context.read<AppData>().userFacebook = userData;
                 log(fbImg);
                 // RegisterFbdto regFb = RegisterFbdto(
                 //    username: nameFB,
