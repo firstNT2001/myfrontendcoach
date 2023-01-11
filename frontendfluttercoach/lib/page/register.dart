@@ -9,7 +9,7 @@ import 'package:frontendfluttercoach/model/DTO/registerCusDTO.dart';
 import 'package:frontendfluttercoach/service/register.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
-import 'package:json_serializable/type_helper.dart';
+// import 'package:json_serializable/type_helper.dart';
 import 'package:provider/provider.dart';
 import 'package:http/http.dart' as http;
 import '../service/provider/appdata.dart';
