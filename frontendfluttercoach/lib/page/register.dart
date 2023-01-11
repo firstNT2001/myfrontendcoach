@@ -9,6 +9,7 @@ import 'package:frontendfluttercoach/model/DTO/registerCusDTO.dart';
 import 'package:frontendfluttercoach/service/register.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
+import 'package:json_serializable/type_helper.dart';
 import 'package:provider/provider.dart';
 import 'package:http/http.dart' as http;
 import '../service/provider/appdata.dart';
@@ -75,6 +76,8 @@ class _RegisterPageState extends State<RegisterPage> {
 
   late bool _showPasswords = false;
 
+  //late double convertHelper = 280;
+
   late RegisterService registerService;
   late Map<String, dynamic> userFacebook;
   int? _selectedChoice;
@@ -124,6 +127,15 @@ class _RegisterPageState extends State<RegisterPage> {
         ),
         body: ListView(children: <Widget>[
           const SizedBox(height: 24.0),
+          // Container(
+          //   color: Colors.grey,
+          //   child: Image.network(
+          //     _image,
+          //     width: double.infinity,
+          //     height: convertHelper,
+          //     fit: BoxFit.cover,
+          //   ),
+          // ),
           Container(
             margin: EdgeInsets.only(left: 20, right: 20, top: 20),
             padding: EdgeInsets.only(left: 20, right: 20),
