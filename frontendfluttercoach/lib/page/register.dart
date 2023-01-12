@@ -50,7 +50,7 @@ class _RegisterPageState extends State<RegisterPage> {
   late String _email = "";
   late String _fullName = "";
   late String _birthday;
-  late String _gender="1";
+  late String _gender = "1";
   late String _phone;
   late String _image;
 
@@ -76,7 +76,7 @@ class _RegisterPageState extends State<RegisterPage> {
 
   late bool _showPasswords = false;
 
-  //late double convertHelper = 280;
+  late double convertHelper = 280;
 
   late RegisterService registerService;
   late Map<String, dynamic> userFacebook;
@@ -94,7 +94,6 @@ class _RegisterPageState extends State<RegisterPage> {
 
     userFacebook = context.read<AppData>().userFacebook;
 
-    
     _length = userFacebook['name'].length;
     if (_length > 0) {
       _email = userFacebook['email'];
@@ -103,7 +102,8 @@ class _RegisterPageState extends State<RegisterPage> {
     } else {
       _email = "";
       _fullName = "";
-      _image = "";
+      _image =
+          "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png";
     }
     // _email = userFacebook['email'];
     //   _fullName = userFacebook['name'];
@@ -115,7 +115,7 @@ class _RegisterPageState extends State<RegisterPage> {
     regFBB();
     // 2.2 async method
     // loadDataMethod = loadData();
-
+    final images = NetworkImage(_image);
     dateInput.text = "";
   }
 
@@ -127,15 +127,27 @@ class _RegisterPageState extends State<RegisterPage> {
         ),
         body: ListView(children: <Widget>[
           const SizedBox(height: 24.0),
-          // Container(
-          //   color: Colors.grey,
-          //   child: Image.network(
-          //     _image,
-          //     width: double.infinity,
-          //     height: convertHelper,
-          //     fit: BoxFit.cover,
-          //   ),
-          // ),
+          Container(
+            child: CircleAvatar(
+              radius: 70,
+              child: ClipOval(
+                
+                child: InkWell(
+                  
+                  onTap: (){
+
+                  },
+                  child: Image.network(
+                    _image,
+                    width: 140,
+                    height: 140,
+                    fit: BoxFit.cover,
+                    
+                  ),
+                ),
+              ),
+            ),
+          ),
           Container(
             margin: EdgeInsets.only(left: 20, right: 20, top: 20),
             padding: EdgeInsets.only(left: 20, right: 20),
