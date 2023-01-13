@@ -4,7 +4,8 @@ import 'dart:developer';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:frontendfluttercoach/model/DTO/loginDTO.dart';
-import 'package:frontendfluttercoach/model/DTO/registerFBDTO.dart';
+import 'package:frontendfluttercoach/model/DTO/loginFBDTO.dart';
+
 import 'package:frontendfluttercoach/page/picture.dart';
 import 'package:frontendfluttercoach/page/register.dart';
 import 'package:frontendfluttercoach/service/login.dart';
@@ -18,6 +19,7 @@ import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
 import 'package:frontendfluttercoach/model/modelCustomer.dart';
 
 import '../model/DTO/registerCoachDTO.dart';
+import 'homePage.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -53,13 +55,18 @@ class _LoginPageState extends State<LoginPage> {
   late String fbEmail = "";
   late String fbName = "";
   late String fbImg = "null";
+  late String fbID = "";
 
   bool _isLoggedIn = false;
   Map _userObj = {};
-  late int uid;
-  late int cid;
+  late int uid = 0;
+  late int cid = 0;
+  late int uidfb = 0;
+  late int cidfb = 0;
   var userLoginCus;
   var userLoginCoach;
+  var userLoginCusFB;
+  var userLoginCoachFB;
   // 2. สร้าง initState เพื่อสร้าง object ของ service
   // และ async method ที่จะใช้กับ FutureBuilder
   @override
@@ -165,18 +172,9 @@ class _LoginPageState extends State<LoginPage> {
                 //   builder: (context) => RegisterPage(
                 //     nameFB: nameFB, emailFB: emailFB, image: image
                 //   )));
-                Map<String,dynamic> userData={
-                      "name": "",
-                      "email": "",
-                      "picture": {
-                        "data": {
-                          "height": 0,
-                          "url": "",
-                          "width": 0
-                        }
-                      },
-                      "id": ""
-                      } ;
+                Map<String, dynamic> userData = {
+                  "name": "",
+                };
                 context.read<AppData>().userFacebook = userData;
                 Navigator.push(
                   context,
@@ -204,24 +202,53 @@ class _LoginPageState extends State<LoginPage> {
                 // fbImg = userData['picture']['data']['url'];
                 context.read<AppData>().userFacebook = userData;
                 log(fbImg);
+
                 // RegisterFbdto regFb = RegisterFbdto(
                 //    username: nameFB,
                 //    email: emailFB,
                 //    image: image
                 // );
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (_) => RegisterPage(),
-                  ),
-                );
-                // Navigator.of(context).push(MaterialPageRoute(
-                //   builder: (context) => RegisterPage(
-                //     nameFB: nameFB, emailFB: emailFB, image: image
-                //   )));
-                // Navigator.push(context, MaterialPageRoute(builder: (context) {
-                //   return RegisterPage(nameFB,emailFB,imgFB);
-                // }));
+                fbID = userData['id'];
+                //fbID = "12";
+                //log("fbID: " + fbID);
+
+                LoginFbDto dtofb = LoginFbDto(facebookId: fbID);
+              
+                
+                // if(jsonEncode(userLoginCoachFB.data.cid) == null){
+                //   cidfb = 0;
+                // }
+                
+
+                userLoginCus = await loginService.loginfb(dtofb);
+                uidfb = int.parse(jsonEncode(userLoginCus.data.uid));
+                cidfb = int.parse(jsonEncode(userLoginCus.data.cid));
+                //log(jsonEncode(userLoginCus.data.uid));
+                
+                if (cidfb > 0) {
+                  //log("cid:" + cid.toString());
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (_) => HomePage(),
+                    ),
+                  );
+                } else if (uidfb > 0) {
+                   log("uidfb:" + uidfb.toString());
+                   Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (_) => HomePage(),
+                    ),
+                  );
+                } else {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (_) => RegisterPage(),
+                    ),
+                  );
+                }
 
                 log(username.length.toString());
               } else {

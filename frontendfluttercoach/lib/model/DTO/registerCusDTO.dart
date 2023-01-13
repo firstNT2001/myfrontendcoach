@@ -5,9 +5,9 @@
 import 'package:meta/meta.dart';
 import 'dart:convert';
 
-RegisterCusDto registerCusDtoFromJson(String str) => RegisterCusDto.fromJson(json.decode(str));
+RegisterCusDto? registerCusDtoFromJson(String str) => RegisterCusDto.fromJson(json.decode(str));
 
-String registerCusDtoToJson(RegisterCusDto data) => json.encode(data.toJson());
+String registerCusDtoToJson(RegisterCusDto? data) => json.encode(data!.toJson());
 
 class RegisterCusDto {
     RegisterCusDto({
@@ -22,19 +22,21 @@ class RegisterCusDto {
         required this.weight,
         required this.height,
         required this.price,
+        required this.facebookId,
     });
 
-    String username;
-    String password;
-    String email;
-    String fullName;
-    String birthday;
-    String gender;
-    String phone;
-    String image;
-    int weight;
-    int height;
-    int price;
+    String? username;
+    String? password;
+    String? email;
+    String? fullName;
+    String? birthday;
+    String? gender;
+    String? phone;
+    String? image;
+    int? weight;
+    int? height;
+    int? price;
+    String? facebookId;
 
     factory RegisterCusDto.fromJson(Map<String, dynamic> json) => RegisterCusDto(
         username: json["Username"],
@@ -48,6 +50,7 @@ class RegisterCusDto {
         weight: json["Weight"],
         height: json["Height"],
         price: json["Price"],
+        facebookId: json["FacebookID"],
     );
 
     Map<String, dynamic> toJson() => {
@@ -62,5 +65,6 @@ class RegisterCusDto {
         "Weight": weight,
         "Height": height,
         "Price": price,
+        "FacebookID": facebookId,
     };
 }

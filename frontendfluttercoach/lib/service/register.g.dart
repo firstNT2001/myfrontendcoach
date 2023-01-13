@@ -19,12 +19,12 @@ class _RegisterService implements RegisterService {
   String? baseUrl;
 
   @override
-  Future<HttpResponse<Customer>> regCusService(cus) async {
+  Future<HttpResponse<Customer>> regCusService(reg) async {
     const _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{};
     final _data = <String, dynamic>{};
-    _data.addAll(cus.toJson());
+    _data.addAll(reg.toJson());
     final _result = await _dio.fetch<Map<String, dynamic>>(
         _setStreamType<HttpResponse<Customer>>(Options(
       method: 'POST',
@@ -44,12 +44,12 @@ class _RegisterService implements RegisterService {
   }
 
   @override
-  Future<HttpResponse<Coach>> regCoachService(cach) async {
+  Future<HttpResponse<Coach>> regCoachService(reg) async {
     const _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{};
     final _data = <String, dynamic>{};
-    _data.addAll(cach.toJson());
+    _data.addAll(reg.toJson());
     final _result = await _dio.fetch<Map<String, dynamic>>(
         _setStreamType<HttpResponse<Coach>>(Options(
       method: 'POST',

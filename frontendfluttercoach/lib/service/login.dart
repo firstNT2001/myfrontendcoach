@@ -4,6 +4,9 @@ import 'package:retrofit/retrofit.dart';
 import 'package:dio/dio.dart';
 import 'package:frontendfluttercoach/model/DTO/loginDTO.dart';
 
+import '../model/DTO/loginFBDTO.dart';
+import '../model/modelCidAndUid.dart';
+
 
 part 'login.g.dart';
 
@@ -16,5 +19,10 @@ abstract class LoginService {
 
   @POST("/user/login")
   Future<HttpResponse<Coach>> loginCoach(@Body() LoginDto login);
+
   
+  @POST("/user/loginfb")
+  Future<HttpResponse<ModelCidAndUid>> loginfb(@Body() LoginFbDto login);
+  //Future<HttpResponse<Customer>> loginfbCus(@Body() LoginFbDto login);
+ 
 }
