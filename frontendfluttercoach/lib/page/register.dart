@@ -53,6 +53,7 @@ class _RegisterPageState extends State<RegisterPage> {
   late String _gender = "1";
   late String _phone;
   late String _image;
+  late String _facebookID;
 
   late String _qualification;
   late String _property;
@@ -99,11 +100,13 @@ class _RegisterPageState extends State<RegisterPage> {
       _email = userFacebook['email'];
       _fullName = userFacebook['name'];
       _image = userFacebook['picture']['data']['url'];
+      _facebookID = userFacebook['id'];
     } else {
       _email = "";
       _fullName = "";
       _image =
           "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png";
+      _facebookID = "";
     }
     // _email = userFacebook['email'];
     //   _fullName = userFacebook['name'];
@@ -480,6 +483,7 @@ class _RegisterPageState extends State<RegisterPage> {
                     log("Gender: " + this._gender);
                     log("Phone: " + this._phone);
                     log("image: " + this._image);
+                    log("fackebook: " + this._facebookID);
                     if (this._typeCoach == true) {
                       log("_qualification: " + this._qualification);
                       log("_property: " + this._property);
@@ -493,7 +497,9 @@ class _RegisterPageState extends State<RegisterPage> {
                           phone: _phone,
                           image: _image,
                           qualification: _qualification,
-                          property: _property);
+                          property: _property,
+                          facebookId: _facebookID
+                          );
 
                       regCoach =
                           await registerService.regCoachService(coachDTO);
@@ -515,7 +521,8 @@ class _RegisterPageState extends State<RegisterPage> {
                           image: _image,
                           weight: _weight,
                           height: _height,
-                          price: _price);
+                          price: _price,
+                          facebookId: _facebookID);
                       regCus = await registerService.regCusService(cusDTO);
                       uid = int.parse(jsonEncode(regCus.data.uid));
                     }
