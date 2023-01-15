@@ -188,45 +188,23 @@ class _LoginPageState extends State<LoginPage> {
             child: Text("Login with Facebook"),
             onPressed: () async {
               final LoginResult result = await FacebookAuth.instance
-                  .login(); // by default we request the email and the public profile
-              // or FacebookAuth.i.login()
+                  .login(); 
+
               if (result.status == LoginStatus.success) {
-                // you are logged
+                
+
                 final AccessToken accessToken = result.accessToken!;
-                //log(accessToken.token);
                 final userData = await FacebookAuth.instance.getUserData();
-                //log(userData['email']);
-                //log(userData['name']);
-                // fbName = userData['name'];
-                // fbEmail = userData['email'];
-                // fbImg = userData['picture']['data']['url'];
                 context.read<AppData>().userFacebook = userData;
                 log(fbImg);
 
-                // RegisterFbdto regFb = RegisterFbdto(
-                //    username: nameFB,
-                //    email: emailFB,
-                //    image: image
-                // );
                 fbID = userData['id'];
-                //fbID = "12";
-                //log("fbID: " + fbID);
-
                 LoginFbDto dtofb = LoginFbDto(facebookId: fbID);
-              
-                
-                // if(jsonEncode(userLoginCoachFB.data.cid) == null){
-                //   cidfb = 0;
-                // }
-                
 
                 userLoginCus = await loginService.loginfb(dtofb);
                 uidfb = int.parse(jsonEncode(userLoginCus.data.uid));
                 cidfb = int.parse(jsonEncode(userLoginCus.data.cid));
-                //log(jsonEncode(userLoginCus.data.uid));
-                
                 if (cidfb > 0) {
-                  //log("cid:" + cid.toString());
                   Navigator.push(
                     context,
                     MaterialPageRoute(
@@ -250,7 +228,6 @@ class _LoginPageState extends State<LoginPage> {
                   );
                 }
 
-                log(username.length.toString());
               } else {
                 print(result.status);
                 print(result.message);
