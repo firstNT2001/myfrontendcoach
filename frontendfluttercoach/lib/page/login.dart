@@ -196,7 +196,7 @@ class _LoginPageState extends State<LoginPage> {
                 final AccessToken accessToken = result.accessToken!;
                 final userData = await FacebookAuth.instance.getUserData();
                 context.read<AppData>().userFacebook = userData;
-                log(fbImg);
+                
 
                 fbID = userData['id'];
                 LoginFbDto dtofb = LoginFbDto(facebookId: fbID);
@@ -205,6 +205,7 @@ class _LoginPageState extends State<LoginPage> {
                 uidfb = int.parse(jsonEncode(userLoginCus.data.uid));
                 cidfb = int.parse(jsonEncode(userLoginCus.data.cid));
                 if (cidfb > 0) {
+                  // ignore: use_build_context_synchronously
                   Navigator.push(
                     context,
                     MaterialPageRoute(
@@ -213,6 +214,7 @@ class _LoginPageState extends State<LoginPage> {
                   );
                 } else if (uidfb > 0) {
                    log("uidfb:" + uidfb.toString());
+                   // ignore: use_build_context_synchronously
                    Navigator.push(
                     context,
                     MaterialPageRoute(
