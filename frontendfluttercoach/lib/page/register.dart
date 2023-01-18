@@ -108,16 +108,9 @@ class _RegisterPageState extends State<RegisterPage> {
           "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png";
       _facebookID = "";
     }
-    // _email = userFacebook['email'];
-    //   _fullName = userFacebook['name'];
-    //   _image = userFacebook['picture']['data']['url'];
-
-    // setState(() => this._email = userFacebook['email']);
-    // setState(() => this._image = userFacebook['picture']['data']['url']);
-    //log(userFacebook['name']);
+   
     regFBB();
-    // 2.2 async method
-    // loadDataMethod = loadData();
+
     final images = NetworkImage(_image);
     dateInput.text = "";
   }

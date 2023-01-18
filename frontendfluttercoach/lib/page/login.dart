@@ -222,6 +222,7 @@ class _LoginPageState extends State<LoginPage> {
                     ),
                   );
                 } else {
+                  // ignore: use_build_context_synchronously
                   Navigator.push(
                     context,
                     MaterialPageRoute(
