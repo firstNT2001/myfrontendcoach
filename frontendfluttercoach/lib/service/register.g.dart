@@ -19,14 +19,14 @@ class _RegisterService implements RegisterService {
   String? baseUrl;
 
   @override
-  Future<HttpResponse<Customer>> regCusService(reg) async {
+  Future<HttpResponse<ModelCidAndUid>> regCusService(reg) async {
     const _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{};
     final _data = <String, dynamic>{};
     _data.addAll(reg.toJson());
     final _result = await _dio.fetch<Map<String, dynamic>>(
-        _setStreamType<HttpResponse<Customer>>(Options(
+        _setStreamType<HttpResponse<ModelCidAndUid>>(Options(
       method: 'POST',
       headers: _headers,
       extra: _extra,
@@ -38,20 +38,20 @@ class _RegisterService implements RegisterService {
               data: _data,
             )
             .copyWith(baseUrl: baseUrl ?? _dio.options.baseUrl)));
-    final value = Customer.fromJson(_result.data!);
+    final value = ModelCidAndUid.fromJson(_result.data!);
     final httpResponse = HttpResponse(value, _result);
     return httpResponse;
   }
 
   @override
-  Future<HttpResponse<Coach>> regCoachService(reg) async {
+  Future<HttpResponse<ModelCidAndUid>> regCoachService(reg) async {
     const _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{};
     final _data = <String, dynamic>{};
     _data.addAll(reg.toJson());
     final _result = await _dio.fetch<Map<String, dynamic>>(
-        _setStreamType<HttpResponse<Coach>>(Options(
+        _setStreamType<HttpResponse<ModelCidAndUid>>(Options(
       method: 'POST',
       headers: _headers,
       extra: _extra,
@@ -63,7 +63,7 @@ class _RegisterService implements RegisterService {
               data: _data,
             )
             .copyWith(baseUrl: baseUrl ?? _dio.options.baseUrl)));
-    final value = Coach.fromJson(_result.data!);
+    final value = ModelCidAndUid.fromJson(_result.data!);
     final httpResponse = HttpResponse(value, _result);
     return httpResponse;
   }

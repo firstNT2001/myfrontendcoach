@@ -39,7 +39,8 @@ class _LoginPageState extends State<LoginPage> {
   late String _email = "";
   late String _password = "";
   late int _type = 0;
-
+  late bool _showPasswords = false;
+  
   late String username;
   late String password;
   late String email;
@@ -99,56 +100,95 @@ class _LoginPageState extends State<LoginPage> {
       body: Column(
         children: <Widget>[
           const SizedBox(height: 24.0),
-          TextFormField(
-            decoration: const InputDecoration(
-              border: UnderlineInputBorder(),
-              filled: true,
-              icon: Icon(Icons.email),
-              hintText: 'Your email address',
-              labelText: 'E-mail',
+          Container(
+            margin: EdgeInsets.only(left: 20, right: 20, top: 20),
+            padding: EdgeInsets.only(left: 20, right: 20),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(10),
+              color: Colors.grey[200],
+              boxShadow: [
+                BoxShadow(
+                  offset: Offset(0, 10),
+                  blurRadius: 50,
+                  color: Color(0xffEEEEEE),
+                )
+              ],
             ),
-            keyboardType: TextInputType.emailAddress,
-            onSaved: (String? value) {
-              this._email = value!;
-              print('email = $_email');
-            },
-            //validator: _validateName,
-            // onFieldSubmitted: (String value) {
-            //   setState(() {
-            //     this._email = value;
-            //     log(this._email);
-            //   });
-            // },
+            alignment: Alignment.center,
+            child: TextField(
+              cursorColor: Color(0xffF5591F),
+              //controller: textControllerEmail,
+              decoration: InputDecoration(
+                labelText: 'Enter Email',
+                enabledBorder: InputBorder.none,
+                focusedBorder: InputBorder.none,
+              ),
+              onChanged: (String value) {
+                this._email = value;
+                log(this._email);
+              },
+            ),
           ),
           const SizedBox(height: 24.0),
-          PasswordField(
-            fieldKey: _passwordFieldKey,
-            helperText: 'No more than 8 characters.',
-            labelText: 'Password *',
-            onSaved: (String? value) {
-              this._password = value!;
-              print('password = $_password');
-            },
+          Container(
+            margin: EdgeInsets.only(left: 20, right: 20, top: 0),
+            padding: EdgeInsets.only(left: 20, right: 20),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(10),
+              color: Colors.grey[200],
+              boxShadow: [
+                BoxShadow(
+                  offset: Offset(0, 10),
+                  blurRadius: 50,
+                  color: Color(0xffEEEEEE),
+                )
+              ],
+            ),
+            alignment: Alignment.center,
+            child: TextField(
+              cursorColor: Color(0xffF5591F),
+              obscureText: !this._showPasswords,
+              decoration: InputDecoration(
+                labelText: 'Enter Password',
+                enabledBorder: InputBorder.none,
+                focusedBorder: InputBorder.none,
+                suffixIcon: IconButton(
+                  icon: Icon(
+                    Icons.remove_red_eye,
+                    color: this._showPasswords ? Colors.blue : Colors.green,
+                  ),
+                  onPressed: () {
+                    setState(() => this._showPasswords = !this._showPasswords);
+                  },
+                ),
+              ),
+              onChanged: (String value) {
+                this._password = value;
+                log(_password);
+              },
+            ),
           ),
-          ElevatedButton(
+          Container(
+            margin: EdgeInsets.only(left: 20, right: 20, top: 0),
+            padding: EdgeInsets.only(left: 20, right: 20),
+          child: ElevatedButton(
               onPressed: () async {
                 log(this._email);
                 log(this._password);
-
+                LoginDto dtoUser = LoginDto(
+                      email: this._email, password: this._password, type: 1);
                 this._type = 1;
                 // LoginDto dto =
                 //   LoginDto(email:"Tpangpond@gmail.com", password:"15978", type:1);
                 if (this._type == 1) {
-                  LoginDto dtoCus = LoginDto(
-                      email: this._email, password: this._password, type: 1);
-
-                  userLoginCus = await loginService.loginCus(dtoCus);
+                  
+                  log(jsonEncode(dtoUser));
+                  userLoginCus = await loginService.login(dtoUser);
+                  log(jsonEncode(userLoginCus.data.uid));
                   uid = int.parse(jsonEncode(userLoginCus.data.uid));
                 } else if (this._type == 0) {
-                  LoginDto dtoCoach = LoginDto(
-                      email: this._email, password: this._password, type: 0);
-
-                  userLoginCoach = await loginService.loginCoach(dtoCoach);
+                
+                  userLoginCoach = await loginService.login(dtoUser);
                   cid = int.parse(jsonEncode(userLoginCus.data.cid));
                 }
 
@@ -158,14 +198,23 @@ class _LoginPageState extends State<LoginPage> {
                 //log(jsonEncode(userLoginCus.data));
                 if (uid > 0) {
                   log("Login Success");
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (_) => HomePage(),
+                    ),
+                  );
                 } else if (cid > 0) {
                   log("Login Success");
+                  
                 } else {
                   log("Login Fail");
+                  _displayTextField();
                   return;
                 }
               },
               child: Text('Login')),
+          ),
           ElevatedButton(
               onPressed: () {
                 // Navigator.of(context).push(MaterialPageRoute(
@@ -241,6 +290,31 @@ class _LoginPageState extends State<LoginPage> {
       ),
     );
   }
+   void _displayTextField() {
+    
+      showDialog(
+          context: context,
+          builder: (BuildContext _context) {
+            return AlertDialog(
+              title: const Text('Login Fail'),
+             
+              actions: <Widget>[
+                
+                Container(
+                  child: ElevatedButton(
+                    onPressed: () {
+                      setState(() {
+                        //codeDialog = valueText;
+                        Navigator.pop(context);
+                      });
+                    },
+                    child: Text('OK'),
+                  ),
+                )
+              ],
+            );
+          });
+    }
 }
 
 class PasswordField extends StatefulWidget {
@@ -295,4 +369,6 @@ class _PasswordFieldState extends State<PasswordField> {
       ),
     );
   }
+ 
 }
+

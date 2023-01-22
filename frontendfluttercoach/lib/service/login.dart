@@ -15,11 +15,7 @@ abstract class LoginService {
   factory LoginService(Dio dio, {String baseUrl}) = _LoginService;
 
   @POST("/user/login")
-  Future<HttpResponse<Customer>> loginCus(@Body() LoginDto login);
-
-  @POST("/user/login")
-  Future<HttpResponse<Coach>> loginCoach(@Body() LoginDto login);
-
+  Future<HttpResponse<ModelCidAndUid>> login(@Body() LoginDto login);
   
   @POST("/user/loginfb")
   Future<HttpResponse<ModelCidAndUid>> loginfb(@Body() LoginFbDto login);

@@ -5,6 +5,8 @@ import 'package:frontendfluttercoach/model/modelCustomer.dart';
 import 'package:retrofit/retrofit.dart';
 import 'package:dio/dio.dart';
 
+import '../model/modelCidAndUid.dart';
+
 
 
 part 'register.g.dart';
@@ -14,9 +16,9 @@ abstract class RegisterService {
   factory RegisterService(Dio dio, {String baseUrl}) = _RegisterService;
 
   @POST("/user/registerCus")
-  Future<HttpResponse<Customer>> regCusService(@Body() RegisterCusDto reg);
+  Future<HttpResponse<ModelCidAndUid>> regCusService(@Body() RegisterCusDto reg);
 
   @POST("/user/registerCoach")
-  Future<HttpResponse<Coach>> regCoachService(@Body() RegisterCoachDto reg);
+  Future<HttpResponse<ModelCidAndUid>> regCoachService(@Body() RegisterCoachDto reg);
   
 }

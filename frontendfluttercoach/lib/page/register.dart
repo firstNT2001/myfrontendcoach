@@ -5,6 +5,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:frontendfluttercoach/model/DTO/registerCoachDTO.dart';
 import 'package:frontendfluttercoach/model/DTO/registerCusDTO.dart';
+import 'package:frontendfluttercoach/page/login.dart';
 //import 'package:frontendfluttercoach/page/home.dart';
 import 'package:frontendfluttercoach/service/register.dart';
 import 'package:get/get.dart';
@@ -53,7 +54,7 @@ class _RegisterPageState extends State<RegisterPage> {
   late String _gender = "1";
   late String _phone;
   late String _image;
-  late String _facebookID;
+  late String _facebookID = " ";
 
   late String _qualification;
   late String _property;
@@ -108,7 +109,7 @@ class _RegisterPageState extends State<RegisterPage> {
           "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png";
       _facebookID = "";
     }
-   
+
     regFBB();
 
     final images = NetworkImage(_image);
@@ -127,18 +128,13 @@ class _RegisterPageState extends State<RegisterPage> {
             child: CircleAvatar(
               radius: 70,
               child: ClipOval(
-                
                 child: InkWell(
-                  
-                  onTap: (){
-
-                  },
+                  onTap: () {},
                   child: Image.network(
                     _image,
                     width: 140,
                     height: 140,
                     fit: BoxFit.cover,
-                    
                   ),
                 ),
               ),
@@ -468,15 +464,15 @@ class _RegisterPageState extends State<RegisterPage> {
                     //this._image = "null";
                     log(_typeCoach.toString());
                     log(_typeCus.toString());
-                    log("Username: " + _username);
-                    log("Password:" + _password);
-                    log("email: " + this._email);
-                    log("fullname: " + this._fullName);
-                    log("birthday: " + this._birthday);
-                    log("Gender: " + this._gender);
-                    log("Phone: " + this._phone);
-                    log("image: " + this._image);
-                    log("fackebook: " + this._facebookID);
+                    // log("Username: " + _username);
+                    // log("Password:" + _password);
+                    // log("email: " + this._email);
+                    // log("fullname: " + this._fullName);
+                    // log("birthday: " + this._birthday);
+                    // log("Gender: " + this._gender);
+                    // log("Phone: " + this._phone);
+                    // log("image: " + this._image);
+                    // log("fackebook: " + this._facebookID);
                     if (this._typeCoach == true) {
                       log("_qualification: " + this._qualification);
                       log("_property: " + this._property);
@@ -491,18 +487,17 @@ class _RegisterPageState extends State<RegisterPage> {
                           image: _image,
                           qualification: _qualification,
                           property: _property,
-                          facebookId: _facebookID
-                          );
-
+                          facebookId: _facebookID);
+                      log(jsonEncode(coachDTO));
                       regCoach =
                           await registerService.regCoachService(coachDTO);
-
+                      log(jsonEncode(regCoach.data.cid));
                       cid = int.parse(jsonEncode(regCoach.data.cid));
                     } else if (_typeCus == true) {
                       this._price = 0;
-                      log("Weight: " + _weight.toString());
-                      log("height: " + _height.toString());
-                      log("price: " + _price.toString());
+                      // log("Weight: " + _weight.toString());
+                      // log("height: " + _height.toString());
+                      // log("price: " + _price.toString());
                       RegisterCusDto cusDTO = RegisterCusDto(
                           username: _username,
                           password: _password,
@@ -516,13 +511,27 @@ class _RegisterPageState extends State<RegisterPage> {
                           height: _height,
                           price: _price,
                           facebookId: _facebookID);
+                      log(jsonEncode(cusDTO));
                       regCus = await registerService.regCusService(cusDTO);
+                      log(jsonEncode(regCus.data.uid));
                       uid = int.parse(jsonEncode(regCus.data.uid));
                     }
                     if (uid > 0) {
                       log("Register Success");
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (_) => LoginPage(),
+                        ),
+                      );
                     } else if (cid > 0) {
                       log("Register Success");
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (_) => LoginPage(),
+                        ),
+                      );
                     } else {
                       log("Register Fail");
                       return;

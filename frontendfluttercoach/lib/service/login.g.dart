@@ -19,14 +19,14 @@ class _LoginService implements LoginService {
   String? baseUrl;
 
   @override
-  Future<HttpResponse<Customer>> loginCus(login) async {
+  Future<HttpResponse<ModelCidAndUid>> login(login) async {
     const _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{};
     final _data = <String, dynamic>{};
     _data.addAll(login.toJson());
     final _result = await _dio.fetch<Map<String, dynamic>>(
-        _setStreamType<HttpResponse<Customer>>(Options(
+        _setStreamType<HttpResponse<ModelCidAndUid>>(Options(
       method: 'POST',
       headers: _headers,
       extra: _extra,
@@ -38,32 +38,7 @@ class _LoginService implements LoginService {
               data: _data,
             )
             .copyWith(baseUrl: baseUrl ?? _dio.options.baseUrl)));
-    final value = Customer.fromJson(_result.data!);
-    final httpResponse = HttpResponse(value, _result);
-    return httpResponse;
-  }
-
-  @override
-  Future<HttpResponse<Coach>> loginCoach(login) async {
-    const _extra = <String, dynamic>{};
-    final queryParameters = <String, dynamic>{};
-    final _headers = <String, dynamic>{};
-    final _data = <String, dynamic>{};
-    _data.addAll(login.toJson());
-    final _result = await _dio.fetch<Map<String, dynamic>>(
-        _setStreamType<HttpResponse<Coach>>(Options(
-      method: 'POST',
-      headers: _headers,
-      extra: _extra,
-    )
-            .compose(
-              _dio.options,
-              '/user/login',
-              queryParameters: queryParameters,
-              data: _data,
-            )
-            .copyWith(baseUrl: baseUrl ?? _dio.options.baseUrl)));
-    final value = Coach.fromJson(_result.data!);
+    final value = ModelCidAndUid.fromJson(_result.data!);
     final httpResponse = HttpResponse(value, _result);
     return httpResponse;
   }
