@@ -40,7 +40,7 @@ class _LoginPageState extends State<LoginPage> {
   late String _password = "";
   late int _type = 0;
   late bool _showPasswords = false;
-  
+
   late String username;
   late String password;
   late String email;
@@ -171,49 +171,47 @@ class _LoginPageState extends State<LoginPage> {
           Container(
             margin: EdgeInsets.only(left: 20, right: 20, top: 0),
             padding: EdgeInsets.only(left: 20, right: 20),
-          child: ElevatedButton(
-              onPressed: () async {
-                log(this._email);
-                log(this._password);
-                LoginDto dtoUser = LoginDto(
+            child: ElevatedButton(
+                onPressed: () async {
+                  log(this._email);
+                  log(this._password);
+                  LoginDto dtoUser = LoginDto(
                       email: this._email, password: this._password, type: 1);
-                this._type = 1;
-                // LoginDto dto =
-                //   LoginDto(email:"Tpangpond@gmail.com", password:"15978", type:1);
-                if (this._type == 1) {
-                  
-                  log(jsonEncode(dtoUser));
-                  userLoginCus = await loginService.login(dtoUser);
-                  log(jsonEncode(userLoginCus.data.uid));
-                  uid = int.parse(jsonEncode(userLoginCus.data.uid));
-                } else if (this._type == 0) {
-                
-                  userLoginCoach = await loginService.login(dtoUser);
-                  cid = int.parse(jsonEncode(userLoginCus.data.cid));
-                }
+                  this._type = 1;
+                  // LoginDto dto =
+                  //   LoginDto(email:"Tpangpond@gmail.com", password:"15978", type:1);
+                  if (this._type == 1) {
+                    log(jsonEncode(dtoUser));
+                    userLoginCus = await loginService.login(dtoUser);
+                    log(jsonEncode(userLoginCus.data.uid));
+                    uid = int.parse(jsonEncode(userLoginCus.data.uid));
+                  } else if (this._type == 0) {
+                    userLoginCoach = await loginService.login(dtoUser);
+                    cid = int.parse(jsonEncode(userLoginCus.data.cid));
+                  }
 
-                //  log("===============");
+                  //  log("===============");
 
-                log(uid.toString());
-                //log(jsonEncode(userLoginCus.data));
-                if (uid > 0) {
-                  log("Login Success");
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (_) => HomePage(),
-                    ),
-                  );
-                } else if (cid > 0) {
-                  log("Login Success");
-                  
-                } else {
-                  log("Login Fail");
-                  _displayTextField();
-                  return;
-                }
-              },
-              child: Text('Login')),
+                  log(uid.toString());
+                  //log(jsonEncode(userLoginCus.data));
+                  if (uid > 0) {
+                    log("Login Success");
+                    _displayLogin();
+                    // Navigator.push(
+                    //   context,
+                    //   MaterialPageRoute(
+                    //     builder: (_) => HomePage(),
+                    //   ),
+                    // );
+                  } else if (cid > 0) {
+                    log("Login Success");
+                  } else {
+                    log("Login Fail");
+                    _displayTextField();
+                    return;
+                  }
+                },
+                child: Text('Login')),
           ),
           ElevatedButton(
               onPressed: () {
@@ -236,16 +234,13 @@ class _LoginPageState extends State<LoginPage> {
           ElevatedButton(
             child: Text("Login with Facebook"),
             onPressed: () async {
-              final LoginResult result = await FacebookAuth.instance
-                  .login(); 
+              final LoginResult result = await FacebookAuth.instance.login();
 
               if (result.status == LoginStatus.success) {
-                
-
                 final AccessToken accessToken = result.accessToken!;
+                log(accessToken.toString());
                 final userData = await FacebookAuth.instance.getUserData();
                 context.read<AppData>().userFacebook = userData;
-                
 
                 fbID = userData['id'];
                 LoginFbDto dtofb = LoginFbDto(facebookId: fbID);
@@ -255,6 +250,7 @@ class _LoginPageState extends State<LoginPage> {
                 cidfb = int.parse(jsonEncode(userLoginCus.data.cid));
                 if (cidfb > 0) {
                   // ignore: use_build_context_synchronously
+                  
                   Navigator.push(
                     context,
                     MaterialPageRoute(
@@ -262,9 +258,10 @@ class _LoginPageState extends State<LoginPage> {
                     ),
                   );
                 } else if (uidfb > 0) {
-                   log("uidfb:" + uidfb.toString());
-                   // ignore: use_build_context_synchronously
-                   Navigator.push(
+                  log("uidfb:" + uidfb.toString());
+                  // ignore: use_build_context_synchronously
+                  
+                  Navigator.push(
                     context,
                     MaterialPageRoute(
                       builder: (_) => HomePage(),
@@ -279,7 +276,6 @@ class _LoginPageState extends State<LoginPage> {
                     ),
                   );
                 }
-
               } else {
                 print(result.status);
                 print(result.message);
@@ -290,31 +286,57 @@ class _LoginPageState extends State<LoginPage> {
       ),
     );
   }
-   void _displayTextField() {
-    
-      showDialog(
-          context: context,
-          builder: (BuildContext _context) {
-            return AlertDialog(
-              title: const Text('Login Fail'),
-             
-              actions: <Widget>[
-                
-                Container(
-                  child: ElevatedButton(
-                    onPressed: () {
-                      setState(() {
-                        //codeDialog = valueText;
-                        Navigator.pop(context);
-                      });
-                    },
-                    child: Text('OK'),
-                  ),
-                )
-              ],
-            );
-          });
-    }
+
+  void _displayTextField() {
+    showDialog(
+        context: context,
+        builder: (BuildContext _context) {
+          return AlertDialog(
+            title: const Text('Login Fail'),
+            actions: <Widget>[
+              Container(
+                child: ElevatedButton(
+                  onPressed: () {
+                    setState(() {
+                      //codeDialog = valueText;
+                      Navigator.pop(context);
+                    });
+                  },
+                  child: Text('OK'),
+                ),
+              )
+            ],
+          );
+        });
+  }
+
+  void _displayLogin() {
+    showDialog(
+        context: context,
+        builder: (BuildContext _context) {
+          return AlertDialog(
+            title: const Text('Login Succeed'),
+            actions: <Widget>[
+              Container(
+                child: ElevatedButton(
+                  onPressed: () {
+                    setState(() {
+                      //codeDialog = valueText;
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (_) => HomePage(),
+                        ),
+                      );
+                    });
+                  },
+                  child: Text('OK'),
+                ),
+              )
+            ],
+          );
+        });
+  }
 }
 
 class PasswordField extends StatefulWidget {
@@ -369,6 +391,4 @@ class _PasswordFieldState extends State<PasswordField> {
       ),
     );
   }
- 
 }
-

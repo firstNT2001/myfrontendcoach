@@ -529,12 +529,12 @@ class _RegisterPageState extends State<RegisterPage> {
                       log("Register Success");
                       type2 = 1;
                       _displayREG(2);
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (_) => LoginPage(),
-                        ),
-                      );
+                      // Navigator.push(
+                      //   context,
+                      //   MaterialPageRoute(
+                      //     builder: (_) => LoginPage(),
+                      //   ),
+                      // );
                     } else if (cid > 0) {
                       log("Register Success");
                       type2 = 1;
@@ -692,6 +692,24 @@ class _RegisterPageState extends State<RegisterPage> {
           builder: (BuildContext _context) {
             return AlertDialog(
               title: const Text('สมัครสมาชิกสำเร็จ'),
+              actions: <Widget>[
+              Container(
+                child: ElevatedButton(
+                  onPressed: () {
+                    setState(() {
+                      //codeDialog = valueText;
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (_) => LoginPage(),
+                        ),
+                      );
+                    });
+                  },
+                  child: Text('OK'),
+                ),
+              )
+            ],
             );
           });
     } else if (type2 == 2) {
@@ -700,6 +718,19 @@ class _RegisterPageState extends State<RegisterPage> {
           builder: (BuildContext _context) {
             return AlertDialog(
               title: const Text('สมัครสมาชิกไม่สำเร็จ'),
+              actions: <Widget>[
+              Container(
+                child: ElevatedButton(
+                  onPressed: () {
+                    setState(() {
+                      //codeDialog = valueText;
+                      Navigator.pop(context);
+                    });
+                  },
+                  child: Text('OK'),
+                ),
+              )
+            ],
             );
           });
     }
