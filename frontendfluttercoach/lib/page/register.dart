@@ -46,30 +46,33 @@ class _RegisterPageState extends State<RegisterPage> {
   var textControllerEmail = new TextEditingController();
   var textControllerImg = new TextEditingController();
 
-  late String _username;
-  late String _password;
+  late String _username = "";
+  late String _password = "";
   late String _email = "";
   late String _fullName = "";
-  late String _birthday;
+  late String _birthday = "";
   late String _gender = "1";
-  late String _phone;
-  late String _image;
-  late String _facebookID = " ";
+  late String _phone = "";
+  late String _image = "";
+  late String _facebookID = "";
 
-  late String _qualification;
-  late String _property;
+  late String _qualification = "";
+  late String _property = "";
 
   late int _length = 0;
 
-  late int _weight;
-  late int _height;
-  late int _price;
+  late int _lengthREG = 0;
+  late int _weight = 0;
+  late int _height = 0;
+  late int _price = 0;
 
   late bool _typeCus = false;
   late bool _typeCoach = false;
+  late bool _typeREG = false;
   late bool genderBool = true;
 
   late int type = 0;
+  late int type2 = 0;
   var regCoach;
   var regCus;
 
@@ -164,6 +167,7 @@ class _RegisterPageState extends State<RegisterPage> {
               ),
               onChanged: (String value) {
                 this._username = value;
+
                 log(_username);
               },
             ),
@@ -461,63 +465,70 @@ class _RegisterPageState extends State<RegisterPage> {
               padding: EdgeInsets.only(left: 20, right: 20),
               child: ElevatedButton(
                   onPressed: () async {
-                    //this._image = "null";
-                    log(_typeCoach.toString());
-                    log(_typeCus.toString());
-                    // log("Username: " + _username);
-                    // log("Password:" + _password);
-                    // log("email: " + this._email);
-                    // log("fullname: " + this._fullName);
-                    // log("birthday: " + this._birthday);
-                    // log("Gender: " + this._gender);
-                    // log("Phone: " + this._phone);
-                    // log("image: " + this._image);
-                    // log("fackebook: " + this._facebookID);
+                    // log(_typeCoach.toString());
+                    // log(_typeCus.toString());
+
+                    //log(_username.isEmpty);
+
+                    // if(_username.isEmpty ?? true) {
+                    // }
                     if (this._typeCoach == true) {
-                      log("_qualification: " + this._qualification);
-                      log("_property: " + this._property);
-                      RegisterCoachDto coachDTO = RegisterCoachDto(
-                          username: _username,
-                          password: _password,
-                          email: _email,
-                          fullName: _fullName,
-                          birthday: _birthday,
-                          gender: _gender,
-                          phone: _phone,
-                          image: _image,
-                          qualification: _qualification,
-                          property: _property,
-                          facebookId: _facebookID);
-                      log(jsonEncode(coachDTO));
-                      regCoach =
-                          await registerService.regCoachService(coachDTO);
-                      log(jsonEncode(regCoach.data.cid));
-                      cid = int.parse(jsonEncode(regCoach.data.cid));
+                      if (_qualification.isEmpty == false) {
+                        if (_property.isEmpty == false) {
+                          log("_qualification: " + this._qualification);
+                          log("_property: " + this._property);
+                          RegisterCoachDto coachDTO = RegisterCoachDto(
+                              username: _username,
+                              password: _password,
+                              email: _email,
+                              fullName: _fullName,
+                              birthday: _birthday,
+                              gender: _gender,
+                              phone: _phone,
+                              image: _image,
+                              qualification: _qualification,
+                              property: _property,
+                              facebookId: _facebookID);
+                          log(jsonEncode(coachDTO));
+                          regCoach =
+                              await registerService.regCoachService(coachDTO);
+                          log(jsonEncode(regCoach.data.cid));
+                          cid = int.parse(jsonEncode(regCoach.data.cid));
+                        }
+                      } else {}
                     } else if (_typeCus == true) {
-                      this._price = 0;
-                      // log("Weight: " + _weight.toString());
-                      // log("height: " + _height.toString());
-                      // log("price: " + _price.toString());
-                      RegisterCusDto cusDTO = RegisterCusDto(
-                          username: _username,
-                          password: _password,
-                          email: _email,
-                          fullName: _fullName,
-                          birthday: _birthday,
-                          gender: _gender,
-                          phone: _phone,
-                          image: _image,
-                          weight: _weight,
-                          height: _height,
-                          price: _price,
-                          facebookId: _facebookID);
-                      log(jsonEncode(cusDTO));
-                      regCus = await registerService.regCusService(cusDTO);
-                      log(jsonEncode(regCus.data.uid));
-                      uid = int.parse(jsonEncode(regCus.data.uid));
+                      if (_weight == 0) {
+                        if (_height == 0) {
+
+                        }
+                      }else{
+                        // log("Weight: " + _weight.toString());
+                          // log("height: " + _height.toString());
+                          // log("price: " + _price.toString());
+                          RegisterCusDto cusDTO = RegisterCusDto(
+                              username: _username,
+                              password: _password,
+                              email: _email,
+                              fullName: _fullName,
+                              birthday: _birthday,
+                              gender: _gender,
+                              phone: _phone,
+                              image: _image,
+                              weight: _weight,
+                              height: _height,
+                              price: _price,
+                              facebookId: _facebookID);
+                          log(jsonEncode(cusDTO));
+                          regCus = await registerService.regCusService(cusDTO);
+                          log(jsonEncode(regCus.data.uid));
+                          uid = int.parse(jsonEncode(regCus.data.uid));
+                      }
                     }
+
                     if (uid > 0) {
                       log("Register Success");
+                      type2 = 1;
+                      _displayREG(2);
                       Navigator.push(
                         context,
                         MaterialPageRoute(
@@ -526,13 +537,17 @@ class _RegisterPageState extends State<RegisterPage> {
                       );
                     } else if (cid > 0) {
                       log("Register Success");
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (_) => LoginPage(),
-                        ),
-                      );
+                      type2 = 1;
+                      _displayREG(2);
+                      // Navigator.push(
+                      //   context,
+                      //   MaterialPageRoute(
+                      //     builder: (_) => LoginPage(),
+                      //   ),
+                      // );
                     } else {
+                      type2 = 2;
+                      _displayREG(2);
                       log("Register Fail");
                       return;
                     }
@@ -547,7 +562,13 @@ class _RegisterPageState extends State<RegisterPage> {
     textControllerImg.text = _image;
   }
 
+  bool validateInput(String? input) {
+    return _typeREG = input?.isNotEmpty ?? false;
+  }
+
   void _displayTextField(int types) {
+    _weight = 0;
+    _height = 0;
     if (type == 0) {
       showDialog(
           context: context,
@@ -658,6 +679,27 @@ class _RegisterPageState extends State<RegisterPage> {
                   ),
                 )
               ],
+            );
+          });
+    }
+  }
+
+  void _displayREG(int types) {
+    
+    if (type2 == 1) {
+      showDialog(
+          context: context,
+          builder: (BuildContext _context) {
+            return AlertDialog(
+              title: const Text('สมัครสมาชิกสำเร็จ'),
+            );
+          });
+    } else if (type2 == 2) {
+      showDialog(
+          context: context,
+          builder: (BuildContext _context) {
+            return AlertDialog(
+              title: const Text('สมัครสมาชิกไม่สำเร็จ'),
             );
           });
     }
