@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-<string name="app_name">DailyWorkoutCoaching</string>    
-<string name="facebook_app_id">696221145557150</string>
-<string name="fb_login_protocol_scheme">fb696221145557150</string>
-<string name="facebook_client_token">4fa460a20134f65808f79a3559ece9fb</string>
+<string name="app_name">DailyworkoutCoaching</string>    
+<string name="facebook_app_id">491628079803996</string>
+<string name="fb_login_protocol_scheme">fb491628079803996</string>
+<string name="facebook_client_token">4f3bf499e8ea343b272986bedb67f533</string>
 </resources>
