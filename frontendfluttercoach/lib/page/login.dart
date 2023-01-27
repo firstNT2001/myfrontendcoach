@@ -282,6 +282,17 @@ class _LoginPageState extends State<LoginPage> {
               }
             },
           ),
+          Container(
+             margin: EdgeInsets.only(left: 20, right: 20, top: 20),
+              padding: EdgeInsets.only(left: 20, right: 20),
+              child: ElevatedButton(
+              onPressed: () {
+                Navigator.push(context, MaterialPageRoute(builder: (context) {
+                  return HomePage();
+                }));
+              },
+              child: Text('Home')),
+          ),
         ],
       ),
     );
