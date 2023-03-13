@@ -55,6 +55,7 @@ dependencies:
   video_player: ^2.4.10
   intl: ^0.18.0
   appinio_video_player: ^1.2.0
+  source_gen: ^1.2.7
   
   
 dev_dependencies:
