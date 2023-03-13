@@ -66,7 +66,7 @@ packages:
     source: hosted
     version: "2.3.1"
   build_config:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: build_config
       sha256: bf80fcfb46a29945b423bd9aad884590fb1dc69b330a4d4700cac476af1708d1
@@ -90,13 +90,13 @@ packages:
     source: hosted
     version: "2.1.0"
   build_runner:
-    dependency: "direct main"
+    dependency: "direct dev"
     description:
       name: build_runner
-      sha256: "6f48c61a9dcd2c3a9e62d3dcdab1ba382790e2f31026288cbabe55d6003c9c23"
+      sha256: b0a8a7b8a76c493e85f1b84bffa0588859a06197863dba8c9036b15581fd9727
       url: "https://pub.dev"
     source: hosted
-    version: "2.3.2"
+    version: "2.3.3"
   build_runner_core:
     dependency: transitive
     description:
@@ -537,7 +537,7 @@ packages:
     source: hosted
     version: "4.7.0"
   json_serializable:
-    dependency: "direct main"
+    dependency: "direct dev"
     description:
       name: json_serializable
       sha256: f3c2c18a7889580f71926f30c1937727c8c7d4f3a435f8f5e8b0ddd25253ef5d
@@ -766,7 +766,7 @@ packages:
     source: sdk
     version: "0.0.99"
   source_gen:
-    dependency: "direct main"
+    dependency: "direct dev"
     description:
       name: source_gen
       sha256: c2bea18c95cfa0276a366270afaa2850b09b4a76db95d546f3d003dcc7011298

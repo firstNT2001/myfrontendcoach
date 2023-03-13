@@ -1,4 +1,9 @@
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+
+import '../../service/course.dart';
+import '../../service/provider/appdata.dart';
 
 class HomePageCoach extends StatefulWidget {
   const HomePageCoach({super.key});
@@ -8,6 +13,17 @@ class HomePageCoach extends StatefulWidget {
 }
 
 class _HomePageCoachState extends State<HomePageCoach> {
+  late  CourseService courseService;
+   @override
+  void initState() {
+    super.initState();
+    // 2.1 object ของ service โดยต้องส่ง baseUrl (จาก provider) เข้าไปด้วย
+    courseService =
+        CourseService(Dio(), baseUrl: context.read<AppData>().baseurl);
+    // 2.2 async method
+    // loadDataMethod = loadData();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(

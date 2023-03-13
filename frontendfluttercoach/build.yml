@@ -1,7 +1,7 @@
 targets:
   $default:
     builders:
-      source_gen|combining_builder:
+      source_gen:combining_builder:
         options:
           build_extensions:
-            '^{{}}.dart': 'lib/service/generated/{{}}.g.dart'
+            '^lib/service/{{}}.dart': 'lib/service/generated/{{}}.g.dart'
