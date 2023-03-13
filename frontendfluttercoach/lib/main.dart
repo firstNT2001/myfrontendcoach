@@ -9,6 +9,7 @@ import 'package:frontendfluttercoach/page/homePage.dart';
 import 'package:frontendfluttercoach/page/login.dart';
 import 'package:frontendfluttercoach/page/register.dart';
 import 'package:frontendfluttercoach/page/start.dart';
+import 'package:frontendfluttercoach/page/startApp.dart';
 
 import 'package:frontendfluttercoach/service/login.dart';
 import 'package:frontendfluttercoach/service/provider/appdata.dart';
@@ -41,7 +42,7 @@ class MyApp extends StatelessWidget {
         
         primarySwatch: Colors.green,
       ),
-      home: HomePage(),
+      home: StartApp(),
     );
   }
 }
