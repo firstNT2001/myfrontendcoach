@@ -5,6 +5,7 @@ import '../model/modelCourse.dart';
 
 part 'course.g.dart';
 
+
 @RestApi()
 abstract class CourseService {
   factory CourseService(Dio dio, {String baseUrl}) = _CourseService;
