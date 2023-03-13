@@ -8,4 +8,7 @@ part 'coach.g.dart';
 @RestApi()
 abstract class CoachService {
   factory CoachService(Dio dio,{String baseUrl}) = _CoachService;
+
+  @GET("/getNameCoach/{name}")
+  Future<HttpResponse<Coach>> getNameCoach(@Path("name") String nameCoach);
 }
