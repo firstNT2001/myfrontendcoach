@@ -8,7 +8,7 @@ import '../model/DTO/loginFBDTO.dart';
 import '../model/modelCidAndUid.dart';
 
 
-part 'login.g.dart';
+part 'generated/login.g.dart';
 
 @RestApi()
 abstract class LoginService {

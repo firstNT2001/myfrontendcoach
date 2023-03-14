@@ -23,7 +23,7 @@ class StartApp extends StatelessWidget {
                   child: ElevatedButton(
                       onPressed: () {
                         Navigator.push(context, MaterialPageRoute(builder: (context) {
-                          return HomePageCoach();
+                          return const HomePageCoach();
                         }));
                       },
                       child: Text('หน้าโค้ช')),
