@@ -9,6 +9,6 @@ part 'coach.g.dart';
 abstract class CoachService {
   factory CoachService(Dio dio,{String baseUrl}) = _CoachService;
 
-  @GET("/getNameCoach/{name}")
-  Future<HttpResponse<Coach>> getNameCoach(@Path("name") String nameCoach);
+  @GET("/user2/getCoachByName/{name}")
+  Future<HttpResponse<List<Coach>>> getNameCoach(@Path("name") String nameCoach);
 }

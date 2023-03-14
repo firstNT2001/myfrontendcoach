@@ -19,25 +19,27 @@ class _CoachService implements CoachService {
   String? baseUrl;
 
   @override
-  Future<HttpResponse<Coach>> getNameCoach(nameCoach) async {
+  Future<HttpResponse<List<Coach>>> getNameCoach(nameCoach) async {
     const _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{};
     final _data = <String, dynamic>{};
-    final _result = await _dio.fetch<Map<String, dynamic>>(
-        _setStreamType<HttpResponse<Coach>>(Options(
+    final _result = await _dio
+        .fetch<List<dynamic>>(_setStreamType<HttpResponse<List<Coach>>>(Options(
       method: 'GET',
       headers: _headers,
       extra: _extra,
     )
             .compose(
               _dio.options,
-              '/getNameCoach/${nameCoach}',
+              '/user2/getCoachByName/${nameCoach}',
               queryParameters: queryParameters,
               data: _data,
             )
             .copyWith(baseUrl: baseUrl ?? _dio.options.baseUrl)));
-    final value = Coach.fromJson(_result.data!);
+    var value = _result.data!
+        .map((dynamic i) => Coach.fromJson(i as Map<String, dynamic>))
+        .toList();
     final httpResponse = HttpResponse(value, _result);
     return httpResponse;
   }
