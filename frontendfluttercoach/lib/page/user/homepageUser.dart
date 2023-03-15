@@ -19,9 +19,7 @@ class HomePageUser extends StatefulWidget {
 class _HomePageUserState extends State<HomePageUser> {
   late CoachService coachService;
   HttpResponse<List<Coach>>? coaches;
-  TextEditingController  myController = TextEditingController();
-  // List<Coach> nameCoach = [];
-  //late Future<void> loadDatanameCoach;
+  TextEditingController myController = TextEditingController();
 
   @override
   void initState() {
@@ -40,51 +38,68 @@ class _HomePageUserState extends State<HomePageUser> {
       body: Column(
         children: [
           Center(
-            child: Container(
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  SizedBox(
-                    width: 250,
-                    height: 50,
-                    child: Expanded(
-                        child: TextField(
-                          controller: myController,
-                      
-                      decoration: InputDecoration(
-                        border: OutlineInputBorder(),
-                        labelText: 'ค้นหา',
-                      ),
-                    )),
-                  ),
-                  ElevatedButton(
-                      onPressed: () {
-                        if(myController.text.isNotEmpty){
-                          
-                        
-                        coachService.getNameCoach(myController.text).then((data) {
-                          coaches = data;
-                          if (coaches != null) {
-                            setState(() {});
-                            log(coaches!.data.length.toString());
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Container(
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    SizedBox(
+                      width: 250,
+                      height: 50,
+                      child: Expanded(
+                          child: TextField(
+                        controller: myController,
+                        decoration: InputDecoration(
+                          border: OutlineInputBorder(),
+                          labelText: 'ค้นหา',
+                        ),
+                      )),
+                    ),
+                    ElevatedButton(
+                        onPressed: () {
+                          if (myController.text.isNotEmpty) {
+                            coachService
+                                .getNameCoach(myController.text)
+                                .then((data) {
+                              coaches = data;
+                              if (coaches != null) {
+                                setState(() {});
+                                log(coaches!.data.length.toString());
+                              }
+                            });
                           }
-                        });}
-                      },
-                      child: Text("แสดงชื่อโค้ช")),
-                ],
+                        },
+                        child: Text("แสดงชื่อโค้ช")),
+                  ],
+                ),
               ),
             ),
           ),
-          (coaches != null)
-              ? Expanded(
-                  child: ListView.builder(
-                    itemCount: coaches!.data.length,
-                    itemBuilder: (context, index) {
-                      return Text(coaches!.data[index].fullName);
-                    },
+          (coaches != null)? 
+          Expanded( 
+                  child: Container(            
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: ListView.builder( 
+                        itemCount: coaches!.data.length,
+                        itemBuilder: (context, index) {
+                          return Padding(
+                            padding: const EdgeInsets.all(18.0),
+                            child: Column(
+                              children: [
+                                Text(coaches!.data[index].username),
+                                Text(coaches!.data[index].fullName)
+                              ],
+                            ),
+                                  
+                          );
+                        },
+                      ),
+                    ),
                   ),
                 )
-              : Container(),
+              : Container(color: Colors.amber),
         ],
       ),
     );
