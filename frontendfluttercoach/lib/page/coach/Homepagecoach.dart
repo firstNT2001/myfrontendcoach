@@ -21,7 +21,10 @@ class _HomePageCoachState extends State<HomePageCoach> {
   late CourseService courseService;
   late Future<void> loadDataMethod;
   late HttpResponse<List<ModelCourse>> courses;
-  String cid = "1";
+  String cid = "2";
+  String statusName = "";
+  String statusID = "";
+  bool checkBoxVal = true;
   //var courses;
   @override
   void initState() {
@@ -47,28 +50,56 @@ class _HomePageCoachState extends State<HomePageCoach> {
               return Container(
                 child: Column(
                   children: [
-                    (courses != null)
-                        ? Expanded(
-                            child: ListView.builder(
-                              itemCount: courses.data.length,
-                              itemBuilder: (context, index) {
-                                return Container(
-                                  padding: EdgeInsets.only(top: 20,left: 5,right: 5),
-                                  child: SizedBox(
-                                      height: 200,
-                                      child: Card(
-                                          child: Column(
-                                            children: [
-                                              Text(courses.data[index].image),
-                                              Text(courses.data[index].name),
-                                              Text(courses.data[index].details),
-                                            ],
-                                          ))),
-                                );
-                              },
-                            ),
-                          )
-                        : Container(),
+                    if (courses != null)
+                      Expanded(
+                        child: ListView.builder(
+                          itemCount: courses.data.length,
+                          itemBuilder: (context, index) {
+                            checkStatusCourse(index);
+                            return Container(
+                              padding:
+                                  EdgeInsets.only(top: 20, left: 5, right: 5),
+                              child: SizedBox(
+                                  height: 300,
+                                  child: Card(
+                                      child: Column(
+                                    children: [
+                                      Padding(
+                                        padding: const EdgeInsets.all(8.0),
+                                        child: SizedBox(
+                                          height: 100,
+                                          width: double.infinity,
+                                          child: Card(
+                                            child:
+                                                Text(courses.data[index].image),
+                                          ),
+                                        ),
+                                      ),
+                                      Text(courses.data[index].image),
+                                      Text(courses.data[index].name),
+                                      Text(statusName),
+                                      // ignore: unnecessary_new
+                                      ListTile(
+                                        title: new Text(index.toString()),
+                                        trailing: new Switch(
+                                          value: checkBoxVal,
+                                          onChanged: (bool? value) {
+                                            log("ss" + value.toString());
+                                            setState(() =>
+                                              checkBoxVal = value!
+                                            );
+                                            log(checkBoxVal.toString());
+                                          },
+                                        ),
+                                      ),
+                                    ],
+                                  ))),
+                            );
+                          },
+                        ),
+                      )
+                    else
+                      Container(),
                   ],
                 ),
               );
@@ -77,6 +108,17 @@ class _HomePageCoachState extends State<HomePageCoach> {
             }
           }),
     );
+  }
+
+  void checkStatusCourse(int index) {
+    statusID = courses.data[index].status;
+    if (statusID == "1") {
+      statusName = "เปิดการขาย";
+      //checkBoxVal = true;
+    } else {
+      statusName = "ปิดการขาย";
+      //checkBoxVal = false;
+    }
   }
 
   Future<void> loadData() async {
