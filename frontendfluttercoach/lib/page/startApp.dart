@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:frontendfluttercoach/page/user/homepageUser.dart';
 
-import 'coach/Homepagecoach.dart';
+import 'coach/homePageCoach.dart';
 
 class StartApp extends StatelessWidget {
   const StartApp({super.key});
