@@ -13,5 +13,10 @@ abstract class CourseService {
   @GET("/course/getCourseByIDCoach/{cid}")
   Future<HttpResponse<List<ModelCourse>>> getCoachByCid(@Path("cid") String cid);
 
+  @GET("/course/getCourseByCoID/{coID}")
+  Future<HttpResponse<ModelCourse>> getCoachByCoID(@Path("coID") String coID);
+
+   @GET("/course/getCourseByName/{name}")
+  Future<HttpResponse<List<ModelCourse>>> getCoachByName(@Path("name") String name);
  
 }
