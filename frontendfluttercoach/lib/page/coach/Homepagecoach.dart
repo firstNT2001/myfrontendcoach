@@ -25,6 +25,7 @@ class _HomePageCoachState extends State<HomePageCoach> {
   String statusName = "";
   String statusID = "";
   bool checkBoxVal = true;
+ 
   //var courses;
   @override
   void initState() {
@@ -47,64 +48,69 @@ class _HomePageCoachState extends State<HomePageCoach> {
           future: loadDataMethod, // 3.1 object ของ async method
           builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.done) {
-              return Container(
-                child: Column(
-                  children: [
-                    if (courses != null)
-                      Expanded(
-                        child: ListView.builder(
-                          itemCount: courses.data.length,
-                          itemBuilder: (context, index) {
-                            checkStatusCourse(index);
-                            return Container(
-                              padding:
-                                  EdgeInsets.only(top: 20, left: 5, right: 5),
-                              child: SizedBox(
-                                  height: 300,
-                                  child: Card(
-                                      child: Column(
-                                    children: [
-                                      Padding(
-                                        padding: const EdgeInsets.all(8.0),
-                                        child: SizedBox(
-                                          height: 100,
-                                          width: double.infinity,
-                                          child: Card(
-                                            child:
-                                                Text(courses.data[index].image),
-                                          ),
-                                        ),
-                                      ),
-                                      Text(courses.data[index].image),
-                                      Text(courses.data[index].name),
-                                      Text(statusName),
-                                      // ignore: unnecessary_new
-                                      ListTile(
-                                        title: new Text(index.toString()),
-                                        trailing: new Switch(
-                                          value: checkBoxVal,
-                                          onChanged: (bool? value) {
-                                            log("ss" + value.toString());
-                                            setState(() =>
-                                              checkBoxVal = value!
-                                            );
-                                            log(checkBoxVal.toString());
-                                          },
-                                        ),
-                                      ),
-                                    ],
-                                  ))),
-                            );
-                          },
-                        ),
-                      )
-                    else
-                      Container(),
-                  ],
-                ),
+              return Column(
+                children: [
+                  if (courses != null)
+                    Expanded(
+                      child: ListView.builder(
+                        itemCount: courses.data.length,
+                        itemBuilder: (context, index) {
+                          checkStatusCourse(index);
+                          return Container(
+                            padding:
+                                const EdgeInsets.only(top: 20, left: 5, right: 5),
+                            child: Card(
+                                child: ListTile(
+                                  title: Text(courses.data[index].name),
+                                  subtitle: Text(courses.data[index].name),
+                                  leading: Image.network(courses.data[index].image),
+                                  onTap: (){
+                                    
+                                  },
+                                  // child: Column(
+                                  //                                 children: [
+                                  // Padding(
+                                  //   padding: const EdgeInsets.all(8.0),
+                                  //   child: SizedBox(
+                                  //     height: 100,
+                                  //     width: double.infinity,
+                                  //     child: Card(
+                                  //       child:
+                                  //           Text(courses.data[index].image),
+                                  //     ),
+                                  //   ),
+                                  // ),
+                                  // Text(courses.data[index].image),
+                                  // Text(courses.data[index].name),
+                                  // Text(statusName),
+                                  // // ignore: unnecessary_new
+                                  // ListTile(
+                                  //   title:  Text(index.toString()),
+                                  //   trailing:  Switch(
+                                  //     value: checkBoxVal,
+                                  //     onChanged: (bool? value) {
+                                  //       log("ss" + value.toString());
+                                  //       setState(() =>
+                                  //         checkBoxVal = value!
+                                  //       );
+                                  //       log(checkBoxVal.toString());
+                                  //     },
+                                  //   ),
+                                  // ),
+                                  //                                 ],
+                                  //                               ),
+                                )),
+                          );
+                        },
+                      ),
+                    )
+                  else
+                    Container(),
+                ],
               );
             } else {
               return const Center(child: CircularProgressIndicator());
+             
             }
           }),
     );
