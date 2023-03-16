@@ -5,4 +5,5 @@ class AppData with ChangeNotifier {
   String baseurl = "http://202.28.34.197:9775";
 
   Map<String,dynamic> userFacebook = {} ; 
+  int coID = 0;
 }
