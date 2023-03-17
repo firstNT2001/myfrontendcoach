@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'register.dart';
+part of '../login.dart';
 
 // **************************************************************************
 // RetrofitGenerator
@@ -8,8 +8,8 @@ part of 'register.dart';
 
 // ignore_for_file: unnecessary_brace_in_string_interps,no_leading_underscores_for_local_identifiers
 
-class _RegisterService implements RegisterService {
-  _RegisterService(
+class _LoginService implements LoginService {
+  _LoginService(
     this._dio, {
     this.baseUrl,
   });
@@ -19,12 +19,12 @@ class _RegisterService implements RegisterService {
   String? baseUrl;
 
   @override
-  Future<HttpResponse<ModelCidAndUid>> regCusService(reg) async {
+  Future<HttpResponse<ModelCidAndUid>> login(login) async {
     const _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{};
     final _data = <String, dynamic>{};
-    _data.addAll(reg.toJson());
+    _data.addAll(login.toJson());
     final _result = await _dio.fetch<Map<String, dynamic>>(
         _setStreamType<HttpResponse<ModelCidAndUid>>(Options(
       method: 'POST',
@@ -33,7 +33,7 @@ class _RegisterService implements RegisterService {
     )
             .compose(
               _dio.options,
-              '/user/registerCus',
+              '/user/login',
               queryParameters: queryParameters,
               data: _data,
             )
@@ -44,12 +44,12 @@ class _RegisterService implements RegisterService {
   }
 
   @override
-  Future<HttpResponse<ModelCidAndUid>> regCoachService(reg) async {
+  Future<HttpResponse<ModelCidAndUid>> loginfb(login) async {
     const _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{};
     final _data = <String, dynamic>{};
-    _data.addAll(reg.toJson());
+    _data.addAll(login.toJson());
     final _result = await _dio.fetch<Map<String, dynamic>>(
         _setStreamType<HttpResponse<ModelCidAndUid>>(Options(
       method: 'POST',
@@ -58,7 +58,7 @@ class _RegisterService implements RegisterService {
     )
             .compose(
               _dio.options,
-              '/user/registerCoach',
+              '/user/loginfb',
               queryParameters: queryParameters,
               data: _data,
             )

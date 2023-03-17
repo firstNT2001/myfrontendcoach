@@ -9,7 +9,7 @@ import '../model/modelCidAndUid.dart';
 
 
 
-part 'register.g.dart';
+part 'generated/register.g.dart';
 
 @RestApi()
 abstract class RegisterService {
