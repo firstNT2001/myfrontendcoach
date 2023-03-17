@@ -18,7 +18,8 @@ class HomePageUser extends StatefulWidget {
 
 class _HomePageUserState extends State<HomePageUser> {
   late CoachService coachService;
-  HttpResponse<List<Coach>>? coaches;
+  List<Coach> coaches = [];
+  //List<Coach> coaches = [];
   TextEditingController myController = TextEditingController();
 
   @override
@@ -37,62 +38,66 @@ class _HomePageUserState extends State<HomePageUser> {
       ),
       body: Column(
         children: [
-          Center(
-            child: Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Container(
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    SizedBox(
-                      width: 250,
-                      height: 50,
-                      child: Expanded(
-                          child: TextField(
-                        controller: myController,
-                        decoration: InputDecoration(
-                          border: OutlineInputBorder(),
-                          labelText: 'ค้นหา',
-                        ),
-                      )),
+          Padding(
+            padding: const EdgeInsets.only(top: 35, left: 15),
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                SizedBox(
+                  width: 250,
+                  height: 50,
+                  child: TextField(
+                    controller: myController,
+                    decoration: InputDecoration(
+                      border: OutlineInputBorder(),
+                      labelText: 'ค้นหา',
                     ),
-                    ElevatedButton(
-                        onPressed: () {
-                          if (myController.text.isNotEmpty) {
-                            coachService
-                                .getNameCoach(myController.text)
-                                .then((data) {
-                              coaches = data;
-                              if (coaches != null) {
-                                setState(() {});
-                                log(coaches!.data.length.toString());
-                              }
-                            });
-                          }
-                        },
-                        child: Text("แสดงชื่อโค้ช")),
-                  ],
+                  ),
                 ),
-              ),
+                Padding(
+                  padding: const EdgeInsets.only(left: 10),
+                  child: ElevatedButton(
+                      onPressed: () {
+                        if (myController.text.isNotEmpty) {
+                          coachService
+                              .getNameCoach(myController.text)
+                              .then((data) {
+                            var datacoach = data.data;
+                            coaches = datacoach;
+                            if (coaches != null) {
+                              setState(() {});
+                              log(coaches.length.toString());
+                            }
+                          });
+                        }
+                      },
+                      child: Text("แสดงชื่อโค้ช")),
+                ),
+              ],
             ),
           ),
-          (coaches != null)? 
-          Expanded( 
-                  child: Container(            
+          Row(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [
+              IconButton(onPressed: () {}, icon: Icon(Icons.tune_rounded)),
+            ],
+          ),
+          (coaches != null)
+              ? Expanded(
+                  child: Container(
                     child: Padding(
                       padding: const EdgeInsets.all(8.0),
-                      child: ListView.builder( 
-                        itemCount: coaches!.data.length,
+                      child: ListView.builder(
+                        itemCount: coaches.length,
                         itemBuilder: (context, index) {
                           return Padding(
                             padding: const EdgeInsets.all(18.0),
                             child: Column(
                               children: [
-                                Text(coaches!.data[index].username),
-                                Text(coaches!.data[index].fullName)
+                                Text(coaches[index].username),
+                                Text(coaches[index].fullName)
                               ],
                             ),
-                                  
                           );
                         },
                       ),
