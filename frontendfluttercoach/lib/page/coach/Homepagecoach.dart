@@ -21,7 +21,7 @@ class HomePageCoach extends StatefulWidget {
 class _HomePageCoachState extends State<HomePageCoach> {
   late CourseService courseService;
   late Future<void> loadDataMethod;
-  late HttpResponse<List<ModelCourse>> courses;
+  List<ModelCourse> courses = [];
   String cid = "2";
   String statusName = "";
   String statusID = "";
@@ -54,7 +54,7 @@ class _HomePageCoachState extends State<HomePageCoach> {
                   if (courses != null)
                     Expanded(
                       child: ListView.builder(
-                        itemCount: courses.data.length,
+                        itemCount: courses.length,
                         itemBuilder: (context, index) {
                           checkStatusCourse(index);
                           return Container(
@@ -62,11 +62,11 @@ class _HomePageCoachState extends State<HomePageCoach> {
                                 const EdgeInsets.only(top: 20, left: 5, right: 5),
                             child: Card(
                                 child: ListTile(
-                                  title: Text(courses.data[index].name),
-                                  subtitle: Text(courses.data[index].name),
-                                  leading: Image.network(courses.data[index].image),
+                                  title: Text(courses[index].name),
+                                  subtitle: Text(courses[index].name),
+                                  leading: Image.network(courses[index].image),
                                   onTap: (){
-                                    context.read<AppData>().coID = courses.data[index].coId;
+                                    context.read<AppData>().coID = courses[index].coId;
                                     Navigator.push(context, MaterialPageRoute(builder: (context) => const courseEditPage()));
                                   },
                                   // child: Column(
@@ -119,7 +119,7 @@ class _HomePageCoachState extends State<HomePageCoach> {
   }
 
   void checkStatusCourse(int index) {
-    statusID = courses.data[index].status;
+    statusID = courses[index].status;
     if (statusID == "1") {
       statusName = "เปิดการขาย";
       //checkBoxVal = true;
@@ -131,7 +131,8 @@ class _HomePageCoachState extends State<HomePageCoach> {
 
   Future<void> loadData() async {
     try {
-      courses = await courseService.getCoachByCid(cid);
+      var datas = await courseService.getCoachByCid(cid);
+      courses = datas.data;
     } catch (err) {
       log('Error: $err');
     }
