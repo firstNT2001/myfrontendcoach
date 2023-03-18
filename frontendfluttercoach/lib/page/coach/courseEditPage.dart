@@ -1,6 +1,6 @@
 import 'dart:convert';
 import 'dart:developer';
-import 'dart:io';
+//import 'dart:io';
 
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
@@ -9,8 +9,6 @@ import 'package:provider/provider.dart';
 
 import '../../service/course.dart';
 import '../../service/provider/appdata.dart';
-
-
 
 class courseEditPage extends StatefulWidget {
   const courseEditPage({super.key});
@@ -22,10 +20,12 @@ class courseEditPage extends StatefulWidget {
 class _courseEditPageState extends State<courseEditPage> {
   late CourseService courseService;
   late Future<void> loadDataMethod;
-   var courses;
 
+  var courses;
+  bool switchOnOff = false;
   int coID = 0;
-  
+  String statusCourse = "";
+
   Object? get destinations => null;
   @override
   void initState() {
@@ -34,13 +34,27 @@ class _courseEditPageState extends State<courseEditPage> {
     coID = context.read<AppData>().coID;
     courseService =
         CourseService(Dio(), baseUrl: context.read<AppData>().baseurl);
-        courseService.getCoachByCoID(coID.toString()).then((cou) {
-        log(cou.data.name);
+    courseService.getCourseByCoID(coID.toString()).then((cou) {
+      log(cou.data.status);
+      statusCourse = cou.data.status;
+      if (statusCourse == "1") {
+        //log(courses.data.status);
+        log("message");
+        setState(() {
+          switchOnOff = true;
+        });
+      }
+      if (statusCourse == "0") {
+        setState(() {
+          switchOnOff = false;
+        });
+      }
     });
-    
+
     // 2.2 async method
     loadDataMethod = loadData();
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -48,16 +62,88 @@ class _courseEditPageState extends State<courseEditPage> {
           future: loadDataMethod, // 3.1 object ของ async method
           builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.done) {
-              return Container(child: Center(child: Text(courses.data.name)));
+              log(courses.data.image);
+
+              return Column(
+                children: [
+                  Expanded(child: Image.network(courses.data.image)),
+                  Padding(
+                    padding: const EdgeInsets.all(50.0),
+                    child: Center(child: Text(courses.data.name)),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.all(50.0),
+                    child: Center(child: Text(courses.data.status)),
+                  ),
+                  Switch(
+                    onChanged: (bool value) {
+                      setState(() {
+                        switchOnOff = value;
+                      });
+                      log(switchOnOff.toString());
+                      if (value == true) {
+                        showDialog<String>(
+                            context: context,
+                            builder: (BuildContext context) => AlertDialog(
+                                  title: const Text('เปิดขายคอร์สหรือไม'),
+                                  content:
+                                      const Text('ต้องการเปิดขายคอร์สหรือไม'),
+                                  actions: <Widget>[
+                                    TextButton(
+                                        child: const Text('Cancel'),
+                                        onPressed: () {
+                                          Navigator.pop(context, 'Cancel');
+                                          setState(() {
+                                            switchOnOff = false;
+                                          });
+                                        }),
+                                    TextButton(
+                                      onPressed: () =>
+                                          Navigator.pop(context, 'OK'),
+                                      child: const Text('OK'),
+                                    ),
+                                  ],
+                                ));
+                      } else if (value == false) {
+                        showDialog<String>(
+                            context: context,
+                            builder: (BuildContext context) => AlertDialog(
+                                  title: const Text('ปิดขายคอร์สหรือไม'),
+                                  content:
+                                      const Text('ต้องการปิดขายคอร์สหรือไม'),
+                                  actions: <Widget>[
+                                    TextButton(
+                                        child: const Text('Cancel'),
+                                        onPressed: () {
+                                          Navigator.pop(context, 'Cancel');
+                                          setState(() {
+                                            switchOnOff = true;
+                                          });
+                                        }),
+                                    TextButton(
+                                      onPressed: () =>
+                                          Navigator.pop(context, 'OK'),
+                                      child: const Text('OK'),
+                                    ),
+                                  ],
+                                ));
+                      }
+                    },
+                    value: switchOnOff,
+                  ),
+                ],
+              );
             } else {
               return const Center(child: CircularProgressIndicator());
             }
           }),
     );
   }
-   Future<void> loadData() async {
+
+  Future<void> loadData() async {
     try {
-      courses = await courseService.getCoachByCoID(coID.toString());
+      courses = await courseService.getCourseByCoID(coID.toString());
+      //log(courses.data.status);
     } catch (err) {
       log('Error: $err');
     }
