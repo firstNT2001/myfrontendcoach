@@ -66,70 +66,30 @@ class _courseEditPageState extends State<courseEditPage> {
 
               return Column(
                 children: [
-                  Expanded(child: Image.network(courses.data.image)),
-                  Padding(
-                    padding: const EdgeInsets.all(50.0),
-                    child: Center(child: Text(courses.data.name)),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.all(50.0),
-                    child: Center(child: Text(courses.data.status)),
-                  ),
-                  Switch(
-                    onChanged: (bool value) {
-                      setState(() {
-                        switchOnOff = value;
-                      });
-                      log(switchOnOff.toString());
-                      if (value == true) {
-                        showDialog<String>(
-                            context: context,
-                            builder: (BuildContext context) => AlertDialog(
-                                  title: const Text('เปิดขายคอร์สหรือไม'),
-                                  content:
-                                      const Text('ต้องการเปิดขายคอร์สหรือไม'),
-                                  actions: <Widget>[
-                                    TextButton(
-                                        child: const Text('Cancel'),
-                                        onPressed: () {
-                                          Navigator.pop(context, 'Cancel');
-                                          setState(() {
-                                            switchOnOff = false;
-                                          });
-                                        }),
-                                    TextButton(
-                                      onPressed: () =>
-                                          Navigator.pop(context, 'OK'),
-                                      child: const Text('OK'),
-                                    ),
-                                  ],
-                                ));
-                      } else if (value == false) {
-                        showDialog<String>(
-                            context: context,
-                            builder: (BuildContext context) => AlertDialog(
-                                  title: const Text('ปิดขายคอร์สหรือไม'),
-                                  content:
-                                      const Text('ต้องการปิดขายคอร์สหรือไม'),
-                                  actions: <Widget>[
-                                    TextButton(
-                                        child: const Text('Cancel'),
-                                        onPressed: () {
-                                          Navigator.pop(context, 'Cancel');
-                                          setState(() {
-                                            switchOnOff = true;
-                                          });
-                                        }),
-                                    TextButton(
-                                      onPressed: () =>
-                                          Navigator.pop(context, 'OK'),
-                                      child: const Text('OK'),
-                                    ),
-                                  ],
-                                ));
-                      }
-                    },
-                    value: switchOnOff,
+                  Expanded(
+                    child: ListView(
+                      children: [
+                        Expanded(child: Image.network(courses.data.image)),
+                        Padding(
+                          padding: const EdgeInsets.all(50.0),
+                          child: Center(
+                              child: TextField(
+                                  decoration: InputDecoration(
+                                      labelText: 'Name',
+                                      onChange:(){
+                                        setState(() {
+                                          
+                                        });
+                                      }
+                                      ))),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.all(50.0),
+                          child: Center(child: Text(courses.data.status)),
+                        ),
+                        switchOnOffStatus(context),
+                      ],
+                    ),
                   ),
                 ],
               );
@@ -137,6 +97,61 @@ class _courseEditPageState extends State<courseEditPage> {
               return const Center(child: CircularProgressIndicator());
             }
           }),
+    );
+  }
+
+  Switch switchOnOffStatus(BuildContext context) {
+    return Switch(
+      onChanged: (bool value) {
+        setState(() {
+          switchOnOff = value;
+        });
+        log(switchOnOff.toString());
+        if (value == true) {
+          showDialog<String>(
+              context: context,
+              builder: (BuildContext context) => AlertDialog(
+                    title: const Text('เปิดขายคอร์สหรือไม'),
+                    content: const Text('ต้องการเปิดขายคอร์สหรือไม'),
+                    actions: <Widget>[
+                      TextButton(
+                          child: const Text('Cancel'),
+                          onPressed: () {
+                            Navigator.pop(context, 'Cancel');
+                            setState(() {
+                              switchOnOff = false;
+                            });
+                          }),
+                      TextButton(
+                        onPressed: () => Navigator.pop(context, 'OK'),
+                        child: const Text('OK'),
+                      ),
+                    ],
+                  ));
+        } else if (value == false) {
+          showDialog<String>(
+              context: context,
+              builder: (BuildContext context) => AlertDialog(
+                    title: const Text('ปิดขายคอร์สหรือไม'),
+                    content: const Text('ต้องการปิดขายคอร์สหรือไม'),
+                    actions: <Widget>[
+                      TextButton(
+                          child: const Text('Cancel'),
+                          onPressed: () {
+                            Navigator.pop(context, 'Cancel');
+                            setState(() {
+                              switchOnOff = true;
+                            });
+                          }),
+                      TextButton(
+                        onPressed: () => Navigator.pop(context, 'OK'),
+                        child: const Text('OK'),
+                      ),
+                    ],
+                  ));
+        }
+      },
+      value: switchOnOff,
     );
   }
 
