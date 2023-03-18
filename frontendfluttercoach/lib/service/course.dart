@@ -11,12 +11,12 @@ abstract class CourseService {
   factory CourseService(Dio dio, {String baseUrl}) = _CourseService;
 
   @GET("/course/getCourseByIDCoach/{cid}")
-  Future<HttpResponse<List<ModelCourse>>> getCoachByCid(@Path("cid") String cid);
+  Future<HttpResponse<List<ModelCourse>>> getCourseByCid(@Path("cid") String cid);
 
   @GET("/course/getCourseByCoID/{coID}")
-  Future<HttpResponse<ModelCourse>> getCoachByCoID(@Path("coID") String coID);
+  Future<HttpResponse<ModelCourse>> getCourseByCoID(@Path("coID") String coID);
 
    @GET("/course/getCourseByName/{name}")
-  Future<HttpResponse<List<ModelCourse>>> getCoachByName(@Path("name") String name);
+  Future<HttpResponse<List<ModelCourse>>> getCourseByName(@Path("name") String name);
  
 }

@@ -19,7 +19,7 @@ class _CourseService implements CourseService {
   String? baseUrl;
 
   @override
-  Future<HttpResponse<List<ModelCourse>>> getCoachByCid(cid) async {
+  Future<HttpResponse<List<ModelCourse>>> getCourseByCid(cid) async {
     const _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{};
@@ -45,7 +45,7 @@ class _CourseService implements CourseService {
   }
 
   @override
-  Future<HttpResponse<ModelCourse>> getCoachByCoID(coID) async {
+  Future<HttpResponse<ModelCourse>> getCourseByCoID(coID) async {
     const _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{};
@@ -69,7 +69,7 @@ class _CourseService implements CourseService {
   }
 
   @override
-  Future<HttpResponse<List<ModelCourse>>> getCoachByName(name) async {
+  Future<HttpResponse<List<ModelCourse>>> getCourseByName(name) async {
     const _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{};

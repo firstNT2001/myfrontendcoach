@@ -34,7 +34,7 @@ class _courseEditPageState extends State<courseEditPage> {
     coID = context.read<AppData>().coID;
     courseService =
         CourseService(Dio(), baseUrl: context.read<AppData>().baseurl);
-    courseService.getCoachByCoID(coID.toString()).then((cou) {
+    courseService.getCourseByCoID(coID.toString()).then((cou) {
       log(cou.data.status);
       statusCourse = cou.data.status;
       if (statusCourse == "1") {
@@ -142,7 +142,7 @@ class _courseEditPageState extends State<courseEditPage> {
 
   Future<void> loadData() async {
     try {
-      courses = await courseService.getCoachByCoID(coID.toString());
+      courses = await courseService.getCourseByCoID(coID.toString());
       //log(courses.data.status);
     } catch (err) {
       log('Error: $err');

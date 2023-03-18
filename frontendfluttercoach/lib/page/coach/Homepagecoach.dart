@@ -56,7 +56,7 @@ class _HomePageCoachState extends State<HomePageCoach> {
                       child: ListView.builder(
                         itemCount: courses.length,
                         itemBuilder: (context, index) {
-                          checkStatusCourse(index);
+                         
                           return Container(
                             padding:
                                 const EdgeInsets.only(top: 20, left: 5, right: 5),
@@ -118,20 +118,10 @@ class _HomePageCoachState extends State<HomePageCoach> {
     );
   }
 
-  void checkStatusCourse(int index) {
-    statusID = courses[index].status;
-    if (statusID == "1") {
-      statusName = "เปิดการขาย";
-      //checkBoxVal = true;
-    } else {
-      statusName = "ปิดการขาย";
-      //checkBoxVal = false;
-    }
-  }
 
   Future<void> loadData() async {
     try {
-      var datas = await courseService.getCoachByCid(cid);
+      var datas = await courseService.getCourseByCid(cid);
       courses = datas.data;
     } catch (err) {
       log('Error: $err');
