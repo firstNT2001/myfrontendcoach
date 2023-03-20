@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:developer';
 
 import 'package:frontendfluttercoach/page/coach/courseEditPage.dart';
+import 'package:get/get.dart';
 import 'package:retrofit/retrofit.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
@@ -67,6 +68,7 @@ class _HomePageCoachState extends State<HomePageCoach> {
                                   leading: Image.network(courses[index].image),
                                   onTap: (){
                                     context.read<AppData>().coID = courses[index].coId;
+                                    //Get.to(()=> courseEditPage());
                                     Navigator.push(context, MaterialPageRoute(builder: (context) => const courseEditPage()));
                                   },
                                   // child: Column(
