@@ -13,17 +13,21 @@ Future<void> main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
-  runApp(GetMaterialApp(
-      title: 'Flutter Demo',
-      theme: ThemeData(
-        useMaterial3: true,
-        primarySwatch: Colors.green,
-      ),
-      home: MultiProvider(providers: [
-    ChangeNotifierProvider(
-      create: (context) => AppData(),
-    )
-  ], child: const StartApp()),
-    ));
+  runApp(MaterialApp(
+    home: MultiProvider(
+        providers: [
+          ChangeNotifierProvider(
+            create: (context) => AppData(),
+          )
+        ],
+        child: GetMaterialApp(
+          home: const StartApp(),
+          title: 'Flutter Demo',
+          theme: ThemeData(
+            useMaterial3: true,
+            primarySwatch: Colors.green,
+          ),
+        )),
+  ));
 }
 
