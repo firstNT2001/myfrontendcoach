@@ -2,7 +2,6 @@ import 'dart:convert';
 import 'dart:developer';
 
 import 'package:frontendfluttercoach/page/coach/courseEditPage.dart';
-import 'package:frontendfluttercoach/page/coach/courseEditPage.dart';
 import 'package:retrofit/retrofit.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';

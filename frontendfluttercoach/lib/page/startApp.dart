@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:frontendfluttercoach/page/user/homepageUser.dart';
+import 'package:get/get.dart';
 
 import 'coach/homePageCoach.dart';
 
@@ -40,9 +41,10 @@ class StartApp extends StatelessWidget {
                 padding: EdgeInsets.only(left: 20, right: 20),
                 child: ElevatedButton(
                     onPressed: () {
-                      Navigator.push(context, MaterialPageRoute(builder: (context) {
-                        return HomePageUser();
-                      }));
+                      Get.to(()=>HomePageUser());
+                      // Navigator.push(context, MaterialPageRoute(builder: (context) {
+                      //   return HomePageUser();
+                      // }));
                     },
                     child: Text('หน้าสมาชิก')),
               ),

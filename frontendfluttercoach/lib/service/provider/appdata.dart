@@ -6,4 +6,11 @@ class AppData with ChangeNotifier {
 
   Map<String,dynamic> userFacebook = {} ; 
   int coID = 0;
+
+  int cid =0;
+
+
+
+
+
 }
