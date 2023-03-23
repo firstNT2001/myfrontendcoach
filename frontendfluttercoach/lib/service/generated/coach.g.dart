@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'coach.dart';
+part of '../coach.dart';
 
 // **************************************************************************
 // RetrofitGenerator

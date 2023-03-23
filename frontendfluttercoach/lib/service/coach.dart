@@ -3,7 +3,7 @@ import 'package:dio/dio.dart';
 
 import 'package:frontendfluttercoach/model/modelCoach.dart';
 
-part 'coach.g.dart';
+part 'generated/coach.g.dart';
 
 @RestApi()
 abstract class CoachService {
