@@ -11,14 +11,14 @@ import 'package:retrofit/dio.dart';
 import '../../service/course.dart';
 import '../../service/provider/appdata.dart';
 
-class courseEditPage extends StatefulWidget {
-  const courseEditPage({super.key});
+class CourseEditPage extends StatefulWidget {
+  const CourseEditPage({super.key});
 
   @override
-  State<courseEditPage> createState() => _courseEditPageState();
+  State<CourseEditPage> createState() => _CourseEditPageState();
 }
 
-class _courseEditPageState extends State<courseEditPage> {
+class _CourseEditPageState extends State<CourseEditPage> {
   late CourseService courseService;
   late Future<void> loadDataMethod;
 

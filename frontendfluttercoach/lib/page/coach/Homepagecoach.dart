@@ -68,8 +68,8 @@ class _HomePageCoachState extends State<HomePageCoach> {
                                   leading: Image.network(courses[index].image),
                                   onTap: (){
                                     context.read<AppData>().coID = courses[index].coId;
-                                    //Get.to(()=> courseEditPage());
-                                    Navigator.push(context, MaterialPageRoute(builder: (context) => const courseEditPage()));
+                                    Get.to(()=> const CourseEditPage());
+                                    // Navigator.push(context, MaterialPageRoute(builder: (context) => const courseEditPage()));
                                   },
                                   // child: Column(
                                   //                                 children: [

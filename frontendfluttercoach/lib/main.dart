@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:frontendfluttercoach/page/startApp.dart';
 import 'package:frontendfluttercoach/service/provider/appdata.dart';
+import 'package:frontendfluttercoach/service/provider/courseData.dart';
 import 'package:get/get.dart';
 import 'package:provider/provider.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -18,6 +19,9 @@ Future<void> main() async {
         providers: [
           ChangeNotifierProvider(
             create: (context) => AppData(),
+          ),
+          ChangeNotifierProvider(
+            create: (context) => CourseData(),
           )
         ],
         child: GetMaterialApp(
