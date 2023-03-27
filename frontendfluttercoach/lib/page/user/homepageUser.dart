@@ -1,4 +1,3 @@
-import 'dart:convert';
 
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
@@ -6,7 +5,6 @@ import 'package:frontendfluttercoach/model/modelCoach.dart';
 import 'package:frontendfluttercoach/page/user/profilecoach.dart';
 import 'package:get/get.dart';
 import 'package:provider/provider.dart';
-import 'package:retrofit/dio.dart';
 import 'dart:developer';
 import '../../model/modelCourse.dart';
 import '../../service/coach.dart';
@@ -128,12 +126,21 @@ class _HomePageUserState extends State<HomePageUser> {
                                     radius: 50,
                                     backgroundImage: NetworkImage(coach.image),
                                   ),
-                                  title: Text(coach.cid.toString()),
+                                  title: Text(coach.username.toString()),
                                   subtitle: Text(coach.fullName),
                                   trailing: const Icon(Icons.arrow_forward),
+                                  
                                   onTap: () {
                                     log(coach.cid.toString());
+                                    log("q :"+ coach.qualification);
+                                    log("name :"+ coach.fullName);
+                                    log("ussername :"+ coach.username);
+                                    log("property :"+ coach.property);
                                     context.read<AppData>().cid = coach.cid;
+                                    context.read<AppData>().qualification = coach.qualification;
+                                    context.read<AppData>().nameCoach = coach.fullName;
+                                    context.read<AppData>().usercoach = coach.username;
+                                    context.read<AppData>().propertycoach = coach.property;
                                     Get.to(()=>ProfileCoachPage());
 
                                   },
@@ -166,13 +173,11 @@ class _HomePageUserState extends State<HomePageUser> {
                                 subtitle: Text(course.details),
                                 trailing: const Icon(Icons.arrow_forward),
                                 onTap: () {
-                                  Navigator.of(context).push(MaterialPageRoute(
-                                    builder: (context) =>
-                                        showCousePage(couse: course ),
-                                  ));
+
+                                  Get.to(()=>showCousePage());
                                 },
                               ),
-                            );
+                            ); 
                           }),
                     ),
                   ),
