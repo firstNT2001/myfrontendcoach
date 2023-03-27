@@ -1,6 +1,7 @@
 
 
 import 'dart:developer';
+import 'dart:ffi';
 
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
@@ -24,6 +25,7 @@ class _ProfileCoachPageState extends State<ProfileCoachPage> {
   String fullnameCoach = "";
   String userNameCoach = " ";
   String propertyC = " ";
+
  
   @override
   void initState() {
@@ -76,5 +78,8 @@ class _ProfileCoachPageState extends State<ProfileCoachPage> {
       ),
       
     );
+  }
+  Future<void> loadData() async{
+   
   }
 }
