@@ -32,9 +32,9 @@ class _CourseEditPageState extends State<CourseEditPage> {
   final _details = TextEditingController();
   final _level = TextEditingController();
   final _amount = TextEditingController();
-  //final _image = TextEditingController();
-  final _day = TextEditingController();
+  final _days = TextEditingController();
   final _price = TextEditingController();
+  int days = 0;
 
   Object? get destinations => null;
   @override
@@ -66,8 +66,11 @@ class _CourseEditPageState extends State<CourseEditPage> {
       _details.text = cou.data.details;
       _level.text = cou.data.level;
       _amount.text = cou.data.amount.toString();
-      _day.text = cou.data.days.toString();
       _price.text = cou.data.price.toString();
+      _days.text = cou.data.days.toString();
+      days = int.parse(_days.text); 
+    
+      log("day:"+days.toString());
     });
 
     // 2.2 async method
@@ -87,19 +90,51 @@ class _CourseEditPageState extends State<CourseEditPage> {
                   Expanded(
                     child: ListView(
                       children: [
+                        
                         //Expanded(child: Image.network(courses.data.image)),
                         Padding(
-                          padding: const EdgeInsets.all(50.0),
-                          child: Center(child: textField(_name,"ชื่อ")),
+                          padding: const EdgeInsets.all(20.0),
+                          child: Center(child: textField(_name, "ชื่อ")),
                         ),
                         Padding(
-                          padding: const EdgeInsets.all(20.0),
-                          child: Center(child: textField(_details,"รายละเอียด")),
+                          padding: const EdgeInsets.all(8.0),
+                          child:
+                              Center(child: textField(_details, "รายละเอียด")),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Center(child: textField(_amount, "จำนวนคน")),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Center(child: textField(_level, "ความยาก")),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Center(child: textField(_price, "ราคา")),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Center(child: textField(_days, "จำนวนวัน")),        
+                        ),
+                       
+                        Column(
+                          children: [
+                            for (int i = 1; i <= days; i++) ...{
+                              Card(
+                                child: Container(
+                                    width: double.infinity,
+                                    padding: EdgeInsets.all(20),
+                                    child: Text("Day:  $i")),
+                              )
+                            }
+                          ],
                         ),
                         // Padding(
                         //   padding: const EdgeInsets.all(50.0),
                         //   child: Center(child: Text(courses.data.status)),
                         // ),
+                        
                         switchOnOffStatus(context),
                         ElevatedButton(
                           //style: style,
@@ -120,7 +155,8 @@ class _CourseEditPageState extends State<CourseEditPage> {
     );
   }
 
-  TextField textField(final TextEditingController _controller,String textLabel) {
+  TextField textField(
+      final TextEditingController _controller, String textLabel) {
     return TextField(
         controller: _controller,
         decoration: InputDecoration(
