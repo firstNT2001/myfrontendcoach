@@ -95,12 +95,12 @@ class _CourseService implements CourseService {
   }
 
   @override
-  Future<HttpResponse<ModelCourse>> updateCourse(login) async {
+  Future<HttpResponse<ModelCourse>> updateCourse(courseUpdate) async {
     const _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{};
     final _data = <String, dynamic>{};
-    _data.addAll(login.toJson());
+    _data.addAll(courseUpdate.toJson());
     final _result = await _dio.fetch<Map<String, dynamic>>(
         _setStreamType<HttpResponse<ModelCourse>>(Options(
       method: 'POST',

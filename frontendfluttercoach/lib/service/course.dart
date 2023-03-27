@@ -21,5 +21,5 @@ abstract class CourseService {
   Future<HttpResponse<List<ModelCourse>>> getCourseByName(@Path("name") String name);
  
   @POST("/course/updateCourse")
-  Future<HttpResponse<ModelCourse>> updateCourse(@Body() UpdateCourse login);
+  Future<HttpResponse<ModelCourse>> updateCourse(@Body() UpdateCourse courseUpdate);
 }

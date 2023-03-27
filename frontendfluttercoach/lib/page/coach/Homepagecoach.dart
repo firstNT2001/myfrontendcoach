@@ -69,40 +69,8 @@ class _HomePageCoachState extends State<HomePageCoach> {
                                   onTap: (){
                                     context.read<AppData>().coID = courses[index].coId;
                                     Get.to(()=> const CourseEditPage());
-                                    // Navigator.push(context, MaterialPageRoute(builder: (context) => const courseEditPage()));
+
                                   },
-                                  // child: Column(
-                                  //                                 children: [
-                                  // Padding(
-                                  //   padding: const EdgeInsets.all(8.0),
-                                  //   child: SizedBox(
-                                  //     height: 100,
-                                  //     width: double.infinity,
-                                  //     child: Card(
-                                  //       child:
-                                  //           Text(courses.data[index].image),
-                                  //     ),
-                                  //   ),
-                                  // ),
-                                  // Text(courses.data[index].image),
-                                  // Text(courses.data[index].name),
-                                  // Text(statusName),
-                                  // // ignore: unnecessary_new
-                                  // ListTile(
-                                  //   title:  Text(index.toString()),
-                                  //   trailing:  Switch(
-                                  //     value: checkBoxVal,
-                                  //     onChanged: (bool? value) {
-                                  //       log("ss" + value.toString());
-                                  //       setState(() =>
-                                  //         checkBoxVal = value!
-                                  //       );
-                                  //       log(checkBoxVal.toString());
-                                  //     },
-                                  //   ),
-                                  // ),
-                                  //                                 ],
-                                  //                               ),
                                 )),
                           );
                         },
