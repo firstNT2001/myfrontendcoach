@@ -95,15 +95,15 @@ class _CourseService implements CourseService {
   }
 
   @override
-  Future<HttpResponse<ModelCourse>> updateCourse(courseUpdate) async {
+  Future<HttpResponse<ModelRowsAffected>> updateCourse(courseUpdate) async {
     const _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{};
     final _data = <String, dynamic>{};
     _data.addAll(courseUpdate.toJson());
     final _result = await _dio.fetch<Map<String, dynamic>>(
-        _setStreamType<HttpResponse<ModelCourse>>(Options(
-      method: 'POST',
+        _setStreamType<HttpResponse<ModelRowsAffected>>(Options(
+      method: 'PUT',
       headers: _headers,
       extra: _extra,
     )
@@ -114,7 +114,7 @@ class _CourseService implements CourseService {
               data: _data,
             )
             .copyWith(baseUrl: baseUrl ?? _dio.options.baseUrl)));
-    final value = ModelCourse.fromJson(_result.data!);
+    final value = ModelRowsAffected.fromJson(_result.data!);
     final httpResponse = HttpResponse(value, _result);
     return httpResponse;
   }

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:frontendfluttercoach/page/startApp.dart';
 import 'package:frontendfluttercoach/service/provider/appdata.dart';
 import 'package:frontendfluttercoach/service/provider/courseData.dart';
+import 'package:frontendfluttercoach/service/provider/dayOfCouseData.dart';
 import 'package:get/get.dart';
 import 'package:provider/provider.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -22,6 +23,9 @@ Future<void> main() async {
           ),
           ChangeNotifierProvider(
             create: (context) => CourseData(),
+          ),
+          ChangeNotifierProvider(
+            create: (context) => DayOfCourseData(),
           )
         ],
         child: GetMaterialApp(

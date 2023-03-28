@@ -11,6 +11,7 @@ import 'package:provider/provider.dart';
 import '../../model/modelCourse.dart';
 import '../../service/course.dart';
 import '../../service/provider/appdata.dart';
+import '../../service/provider/courseData.dart';
 
 class HomePageCoach extends StatefulWidget {
   const HomePageCoach({super.key});
@@ -67,7 +68,15 @@ class _HomePageCoachState extends State<HomePageCoach> {
                                   subtitle: Text(courses[index].name),
                                   leading: Image.network(courses[index].image),
                                   onTap: (){
-                                    context.read<AppData>().coID = courses[index].coId;
+                                    context.read<CourseData>().coIDCourse = courses[index].coId;
+                                    context.read<CourseData>().nameCourse = courses[index].name;
+                                    context.read<CourseData>().detailsCourse = courses[index].details;
+                                    context.read<CourseData>().lavelCourse =  courses[index].level;
+                                    context.read<CourseData>().amountCourse = courses[index].amount;
+                                    context.read<CourseData>().imageCourse = courses[index].image;
+                                    context.read<CourseData>().daysCourse = courses[index].days;
+                                    context.read<CourseData>().priceCourse = courses[index].price;
+                                    context.read<CourseData>().statusCourse = courses[index].status;
                                     Get.to(()=> const CourseEditPage());
 
                                   },
