@@ -3,6 +3,8 @@ import 'package:dio/dio.dart';
 
 import '../model/DTO/updateCourseDTO.dart';
 import '../model/modelCourse.dart';
+import '../model/modelRowsAffected.dart';
+
 
 part 'generated/course.g.dart';
 
@@ -20,6 +22,6 @@ abstract class CourseService {
   @GET("/course/getCourseByName/{name}")
   Future<HttpResponse<List<ModelCourse>>> getCourseByName(@Path("name") String name);
  
-  @POST("/course/updateCourse")
-  Future<HttpResponse<ModelCourse>> updateCourse(@Body() UpdateCourse login);
+  @PUT("/course/updateCourse")
+  Future<HttpResponse<ModelRowsAffected>> updateCourse(@Body() UpdateCourse courseUpdate);
 }
