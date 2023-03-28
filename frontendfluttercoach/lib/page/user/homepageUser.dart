@@ -173,6 +173,8 @@ class _HomePageUserState extends State<HomePageUser> {
                                 subtitle: Text(course.details),
                                 trailing: const Icon(Icons.arrow_forward),
                                 onTap: () {
+                                  log(course.coId.toString());
+                                    context.read<AppData>().idcourse = course.coId;
 
                                   Get.to(()=>showCousePage());
                                 },
