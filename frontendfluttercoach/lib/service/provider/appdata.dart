@@ -7,7 +7,17 @@ class AppData with ChangeNotifier {
   Map<String,dynamic> userFacebook = {} ; 
   int coID = 0;
 
+  // coach
   int cid =0;
+  String qualification = "";
+  String nameCoach = " ";
+  String usercoach = " ";
+  String propertycoach = " ";
+
+  //course
+  int idcourse = 0;
+  
+
 
 
 
