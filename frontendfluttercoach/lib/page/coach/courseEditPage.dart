@@ -97,27 +97,27 @@ class _CourseEditPageState extends State<CourseEditPage> {
             children: [
               Expanded(child: Image.network(imageCourse)),
               Padding(
-                padding: const EdgeInsets.all(20.0),
+                padding: const EdgeInsets.only(top: 50, left: 5, right: 5),
                 child: Center(child: textField(_name, "ชื่อ")),
               ),
               Padding(
-                padding: const EdgeInsets.all(8.0),
+                padding: const  EdgeInsets.only(top: 10, left: 10, right: 10),
                 child: Center(child: textField(_details, "รายละเอียด")),
               ),
               Padding(
-                padding: const EdgeInsets.all(8.0),
+                padding: const  EdgeInsets.only(top: 10, left: 10, right: 10),
                 child: Center(child: textField(_amount, "จำนวนคน")),
               ),
               Padding(
-                padding: const EdgeInsets.all(8.0),
+                padding: const EdgeInsets.only(top: 10, left: 10, right: 10),
                 child: Center(child: textField(_level, "ความยาก")),
               ),
               Padding(
-                padding: const EdgeInsets.all(8.0),
+                padding: const EdgeInsets.only(top: 10, left: 10, right: 10),
                 child: Center(child: textField(_price, "ราคา")),
               ),
               Padding(
-                padding: const EdgeInsets.all(8.0),
+                padding: const EdgeInsets.only(top: 10, left: 10, right: 10),
                 child: Center(child: textField(_days, "จำนวนวัน")),
               ),
 
