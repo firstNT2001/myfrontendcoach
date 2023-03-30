@@ -97,28 +97,28 @@ class _CourseEditPageState extends State<CourseEditPage> {
             children: [
               Expanded(child: Image.network(imageCourse)),
               Padding(
-                padding: const EdgeInsets.all(20.0),
+                padding: const EdgeInsets.only(top: 50, left: 5, right: 5),
                 child: Center(child: textField(_name, "ชื่อ")),
               ),
               Padding(
-                padding: const EdgeInsets.all(8.0),
+                padding: const EdgeInsets.only(top: 10, left: 10, right: 10),
                 child: Center(child: textField(_details, "รายละเอียด")),
               ),
               Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Center(child: textField(_amount, "จำนวนคน")),
+                padding: const EdgeInsets.only(top: 10, left: 10, right: 10),
+                child:  textFieldNumber(_amount, "จำนวนคน"),
               ),
               Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Center(child: textField(_level, "ความยาก")),
+                padding: const EdgeInsets.only(top: 10, left: 10, right: 10),
+                child:  textFieldNumber(_level, "ความยาก"),
               ),
               Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Center(child: textField(_price, "ราคา")),
+                padding: const EdgeInsets.only(top: 10, left: 10, right: 10),
+                child:  textFieldNumber(_price, "ราคา"),
               ),
               Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Center(child: textField(_days, "จำนวนวัน")),
+                padding: const EdgeInsets.only(top: 10, left: 10, right: 10),
+                child:  textFieldNumber(_days, "จำนวนวัน"),
               ),
 
               Column(
@@ -128,11 +128,11 @@ class _CourseEditPageState extends State<CourseEditPage> {
                       width: double.infinity,
                       padding: EdgeInsets.all(20),
                       child: ElevatedButton(
-                    onPressed: () {
-                       context.read<DayOfCourseData>().didDayOfCouse = i;
-                      Get.to(()=> DayOfCoursePage());
-                    },
-                    child: Text('Day $i'),
+                        onPressed: () {
+                          context.read<DayOfCourseData>().didDayOfCouse = i;
+                          Get.to(() => DayOfCoursePage());
+                        },
+                        child: Text('Day $i'),
                       ),
                     )
                   }
@@ -172,6 +172,19 @@ class _CourseEditPageState extends State<CourseEditPage> {
         ),
       ],
     )));
+  }
+
+  Center textFieldNumber(
+      // ignore: no_leading_underscores_for_local_identifiers
+      final TextEditingController _controller,
+      String textLabel) {
+    return Center(
+        child: TextField(
+            controller: _controller,
+            keyboardType: TextInputType.number,
+            decoration: InputDecoration(
+              labelText: textLabel,
+            )));
   }
 
   TextField textField(

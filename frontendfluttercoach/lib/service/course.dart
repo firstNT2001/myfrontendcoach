@@ -1,3 +1,4 @@
+import 'package:frontendfluttercoach/model/DTO/insertCourseDTO.dart';
 import 'package:retrofit/retrofit.dart';
 import 'package:dio/dio.dart';
 
@@ -24,4 +25,7 @@ abstract class CourseService {
  
   @PUT("/course/updateCourse")
   Future<HttpResponse<ModelRowsAffected>> updateCourse(@Body() UpdateCourse courseUpdate);
+
+  @POST("/course/insertCourse")
+  Future<HttpResponse<ModelRowsAffected>> insetCourse(@Body() InsertCourseDto courseInset);
 }
