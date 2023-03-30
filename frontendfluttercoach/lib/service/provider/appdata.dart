@@ -16,6 +16,9 @@ class AppData with ChangeNotifier {
 
   //course
   int idcourse = 0;
+
+  //user
+  int uid = 0;
   
 
 
