@@ -2,6 +2,7 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:frontendfluttercoach/model/modelCoach.dart';
+import 'package:frontendfluttercoach/page/user/profileUser.dart';
 import 'package:frontendfluttercoach/page/user/profilecoach.dart';
 import 'package:get/get.dart';
 import 'package:provider/provider.dart';
@@ -185,8 +186,13 @@ class _HomePageUserState extends State<HomePageUser> {
                   ),
                 )
               : Container(color: Colors.amber),
+              ElevatedButton(onPressed: (){
+
+                Get.to(() => ProfileUser());
+              }, child: Text("โปรไฟล์ของฉัน")),
         ],
       ),
+      
     );
   }
 }
