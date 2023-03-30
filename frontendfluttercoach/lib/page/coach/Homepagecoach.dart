@@ -3,6 +3,7 @@ import 'dart:developer';
 
 import 'package:frontendfluttercoach/model/modelCoach.dart';
 import 'package:frontendfluttercoach/page/coach/courseEditPage.dart';
+import 'package:frontendfluttercoach/page/coach/foodPage.dart';
 import 'package:frontendfluttercoach/service/provider/coachData.dart';
 import 'package:get/get.dart';
 import 'package:retrofit/retrofit.dart';
@@ -61,9 +62,19 @@ class _HomePageCoachState extends State<HomePageCoach> {
                     child: ElevatedButton(
                       onPressed: () {
                         context.read<CoachData>().cid = int.parse(cid);
-                        Get.to(() => CourseInsertPage());
+                        Get.to(() => const CourseInsertPage());
                       },
-                      child: Text("สร้างคอร์ส"),
+                      child: const Text("สร้างคอร์ส"),
+                    ),
+                  ),
+                  Container(
+                    padding: const EdgeInsets.only(top: 20, left: 5, right: 5),
+                    child: ElevatedButton(
+                      onPressed: () {
+                        context.read<CoachData>().cid = int.parse(cid);
+                        Get.to(() => const FoodPage());
+                      },
+                      child: const Text("หน้าอาหาร"),
                     ),
                   ),
                   if (courses != null)
