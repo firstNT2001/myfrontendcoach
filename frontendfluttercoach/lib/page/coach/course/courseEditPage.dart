@@ -11,11 +11,12 @@ import 'package:get/get_core/src/get_main.dart';
 import 'package:provider/provider.dart';
 import 'package:retrofit/dio.dart';
 
-import '../../model/DTO/updateCourseDTO.dart';
-import '../../service/course.dart';
-import '../../service/provider/appdata.dart';
-import '../../service/provider/courseData.dart';
-import '../../service/provider/dayOfCouseData.dart';
+import '../../../model/DTO/updateCourseDTO.dart';
+import '../../../service/course.dart';
+
+import '../../../service/provider/appdata.dart';
+import '../../../service/provider/courseData.dart';
+import '../../../service/provider/dayOfCouseData.dart';
 import 'dayOfCoursePage.dart';
 
 class CourseEditPage extends StatefulWidget {

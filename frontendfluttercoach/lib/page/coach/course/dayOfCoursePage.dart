@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../../service/provider/dayOfCouseData.dart';
+import '../../../service/provider/dayOfCouseData.dart';
 
 class DayOfCoursePage extends StatefulWidget {
   const DayOfCoursePage({super.key});

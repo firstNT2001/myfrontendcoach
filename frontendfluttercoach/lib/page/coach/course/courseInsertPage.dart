@@ -8,10 +8,10 @@ import 'package:flutter/src/widgets/placeholder.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../../model/DTO/insertCourseDTO.dart';
-import '../../service/course.dart';
-import '../../service/provider/appdata.dart';
-import '../../service/provider/coachData.dart';
+import '../../../model/DTO/insertCourseDTO.dart';
+import '../../../service/course.dart';
+import '../../../service/provider/appdata.dart';
+import '../../../service/provider/coachData.dart';
 
 class CourseInsertPage extends StatefulWidget {
   const CourseInsertPage({super.key});
