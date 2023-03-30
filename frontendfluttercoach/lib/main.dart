@@ -4,6 +4,7 @@ import 'package:frontendfluttercoach/service/provider/appdata.dart';
 import 'package:frontendfluttercoach/service/provider/coachData.dart';
 import 'package:frontendfluttercoach/service/provider/courseData.dart';
 import 'package:frontendfluttercoach/service/provider/dayOfCouseData.dart';
+import 'package:frontendfluttercoach/service/provider/listFood.dart';
 import 'package:get/get.dart';
 import 'package:provider/provider.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -29,6 +30,9 @@ Future<void> main() async {
           ),
           ChangeNotifierProvider(
             create: (context) => CoachData(),
+          ),
+          ChangeNotifierProvider(
+            create: (context) => ListFoodData(),
           )
         ],
         child: GetMaterialApp(
