@@ -163,16 +163,7 @@ class _showCousePageState extends State<showCousePage> {
           }
         });
   }
-  Future<void> loadData() async {
-    try {
-      log(courseId.toString());
-      var datas = await courseService.getCourseByCoID(courseId.toString());
-      courses = datas.data;
-      log('couse: ${courses.coId}');
-    } catch (err) {
-      log('Error: $err');
-    }
-  }
+
 }
 
 // class showCousePage extends StatelessWidget {
