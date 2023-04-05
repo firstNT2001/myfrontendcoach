@@ -24,7 +24,7 @@ class FoodPage extends StatefulWidget {
 }
 
 class _FoodPageState extends State<FoodPage> {
-  late FoodService foodService;
+  late FoodServices foodService;
   late Future<void> loadDataMethod;
   late List<ModelListFood> foods = [];
 
@@ -35,7 +35,7 @@ class _FoodPageState extends State<FoodPage> {
     super.initState();
     cid = context.read<CoachData>().cid.toString();
     foodService =
-        FoodService(Dio(), baseUrl: context.read<AppData>().baseurl);
+        FoodServices(Dio(), baseUrl: context.read<AppData>().baseurl);
 
     loadDataMethod = loadData();
   }
