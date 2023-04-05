@@ -1,17 +1,16 @@
 // To parse this JSON data, do
 //
-//     final modelListFood = modelListFoodFromJson(jsonString);
+//     final foodDto = foodDtoFromJson(jsonString);
 
 import 'package:meta/meta.dart';
 import 'dart:convert';
 
-List<ModelListFood> modelListFoodFromJson(String str) => List<ModelListFood>.from(json.decode(str).map((x) => ModelListFood.fromJson(x)));
+FoodDto foodDtoFromJson(String str) => FoodDto.fromJson(json.decode(str));
 
-String modelListFoodToJson(List<ModelListFood> data) => json.encode(List<dynamic>.from(data.map((x) => x.toJson())));
+String foodDtoToJson(FoodDto data) => json.encode(data.toJson());
 
-class ModelListFood {
-    ModelListFood({
-        required this.ifid,
+class FoodDto {
+    FoodDto({
         required this.cid,
         required this.name,
         required this.image,
@@ -19,15 +18,13 @@ class ModelListFood {
         required this.calories,
     });
 
-    int ifid;
     int cid;
     String name;
     String image;
     String details;
     int calories;
 
-    factory ModelListFood.fromJson(Map<String, dynamic> json) => ModelListFood(
-        ifid: json["Ifid"],
+    factory FoodDto.fromJson(Map<String, dynamic> json) => FoodDto(
         cid: json["Cid"],
         name: json["Name"],
         image: json["Image"],
@@ -36,7 +33,6 @@ class ModelListFood {
     );
 
     Map<String, dynamic> toJson() => {
-        "Ifid": ifid,
         "Cid": cid,
         "Name": name,
         "Image": image,

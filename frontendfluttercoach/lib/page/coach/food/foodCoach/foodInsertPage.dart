@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../../../service/provider/coachData.dart';
+import '../../../../service/provider/coachData.dart';
 
 class FoodInsertPage extends StatefulWidget {
   const FoodInsertPage({super.key});

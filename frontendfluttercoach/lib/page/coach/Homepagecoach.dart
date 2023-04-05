@@ -3,7 +3,6 @@ import 'dart:developer';
 
 import 'package:frontendfluttercoach/model/modelCoach.dart';
 
-import 'package:frontendfluttercoach/page/coach/food/foodPage.dart';
 import 'package:frontendfluttercoach/service/provider/coachData.dart';
 import 'package:get/get.dart';
 import 'package:retrofit/retrofit.dart';
@@ -17,6 +16,7 @@ import '../../service/provider/appdata.dart';
 import '../../service/provider/courseData.dart';
 import 'course/courseEditPage.dart';
 import 'course/courseInsertPage.dart';
+import 'food/foodCoach/foodPage.dart';
 
 class HomePageCoach extends StatefulWidget {
   const HomePageCoach({super.key});
