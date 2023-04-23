@@ -19,6 +19,7 @@ class AppData with ChangeNotifier {
 
   //user
   int uid = 0;
+  String nameCus = " ";
   
 
 
