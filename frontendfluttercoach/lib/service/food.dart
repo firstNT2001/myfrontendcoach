@@ -1,8 +1,8 @@
+import 'package:frontendfluttercoach/model/DTO/ListFoodPostRequest.dart';
 import 'package:retrofit/retrofit.dart';
 import 'package:dio/dio.dart';
 
 
-import '../model/DTO/listFoodDTO.dart';
 import '../model/modelListFood.dart';
 import '../model/modelRowsAffected.dart';
 
@@ -18,6 +18,6 @@ abstract class FoodServices {
   Future<HttpResponse<List<ModelListFood>>> listFoods(@Path("cid") String cid);
 
   @POST("/listFood/insertListFood")
-  Future<HttpResponse<ModelRowsAffected>> insertListFood(@Body() ListFoodDto food);
+  Future<HttpResponse<ModelRowsAffected>> insertListFood(@Body() ListFoodPostRequest listFoodPostRequest);
 
 }

@@ -45,12 +45,13 @@ class _FoodServices implements FoodServices {
   }
 
   @override
-  Future<HttpResponse<ModelRowsAffected>> insertListFood(food) async {
+  Future<HttpResponse<ModelRowsAffected>> insertListFood(
+      listFoodPostRequest) async {
     const _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{};
     final _data = <String, dynamic>{};
-    _data.addAll(food.toJson());
+    _data.addAll(listFoodPostRequest.toJson());
     final _result = await _dio.fetch<Map<String, dynamic>>(
         _setStreamType<HttpResponse<ModelRowsAffected>>(Options(
       method: 'POST',
