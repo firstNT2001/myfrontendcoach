@@ -42,7 +42,7 @@ class _FoodInsertPageState extends State<FoodInsertPage> {
     cid = context.read<CoachData>().cid;
 
     name.text = "ไข่เจียวไร้น้ำมันหมู22";
-    details.text = "ไข่เจียว ไข่2ฟอง\r\nแครอท 30 กรัม\r\nกับหัวหอม 10 กรัม\r\nชีส 15 กรัม\r\nผักต้มสุกตามใจชอบ\r\nข้าวกล้อง 200 กรัม";
+    details.text = "ไข่เจียว ไข่2ฟอง แครอท 30 กรัม กับหัวหอม 10 กรัม ชีส 15 กรัม ผักต้มสุกตามใจชอบ ข้าวกล้อง 200 กรัม";
     calories.text = "260";
   }
 
