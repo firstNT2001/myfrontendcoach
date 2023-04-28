@@ -4,15 +4,16 @@ import 'dart:developer';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:frontendfluttercoach/model/modelListFood.dart';
-import 'package:frontendfluttercoach/page/coach/food/foodEditPage.dart';
-import 'package:frontendfluttercoach/page/coach/food/foodInsertPage.dart';
+
 import 'package:frontendfluttercoach/service/food.dart';
 import 'package:get/get.dart';
 import 'package:provider/provider.dart';
 
-import '../../../service/provider/appdata.dart';
-import '../../../service/provider/coachData.dart';
-import '../../../service/provider/listFood.dart';
+import '../../../../service/provider/appdata.dart';
+import '../../../../service/provider/coachData.dart';
+import '../../../../service/provider/listFood.dart';
+import 'foodEditPage.dart';
+import 'foodInsertPage.dart';
 
 
 class FoodPage extends StatefulWidget {
@@ -23,7 +24,7 @@ class FoodPage extends StatefulWidget {
 }
 
 class _FoodPageState extends State<FoodPage> {
-  late FoodService foodService;
+  late FoodServices foodService;
   late Future<void> loadDataMethod;
   late List<ModelListFood> foods = [];
 
@@ -34,7 +35,7 @@ class _FoodPageState extends State<FoodPage> {
     super.initState();
     cid = context.read<CoachData>().cid.toString();
     foodService =
-        FoodService(Dio(), baseUrl: context.read<AppData>().baseurl);
+        FoodServices(Dio(), baseUrl: context.read<AppData>().baseurl);
 
     loadDataMethod = loadData();
   }
@@ -96,7 +97,6 @@ class _FoodPageState extends State<FoodPage> {
     try {
       var datas = await foodService.listFoods(cid);
       foods = datas.data;
-     
     } catch (err) {
       log('Error: $err');
     }

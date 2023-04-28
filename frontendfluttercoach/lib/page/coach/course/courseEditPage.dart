@@ -67,7 +67,7 @@ class _CourseEditPageState extends State<CourseEditPage> {
     _price.text = context.read<CourseData>().priceCourse.toString();
     statusCourse = context.read<CourseData>().statusCourse;
     days = int.parse(_days.text);
-
+    log("L "+_details.text.length.toString());
     //เช็ค สถานะการเปิดขายของคอร์ส
     status = statusCourse;
     if (statusCourse == "1") {
@@ -103,7 +103,18 @@ class _CourseEditPageState extends State<CourseEditPage> {
               ),
               Padding(
                 padding: const EdgeInsets.only(top: 10, left: 10, right: 10),
-                child: Center(child: textField(_details, "รายละเอียด")),
+                child: Center(child: TextField(
+                    controller: _details,
+                    maxLines: 2,
+                    onChanged: (String value){
+                      setState(() {
+                         log("Ls "+_details.text.length.toString());
+                      });
+                    },
+                    decoration: const InputDecoration(
+                      labelText: "รายระเอียด",
+                      
+                    )),),
               ),
               Padding(
                 padding: const EdgeInsets.only(top: 10, left: 10, right: 10),

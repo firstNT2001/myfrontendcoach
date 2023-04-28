@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../../../service/provider/listFood.dart';
+import '../../../../service/provider/listFood.dart';
+
 
 class FoodEditPage extends StatefulWidget {
   const FoodEditPage({super.key});

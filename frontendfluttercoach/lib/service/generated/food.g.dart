@@ -8,8 +8,8 @@ part of '../food.dart';
 
 // ignore_for_file: unnecessary_brace_in_string_interps,no_leading_underscores_for_local_identifiers
 
-class _FoodService implements FoodService {
-  _FoodService(
+class _FoodServices implements FoodServices {
+  _FoodServices(
     this._dio, {
     this.baseUrl,
   });
@@ -40,6 +40,32 @@ class _FoodService implements FoodService {
     var value = _result.data!
         .map((dynamic i) => ModelListFood.fromJson(i as Map<String, dynamic>))
         .toList();
+    final httpResponse = HttpResponse(value, _result);
+    return httpResponse;
+  }
+
+  @override
+  Future<HttpResponse<ModelRowsAffected>> insertListFood(
+      listFoodPostRequest) async {
+    const _extra = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{};
+    final _headers = <String, dynamic>{};
+    final _data = <String, dynamic>{};
+    _data.addAll(listFoodPostRequest.toJson());
+    final _result = await _dio.fetch<Map<String, dynamic>>(
+        _setStreamType<HttpResponse<ModelRowsAffected>>(Options(
+      method: 'POST',
+      headers: _headers,
+      extra: _extra,
+    )
+            .compose(
+              _dio.options,
+              '/listFood/insertListFood',
+              queryParameters: queryParameters,
+              data: _data,
+            )
+            .copyWith(baseUrl: baseUrl ?? _dio.options.baseUrl)));
+    final value = ModelRowsAffected.fromJson(_result.data!);
     final httpResponse = HttpResponse(value, _result);
     return httpResponse;
   }
