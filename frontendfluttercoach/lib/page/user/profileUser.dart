@@ -26,7 +26,7 @@ class _ProfileUserState extends State<ProfileUser> {
   late CustomerService customerService;
   late Future<void> loadDataMethod;
   late HttpResponse<Customer> customer;
-  String uid = "1";
+  int uid = 1;
 
   @override
   void initState() {
@@ -87,7 +87,8 @@ class _ProfileUserState extends State<ProfileUser> {
                           padding: const EdgeInsets.only(left: 50),
                           child: InkWell(
                                 onTap: () {
-                                  Get.to(() => const editProfileCus());
+                                  //1. ส่งตัวแปรแบบconstructure
+                                  Get.to(() =>  editProfileCus(uid: uid));
                                 },
                                 child: Icon(
                                   Icons.edit_outlined,
