@@ -3,15 +3,15 @@ import 'dart:developer';
 
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
-import 'package:frontendfluttercoach/model/modelListFood.dart';
 
-import 'package:frontendfluttercoach/service/food.dart';
 import 'package:get/get.dart';
 import 'package:provider/provider.dart';
 
+import '../../../../model/ModelFoodList.dart';
+import '../../../../service/listFood.dart';
 import '../../../../service/provider/appdata.dart';
 import '../../../../service/provider/coachData.dart';
-import '../../../../service/provider/listFood.dart';
+// import '../../../../service/provider/listFood.dart';
 import 'foodEditPage.dart';
 import 'foodInsertPage.dart';
 
@@ -24,9 +24,9 @@ class FoodPage extends StatefulWidget {
 }
 
 class _FoodPageState extends State<FoodPage> {
-  late FoodServices foodService;
+  late ListFoodServices _listfoodService;
   late Future<void> loadDataMethod;
-  late List<ModelListFood> foods = [];
+  late List<ModelFoodList> foods = [];
 
   String cid = "";
   @override
@@ -34,8 +34,8 @@ class _FoodPageState extends State<FoodPage> {
     // TODO: implement initState
     super.initState();
     cid = context.read<CoachData>().cid.toString();
-    foodService =
-        FoodServices(Dio(), baseUrl: context.read<AppData>().baseurl);
+    _listfoodService =
+        context.read<AppData>().listfoodServices;
 
     loadDataMethod = loadData();
   }
@@ -74,9 +74,8 @@ class _FoodPageState extends State<FoodPage> {
                               leading: Image.network(foods[index].image),
                               onTap: () {
                                 // log(foods[index].ifid.toString());
-                                context.read<ListFoodData>().ifid =
-                                    foods[index].ifid;
-                                Get.to(() =>  FoodEditPage());
+                                
+                                Get.to(() =>  FoodEditPage(ifid: foods[index].ifid,));
                               },
                             )),
                           );
@@ -95,7 +94,7 @@ class _FoodPageState extends State<FoodPage> {
   }
   Future<void> loadData() async {
     try {
-      var datas = await foodService.listFoods(cid);
+      var datas = await _listfoodService.listFoods(cid);
       foods = datas.data;
     } catch (err) {
       log('Error: $err');

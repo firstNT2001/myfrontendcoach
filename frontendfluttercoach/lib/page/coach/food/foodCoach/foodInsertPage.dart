@@ -1,18 +1,18 @@
 import 'dart:convert';
 import 'dart:developer';
 
-import 'package:dio/dio.dart';
+
 import 'package:flutter/material.dart';
 import 'package:frontendfluttercoach/page/showDialogWidget.dart';
-import 'package:get/get.dart';
+
 import 'package:provider/provider.dart';
 
 import '../../../../model/DTO/ListFoodPostRequest.dart';
-import '../../../../model/modelRowsAffected.dart';
-import '../../../../service/food.dart';
+import '../../../../model/modelResult.dart';
+
+import '../../../../service/listFood.dart';
 import '../../../../service/provider/appdata.dart';
 import '../../../../service/provider/coachData.dart';
-import 'foodPage.dart';
 
 class FoodInsertPage extends StatefulWidget {
   const FoodInsertPage({super.key});
@@ -23,8 +23,8 @@ class FoodInsertPage extends StatefulWidget {
 
 class _FoodInsertPageState extends State<FoodInsertPage> {
   //Services
-  late FoodServices foodServices;
-  late ModelRowsAffected modelRowsAffected;
+  late ListFoodServices _listfoodService;
+  late ModelResult modelResult;
   var insertFood;
   //inputServices
   int cid = 0;
@@ -37,7 +37,8 @@ class _FoodInsertPageState extends State<FoodInsertPage> {
   void initState() {
     super.initState();
 
-    foodServices = FoodServices(Dio(), baseUrl: context.read<AppData>().baseurl);
+    _listfoodService =
+        context.read<AppData>().listfoodServices;
     log( context.read<AppData>().baseurl);
     cid = context.read<CoachData>().cid;
 
@@ -92,10 +93,10 @@ class _FoodInsertPageState extends State<FoodInsertPage> {
                         calories: int.parse(calories.text));
                     log(jsonEncode(insertFoodDTO));
                     insertFood =
-                        await foodServices.insertListFood(insertFoodDTO);
-                    modelRowsAffected = insertFood.data;
-                    log(jsonEncode(modelRowsAffected.rowsAffected));
-                      if (modelRowsAffected.rowsAffected == "1") {
+                        await _listfoodService.insertListFood(insertFoodDTO);
+                    modelResult = insertFood.data;
+                    log(jsonEncode(modelResult.result));
+                      if (modelResult.result == "1") {
                           // ignore: use_build_context_synchronously
                           // showDialogRowsAffected(context, "บันทึกสำเร็จ");
                           const ShowDialogWidget();
