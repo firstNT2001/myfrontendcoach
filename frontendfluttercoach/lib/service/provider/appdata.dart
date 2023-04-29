@@ -1,4 +1,7 @@
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+
+import '../listFood.dart';
 
 class AppData with ChangeNotifier {
   //Api baseurl
@@ -20,7 +23,7 @@ class AppData with ChangeNotifier {
   //user
   int uid = 0;
   
-
+  ListFoodServices get listfoodServices => ListFoodServices(Dio(), baseUrl: baseurl);
 
 
 
