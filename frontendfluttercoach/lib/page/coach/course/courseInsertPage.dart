@@ -89,7 +89,7 @@ class _CourseInsertPageState extends State<CourseInsertPage> {
                     //style: style,
                     onPressed: () async {
                       InsertCourseDto insertCourseDTO = InsertCourseDto(
-                          cid: cid,
+                          coachId: cid,
                           bid: null,
                           name: _name.text,
                           details: _details.text,

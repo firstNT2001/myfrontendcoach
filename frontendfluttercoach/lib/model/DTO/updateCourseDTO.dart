@@ -10,8 +10,18 @@ UpdateCourse updateCourseFromJson(String str) => UpdateCourse.fromJson(json.deco
 String updateCourseToJson(UpdateCourse data) => json.encode(data.toJson());
 
 class UpdateCourse {
+    int coachId;
+    String name;
+    String details;
+    String level;
+    int amount;
+    String image;
+    int days;
+    int price;
+    String status;
+
     UpdateCourse({
-        required this.coId,
+        required this.coachId,
         required this.name,
         required this.details,
         required this.level,
@@ -22,18 +32,8 @@ class UpdateCourse {
         required this.status,
     });
 
-    int coId;
-    String name;
-    String details;
-    String level;
-    int amount;
-    String image;
-    int days;
-    int price;
-    String status;
-
     factory UpdateCourse.fromJson(Map<String, dynamic> json) => UpdateCourse(
-        coId: json["CoID"],
+        coachId: json["CoachID"],
         name: json["Name"],
         details: json["Details"],
         level: json["Level"],
@@ -45,7 +45,7 @@ class UpdateCourse {
     );
 
     Map<String, dynamic> toJson() => {
-        "CoID": coId,
+        "CoachID": coachId,
         "Name": name,
         "Details": details,
         "Level": level,

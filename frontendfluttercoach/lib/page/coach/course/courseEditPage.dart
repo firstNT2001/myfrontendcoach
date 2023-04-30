@@ -160,7 +160,7 @@ class _CourseEditPageState extends State<CourseEditPage> {
                 //style: style,
                 onPressed: () async {
                   UpdateCourse updateCourseDTO = UpdateCourse(
-                    coId: coID,
+                    coachId: coID,
                     name: _name.text,
                     details: _details.text,
                     level: _level.text,

@@ -10,8 +10,20 @@ InsertCourseDto insertCourseDtoFromJson(String str) => InsertCourseDto.fromJson(
 String insertCourseDtoToJson(InsertCourseDto data) => json.encode(data.toJson());
 
 class InsertCourseDto {
+    int coachId;
+    dynamic bid;
+    String name;
+    String details;
+    String level;
+    int amount;
+    String image;
+    int days;
+    int price;
+    String status;
+    dynamic expirationDate;
+
     InsertCourseDto({
-        required this.cid,
+        required this.coachId,
         required this.bid,
         required this.name,
         required this.details,
@@ -24,20 +36,8 @@ class InsertCourseDto {
         required this.expirationDate,
     });
 
-    int cid;
-    dynamic bid;
-    String name;
-    String details;
-    String level;
-    int amount;
-    String image;
-    int days;
-    int price;
-    String status;
-    dynamic expirationDate;
-
     factory InsertCourseDto.fromJson(Map<String, dynamic> json) => InsertCourseDto(
-        cid: json["Cid"],
+        coachId: json["CoachID"],
         bid: json["Bid"],
         name: json["Name"],
         details: json["Details"],
@@ -51,7 +51,7 @@ class InsertCourseDto {
     );
 
     Map<String, dynamic> toJson() => {
-        "Cid": cid,
+        "CoachID": coachId,
         "Bid": bid,
         "Name": name,
         "Details": details,

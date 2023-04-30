@@ -10,22 +10,22 @@ ListFoodPostRequest listFoodPostRequestFromJson(String str) => ListFoodPostReque
 String listFoodPostRequestToJson(ListFoodPostRequest data) => json.encode(data.toJson());
 
 class ListFoodPostRequest {
+    int coachId;
+    String name;
+    String image;
+    String details;
+    int calories;
+
     ListFoodPostRequest({
-        required this.cid,
+        required this.coachId,
         required this.name,
         required this.image,
         required this.details,
         required this.calories,
     });
 
-    int cid;
-    String name;
-    String image;
-    String details;
-    int calories;
-
     factory ListFoodPostRequest.fromJson(Map<String, dynamic> json) => ListFoodPostRequest(
-        cid: json["Cid"],
+        coachId: json["CoachID"],
         name: json["Name"],
         image: json["Image"],
         details: json["Details"],
@@ -33,7 +33,7 @@ class ListFoodPostRequest {
     );
 
     Map<String, dynamic> toJson() => {
-        "Cid": cid,
+        "CoachID": coachId,
         "Name": name,
         "Image": image,
         "Details": details,
