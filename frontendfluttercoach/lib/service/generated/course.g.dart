@@ -95,14 +95,14 @@ class _CourseService implements CourseService {
   }
 
   @override
-  Future<HttpResponse<ModelRowsAffected>> updateCourse(courseUpdate) async {
+  Future<HttpResponse<ModelResult>> updateCourse(courseUpdate) async {
     const _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{};
     final _data = <String, dynamic>{};
     _data.addAll(courseUpdate.toJson());
     final _result = await _dio.fetch<Map<String, dynamic>>(
-        _setStreamType<HttpResponse<ModelRowsAffected>>(Options(
+        _setStreamType<HttpResponse<ModelResult>>(Options(
       method: 'PUT',
       headers: _headers,
       extra: _extra,
@@ -114,20 +114,20 @@ class _CourseService implements CourseService {
               data: _data,
             )
             .copyWith(baseUrl: baseUrl ?? _dio.options.baseUrl)));
-    final value = ModelRowsAffected.fromJson(_result.data!);
+    final value = ModelResult.fromJson(_result.data!);
     final httpResponse = HttpResponse(value, _result);
     return httpResponse;
   }
 
   @override
-  Future<HttpResponse<ModelRowsAffected>> insetCourse(courseInset) async {
+  Future<HttpResponse<ModelResult>> insetCourse(courseInset) async {
     const _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{};
     final _data = <String, dynamic>{};
     _data.addAll(courseInset.toJson());
     final _result = await _dio.fetch<Map<String, dynamic>>(
-        _setStreamType<HttpResponse<ModelRowsAffected>>(Options(
+        _setStreamType<HttpResponse<ModelResult>>(Options(
       method: 'POST',
       headers: _headers,
       extra: _extra,
@@ -139,7 +139,7 @@ class _CourseService implements CourseService {
               data: _data,
             )
             .copyWith(baseUrl: baseUrl ?? _dio.options.baseUrl)));
-    final value = ModelRowsAffected.fromJson(_result.data!);
+    final value = ModelResult.fromJson(_result.data!);
     final httpResponse = HttpResponse(value, _result);
     return httpResponse;
   }

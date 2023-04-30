@@ -12,6 +12,7 @@ import 'package:provider/provider.dart';
 import 'package:retrofit/dio.dart';
 
 import '../../../model/DTO/updateCourseDTO.dart';
+import '../../../model/modelResult.dart';
 import '../../../service/course.dart';
 
 import '../../../service/provider/appdata.dart';
@@ -29,7 +30,7 @@ class CourseEditPage extends StatefulWidget {
 class _CourseEditPageState extends State<CourseEditPage> {
   late CourseService courseService;
   late Future<void> loadDataMethod;
-
+  late ModelResult moduleResult;
   late HttpResponse<ModelCourse> courses;
   bool switchOnOff = false;
   int coID = 0;
@@ -173,7 +174,8 @@ class _CourseEditPageState extends State<CourseEditPage> {
                   log(jsonEncode(updateCourseDTO));
                   updateCourse =
                       await courseService.updateCourse(updateCourseDTO);
-
+                   moduleResult = updateCourse.data;
+                      log(jsonEncode(moduleResult.result));
                   //log("rowsAffected:"+updateCourse);
                   Get.to(() => const HomePageCoach());
                 },

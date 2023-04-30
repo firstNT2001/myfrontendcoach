@@ -1,10 +1,11 @@
 import 'package:frontendfluttercoach/model/DTO/insertCourseDTO.dart';
+import 'package:frontendfluttercoach/model/modelResult.dart';
 import 'package:retrofit/retrofit.dart';
 import 'package:dio/dio.dart';
 
 import '../model/DTO/updateCourseDTO.dart';
 import '../model/modelCourse.dart';
-import '../model/modelRowsAffected.dart';
+
 
 
 part 'generated/course.g.dart';
@@ -24,8 +25,8 @@ abstract class CourseService {
   Future<HttpResponse<List<ModelCourse>>> getCourseByName(@Path("name") String name);
  
   @PUT("/course/updateCourse")
-  Future<HttpResponse<ModelRowsAffected>> updateCourse(@Body() UpdateCourse courseUpdate);
+  Future<HttpResponse<ModelResult>> updateCourse(@Body() UpdateCourse courseUpdate);
 
   @POST("/course/insertCourse")
-  Future<HttpResponse<ModelRowsAffected>> insetCourse(@Body() InsertCourseDto courseInset);
+  Future<HttpResponse<ModelResult>> insetCourse(@Body() InsertCourseDto courseInset);
 }
