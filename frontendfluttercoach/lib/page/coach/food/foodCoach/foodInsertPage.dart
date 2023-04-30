@@ -86,7 +86,7 @@ class _FoodInsertPageState extends State<FoodInsertPage> {
               ElevatedButton(
                   onPressed: () async {
                     ListFoodPostRequest insertFoodDTO = ListFoodPostRequest(
-                        cid: cid,
+                        coachId: cid,
                         name: name.text,
                         image: image,
                         details: details.text,
