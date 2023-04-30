@@ -9,6 +9,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../../../model/DTO/insertCourseDTO.dart';
+import '../../../model/modelResult.dart';
 import '../../../service/course.dart';
 import '../../../service/provider/appdata.dart';
 import '../../../service/provider/coachData.dart';
@@ -22,7 +23,7 @@ class CourseInsertPage extends StatefulWidget {
 
 class _CourseInsertPageState extends State<CourseInsertPage> {
   late CourseService courseService;
-
+  late ModelResult moduleResult;
   int cid = 0;
   String image = "_";
   String status = "1";
@@ -103,8 +104,9 @@ class _CourseInsertPageState extends State<CourseInsertPage> {
                       log(jsonEncode(insertCourseDTO));
                       insertCourse =
                           await courseService.insetCourse(insertCourseDTO);
-                      log(jsonEncode(insertCourse.data.rowsAffected));
-                      if (insertCourse.data.rowsAffected == "1") {
+                      moduleResult = insertCourse.data;
+                      log(jsonEncode(moduleResult.result));
+                      if (moduleResult.result == "1") {
                         // ignore: use_build_context_synchronously
                         showDialogRowsAffected(context, "บันทึกสำเร็จ");
                       } else {
