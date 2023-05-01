@@ -39,9 +39,9 @@ Future<void> main() async {
             primarySwatch: Colors.green,
           ),
           //localizationsDelegates: GlobalMaterialLocalizations.delegate,
-          supportedLocales: const [
-            Locale('th', 'TH'),
-          ],
+          // supportedLocales: const [
+          //   Locale('th', 'TH'),
+          // ],
         )),
   ));
 }

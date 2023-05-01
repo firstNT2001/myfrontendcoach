@@ -4,6 +4,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:retrofit/retrofit.dart';
+import '../../model/DTO/updateCus.dart';
 import '../../model/modelCustomer.dart';
 import '../../service/customer.dart';
 import '../../service/provider/appdata.dart';
@@ -39,7 +40,7 @@ class _editProfileCusState extends State<editProfileCus> {
   int _price = 0;
 
   final List<String> genders = ['ผู้หญิง', 'ผู้ชาย'];
-  
+
   String _image = " ";
 
   @override
@@ -83,9 +84,9 @@ class _editProfileCusState extends State<editProfileCus> {
       _weight.text = customer.data.weight.toString();
       _height.text = customer.data.height.toString();
       //gender show
-      if(_gender.text =="1"){
+      if (_gender.text == "1") {
         _gender.text = "ชาย";
-      }else{
+      } else {
         _gender.text = "หญิง";
       }
     } catch (err) {
@@ -122,11 +123,10 @@ class _editProfileCusState extends State<editProfileCus> {
               child: Column(
                 children: [
                   CircleAvatar(
-                              minRadius: 35,
-                              maxRadius: 55,
-                              backgroundImage:
-                                  NetworkImage(customer.data.image),
-                            ),
+                    minRadius: 35,
+                    maxRadius: 55,
+                    backgroundImage: NetworkImage(customer.data.image),
+                  ),
                   txtfild(_username, "ชื่อผู้ใช้", "ชื่อผู้ใช้"),
                   txtfild(_email, "e-mail", "e-mail"),
                   txtfild(_fullName, "ชื่อ-นามสกุล", "ชื่อ-นามสกุล"),
@@ -135,39 +135,38 @@ class _editProfileCusState extends State<editProfileCus> {
                   txtfild(_weight, "น้ำหนัก", "น้ำหนัก"),
                   txtfild(_height, "ส่วนสูง", "ส่วนสูง"),
                   Padding(
-                    padding: const EdgeInsets.only(top: 15,bottom: 15),
-                    child: ElevatedButton(child: Padding(
-                      padding: const EdgeInsets.all(10.0),
-                      child: Text("บันทึก"),
-                    ),onPressed: ()async{
-                      Customer updateCustomer = Customer(
-                        uid: widget.uid, 
-                        username: _username.text, 
-                        password: _password.text, 
-                        email: _email.text, 
-                        fullName: _fullName.text, 
-                        birthday: _birthday.text, 
-                        gender: _gender.text, 
-                        phone: _phone.text, 
-                        image: _image, 
-                        weight: int.parse(_weight.text), 
-                        height: int.parse(_height.text), 
-                        facebookId: _facebookID.text, 
-                        price: _price, 
-                        buying: 2);
-                        log(jsonEncode(updateCustomer));
-                        updateCustomer =
-                      (await customerService.updateCus(cusUpdate)) as Customer;
-
-                    } ),
+                    padding: const EdgeInsets.only(top: 15, bottom: 15),
+                    child: ElevatedButton(
+                        child: Padding(
+                          padding: const EdgeInsets.all(10.0),
+                          child: Text("บันทึก"),
+                        ),
+                        onPressed: ()async {
+                          // UpdateCustomer updateCustomer  = UpdateCustomer(
+                          //     uid: widget.uid,
+                          //     username: _username.text,
+                          //     password: _password.text,
+                          //     email: _email.text,
+                          //     fullName: _fullName.text,
+                          //     birthday: _birthday.text,
+                          //     gender: _gender.text,
+                          //     phone: _phone.text,
+                          //     image: _image,
+                          //     weight: int.parse(_weight.text),
+                          //     height: int.parse(_height.text),);
+                          // log(jsonEncode(updateCustomer));
+                          // updateCustomer =
+                          //     (await customerService.updateCus(updateCustomer as Customer)) as UpdateCustomer;
+                        
+                        }),
                   )
-                  
                 ],
               ),
             );
           }
         });
   }
+
   String? selectGender;
   List<DropdownMenuItem<String>> _addDividersAfterGender(List<String> genders) {
     List<DropdownMenuItem<String>> _genders = [];
@@ -209,7 +208,8 @@ class _editProfileCusState extends State<editProfileCus> {
     }
     return _gendersHeights;
   }
-    Widget buildDropdownGender() {
+
+  Widget buildDropdownGender() {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
