@@ -42,6 +42,10 @@ Future<void> main() async {
             useMaterial3: true,
             primarySwatch: Colors.green,
           ),
+          //localizationsDelegates: GlobalMaterialLocalizations.delegate,
+          // supportedLocales: const [
+          //   Locale('th', 'TH'),
+          // ],
         )),
   ));
 }

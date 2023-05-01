@@ -176,6 +176,7 @@ class _HomePageUserState extends State<HomePageUser> {
                                 onTap: () {
                                   log(course.coId.toString());
                                     context.read<AppData>().idcourse = course.coId;
+                                    
 
                                   Get.to(()=>showCousePage());
                                 },

@@ -6,11 +6,13 @@ import 'package:frontendfluttercoach/page/user/money.dart';
 import 'package:get/get.dart';
 import 'package:provider/provider.dart';
 import 'package:retrofit/dio.dart';
+import 'package:retrofit/retrofit.dart';
 
 import '../../model/modelCustomer.dart';
 import '../../service/customer.dart';
 import '../../service/provider/appdata.dart';
 import 'chatOfCus.dart';
+import 'editProfile.dart';
 import 'mycourse.dart';
 
 class ProfileUser extends StatefulWidget {
@@ -24,7 +26,7 @@ class _ProfileUserState extends State<ProfileUser> {
   late CustomerService customerService;
   late Future<void> loadDataMethod;
   late HttpResponse<Customer> customer;
-  String uid = "1";
+  int uid = 1;
 
   @override
   void initState() {
@@ -60,7 +62,7 @@ class _ProfileUserState extends State<ProfileUser> {
                   Padding(
                     padding: const EdgeInsets.only(left: 25, top: 30),
                     child: Column(
-                      children: [
+                      children: [                    
                         Row(
                           children: [
                             CircleAvatar(
@@ -80,6 +82,21 @@ class _ProfileUserState extends State<ProfileUser> {
                                 ],
                               ),
                             ),
+                              
+                        Padding(
+                          padding: const EdgeInsets.only(left: 50),
+                          child: InkWell(
+                                onTap: () {
+                                  //1. ส่งตัวแปรแบบconstructure
+                                  Get.to(() =>  editProfileCus(uid: uid));
+                                },
+                                child: Icon(
+                                  Icons.edit_outlined,
+                                  color: Colors.black,
+                                  size: 28,
+                                ),
+                              ),
+                        ), 
                           ],
                         ),
                         Container(
@@ -166,7 +183,7 @@ class _ProfileUserState extends State<ProfileUser> {
             onTap: () {
               log(customer.data.uid.toString());
               context.read<AppData>().uid = customer.data.uid;
-              Get.to(() => const MyCouses());
+              Get.to(() =>  MyCouses());
             },
             child: Card(
               elevation: 0,
@@ -184,17 +201,15 @@ class _ProfileUserState extends State<ProfileUser> {
                       Icons.list_alt_rounded,
                       color: Colors.green,
                       size: 24.0,
-                    ),                              
+                    ),
                   ),
                   Text("รายการซื้อของฉัน"),
-                  
                 ],
               ),
-              
             ),
           ),
           InkWell(
-            onTap: (){
+            onTap: () {
               log(customer.data.uid.toString());
               context.read<AppData>().uid = customer.data.uid;
               Get.to(() => const chatOfCustomer());
@@ -216,7 +231,6 @@ class _ProfileUserState extends State<ProfileUser> {
                       color: Colors.green,
                       size: 24.0,
                     ),
-                    
                   ),
                   Text("ข้อมความ"),
                 ],
@@ -224,7 +238,7 @@ class _ProfileUserState extends State<ProfileUser> {
             ),
           ),
           InkWell(
-            onTap: (){
+            onTap: () {
               log(customer.data.uid.toString());
               context.read<AppData>().uid = customer.data.uid;
               Get.to(() => const addCoin());
@@ -246,7 +260,6 @@ class _ProfileUserState extends State<ProfileUser> {
                       color: Colors.green,
                       size: 24.0,
                     ),
-                    
                   ),
                   Text("เติมเงิน"),
                 ],
@@ -254,9 +267,7 @@ class _ProfileUserState extends State<ProfileUser> {
             ),
           ),
           InkWell(
-            onLongPress: (){
-              
-            },
+            onLongPress: () {},
             child: Card(
               elevation: 0,
               shape: RoundedRectangleBorder(
@@ -265,7 +276,6 @@ class _ProfileUserState extends State<ProfileUser> {
                 ),
                 borderRadius: const BorderRadius.all(Radius.circular(12)),
               ),
-              
               child: Row(
                 children: [
                   Padding(
@@ -275,12 +285,10 @@ class _ProfileUserState extends State<ProfileUser> {
                       color: Colors.redAccent,
                       size: 24.0,
                     ),
-                    
                   ),
                   Text("ออกจากระบบ"),
                 ],
               ),
-              
             ),
           ),
         ],
