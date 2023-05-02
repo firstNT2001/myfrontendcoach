@@ -14,6 +14,7 @@ import '../../model/modelCourse.dart';
 import '../../service/course.dart';
 import '../../service/provider/appdata.dart';
 import '../../service/provider/courseData.dart';
+import 'clip/clipPage.dart';
 import 'course/courseEditPage.dart';
 import 'course/courseInsertPage.dart';
 import 'food/foodCoach/foodPage.dart';
@@ -76,6 +77,16 @@ class _HomePageCoachState extends State<HomePageCoach> {
                         Get.to(() => const FoodPage());
                       },
                       child: const Text("หน้าอาหาร"),
+                    ),
+                  ),
+                  Container(
+                    padding: const EdgeInsets.only(top: 20, left: 5, right: 5),
+                    child: ElevatedButton(
+                      onPressed: () {
+                        context.read<CoachData>().cid = int.parse(cid);
+                        Get.to(() => const ClipPage());
+                      },
+                      child: const Text("หน้าคลิป"),
                     ),
                   ),
                   if (courses != null)
