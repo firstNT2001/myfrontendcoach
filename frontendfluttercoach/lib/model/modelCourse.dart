@@ -5,6 +5,9 @@
 import 'package:meta/meta.dart';
 import 'dart:convert';
 
+import 'ModelBuying.dart';
+import 'modelCustomer.dart';
+
 List<ModelCourse> modelCourseFromJson(String str) => List<ModelCourse>.from(json.decode(str).map((x) => ModelCourse.fromJson(x)));
 
 String modelCourseToJson(List<ModelCourse> data) => json.encode(List<dynamic>.from(data.map((x) => x.toJson())));
@@ -21,8 +24,9 @@ class ModelCourse {
     int days;
     int price;
     String status;
-    String expirationDate;
-    List<DayOfCouse> dayOfCouses;
+    DateTime expirationDate;
+    ModelBuying buying;
+    dynamic dayOfCouses;
 
     ModelCourse({
         required this.coId,
@@ -37,6 +41,7 @@ class ModelCourse {
         required this.price,
         required this.status,
         required this.expirationDate,
+        required this.buying,
         required this.dayOfCouses,
     });
 
@@ -52,8 +57,9 @@ class ModelCourse {
         days: json["Days"],
         price: json["Price"],
         status: json["Status"],
-        expirationDate: json["ExpirationDate"],
-        dayOfCouses: List<DayOfCouse>.from(json["DayOfCouses"].map((x) => DayOfCouse.fromJson(x))),
+        expirationDate: DateTime.parse(json["ExpirationDate"]),
+        buying: ModelBuying.fromJson(json["Buying"]),
+        dayOfCouses: json["DayOfCouses"],
     );
 
     Map<String, dynamic> toJson() => {
@@ -68,39 +74,12 @@ class ModelCourse {
         "Days": days,
         "Price": price,
         "Status": status,
-        "ExpirationDate": expirationDate,
-        "DayOfCouses": List<dynamic>.from(dayOfCouses.map((x) => x.toJson())),
+        "ExpirationDate": expirationDate.toIso8601String(),
+        "Buying": buying.toJson(),
+        "DayOfCouses": dayOfCouses,
     };
 }
 
-class DayOfCouse {
-    int did;
-    int courseId;
-    int sequence;
-    dynamic foods;
-    dynamic clips;
 
-    DayOfCouse({
-        required this.did,
-        required this.courseId,
-        required this.sequence,
-        required this.foods,
-        required this.clips,
-    });
 
-    factory DayOfCouse.fromJson(Map<String, dynamic> json) => DayOfCouse(
-        did: json["Did"],
-        courseId: json["CourseID"],
-        sequence: json["Sequence"],
-        foods: json["Foods"],
-        clips: json["Clips"],
-    );
 
-    Map<String, dynamic> toJson() => {
-        "Did": did,
-        "CourseID": courseId,
-        "Sequence": sequence,
-        "Foods": foods,
-        "Clips": clips,
-    };
-}

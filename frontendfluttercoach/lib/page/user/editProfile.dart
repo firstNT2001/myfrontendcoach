@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:developer';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:frontendfluttercoach/model/modelRowsAffected.dart';
 import 'package:provider/provider.dart';
 import 'package:retrofit/retrofit.dart';
 import '../../model/DTO/updateCus.dart';
@@ -25,6 +26,7 @@ class _editProfileCusState extends State<editProfileCus> {
   late Future<void> loadDataMethod;
   late CustomerService customerService;
   late HttpResponse<Customer> customer;
+  late ModelRowsAffected modelRowsAffected;
   //controller
   TextEditingController _uid = TextEditingController();
   TextEditingController _username = TextEditingController();
@@ -142,22 +144,23 @@ class _editProfileCusState extends State<editProfileCus> {
                           child: Text("บันทึก"),
                         ),
                         onPressed: ()async {
-                          // UpdateCustomer updateCustomer  = UpdateCustomer(
-                          //     uid: widget.uid,
-                          //     username: _username.text,
-                          //     password: _password.text,
-                          //     email: _email.text,
-                          //     fullName: _fullName.text,
-                          //     birthday: _birthday.text,
-                          //     gender: _gender.text,
-                          //     phone: _phone.text,
-                          //     image: _image,
-                          //     weight: int.parse(_weight.text),
-                          //     height: int.parse(_height.text),);
-                          // log(jsonEncode(updateCustomer));
-                          // updateCustomer =
-                          //     (await customerService.updateCus(updateCustomer as Customer)) as UpdateCustomer;
-                        
+                          UpdateCustomer updateCustomer  = UpdateCustomer(
+                              uid: widget.uid,
+                              username: _username.text,
+                              password: _password.text,
+                              email: _email.text,
+                              fullName: _fullName.text,
+                              birthday: _birthday.text,
+                              gender: _gender.text,
+                              phone: _phone.text,
+                              image: _image,
+                              weight: int.parse(_weight.text),
+                              height: int.parse(_height.text),);
+                          log(jsonEncode(updateCustomer));
+                          var update =
+                              (await customerService.updateCus(updateCustomer)) ;
+                          modelRowsAffected = update.data;
+                          log(modelRowsAffected.rowsAffected);
                         }),
                   )
                 ],
