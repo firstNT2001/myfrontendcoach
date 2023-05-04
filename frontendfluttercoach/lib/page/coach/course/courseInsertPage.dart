@@ -8,8 +8,9 @@ import 'package:flutter/src/widgets/placeholder.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../../../model/DTO/insertCourseDTO.dart';
-import '../../../model/modelResult.dart';
+import '../../../model/request/course_coachID_post.dart';
+
+import '../../../model/response/md_Result.dart';
 import '../../../service/course.dart';
 import '../../../service/provider/appdata.dart';
 import '../../../service/provider/coachData.dart';
@@ -89,8 +90,7 @@ class _CourseInsertPageState extends State<CourseInsertPage> {
                   child: ElevatedButton(
                     //style: style,
                     onPressed: () async {
-                      InsertCourseDto insertCourseDTO = InsertCourseDto(
-                          coachId: cid,
+                      CourseCoachIdPost courseCoachIdPost = CourseCoachIdPost(
                           bid: null,
                           name: _name.text,
                           details: _details.text,
@@ -101,9 +101,9 @@ class _CourseInsertPageState extends State<CourseInsertPage> {
                           price: int.parse(_price.text),
                           status: status,
                           expirationDate: null);
-                      log(jsonEncode(insertCourseDTO));
+                      log(jsonEncode(courseCoachIdPost));
                       insertCourse =
-                          await courseService.insetCourse(insertCourseDTO);
+                          await courseService.insetCourse(cid.toString(),courseCoachIdPost);
                       moduleResult = insertCourse.data;
                       log(jsonEncode(moduleResult.result));
                       if (moduleResult.result == "1") {

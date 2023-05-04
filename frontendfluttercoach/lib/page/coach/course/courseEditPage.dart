@@ -4,21 +4,23 @@ import 'dart:developer';
 
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
-import 'package:frontendfluttercoach/model/modelCourse.dart';
+
 import 'package:frontendfluttercoach/page/coach/homePageCoach.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:provider/provider.dart';
 import 'package:retrofit/dio.dart';
 
-import '../../../model/DTO/updateCourseDTO.dart';
-import '../../../model/modelResult.dart';
+import '../../../model/request/course_courseID_put.dart';
+import '../../../model/response/md_Course_get.dart';
+import '../../../model/response/md_Result.dart';
 import '../../../service/course.dart';
 
 import '../../../service/provider/appdata.dart';
 import '../../../service/provider/courseData.dart';
 import '../../../service/provider/dayOfCouseData.dart';
 import 'dayOfCoursePage.dart';
+
 
 class CourseEditPage extends StatefulWidget {
   const CourseEditPage({super.key});
@@ -160,8 +162,7 @@ class _CourseEditPageState extends State<CourseEditPage> {
               ElevatedButton(
                 //style: style,
                 onPressed: () async {
-                  UpdateCourse updateCourseDTO = UpdateCourse(
-                    coachId: coID,
+                  CourseCourseIdPut updateCourseDTO = CourseCourseIdPut(
                     name: _name.text,
                     details: _details.text,
                     level: _level.text,
@@ -172,8 +173,9 @@ class _CourseEditPageState extends State<CourseEditPage> {
                     status: status,
                   );
                   log(jsonEncode(updateCourseDTO));
+                  log(coID.toString());
                   updateCourse =
-                      await courseService.updateCourse(updateCourseDTO);
+                      await courseService.updateCourse(coID.toString(),updateCourseDTO);
                    moduleResult = updateCourse.data;
                       log(jsonEncode(moduleResult.result));
                   //log("rowsAffected:"+updateCourse);

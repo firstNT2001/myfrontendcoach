@@ -19,9 +19,17 @@ class _CourseService implements CourseService {
   String? baseUrl;
 
   @override
-  Future<HttpResponse<List<ModelCourse>>> getCourseByCid(cid) async {
+  Future<HttpResponse<List<ModelCourse>>> course({
+    required coID,
+    required cid,
+    required name,
+  }) async {
     const _extra = <String, dynamic>{};
-    final queryParameters = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{
+      r'coID': coID,
+      r'cid': cid,
+      r'name': name,
+    };
     final _headers = <String, dynamic>{};
     final _data = <String, dynamic>{};
     final _result = await _dio.fetch<List<dynamic>>(
@@ -32,7 +40,7 @@ class _CourseService implements CourseService {
     )
             .compose(
               _dio.options,
-              '/course/getCourseByIDCoach/${cid}',
+              '/course',
               queryParameters: queryParameters,
               data: _data,
             )
@@ -45,62 +53,15 @@ class _CourseService implements CourseService {
   }
 
   @override
-  Future<HttpResponse<ModelCourse>> getCourseByCoID(coID) async {
+  Future<HttpResponse<ModelResult>> updateCourse(
+    coID,
+    courseCourseIdPut,
+  ) async {
     const _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{};
     final _data = <String, dynamic>{};
-    final _result = await _dio.fetch<Map<String, dynamic>>(
-        _setStreamType<HttpResponse<ModelCourse>>(Options(
-      method: 'GET',
-      headers: _headers,
-      extra: _extra,
-    )
-            .compose(
-              _dio.options,
-              '/course/getCourseByCoID/${coID}',
-              queryParameters: queryParameters,
-              data: _data,
-            )
-            .copyWith(baseUrl: baseUrl ?? _dio.options.baseUrl)));
-    final value = ModelCourse.fromJson(_result.data!);
-    final httpResponse = HttpResponse(value, _result);
-    return httpResponse;
-  }
-
-  @override
-  Future<HttpResponse<List<ModelCourse>>> getCourseByName(name) async {
-    const _extra = <String, dynamic>{};
-    final queryParameters = <String, dynamic>{};
-    final _headers = <String, dynamic>{};
-    final _data = <String, dynamic>{};
-    final _result = await _dio.fetch<List<dynamic>>(
-        _setStreamType<HttpResponse<List<ModelCourse>>>(Options(
-      method: 'GET',
-      headers: _headers,
-      extra: _extra,
-    )
-            .compose(
-              _dio.options,
-              '/course/getCourseByName/${name}',
-              queryParameters: queryParameters,
-              data: _data,
-            )
-            .copyWith(baseUrl: baseUrl ?? _dio.options.baseUrl)));
-    var value = _result.data!
-        .map((dynamic i) => ModelCourse.fromJson(i as Map<String, dynamic>))
-        .toList();
-    final httpResponse = HttpResponse(value, _result);
-    return httpResponse;
-  }
-
-  @override
-  Future<HttpResponse<ModelResult>> updateCourse(courseUpdate) async {
-    const _extra = <String, dynamic>{};
-    final queryParameters = <String, dynamic>{};
-    final _headers = <String, dynamic>{};
-    final _data = <String, dynamic>{};
-    _data.addAll(courseUpdate.toJson());
+    _data.addAll(courseCourseIdPut.toJson());
     final _result = await _dio.fetch<Map<String, dynamic>>(
         _setStreamType<HttpResponse<ModelResult>>(Options(
       method: 'PUT',
@@ -109,7 +70,7 @@ class _CourseService implements CourseService {
     )
             .compose(
               _dio.options,
-              '/course/updateCourse',
+              '/course/courseID/${coID}',
               queryParameters: queryParameters,
               data: _data,
             )
@@ -120,12 +81,15 @@ class _CourseService implements CourseService {
   }
 
   @override
-  Future<HttpResponse<ModelResult>> insetCourse(courseInset) async {
+  Future<HttpResponse<ModelResult>> insetCourse(
+    cid,
+    courseCoachIdPost,
+  ) async {
     const _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{};
     final _data = <String, dynamic>{};
-    _data.addAll(courseInset.toJson());
+    _data.addAll(courseCoachIdPost.toJson());
     final _result = await _dio.fetch<Map<String, dynamic>>(
         _setStreamType<HttpResponse<ModelResult>>(Options(
       method: 'POST',
@@ -134,7 +98,7 @@ class _CourseService implements CourseService {
     )
             .compose(
               _dio.options,
-              '/course/insertCourse',
+              '/course/coachID/${cid}',
               queryParameters: queryParameters,
               data: _data,
             )

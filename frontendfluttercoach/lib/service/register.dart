@@ -1,11 +1,10 @@
-import 'package:frontendfluttercoach/model/DTO/registerCoachDTO.dart';
-import 'package:frontendfluttercoach/model/DTO/registerCusDTO.dart';
-import 'package:frontendfluttercoach/model/modelCoach.dart';
-import 'package:frontendfluttercoach/model/modelCustomer.dart';
+import 'package:frontendfluttercoach/model/request/registerCoachDTO.dart';
+import 'package:frontendfluttercoach/model/request/registerCusDTO.dart';
+
 import 'package:retrofit/retrofit.dart';
 import 'package:dio/dio.dart';
 
-import '../model/modelCidAndUid.dart';
+import '../model/response/md_CidAndUid.dart';
 
 
 

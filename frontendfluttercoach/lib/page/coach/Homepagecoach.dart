@@ -1,8 +1,6 @@
 import 'dart:convert';
 import 'dart:developer';
 
-import 'package:frontendfluttercoach/model/modelCoach.dart';
-
 import 'package:frontendfluttercoach/service/provider/coachData.dart';
 import 'package:get/get.dart';
 import 'package:retrofit/retrofit.dart';
@@ -10,7 +8,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../../model/modelCourse.dart';
+import '../../model/response/md_Course_get.dart';
 import '../../service/course.dart';
 import '../../service/provider/appdata.dart';
 import '../../service/provider/courseData.dart';
@@ -141,7 +139,7 @@ class _HomePageCoachState extends State<HomePageCoach> {
 
   Future<void> loadData() async {
     try {
-      var datas = await courseService.getCourseByCid(cid);
+      var datas = await courseService.course(coID: '', cid: cid, name: '');
       courses = datas.data;
     } catch (err) {
       log('Error: $err');

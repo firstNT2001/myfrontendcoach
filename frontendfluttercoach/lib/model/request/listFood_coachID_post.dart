@@ -1,31 +1,28 @@
 // To parse this JSON data, do
 //
-//     final listFoodPostRequest = listFoodPostRequestFromJson(jsonString);
+//     final listFoodCoachIdPost = listFoodCoachIdPostFromJson(jsonString);
 
 import 'package:meta/meta.dart';
 import 'dart:convert';
 
-ListFoodPostRequest listFoodPostRequestFromJson(String str) => ListFoodPostRequest.fromJson(json.decode(str));
+ListFoodCoachIdPost listFoodCoachIdPostFromJson(String str) => ListFoodCoachIdPost.fromJson(json.decode(str));
 
-String listFoodPostRequestToJson(ListFoodPostRequest data) => json.encode(data.toJson());
+String listFoodCoachIdPostToJson(ListFoodCoachIdPost data) => json.encode(data.toJson());
 
-class ListFoodPostRequest {
-    int coachId;
+class ListFoodCoachIdPost {
     String name;
     String image;
     String details;
     int calories;
 
-    ListFoodPostRequest({
-        required this.coachId,
+    ListFoodCoachIdPost({
         required this.name,
         required this.image,
         required this.details,
         required this.calories,
     });
 
-    factory ListFoodPostRequest.fromJson(Map<String, dynamic> json) => ListFoodPostRequest(
-        coachId: json["CoachID"],
+    factory ListFoodCoachIdPost.fromJson(Map<String, dynamic> json) => ListFoodCoachIdPost(
         name: json["Name"],
         image: json["Image"],
         details: json["Details"],
@@ -33,7 +30,6 @@ class ListFoodPostRequest {
     );
 
     Map<String, dynamic> toJson() => {
-        "CoachID": coachId,
         "Name": name,
         "Image": image,
         "Details": details,

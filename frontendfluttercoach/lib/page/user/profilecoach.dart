@@ -2,10 +2,11 @@ import 'dart:developer';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:frontendfluttercoach/page/user/cousepage.dart';
+import '../../model/response/md_Course_get.dart';
 import '../../service/course.dart';
 import 'package:get/get.dart';
 import 'package:provider/provider.dart';
-import '../../model/modelCourse.dart';
+
 import '../../service/course.dart';
 import '../../service/provider/appdata.dart';
 
@@ -118,7 +119,7 @@ class _ProfileCoachPageState extends State<ProfileCoachPage> {
 
   Future<void> loadData() async {
     try {
-      var datas = await courseService.getCourseByCid(cidCoach.toString());
+      var datas = await courseService.course(cid: cidCoach.toString(), coID: '', name: '');
       courses = datas.data;
       log('couse: $courses');
     } catch (err) {

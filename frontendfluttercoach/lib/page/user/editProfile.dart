@@ -4,8 +4,9 @@ import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:retrofit/retrofit.dart';
-import '../../model/DTO/updateCus.dart';
-import '../../model/modelCustomer.dart';
+import '../../model/request/updateCus.dart';
+
+import '../../model/response/md_Course_get.dart';
 import '../../service/customer.dart';
 import '../../service/provider/appdata.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';

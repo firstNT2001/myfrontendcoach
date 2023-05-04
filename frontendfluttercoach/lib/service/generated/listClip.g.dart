@@ -19,9 +19,17 @@ class _ListClipServices implements ListClipServices {
   String? baseUrl;
 
   @override
-  Future<HttpResponse<List<ModelClipList>>> listClips(cid) async {
+  Future<HttpResponse<List<ModelClipList>>> listClips({
+    required icpID,
+    required cid,
+    required name,
+  }) async {
     const _extra = <String, dynamic>{};
-    final queryParameters = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{
+      r'icpID': icpID,
+      r'cid': cid,
+      r'name': name,
+    };
     final _headers = <String, dynamic>{};
     final _data = <String, dynamic>{};
     final _result = await _dio.fetch<List<dynamic>>(
@@ -32,7 +40,7 @@ class _ListClipServices implements ListClipServices {
     )
             .compose(
               _dio.options,
-              '/listClip/${cid}',
+              '/listClip',
               queryParameters: queryParameters,
               data: _data,
             )

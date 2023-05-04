@@ -5,10 +5,10 @@ import 'package:flutter/material.dart';
 
 import 'package:provider/provider.dart';
 
-import '../../../../model/DTO/ListFoodPutRequest.dart';
-import '../../../../model/ModelFoodList.dart';
+import '../../../../model/request/listFood_foodID_put.dart';
 
-import '../../../../model/modelResult.dart';
+import '../../../../model/response/md_FoodList_get.dart';
+import '../../../../model/response/md_Result.dart';
 import '../../../../service/listFood.dart';
 import '../../../../service/provider/appdata.dart';
 
@@ -23,7 +23,7 @@ class FoodEditPage extends StatefulWidget {
 class _FoodEditPageState extends State<FoodEditPage> {
   late Future<void> _loadData;
   late ListFoodServices _listfoodService;
-  late ModelFoodList foods;
+  List<ModelFoodList> foods=[];
   late ModelResult modelResult;
   var editFood;
 
@@ -65,15 +65,14 @@ class _FoodEditPageState extends State<FoodEditPage> {
                         //     image: image,
                         //     details: details.text,
                         //     calories: int.parse(calories.text));
-                        ListFoodPutRequest request = ListFoodPutRequest(
-                            ifid: widget.ifid,
+                        ListFoodFoodIdPut request = ListFoodFoodIdPut(
                             name: name.text,
                             image: image,
                             details: 'tt',
                             calories: 22);
                         log(jsonEncode(request));    
                         editFood =
-                         await _listfoodService.updateListFood(request);
+                         await _listfoodService.updateListFood(widget.ifid.toString(),request);
                         modelResult = editFood.data;
                         log(jsonEncode(modelResult.result));
                       },
@@ -87,9 +86,9 @@ class _FoodEditPageState extends State<FoodEditPage> {
 
   Future<void> loadDataAsync() async {
     try {
-      var res = await _listfoodService.listFood(widget.ifid.toString());
+      var res = await _listfoodService.listFoods(ifid: widget.ifid.toString(), cid: '', name: '');
       foods = res.data;
-      name.text = foods.name;
+      //name.text = foods.name;
     } catch (err) {
       log('Error: $err');
     }

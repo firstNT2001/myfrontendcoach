@@ -19,9 +19,17 @@ class _ListFoodServices implements ListFoodServices {
   String? baseUrl;
 
   @override
-  Future<HttpResponse<List<ModelFoodList>>> listFoods(cid) async {
+  Future<HttpResponse<List<ModelFoodList>>> listFoods({
+    required ifid,
+    required cid,
+    required name,
+  }) async {
     const _extra = <String, dynamic>{};
-    final queryParameters = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{
+      r'ifid': ifid,
+      r'cid': cid,
+      r'name': name,
+    };
     final _headers = <String, dynamic>{};
     final _data = <String, dynamic>{};
     final _result = await _dio.fetch<List<dynamic>>(
@@ -32,7 +40,7 @@ class _ListFoodServices implements ListFoodServices {
     )
             .compose(
               _dio.options,
-              '/listFood/${cid}',
+              '/listFood',
               queryParameters: queryParameters,
               data: _data,
             )
@@ -45,36 +53,15 @@ class _ListFoodServices implements ListFoodServices {
   }
 
   @override
-  Future<HttpResponse<ModelFoodList>> listFood(ifid) async {
+  Future<HttpResponse<ModelResult>> insertListFood(
+    cid,
+    listFoodCoachIdPost,
+  ) async {
     const _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{};
     final _data = <String, dynamic>{};
-    final _result = await _dio.fetch<Map<String, dynamic>>(
-        _setStreamType<HttpResponse<ModelFoodList>>(Options(
-      method: 'GET',
-      headers: _headers,
-      extra: _extra,
-    )
-            .compose(
-              _dio.options,
-              '/listFood/foodID/${ifid}',
-              queryParameters: queryParameters,
-              data: _data,
-            )
-            .copyWith(baseUrl: baseUrl ?? _dio.options.baseUrl)));
-    final value = ModelFoodList.fromJson(_result.data!);
-    final httpResponse = HttpResponse(value, _result);
-    return httpResponse;
-  }
-
-  @override
-  Future<HttpResponse<ModelResult>> insertListFood(listFoodPostRequest) async {
-    const _extra = <String, dynamic>{};
-    final queryParameters = <String, dynamic>{};
-    final _headers = <String, dynamic>{};
-    final _data = <String, dynamic>{};
-    _data.addAll(listFoodPostRequest.toJson());
+    _data.addAll(listFoodCoachIdPost.toJson());
     final _result = await _dio.fetch<Map<String, dynamic>>(
         _setStreamType<HttpResponse<ModelResult>>(Options(
       method: 'POST',
@@ -83,7 +70,7 @@ class _ListFoodServices implements ListFoodServices {
     )
             .compose(
               _dio.options,
-              '/listFood/insertListFood',
+              '/listFood/coachID/${cid}',
               queryParameters: queryParameters,
               data: _data,
             )
@@ -94,12 +81,15 @@ class _ListFoodServices implements ListFoodServices {
   }
 
   @override
-  Future<HttpResponse<ModelResult>> updateListFood(listFoodPutRequest) async {
+  Future<HttpResponse<ModelResult>> updateListFood(
+    ifid,
+    listFoodFoodIdPut,
+  ) async {
     const _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{};
     final _data = <String, dynamic>{};
-    _data.addAll(listFoodPutRequest.toJson());
+    _data.addAll(listFoodFoodIdPut.toJson());
     final _result = await _dio.fetch<Map<String, dynamic>>(
         _setStreamType<HttpResponse<ModelResult>>(Options(
       method: 'PUT',
@@ -108,7 +98,7 @@ class _ListFoodServices implements ListFoodServices {
     )
             .compose(
               _dio.options,
-              '/listFood/updateListFood',
+              '/listFood/foodID/${ifid}',
               queryParameters: queryParameters,
               data: _data,
             )
