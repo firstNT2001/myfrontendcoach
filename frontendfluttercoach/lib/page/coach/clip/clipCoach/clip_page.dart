@@ -6,19 +6,20 @@ import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:provider/provider.dart';
 
-import '../../../service/listClip.dart';
-import '../../../service/provider/appdata.dart';
-import '../../../service/provider/coachData.dart';
-import 'clipEditPage.dart';
 
-class ClipPage extends StatefulWidget {
-  const ClipPage({super.key});
+import '../../../../service/listClip.dart';
+import '../../../../service/provider/appdata.dart';
+import '../../../../service/provider/coachData.dart';
+import 'clip_edit_page.dart';
+
+class ClipCoachPage extends StatefulWidget {
+  const ClipCoachPage({super.key});
 
   @override
-  State<ClipPage> createState() => _ClipPageState();
+  State<ClipCoachPage> createState() => _ClipCoachPageState();
 }
 
-class _ClipPageState extends State<ClipPage> {
+class _ClipCoachPageState extends State<ClipCoachPage> {
   String cid = "";
   late Future<void> loadDataMethod;
   late ListClipServices _listclipService;
@@ -56,7 +57,7 @@ class _ClipPageState extends State<ClipPage> {
                                   onTap: () {
                                     // log(foods[index].ifid.toString());
 
-                                    Get.to(() => ClipEditPage(
+                                    Get.to(() => ClipEditCoachPage(
                                           icpId: clips[index].icpId,
                                         ));
                                   },

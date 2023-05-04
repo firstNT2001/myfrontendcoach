@@ -13,14 +13,14 @@ import '../../../../service/listFood.dart';
 import '../../../../service/provider/appdata.dart';
 import '../../../../service/provider/coachData.dart';
 
-class FoodInsertPage extends StatefulWidget {
-  const FoodInsertPage({super.key});
+class FoodNewCoachPage extends StatefulWidget {
+  const FoodNewCoachPage({super.key});
 
   @override
-  State<FoodInsertPage> createState() => _FoodInsertPageState();
+  State<FoodNewCoachPage> createState() => _FoodNewCoachPageState();
 }
 
-class _FoodInsertPageState extends State<FoodInsertPage> {
+class _FoodNewCoachPageState extends State<FoodNewCoachPage> {
   //Services
   late ListFoodServices _listfoodService;
   late ModelResult modelResult;
@@ -93,7 +93,7 @@ class _FoodInsertPageState extends State<FoodInsertPage> {
                             calories: int.parse(calories.text));
                     log(jsonEncode(listFoodCoachIdPost));
                     insertFood = await _listfoodService
-                        .insertListFood(cid.toString(),listFoodCoachIdPost);
+                        .insertListFoodByCoachID(cid.toString(),listFoodCoachIdPost);
                     modelResult = insertFood.data;
                     log(jsonEncode(modelResult.result));
                     if (modelResult.result == "1") {

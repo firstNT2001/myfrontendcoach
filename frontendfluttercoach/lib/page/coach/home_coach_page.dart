@@ -1,9 +1,8 @@
-import 'dart:convert';
 import 'dart:developer';
 
 import 'package:frontendfluttercoach/service/provider/coachData.dart';
 import 'package:get/get.dart';
-import 'package:retrofit/retrofit.dart';
+
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -12,10 +11,11 @@ import '../../model/response/md_Course_get.dart';
 import '../../service/course.dart';
 import '../../service/provider/appdata.dart';
 import '../../service/provider/courseData.dart';
-import 'clip/clipPage.dart';
-import 'course/courseEditPage.dart';
-import 'course/courseInsertPage.dart';
-import 'food/foodCoach/foodPage.dart';
+
+import 'clip/clipCoach/clip_page.dart';
+import 'course/course_edit_page.dart';
+import 'food/foodCoach/food_page.dart';
+
 
 class HomePageCoach extends StatefulWidget {
   const HomePageCoach({super.key});
@@ -62,7 +62,7 @@ class _HomePageCoachState extends State<HomePageCoach> {
                     child: ElevatedButton(
                       onPressed: () {
                         context.read<CoachData>().cid = int.parse(cid);
-                        Get.to(() => const CourseInsertPage());
+                        Get.to(() => const CourseEditPage());
                       },
                       child: const Text("สร้างคอร์ส"),
                     ),
@@ -72,7 +72,7 @@ class _HomePageCoachState extends State<HomePageCoach> {
                     child: ElevatedButton(
                       onPressed: () {
                         context.read<CoachData>().cid = int.parse(cid);
-                        Get.to(() => const FoodPage());
+                        Get.to(() => const FoodCoachPage());
                       },
                       child: const Text("หน้าอาหาร"),
                     ),
@@ -82,11 +82,12 @@ class _HomePageCoachState extends State<HomePageCoach> {
                     child: ElevatedButton(
                       onPressed: () {
                         context.read<CoachData>().cid = int.parse(cid);
-                        Get.to(() => const ClipPage());
+                        Get.to(() => const ClipCoachPage());
                       },
                       child: const Text("หน้าคลิป"),
                     ),
                   ),
+                  // ignore: unnecessary_null_comparison
                   if (courses != null)
                     Expanded(
                       child: ListView.builder(

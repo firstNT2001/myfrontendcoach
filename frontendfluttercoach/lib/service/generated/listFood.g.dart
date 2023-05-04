@@ -53,7 +53,7 @@ class _ListFoodServices implements ListFoodServices {
   }
 
   @override
-  Future<HttpResponse<ModelResult>> insertListFood(
+  Future<HttpResponse<ModelResult>> insertListFoodByCoachID(
     cid,
     listFoodCoachIdPost,
   ) async {
@@ -81,7 +81,7 @@ class _ListFoodServices implements ListFoodServices {
   }
 
   @override
-  Future<HttpResponse<ModelResult>> updateListFood(
+  Future<HttpResponse<ModelResult>> updateListFoodByFoodID(
     ifid,
     listFoodFoodIdPut,
   ) async {

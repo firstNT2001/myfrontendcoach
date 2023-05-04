@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:frontendfluttercoach/page/login.dart';
-import 'package:frontendfluttercoach/page/picture.dart';
-import 'package:frontendfluttercoach/page/vdo.dart';
+import 'package:frontendfluttercoach/page/waitingForEdit/picture.dart';
+import 'package:frontendfluttercoach/page/waitingForEdit/vdo.dart';
+
+import 'login.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
