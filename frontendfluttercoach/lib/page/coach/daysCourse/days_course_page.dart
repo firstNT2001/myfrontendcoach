@@ -3,14 +3,14 @@ import 'package:provider/provider.dart';
 
 import '../../../service/provider/dayOfCouseData.dart';
 
-class DayOfCoursePage extends StatefulWidget {
-  const DayOfCoursePage({super.key});
+class DaysCoursePage extends StatefulWidget {
+  const DaysCoursePage({super.key});
 
   @override
-  State<DayOfCoursePage> createState() => _DayOfCoursePageState();
+  State<DaysCoursePage> createState() => _DaysCoursePageState();
 }
 
-class _DayOfCoursePageState extends State<DayOfCoursePage> {
+class _DaysCoursePageState extends State<DaysCoursePage> {
   int did = 0;
   @override
   void initState() {

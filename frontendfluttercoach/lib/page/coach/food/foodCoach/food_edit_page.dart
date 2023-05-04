@@ -12,15 +12,15 @@ import '../../../../model/response/md_Result.dart';
 import '../../../../service/listFood.dart';
 import '../../../../service/provider/appdata.dart';
 
-class FoodEditPage extends StatefulWidget {
+class FoodEditCoachPage extends StatefulWidget {
   late int ifid;
-  FoodEditPage({super.key, required this.ifid});
+  FoodEditCoachPage({super.key, required this.ifid});
 
   @override
-  State<FoodEditPage> createState() => _FoodEditPageState();
+  State<FoodEditCoachPage> createState() => _FoodEditCoachPageState();
 }
 
-class _FoodEditPageState extends State<FoodEditPage> {
+class _FoodEditCoachPageState extends State<FoodEditCoachPage> {
   late Future<void> _loadData;
   late ListFoodServices _listfoodService;
   List<ModelFoodList> foods=[];
@@ -72,7 +72,7 @@ class _FoodEditPageState extends State<FoodEditPage> {
                             calories: 22);
                         log(jsonEncode(request));    
                         editFood =
-                         await _listfoodService.updateListFood(widget.ifid.toString(),request);
+                         await _listfoodService.updateListFoodByFoodID(widget.ifid.toString(),request);
                         modelResult = editFood.data;
                         log(jsonEncode(modelResult.result));
                       },

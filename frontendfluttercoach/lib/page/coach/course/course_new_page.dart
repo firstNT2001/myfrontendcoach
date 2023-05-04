@@ -2,8 +2,6 @@ import 'dart:convert';
 import 'dart:developer';
 
 import 'package:dio/dio.dart';
-import 'package:flutter/src/widgets/framework.dart';
-import 'package:flutter/src/widgets/placeholder.dart';
 
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -15,14 +13,14 @@ import '../../../service/course.dart';
 import '../../../service/provider/appdata.dart';
 import '../../../service/provider/coachData.dart';
 
-class CourseInsertPage extends StatefulWidget {
-  const CourseInsertPage({super.key});
+class CourseNewPage extends StatefulWidget {
+  const CourseNewPage({super.key});
 
   @override
-  State<CourseInsertPage> createState() => _CourseInsertPageState();
+  State<CourseNewPage> createState() => _CourseNewPageState();
 }
 
-class _CourseInsertPageState extends State<CourseInsertPage> {
+class _CourseNewPageState extends State<CourseNewPage> {
   late CourseService courseService;
   late ModelResult moduleResult;
   int cid = 0;
@@ -102,8 +100,8 @@ class _CourseInsertPageState extends State<CourseInsertPage> {
                           status: status,
                           expirationDate: null);
                       log(jsonEncode(courseCoachIdPost));
-                      insertCourse =
-                          await courseService.insetCourse(cid.toString(),courseCoachIdPost);
+                      insertCourse = await courseService.insetCourseByCoachID(
+                          cid.toString(), courseCoachIdPost);
                       moduleResult = insertCourse.data;
                       log(jsonEncode(moduleResult.result));
                       if (moduleResult.result == "1") {

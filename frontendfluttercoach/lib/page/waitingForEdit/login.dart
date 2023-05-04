@@ -5,11 +5,11 @@ import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:frontendfluttercoach/model/request/loginDTO.dart';
 import 'package:frontendfluttercoach/model/request/loginFBDTO.dart';
+import 'package:frontendfluttercoach/page/waitingForEdit/register.dart';
 
-import 'package:frontendfluttercoach/page/picture.dart';
-import 'package:frontendfluttercoach/page/register.dart';
+
 import 'package:frontendfluttercoach/service/login.dart';
-import 'package:frontendfluttercoach/page/vdo.dart';
+
 import 'package:frontendfluttercoach/service/provider/appdata.dart';
 import 'package:provider/provider.dart';
 import 'package:http/http.dart' as http;
@@ -18,7 +18,7 @@ import 'package:http/http.dart' as http;
 import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
 
 
-import '../model/request/registerCoachDTO.dart';
+
 import 'homePage.dart';
 
 class LoginPage extends StatefulWidget {

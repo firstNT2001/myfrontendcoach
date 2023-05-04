@@ -19,10 +19,10 @@ abstract class CourseService {
       @Query("name") required String name});
 
   @PUT("/course/courseID/{coID}")
-  Future<HttpResponse<ModelResult>> updateCourse(
+  Future<HttpResponse<ModelResult>> updateCourseByCourseID(
       @Path("coID") String coID, @Body() CourseCourseIdPut courseCourseIdPut);
 
   @POST("/course/coachID/{cid}")
-  Future<HttpResponse<ModelResult>> insetCourse(
+  Future<HttpResponse<ModelResult>> insetCourseByCoachID(
       @Path("cid") String cid, @Body() CourseCoachIdPost courseCoachIdPost);
 }

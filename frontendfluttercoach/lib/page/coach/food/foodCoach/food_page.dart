@@ -3,6 +3,7 @@ import 'dart:developer';
 
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:frontendfluttercoach/page/coach/food/foodCoach/food_edit_page.dart';
 
 import 'package:get/get.dart';
 import 'package:provider/provider.dart';
@@ -11,19 +12,18 @@ import '../../../../model/response/md_FoodList_get.dart';
 import '../../../../service/listFood.dart';
 import '../../../../service/provider/appdata.dart';
 import '../../../../service/provider/coachData.dart';
-// import '../../../../service/provider/listFood.dart';
-import 'foodEditPage.dart';
-import 'foodInsertPage.dart';
+
+import 'food_new_page.dart';
 
 
-class FoodPage extends StatefulWidget {
-  const FoodPage({super.key});
+class FoodCoachPage extends StatefulWidget {
+  const FoodCoachPage({super.key});
 
   @override
-  State<FoodPage> createState() => _FoodPageState();
+  State<FoodCoachPage> createState() => _FoodCoachPageState();
 }
 
-class _FoodPageState extends State<FoodPage> {
+class _FoodCoachPageState extends State<FoodCoachPage> {
   late ListFoodServices _listfoodService;
   late Future<void> loadDataMethod;
   late List<ModelFoodList> foods = [];
@@ -54,7 +54,7 @@ class _FoodPageState extends State<FoodPage> {
                     child: ElevatedButton(
                       onPressed: () {
                         context.read<CoachData>().cid = int.parse(cid);
-                        Get.to(() => const FoodInsertPage());
+                        Get.to(() => const FoodNewCoachPage());
                       },
                       child: const Text("สร้างรายการอาหาร"),
                     ),
@@ -75,7 +75,7 @@ class _FoodPageState extends State<FoodPage> {
                               onTap: () {
                                 // log(foods[index].ifid.toString());
                                 
-                                Get.to(() =>  FoodEditPage(ifid: foods[index].ifid,));
+                                Get.to(() =>  FoodEditCoachPage(ifid: foods[index].ifid,));
                               },
                             )),
                           );

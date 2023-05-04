@@ -53,7 +53,7 @@ class _CourseService implements CourseService {
   }
 
   @override
-  Future<HttpResponse<ModelResult>> updateCourse(
+  Future<HttpResponse<ModelResult>> updateCourseByCourseID(
     coID,
     courseCourseIdPut,
   ) async {
@@ -81,7 +81,7 @@ class _CourseService implements CourseService {
   }
 
   @override
-  Future<HttpResponse<ModelResult>> insetCourse(
+  Future<HttpResponse<ModelResult>> insetCourseByCoachID(
     cid,
     courseCoachIdPost,
   ) async {

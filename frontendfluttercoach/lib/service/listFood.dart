@@ -21,12 +21,12 @@ abstract class ListFoodServices {
       @Query("name") required String name});
 
   @POST("/listFood/coachID/{cid}")
-  Future<HttpResponse<ModelResult>> insertListFood(
+  Future<HttpResponse<ModelResult>> insertListFoodByCoachID(
       @Path("cid") String cid,
       @Body() ListFoodCoachIdPost listFoodCoachIdPost);
 
   @PUT("/listFood/foodID/{ifid}")
-  Future<HttpResponse<ModelResult>> updateListFood(
+  Future<HttpResponse<ModelResult>> updateListFoodByFoodID(
       @Path("ifid") String ifid,
       @Body() ListFoodFoodIdPut listFoodFoodIdPut);
 }

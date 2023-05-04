@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 
-class ClipEditPage extends StatefulWidget {
+class ClipEditCoachPage extends StatefulWidget {
   late int icpId;
-   ClipEditPage({super.key,required this.icpId});
+   ClipEditCoachPage({super.key,required this.icpId});
 
   @override
-  State<ClipEditPage> createState() => _ClipEditPageState();
+  State<ClipEditCoachPage> createState() => _ClipEditCoachPageState();
 }
 
-class _ClipEditPageState extends State<ClipEditPage> {
+class _ClipEditCoachPageState extends State<ClipEditCoachPage> {
   @override
   Widget build(BuildContext context) {
     return  Scaffold(
