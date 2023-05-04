@@ -7,7 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:provider/provider.dart';
 
-import '../../../../model/ModelFoodList.dart';
+import '../../../../model/response/md_FoodList_get.dart';
 import '../../../../service/listFood.dart';
 import '../../../../service/provider/appdata.dart';
 import '../../../../service/provider/coachData.dart';
@@ -94,7 +94,7 @@ class _FoodPageState extends State<FoodPage> {
   }
   Future<void> loadData() async {
     try {
-      var datas = await _listfoodService.listFoods(cid);
+      var datas = await _listfoodService.listFoods(ifid: '', cid: cid, name: '',);
       foods = datas.data;
     } catch (err) {
       log('Error: $err');

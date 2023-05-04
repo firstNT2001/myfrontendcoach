@@ -2,12 +2,12 @@
 //
 //     final modelReview = modelReviewFromJson(jsonString);
 
-import 'package:frontendfluttercoach/model/modelCourse.dart';
+import 'package:frontendfluttercoach/model/response/md_Course_get.dart';
 import 'package:meta/meta.dart';
 import 'dart:convert';
 
-import 'modelCoach.dart';
-import 'modelCustomer.dart';
+import 'md_Coach_get.dart';
+// import 'md_Customer_get.dart';
 
 ModelReview modelReviewFromJson(String str) => ModelReview.fromJson(json.decode(str));
 

@@ -3,8 +3,8 @@ import 'dart:developer';
 
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
-import 'package:frontendfluttercoach/model/DTO/registerCoachDTO.dart';
-import 'package:frontendfluttercoach/model/DTO/registerCusDTO.dart';
+import 'package:frontendfluttercoach/model/request/registerCoachDTO.dart';
+import 'package:frontendfluttercoach/model/request/registerCusDTO.dart';
 import 'package:frontendfluttercoach/page/login.dart';
 //import 'package:frontendfluttercoach/page/home.dart';
 import 'package:frontendfluttercoach/service/register.dart';

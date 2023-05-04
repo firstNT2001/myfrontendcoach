@@ -1,8 +1,9 @@
 import 'package:retrofit/retrofit.dart';
 import 'package:dio/dio.dart';
-import 'package:frontendfluttercoach/model/modelCustomer.dart';
 
-import '../model/modelRowsAffected.dart';
+
+import '../model/response/md_Course_get.dart';
+import '../model/response/md_RowsAffected.dart';
 
 
 part 'generated/customer.g.dart';

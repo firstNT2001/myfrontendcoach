@@ -1,13 +1,15 @@
 
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
-import 'package:frontendfluttercoach/model/modelCoach.dart';
+
 import 'package:frontendfluttercoach/page/user/profileUser.dart';
 import 'package:frontendfluttercoach/page/user/profilecoach.dart';
 import 'package:get/get.dart';
 import 'package:provider/provider.dart';
 import 'dart:developer';
-import '../../model/modelCourse.dart';
+
+import '../../model/response/md_Coach_get.dart';
+import '../../model/response/md_Course_get.dart';
 import '../../service/coach.dart';
 import '../../service/course.dart';
 import '../../service/provider/appdata.dart';
@@ -87,7 +89,7 @@ class _HomePageUserState extends State<HomePageUser> {
                             }
                           });
                           courseService
-                              .getCourseByName(myController.text)
+                              .course(cid: '', coID: '', name: myController.text)
                               .then((coursedata) {
                             var datacourse = coursedata.data;
                             courses = datacourse;

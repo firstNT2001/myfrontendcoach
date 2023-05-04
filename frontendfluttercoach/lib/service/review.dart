@@ -1,6 +1,8 @@
-import 'package:frontendfluttercoach/model/modelReview.dart';
+
 import 'package:retrofit/retrofit.dart';
 import 'package:dio/dio.dart';
+
+import '../model/response/md_Review_get.dart';
 
 
 part 'generated/review.g.dart';

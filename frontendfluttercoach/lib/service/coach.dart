@@ -1,7 +1,9 @@
 import 'package:retrofit/retrofit.dart';
 import 'package:dio/dio.dart';
 
-import 'package:frontendfluttercoach/model/modelCoach.dart';
+import '../model/response/md_Coach_get.dart';
+
+
 
 part 'generated/coach.g.dart';
 

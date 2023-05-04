@@ -1,16 +1,15 @@
 // To parse this JSON data, do
 //
-//     final updateCourse = updateCourseFromJson(jsonString);
+//     final courseCourseIdPut = courseCourseIdPutFromJson(jsonString);
 
 import 'package:meta/meta.dart';
 import 'dart:convert';
 
-UpdateCourse updateCourseFromJson(String str) => UpdateCourse.fromJson(json.decode(str));
+CourseCourseIdPut courseCourseIdPutFromJson(String str) => CourseCourseIdPut.fromJson(json.decode(str));
 
-String updateCourseToJson(UpdateCourse data) => json.encode(data.toJson());
+String courseCourseIdPutToJson(CourseCourseIdPut data) => json.encode(data.toJson());
 
-class UpdateCourse {
-    int coachId;
+class CourseCourseIdPut {
     String name;
     String details;
     String level;
@@ -20,8 +19,7 @@ class UpdateCourse {
     int price;
     String status;
 
-    UpdateCourse({
-        required this.coachId,
+    CourseCourseIdPut({
         required this.name,
         required this.details,
         required this.level,
@@ -32,8 +30,7 @@ class UpdateCourse {
         required this.status,
     });
 
-    factory UpdateCourse.fromJson(Map<String, dynamic> json) => UpdateCourse(
-        coachId: json["CoachID"],
+    factory CourseCourseIdPut.fromJson(Map<String, dynamic> json) => CourseCourseIdPut(
         name: json["Name"],
         details: json["Details"],
         level: json["Level"],
@@ -45,7 +42,6 @@ class UpdateCourse {
     );
 
     Map<String, dynamic> toJson() => {
-        "CoachID": coachId,
         "Name": name,
         "Details": details,
         "Level": level,

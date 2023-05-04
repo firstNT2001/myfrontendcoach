@@ -1,15 +1,12 @@
-
 import 'package:dio/dio.dart';
 
 import 'package:retrofit/retrofit.dart';
 
-import '../model/DTO/ListFoodPutRequest.dart';
+import '../model/request/listFood_foodID_put.dart';
 
-import '../model/ModelFoodList.dart';
-import '../model/DTO/ListFoodPostRequest.dart';
-import '../model/modelResult.dart';
-
-
+import '../model/request/listFood_coachID_post.dart';
+import '../model/response/md_FoodList_get.dart';
+import '../model/response/md_Result.dart';
 
 part 'generated/listFood.g.dart';
 
@@ -17,15 +14,19 @@ part 'generated/listFood.g.dart';
 abstract class ListFoodServices {
   factory ListFoodServices(Dio dio, {String baseUrl}) = _ListFoodServices;
 
-   @GET("/listFood/{cid}")
-  Future<HttpResponse<List<ModelFoodList>>> listFoods(@Path("cid") String cid);
+  @GET("/listFood")
+  Future<HttpResponse<List<ModelFoodList>>> listFoods(
+      {@Query("ifid") required String ifid,
+      @Query("cid") required String cid,
+      @Query("name") required String name});
 
-  @GET("/listFood/foodID/{ifid}")
-  Future<HttpResponse<ModelFoodList>> listFood(@Path("ifid") String ifid);
+  @POST("/listFood/coachID/{cid}")
+  Future<HttpResponse<ModelResult>> insertListFood(
+      @Path("cid") String cid,
+      @Body() ListFoodCoachIdPost listFoodCoachIdPost);
 
-  @POST("/listFood/insertListFood")
-  Future<HttpResponse<ModelResult>> insertListFood(@Body() ListFoodPostRequest listFoodPostRequest);
-  
-  @PUT("/listFood/updateListFood")
-  Future<HttpResponse<ModelResult>> updateListFood(@Body() ListFoodPutRequest listFoodPutRequest);
+  @PUT("/listFood/foodID/{ifid}")
+  Future<HttpResponse<ModelResult>> updateListFood(
+      @Path("ifid") String ifid,
+      @Body() ListFoodFoodIdPut listFoodFoodIdPut);
 }

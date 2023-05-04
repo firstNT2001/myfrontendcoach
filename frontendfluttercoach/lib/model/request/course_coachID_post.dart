@@ -1,16 +1,15 @@
 // To parse this JSON data, do
 //
-//     final insertCourseDto = insertCourseDtoFromJson(jsonString);
+//     final courseCoachIdPost = courseCoachIdPostFromJson(jsonString);
 
 import 'package:meta/meta.dart';
 import 'dart:convert';
 
-InsertCourseDto insertCourseDtoFromJson(String str) => InsertCourseDto.fromJson(json.decode(str));
+CourseCoachIdPost courseCoachIdPostFromJson(String str) => CourseCoachIdPost.fromJson(json.decode(str));
 
-String insertCourseDtoToJson(InsertCourseDto data) => json.encode(data.toJson());
+String courseCoachIdPostToJson(CourseCoachIdPost data) => json.encode(data.toJson());
 
-class InsertCourseDto {
-    int coachId;
+class CourseCoachIdPost {
     dynamic bid;
     String name;
     String details;
@@ -22,8 +21,7 @@ class InsertCourseDto {
     String status;
     dynamic expirationDate;
 
-    InsertCourseDto({
-        required this.coachId,
+    CourseCoachIdPost({
         required this.bid,
         required this.name,
         required this.details,
@@ -36,8 +34,7 @@ class InsertCourseDto {
         required this.expirationDate,
     });
 
-    factory InsertCourseDto.fromJson(Map<String, dynamic> json) => InsertCourseDto(
-        coachId: json["CoachID"],
+    factory CourseCoachIdPost.fromJson(Map<String, dynamic> json) => CourseCoachIdPost(
         bid: json["Bid"],
         name: json["Name"],
         details: json["Details"],
@@ -51,7 +48,6 @@ class InsertCourseDto {
     );
 
     Map<String, dynamic> toJson() => {
-        "CoachID": coachId,
         "Bid": bid,
         "Name": name,
         "Details": details,

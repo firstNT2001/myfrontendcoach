@@ -8,7 +8,8 @@ import 'package:provider/provider.dart';
 import 'package:retrofit/dio.dart';
 import 'package:retrofit/retrofit.dart';
 
-import '../../model/modelCustomer.dart';
+
+import '../../model/response/md_Course_get.dart';
 import '../../service/customer.dart';
 import '../../service/provider/appdata.dart';
 import 'chatOfCus.dart';
