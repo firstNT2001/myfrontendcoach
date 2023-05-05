@@ -5,7 +5,7 @@ import 'dart:developer';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 
-import 'package:frontendfluttercoach/page/coach/homePageCoach.dart';
+
 import 'package:get/get.dart';
 import 'package:provider/provider.dart';
 import 'package:retrofit/dio.dart';
@@ -19,6 +19,7 @@ import '../../../service/provider/appdata.dart';
 import '../../../service/provider/courseData.dart';
 import '../../../service/provider/dayOfCouseData.dart';
 import '../daysCourse/days_course_page.dart';
+import '../home_coach_page.dart';
 
 
 class CourseEditPage extends StatefulWidget {
