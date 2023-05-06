@@ -9,7 +9,7 @@ import 'package:retrofit/dio.dart';
 import 'package:retrofit/retrofit.dart';
 
 
-import '../../model/response/md_Course_get.dart';
+import '../../model/response/md_Customer_get.dart';
 import '../../service/customer.dart';
 import '../../service/provider/appdata.dart';
 import 'chatOfCus.dart';

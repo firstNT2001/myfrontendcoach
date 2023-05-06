@@ -2,11 +2,11 @@
 //
 //     final modelCourse = modelCourseFromJson(jsonString);
 
+import 'package:frontendfluttercoach/model/response/md_Buying_get.dart';
 import 'package:meta/meta.dart';
 import 'dart:convert';
 
-import 'ModelBuying.dart';
-import 'modelCustomer.dart';
+
 
 List<ModelCourse> modelCourseFromJson(String str) => List<ModelCourse>.from(json.decode(str).map((x) => ModelCourse.fromJson(x)));
 
