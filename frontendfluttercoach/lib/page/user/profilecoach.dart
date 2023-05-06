@@ -2,7 +2,7 @@ import 'dart:developer';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:frontendfluttercoach/page/user/cousepage.dart';
-import '../../model/response/md_Course_get.dart';
+import '../../model/response/course_get_res.dart';
 import '../../service/course.dart';
 import 'package:get/get.dart';
 import 'package:provider/provider.dart';

@@ -7,7 +7,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../../model/response/md_Course_get.dart';
+import '../../model/response/course_get_res.dart';
 import '../../service/course.dart';
 import '../../service/provider/appdata.dart';
 import '../../service/provider/courseData.dart';
