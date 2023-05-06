@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import 'login.dart';
+import '../auth/login.dart';
 
 class pageStart extends StatefulWidget {
   const pageStart({super.key});

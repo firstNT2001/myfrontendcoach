@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:frontendfluttercoach/page/user/homepageUser.dart';
+import 'package:frontendfluttercoach/page/auth/login.dart';
 import 'package:get/get.dart';
 
 import 'coach/home_coach_page.dart';
@@ -25,7 +26,7 @@ class StartApp extends StatelessWidget {
                   child: ElevatedButton(
                       onPressed: () {
                         Navigator.push(context, MaterialPageRoute(builder: (context) {
-                          return const HomePageCoach();
+                          return  LoginPage();
                         }));
                       },
                       child: Text('หน้าโค้ช')),
