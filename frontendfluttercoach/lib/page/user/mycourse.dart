@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:provider/provider.dart';
 
-import '../../model/modelCourse.dart';
+
 import '../../service/course.dart';
 import '../../service/provider/appdata.dart';
 
