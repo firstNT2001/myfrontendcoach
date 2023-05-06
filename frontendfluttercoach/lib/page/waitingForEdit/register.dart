@@ -15,7 +15,7 @@ import 'package:provider/provider.dart';
 import 'package:http/http.dart' as http;
 
 import '../../service/provider/appdata.dart';
-import 'login.dart';
+import '../auth/login.dart';
 
 // class regFB{
 //   final String nameFB;

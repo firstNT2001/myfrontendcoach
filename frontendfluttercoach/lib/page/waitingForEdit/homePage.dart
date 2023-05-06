@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:frontendfluttercoach/page/waitingForEdit/picture.dart';
 import 'package:frontendfluttercoach/page/waitingForEdit/vdo.dart';
 
-import 'login.dart';
+import '../auth/login.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});

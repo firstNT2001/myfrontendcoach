@@ -100,7 +100,7 @@ class _HomePageCoachState extends State<HomePageCoach> {
                                 child: ListTile(
                               title: Text(courses[index].name),
                               subtitle: Text(courses[index].name),
-                              leading: Image.network(courses[index].image),
+                              //leading: Image.network(courses[index].image),
                               onTap: () {
                                 context.read<CourseData>().coIDCourse =
                                     courses[index].coId;
