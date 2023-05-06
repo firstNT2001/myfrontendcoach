@@ -17,6 +17,6 @@ abstract class CustomerService {
   Future<HttpResponse<Customer>> customer(@Path("uid") String uid);
 
   @PUT("/user2/updateCus")
-   Future<HttpResponse<ModelRowsAffected>> updateCus(@Body() Customer cusUpdate);
+   Future<HttpResponse<ModelRowsAffected>> updateCus(@Body() UpdateCustomer cusUpdate);
 
 }
