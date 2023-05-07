@@ -21,7 +21,7 @@ class _CoachService implements CoachService {
   @override
   Future<HttpResponse<List<Coach>>> getNameCoach(nameCoach) async {
     const _extra = <String, dynamic>{};
-    final queryParameters = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{r'name': nameCoach};
     final _headers = <String, dynamic>{};
     final _data = <String, dynamic>{};
     final _result = await _dio
@@ -32,7 +32,7 @@ class _CoachService implements CoachService {
     )
             .compose(
               _dio.options,
-              '/user2/getCoachByName/${nameCoach}',
+              'coach',
               queryParameters: queryParameters,
               data: _data,
             )

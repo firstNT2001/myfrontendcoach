@@ -18,6 +18,9 @@ abstract class CourseService {
       @Query("cid") required String cid,
       @Query("name") required String name});
 
+  @GET("/courses/customer")
+  Future<HttpResponse<List<ModelCourse>>> courseByUid({@Query("uid") required String uid,});
+
   @PUT("/course/courseID/{coID}")
   Future<HttpResponse<ModelResult>> updateCourseByCourseID(
       @Path("coID") String coID, @Body() CourseCourseIdPut courseCourseIdPut);
