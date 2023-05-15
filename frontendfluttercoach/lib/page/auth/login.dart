@@ -14,6 +14,7 @@ import '../../model/request/auth_login_post.dart';
 import '../../model/response/auth_login_res.dart';
 import '../../service/auth.dart';
 import '../../service/provider/appdata.dart';
+import '../../widget/wg_textField.dart';
 import '../coach/home_coach_page.dart';
 import '../user/homepageUser.dart';
 
@@ -55,20 +56,9 @@ class _LoginPageState extends State<LoginPage> {
     return Scaffold(
       body: Center(
         child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
-          Padding(
-            padding: const EdgeInsets.only(left: 20, right: 20, top: 16),
-            child: TextField(
-                controller: email,
-                autofocus: true,
-                onChanged: (String value) {
-                  setState(() => chackNameAndPassword = "");
-                },
-                textAlignVertical: TextAlignVertical.center,
-                textAlign: TextAlign.center,
-                decoration: InputDecoration(
-                    labelText: 'อีเมลผู้ใช้ (email)',
-                    filled: true,
-                    fillColor: Theme.of(context).colorScheme.background)),
+          WidgetTextFieldString(
+            controller: email,
+            labelText: 'อีเมลผู้ใช้ (email)',
           ),
           Padding(
             padding: const EdgeInsets.only(left: 20, right: 20, top: 16),
@@ -124,7 +114,7 @@ class _LoginPageState extends State<LoginPage> {
       Get.to(() => const HomePageCoach());
     } else if (authLoginRes.uid > 0) {
       Get.to(() => const HomePageUser());
-    }else{
+    } else {
       log('ไม่พบ');
     }
   }
@@ -145,8 +135,9 @@ class _LoginPageState extends State<LoginPage> {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             const Padding(
-              padding: EdgeInsets.only(left: 20, right: 20, top: 16, bottom: 16),
-              child:  Text("คุณจะเข้าสู่ระบบเป็นผู้ใช้ประเภทใด"),
+              padding:
+                  EdgeInsets.only(left: 20, right: 20, top: 16, bottom: 16),
+              child: Text("คุณจะเข้าสู่ระบบเป็นผู้ใช้ประเภทใด"),
             ),
             Row(
               //mainAxisSize: MainAxisSize.max,
