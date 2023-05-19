@@ -21,7 +21,7 @@ class _CustomerService implements CustomerService {
   @override
   Future<HttpResponse<Customer>> customer(uid) async {
     const _extra = <String, dynamic>{};
-    final queryParameters = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{r'uid': uid};
     final _headers = <String, dynamic>{};
     final _data = <String, dynamic>{};
     final _result = await _dio.fetch<Map<String, dynamic>>(
@@ -32,7 +32,7 @@ class _CustomerService implements CustomerService {
     )
             .compose(
               _dio.options,
-              '/user2/customer/${uid}',
+              '/user',
               queryParameters: queryParameters,
               data: _data,
             )

@@ -38,6 +38,7 @@ class _HomePageUserState extends State<HomePageUser> {
         CoachService(Dio(), baseUrl: context.read<AppData>().baseurl);
     courseService =
         CourseService(Dio(), baseUrl: context.read<AppData>().baseurl);
+        
   }
 
   @override
@@ -71,12 +72,13 @@ class _HomePageUserState extends State<HomePageUser> {
                       onPressed: () {
                         if (myController.text.isNotEmpty) {
                           coachService
-                              .getNameCoach(myController.text)
+                              .coach(nameCoach: myController.text, cid: "")
                               .then((coachdata) {
                             var datacoach = coachdata.data;
                             //var checkcoaches = coaches.length;
-                            coaches = datacoach;
+                            coaches = datacoach;                           
                             if (coaches.isNotEmpty) {
+                              //log("message"+coaches.first);
                               setState(() {
                                 isVisible = true;
                               });

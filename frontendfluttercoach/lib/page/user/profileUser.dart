@@ -301,7 +301,7 @@ class _ProfileUserState extends State<ProfileUser> {
     try {
       customer = await customerService.customer(uid.toString());
 
-      log('cus: ${customer.data.uid}');
+      log('cussss: ${customer.data.uid}');
     } catch (err) {
       log('Error: $err');
     }

@@ -19,9 +19,9 @@ class _ReviewService implements ReviewService {
   String? baseUrl;
 
   @override
-  Future<HttpResponse<List<ModelReview>>> getReviewByCoID(coID) async {
+  Future<HttpResponse<List<ModelReview>>> review(coID) async {
     const _extra = <String, dynamic>{};
-    final queryParameters = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{r'coID': coID};
     final _headers = <String, dynamic>{};
     final _data = <String, dynamic>{};
     final _result = await _dio.fetch<List<dynamic>>(
@@ -32,7 +32,7 @@ class _ReviewService implements ReviewService {
     )
             .compose(
               _dio.options,
-              '/user2/getReviewByCoID/${coID}',
+              '/review',
               queryParameters: queryParameters,
               data: _data,
             )
