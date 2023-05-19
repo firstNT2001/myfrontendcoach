@@ -39,7 +39,7 @@ class _showCousePageState extends State<showCousePage> {
     reviewService =
         ReviewService(Dio(), baseUrl: context.read<AppData>().baseurl);
 
-    //loadDataMethod = loadData();
+    loadDataMethod = loadData();
   }
 
   @override
@@ -74,9 +74,9 @@ class _showCousePageState extends State<showCousePage> {
     try {
       log(courseId.toString());
       var datas = await courseService.course(cid: '',coID: courseId.toString(),name: '');
-      //var datareview = await reviewService.getReviewByCoID(courseId.toString());
+      var datareview = await reviewService.getReviewByCoID(courseId.toString());
       courses = datas.response.data;
-      //reviews = datareview.data;
+      reviews = datareview.data;
       log('couse: ${courses.name}');
       //log('review: ${reviews.length}');
     } catch (err) {
