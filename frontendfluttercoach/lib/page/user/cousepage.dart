@@ -8,7 +8,7 @@ import 'package:provider/provider.dart';
 
 
 
-import '../../model/response/md_Course_get.dart';
+import '../../model/response/course_get_res.dart';
 import '../../model/response/md_Review_get.dart';
 import '../../service/course.dart';
 import '../../service/provider/appdata.dart';
