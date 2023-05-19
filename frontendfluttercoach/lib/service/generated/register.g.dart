@@ -19,14 +19,14 @@ class _RegisterService implements RegisterService {
   String? baseUrl;
 
   @override
-  Future<HttpResponse<ModelCidAndUid>> regCusService(reg) async {
+  Future<HttpResponse<AuthLoginRes>> regCusService(reg) async {
     const _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{};
     final _data = <String, dynamic>{};
     _data.addAll(reg.toJson());
     final _result = await _dio.fetch<Map<String, dynamic>>(
-        _setStreamType<HttpResponse<ModelCidAndUid>>(Options(
+        _setStreamType<HttpResponse<AuthLoginRes>>(Options(
       method: 'POST',
       headers: _headers,
       extra: _extra,
@@ -38,20 +38,20 @@ class _RegisterService implements RegisterService {
               data: _data,
             )
             .copyWith(baseUrl: baseUrl ?? _dio.options.baseUrl)));
-    final value = ModelCidAndUid.fromJson(_result.data!);
+    final value = AuthLoginRes.fromJson(_result.data!);
     final httpResponse = HttpResponse(value, _result);
     return httpResponse;
   }
 
   @override
-  Future<HttpResponse<ModelCidAndUid>> regCoachService(reg) async {
+  Future<HttpResponse<AuthLoginRes>> regCoachService(reg) async {
     const _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{};
     final _data = <String, dynamic>{};
     _data.addAll(reg.toJson());
     final _result = await _dio.fetch<Map<String, dynamic>>(
-        _setStreamType<HttpResponse<ModelCidAndUid>>(Options(
+        _setStreamType<HttpResponse<AuthLoginRes>>(Options(
       method: 'POST',
       headers: _headers,
       extra: _extra,
@@ -63,7 +63,7 @@ class _RegisterService implements RegisterService {
               data: _data,
             )
             .copyWith(baseUrl: baseUrl ?? _dio.options.baseUrl)));
-    final value = ModelCidAndUid.fromJson(_result.data!);
+    final value = AuthLoginRes.fromJson(_result.data!);
     final httpResponse = HttpResponse(value, _result);
     return httpResponse;
   }

@@ -2,7 +2,8 @@ import 'package:retrofit/retrofit.dart';
 import 'package:dio/dio.dart';
 
 
-import '../model/response/md_Course_get.dart';
+import '../model/request/updateCus.dart';
+import '../model/response/md_Customer_get.dart';
 import '../model/response/md_RowsAffected.dart';
 
 
@@ -17,6 +18,6 @@ abstract class CustomerService {
   Future<HttpResponse<Customer>> customer(@Path("uid") String uid);
 
   @PUT("/user2/updateCus")
-   Future<HttpResponse<ModelRowsAffected>> updateCus(@Body() Customer cusUpdate);
+   Future<HttpResponse<ModelRowsAffected>> updateCus(@Body() UpdateCustomer cusUpdate);
 
 }

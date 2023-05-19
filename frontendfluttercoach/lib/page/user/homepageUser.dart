@@ -9,7 +9,7 @@ import 'package:provider/provider.dart';
 import 'dart:developer';
 
 import '../../model/response/md_Coach_get.dart';
-import '../../model/response/md_Course_get.dart';
+import '../../model/response/course_get_res.dart';
 import '../../service/coach.dart';
 import '../../service/course.dart';
 import '../../service/provider/appdata.dart';

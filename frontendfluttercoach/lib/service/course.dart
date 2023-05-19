@@ -3,7 +3,7 @@ import 'package:frontendfluttercoach/model/request/course_courseID_put.dart';
 import 'package:retrofit/retrofit.dart';
 import 'package:dio/dio.dart';
 
-import '../model/response/md_Course_get.dart';
+import '../model/response/course_get_res.dart';
 import '../model/response/md_Result.dart';
 
 part 'generated/course.g.dart';

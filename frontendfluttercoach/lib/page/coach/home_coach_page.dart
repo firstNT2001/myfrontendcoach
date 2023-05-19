@@ -7,7 +7,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../../model/response/md_Course_get.dart';
+import '../../model/response/course_get_res.dart';
 import '../../service/course.dart';
 import '../../service/provider/appdata.dart';
 import '../../service/provider/courseData.dart';
@@ -100,7 +100,7 @@ class _HomePageCoachState extends State<HomePageCoach> {
                                 child: ListTile(
                               title: Text(courses[index].name),
                               subtitle: Text(courses[index].name),
-                              leading: Image.network(courses[index].image),
+                              //leading: Image.network(courses[index].image),
                               onTap: () {
                                 context.read<CourseData>().coIDCourse =
                                     courses[index].coId;

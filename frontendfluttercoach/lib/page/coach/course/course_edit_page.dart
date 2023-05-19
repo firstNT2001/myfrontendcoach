@@ -11,7 +11,7 @@ import 'package:provider/provider.dart';
 import 'package:retrofit/dio.dart';
 
 import '../../../model/request/course_courseID_put.dart';
-import '../../../model/response/md_Course_get.dart';
+import '../../../model/response/course_get_res.dart';
 import '../../../model/response/md_Result.dart';
 import '../../../service/course.dart';
 
