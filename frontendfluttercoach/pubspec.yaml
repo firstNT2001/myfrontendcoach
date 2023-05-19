@@ -52,19 +52,19 @@ dependencies:
   firebase_storage: ^11.0.10
   cloud_firestore: ^4.3.1
   video_player: ^2.4.10
-  intl: ^0.18.1
+  intl: ^0.17.0
   appinio_video_player: ^1.2.0
   build_config: ^1.1.1
   source_gen: ^1.2.7
   dropdown_button2: ^2.1.0
-  flutter_localizations:
-    sdk: flutter
+  
   flutter_rounded_date_picker: ^3.0.2
   flex_color_scheme: ^7.0.5
   google_fonts: ^4.0.4
   local_session_timeout: ^2.3.0
   flutter_smart_dialog: ^4.9.0+6
   font_awesome_flutter: ^10.4.0
+  flutter_localization: ^0.1.11
   
   
   

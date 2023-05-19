@@ -67,18 +67,6 @@ Future<void> main() async {
           ChangeNotifierProvider(
             create: (context) => AppData(),
           ),
-          ChangeNotifierProvider(
-            create: (context) => CourseData(),
-          ),
-          ChangeNotifierProvider(
-            create: (context) => DayOfCourseData(),
-          ),
-          ChangeNotifierProvider(
-            create: (context) => CoachData(),
-          ),
-          ChangeNotifierProvider(
-            create: (context) => ListFoodData(),
-          )
         ],
        child: Center(
         child: SizedBox(
