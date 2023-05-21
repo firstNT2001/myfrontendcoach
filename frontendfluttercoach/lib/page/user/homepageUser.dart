@@ -1,4 +1,3 @@
-
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 
@@ -6,12 +5,15 @@ import 'package:frontendfluttercoach/page/user/profileUser.dart';
 import 'package:frontendfluttercoach/page/user/profilecoach.dart';
 import 'package:get/get.dart';
 import 'package:provider/provider.dart';
+import 'package:retrofit/retrofit.dart';
 import 'dart:developer';
 
 import '../../model/response/md_Coach_get.dart';
 import '../../model/response/course_get_res.dart';
+import '../../model/response/md_Customer_get.dart';
 import '../../service/coach.dart';
 import '../../service/course.dart';
+import '../../service/customer.dart';
 import '../../service/provider/appdata.dart';
 import 'cousepage.dart';
 
@@ -23,31 +25,41 @@ class HomePageUser extends StatefulWidget {
 }
 
 class _HomePageUserState extends State<HomePageUser> {
+  late Future<void> loadDataMethod;
   late CoachService coachService;
   late CourseService courseService;
+  late CustomerService customerService;
+  late HttpResponse<Customer> customer;
+
   List<Coach> coaches = [];
   List<ModelCourse> courses = [];
   TextEditingController myController = TextEditingController();
-  bool isVisible = false;
 
+  int uid = 1;
+  bool isVisible = false;
+  double bmi = 0 ;
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-        coachService =
+    coachService =
         CoachService(Dio(), baseUrl: context.read<AppData>().baseurl);
     courseService =
         CourseService(Dio(), baseUrl: context.read<AppData>().baseurl);
+
+    customerService =
+        CustomerService(Dio(), baseUrl: context.read<AppData>().baseurl);
+    loadDataMethod = loadData();
   }
 
   @override
   Widget build(BuildContext context) {
-
     return Scaffold(
       appBar: AppBar(
-        title: Text("tesr"),
+        title: const Text("tesr"),
       ),
       body: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Padding(
             padding: const EdgeInsets.only(top: 35, left: 15),
@@ -59,7 +71,7 @@ class _HomePageUserState extends State<HomePageUser> {
                   height: 50,
                   child: TextField(
                     controller: myController,
-                    decoration: InputDecoration(
+                    decoration: const InputDecoration(
                       border: OutlineInputBorder(),
                       labelText: 'ค้นหา',
                     ),
@@ -71,12 +83,13 @@ class _HomePageUserState extends State<HomePageUser> {
                       onPressed: () {
                         if (myController.text.isNotEmpty) {
                           coachService
-                              .getNameCoach(myController.text)
+                              .coach(nameCoach: myController.text, cid: "")
                               .then((coachdata) {
                             var datacoach = coachdata.data;
                             //var checkcoaches = coaches.length;
                             coaches = datacoach;
                             if (coaches.isNotEmpty) {
+                              //log("message"+coaches.first);
                               setState(() {
                                 isVisible = true;
                               });
@@ -89,7 +102,8 @@ class _HomePageUserState extends State<HomePageUser> {
                             }
                           });
                           courseService
-                              .course(cid: '', coID: '', name: myController.text)
+                              .course(
+                                  cid: '', coID: '', name: myController.text)
                               .then((coursedata) {
                             var datacourse = coursedata.data;
                             courses = datacourse;
@@ -100,7 +114,7 @@ class _HomePageUserState extends State<HomePageUser> {
                           });
                         }
                       },
-                      child: Text("แสดงชื่อโค้ช")),
+                      child: const Text("แสดงชื่อโค้ช")),
                 ),
               ],
             ),
@@ -108,53 +122,98 @@ class _HomePageUserState extends State<HomePageUser> {
           Row(
             mainAxisAlignment: MainAxisAlignment.end,
             children: [
-              IconButton(onPressed: () {}, icon: Icon(Icons.tune_rounded)),
+              IconButton(onPressed: () {}, icon: const Icon(Icons.tune_rounded)),
             ],
           ),
-
-           Visibility(
-                  visible: isVisible ,
-                  child: Expanded(
-                    child: Container(
-                      child: Padding(
-                        padding: const EdgeInsets.all(20.0),
-                        child: ListView.builder(
-                            shrinkWrap: true,
-                            itemCount: coaches.length,
-                            itemBuilder: (context, index) {
-                              final coach = coaches[index];
-                              return Card(
-                                child: ListTile(
-                                  leading: CircleAvatar(
-                                    radius: 50,
-                                    backgroundImage: NetworkImage(coach.image),
-                                  ),
-                                  title: Text(coach.username.toString()),
-                                  subtitle: Text(coach.fullName),
-                                  trailing: const Icon(Icons.arrow_forward),
-                                  
-                                  onTap: () {
-                                    log(coach.cid.toString());
-                                    log("q :"+ coach.qualification);
-                                    log("name :"+ coach.fullName);
-                                    log("ussername :"+ coach.username);
-                                    log("property :"+ coach.property);
-                                    context.read<AppData>().cid = coach.cid;
-                                    context.read<AppData>().qualification = coach.qualification;
-                                    context.read<AppData>().nameCoach = coach.fullName;
-                                    context.read<AppData>().usercoach = coach.username;
-                                    context.read<AppData>().propertycoach = coach.property;
-                                    Get.to(()=>ProfileCoachPage());
-
-                                  },
-                                ),
-                              );
-                            }),
-                      ),
+          Card(
+            child: ListTile(
+              leading: const Icon(Icons.girl_outlined, size: 110),
+              title: Padding(
+                padding: const EdgeInsets.all(15.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(customer.data.height.toString()),
+                        const Text("CM"),
+                      ],
                     ),
-                  ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(customer.data.weight.toString()),
+                        const Text("KG"),
+                      ],
+                    ),
+                    const Divider(
+                       //color of divider
+                      height: 5, //height spacing of divider
+                      thickness: 2, //thickness of divier line
+                      indent: 50, //spacing at the start of divider
+                      endIndent: 50,
+                    ),
+                    const Text("BMI"),
+                    Text(bmi.toString()),
+                    
+                  ],
                 ),
-            
+              ),
+              //subtitle: Text(review.details),
+            ),
+          ),
+
+          const Padding(
+            padding: EdgeInsets.only(left: 15),
+            child: Text("รายการแนะนำ"),
+          ),
+
+          Visibility(
+            visible: isVisible,
+            child: Expanded(
+              child: Container(
+                child: Padding(
+                  padding: const EdgeInsets.all(20.0),
+                  child: ListView.builder(
+                      shrinkWrap: true,
+                      itemCount: coaches.length,
+                      itemBuilder: (context, index) {
+                        final coach = coaches[index];
+                        return Card(
+                          child: ListTile(
+                            leading: CircleAvatar(
+                              radius: 50,
+                              backgroundImage: NetworkImage(coach.image),
+                            ),
+                            title: Text(coach.username.toString()),
+                            subtitle: Text(coach.fullName),
+                            trailing: const Icon(Icons.arrow_forward),
+                            onTap: () {
+                              log(coach.cid.toString());
+                              log("q :" + coach.qualification);
+                              log("name :" + coach.fullName);
+                              log("ussername :" + coach.username);
+                              log("property :" + coach.property);
+                              context.read<AppData>().cid = coach.cid;
+                              context.read<AppData>().qualification =
+                                  coach.qualification;
+                              context.read<AppData>().nameCoach =
+                                  coach.fullName;
+                              context.read<AppData>().usercoach =
+                                  coach.username;
+                              context.read<AppData>().propertycoach =
+                                  coach.property;
+                              Get.to(() => const ProfileCoachPage());
+                            },
+                          ),
+                        );
+                      }),
+                ),
+              ),
+            ),
+          ),
+
           //showCourse
           (courses != null)
               ? Expanded(
@@ -177,25 +236,39 @@ class _HomePageUserState extends State<HomePageUser> {
                                 trailing: const Icon(Icons.arrow_forward),
                                 onTap: () {
                                   log(course.coId.toString());
-                                    context.read<AppData>().idcourse = course.coId;
-                                    
+                                  context.read<AppData>().idcourse =
+                                      course.coId;
 
-                                  Get.to(()=>showCousePage());
+                                  Get.to(() => const showCousePage());
                                 },
                               ),
-                            ); 
+                            );
                           }),
                     ),
                   ),
                 )
               : Container(color: Colors.amber),
-              ElevatedButton(onPressed: (){
-
-                Get.to(() => ProfileUser());
-              }, child: Text("โปรไฟล์ของฉัน")),
+          Center(
+            child: ElevatedButton(
+                onPressed: () {
+                  Get.to(() => const ProfileUser());
+                },
+                child: const Text("โปรไฟล์ของฉัน")),
+          ),
         ],
       ),
-      
     );
+  }
+
+  Future<void> loadData() async {
+    try {
+      customer = await customerService.customer(uid: uid.toString());
+      double h = ((customer.data.height) +.0)/100;
+      log('BMI=: $h');
+      bmi =  ((customer.data.weight) +.0)/(h*h) ; 
+      log('BMI=: $bmi');
+    } catch (err) {
+      log('Error: $err');
+    }
   }
 }
