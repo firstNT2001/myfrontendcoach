@@ -17,7 +17,6 @@ import 'course/course_edit_page.dart';
 import 'course/course_new_page.dart';
 import 'food/foodCoach/food_page.dart';
 
-
 class HomePageCoach extends StatefulWidget {
   const HomePageCoach({super.key});
 
@@ -29,7 +28,7 @@ class _HomePageCoachState extends State<HomePageCoach> {
   late CourseService _courseService;
   late Future<void> loadDataMethod;
   List<ModelCourse> courses = [];
-  String cid = "2";
+  String cid = '';
   String statusName = "";
   String statusID = "";
   bool checkBoxVal = true;
@@ -39,11 +38,11 @@ class _HomePageCoachState extends State<HomePageCoach> {
   void initState() {
     super.initState();
     // 2.1 object ของ service โดยต้องส่ง baseUrl (จาก provider) เข้าไปด้วย
-   _courseService =
-       context.read<AppData>().courseService;
+    _courseService = context.read<AppData>().courseService;
     // courseService.getCoachByCid("1").then((cou) {
     //   log(cou.data.first.name);
     // });
+    cid = context.read<AppData>().cid.toString();
 
     // 2.2 async method
     loadDataMethod = loadData();
@@ -63,7 +62,7 @@ class _HomePageCoachState extends State<HomePageCoach> {
                     child: ElevatedButton(
                       onPressed: () {
                         context.read<CoachData>().cid = int.parse(cid);
-                        Get.to(() =>  const CourseNewPage());
+                        Get.to(() => const CourseNewPage());
                       },
                       child: const Text("สร้างคอร์ส"),
                     ),
@@ -103,7 +102,9 @@ class _HomePageCoachState extends State<HomePageCoach> {
                               subtitle: Text(courses[index].name),
                               //leading: Image.network(courses[index].image),
                               onTap: () {
-                                Get.to(() => CourseEditPage(coID: courses[index].coId.toString(),));
+                                Get.to(() => CourseEditPage(
+                                      coID: courses[index].coId.toString(),
+                                    ));
                               },
                             )),
                           );

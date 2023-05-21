@@ -9,6 +9,8 @@ import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:local_session_timeout/src/session_timeout_manager.dart';
 import 'package:provider/provider.dart';
+import 'package:sign_button/constants.dart';
+import 'package:sign_button/create_button.dart';
 
 import '../../model/request/auth_login_post.dart';
 import '../../model/response/auth_login_res.dart';
@@ -31,7 +33,6 @@ class LoginPage extends StatefulWidget {
 class _LoginPageState extends State<LoginPage> {
   //Service
   late AuthService authService;
-  var response;
   late AuthLoginRes authLoginRes;
 
   //แสดงรหัสผ่าน
@@ -43,6 +44,10 @@ class _LoginPageState extends State<LoginPage> {
   TextEditingController password = TextEditingController();
 
   String titleErr = '';
+
+  //id
+  int cid = 0;
+  int uid = 0;
   @override
   void initState() {
     super.initState();
@@ -109,7 +114,7 @@ class _LoginPageState extends State<LoginPage> {
               Padding(
                 padding: const EdgeInsets.only(left: 20, right: 20, top: 2),
                 child: Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
+                  mainAxisAlignment: MainAxisAlignment.start,
                   children: [
                     Text(
                       titleErr,
@@ -160,6 +165,16 @@ class _LoginPageState extends State<LoginPage> {
                       )),
                 ),
               ),
+              // Padding(
+              //   padding: const EdgeInsets.only(left: 20, right: 20),
+              //   child: SignInButton(
+              //     buttonType: ButtonType.facebook,
+              //     width: double.infinity,
+              //     onPressed: () {
+                    
+              //     },
+              //   ),
+              // ),
               Padding(
                   padding:
                       const EdgeInsets.only(left: 20, right: 20, bottom: 16),
@@ -168,7 +183,7 @@ class _LoginPageState extends State<LoginPage> {
                         Get.to(const RegisterPage());
                       },
                       child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center, 
+                        mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           const Text(" Don't have any account? "),
                           Text(
@@ -189,7 +204,7 @@ class _LoginPageState extends State<LoginPage> {
     AuthLoginPost request =
         AuthLoginPost(email: email.text, password: password.text);
     log(jsonEncode(request));
-    response = await authService.login(request);
+    var response = await authService.login(request);
     authLoginRes = response.data;
     //log(authLoginRes.uid.toString());
     if (authLoginRes.uid > 0 && authLoginRes.cid > 0) {
@@ -207,6 +222,8 @@ class _LoginPageState extends State<LoginPage> {
 
       setState(() => titleErr = 'กรุณาใส่อีเมล์หรือรหัสผ่านให้ถูกต้อง');
     }
+    uid = authLoginRes.uid;
+    cid = authLoginRes.cid;
   }
 
   void _bindPage(BuildContext ctx) {
@@ -236,14 +253,19 @@ class _LoginPageState extends State<LoginPage> {
                 ElevatedButton(
                   onPressed: () {
                     Get.to(() => const HomePageCoach());
+                   
+                    context.read<AppData>().cid = cid;
+                   
                   },
-                  child: Text('Coach'),
+                  child: const Text('Coach'),
                 ),
                 ElevatedButton(
                   onPressed: () {
+                    log("uid:$uid");
                     Get.to(() => const HomePageUser());
+                    context.read<AppData>().uid = uid;
                   },
-                  child: Text('User'),
+                  child: const Text('User'),
                 ),
               ],
             ),

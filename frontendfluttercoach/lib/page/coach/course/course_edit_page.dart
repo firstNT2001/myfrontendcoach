@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:developer';
 //import 'dart:io';
 
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -159,7 +160,6 @@ class _CourseEditPageState extends State<CourseEditPage> {
             }));
   }
 
-
   Switch switchOnOffStatus(BuildContext context) {
     return Switch(
       onChanged: (bool value) {
@@ -238,10 +238,10 @@ class _CourseEditPageState extends State<CourseEditPage> {
     details.text = courses[0].details;
     level.text = courses[0].level;
     amount.text = courses[0].amount.toString();
-    price.text =  courses[0].price.toString();
-    days.text =  courses[0].days.toString();
+    price.text = courses[0].price.toString();
+    days.text = courses[0].days.toString();
     statusCourse = courses[0].status;
-    log(statusCourse);
+    log("coachId: "+courses.first.coachId.toString());
     //เช็ค สถานะการเปิดขายของคอร์ส
     status = statusCourse;
     if (statusCourse == "1") {
