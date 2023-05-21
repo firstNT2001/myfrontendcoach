@@ -5,7 +5,8 @@ import 'package:flutter/material.dart';
 
 import 'package:frontendfluttercoach/service/review.dart';
 import 'package:provider/provider.dart';
-
+import 'package:retrofit/retrofit.dart';
+import 'package:retrofit/dio.dart';
 
 
 import '../../model/response/course_get_res.dart';
@@ -24,10 +25,9 @@ class _showCousePageState extends State<showCousePage> {
   late CourseService courseService;
   late Future<void> loadDataMethod;
   late ReviewService reviewService;
-
-  //List<ModelCourse> courses = [];
+  List<ModelCourse> courses = [];
+  
   int courseId = 0;
-  late ModelCourse courses;
   List<ModelReview> reviews = [];
   @override
   void initState() {
@@ -54,37 +54,90 @@ class _showCousePageState extends State<showCousePage> {
               child: Column(
                 children: [
                   Container(
-                    child: Column(children: [loadCorse()]),
-                  ),
-                  
-                   
+                     child: Column(children: [loadCourse()]),
+                  ),           
                       SizedBox(
                         height: 320,width: 390,
-                        child: loadReview())
-                    
-                  
+                        child: loadReview()
+                        )
+ 
                 ],
               ),
             ),
           ],
-        ));
+        )
+        );
   }
 
   Future<void> loadData() async {
     try {
-      log(courseId.toString());
-      var datas = await courseService.course(cid: '',coID: courseId.toString(),name: '');
-      var datareview = await reviewService.getReviewByCoID(courseId.toString());
-      courses = datas.response.data;
+      
+      var datacouse = await courseService.course(coID: courseId.toString(), cid: '', name: '');
+      log("loadCoursereview"+courseId.toString());
+      var datareview = await reviewService.review(coID: courseId.toString());
+      
+      courses = datacouse.data;
       reviews = datareview.data;
-      log('couse: ${courses.name}');
+      log("loadCourseIDDatas"+courses[0].name);
+      log("loadCoursereview"+reviews.length.toString());
+      
       //log('review: ${reviews.length}');
     } catch (err) {
       log('Error: $err');
     }
   }
+    Widget loadCourse() {
+    return FutureBuilder(
+        future: loadDataMethod, // 3.1 object ของ async method
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.done) {
+            return Column(
+              children: [
+                SizedBox(
+                    height: 35,
+                    width: 390,
+                    child: Text(
+                      "Daily workout",
+                      style: TextStyle(fontSize: 25),
+                    )),
+                Image.network(
+                  courses.first.image,
+                  height: 200,
+                  width: double.infinity,
+                  fit: BoxFit.cover,
+                ),
+                Column(
+                  children: [
+                    SizedBox(
+                        width: 200, height: 100, child: Text(courses.first.name)),
+                    Row(
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.only(right: 20),
+                          child: Text(courses.first.days.toString() + "วัน/คอร์ส"),
+                        ),
+                        Text("27 คลิป")
+                      ],
+                    ),
+                    Row(
+                      children: [
+                        Text(courses.first.amount.toString() + "คน"),
+                        Text(courses.first.price.toString() + "บาท"),
+                      ],
+                    ),
+                    Text("รายละเอียดคอร์ส"),
+                    Text(courses.first.details),
+                  ],
+                )
+              ],
+            );
+          } else {
+            return const Center(child: CircularProgressIndicator());
+          }
+        });
+  }
 
-  Widget loadReview() {
+    Widget loadReview() {
     return FutureBuilder(
       future: loadDataMethod,
       builder: (context, snapshot) {
@@ -116,93 +169,4 @@ class _showCousePageState extends State<showCousePage> {
     );
   }
 
-  Widget loadCorse() {
-    return FutureBuilder(
-        future: loadDataMethod, // 3.1 object ของ async method
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.done) {
-            return Column(
-              children: [
-                SizedBox(
-                    height: 35,
-                    width: 390,
-                    child: Text(
-                      "Daily workout",
-                      style: TextStyle(fontSize: 25),
-                    )),
-                Image.network(
-                  courses.image,
-                  height: 200,
-                  width: double.infinity,
-                  fit: BoxFit.cover,
-                ),
-                Column(
-                  children: [
-                    SizedBox(
-                        width: 200, height: 100, child: Text(courses.name)),
-                    Row(
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.only(right: 20),
-                          child: Text(courses.days.toString() + "วัน/คอร์ส"),
-                        ),
-                        Text("27 คลิป")
-                      ],
-                    ),
-                    Row(
-                      children: [
-                        Text(courses.amount.toString() + "คน"),
-                        Text(courses.price.toString() + "บาท"),
-                      ],
-                    ),
-                    Text("รายละเอียดคอร์ส"),
-                    Text(courses.details),
-                  ],
-                )
-              ],
-            );
-          } else {
-            return const Center(child: CircularProgressIndicator());
-          }
-        });
-  }
-
 }
-
-// class showCousePage extends StatelessWidget {
-//   final ModelCourse couse;
-//   const showCousePage({
-//     Key? key,
-//     required this.couse,
-//   }) : super(key: key);
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return Scaffold(
-//       appBar: AppBar(
-//         title: Text(couse.name),
-//       ),
-//       body: Center(
-//         child: Column(
-//           children: [
-//              Image.network(
-//               couse.image,
-//               height: 200,
-//               width: double.infinity,
-//               fit: BoxFit.cover,
-//             ),
-//             Card(
-//               child: Expanded(child: Text(couse.name)),
-//             ),
-//             Card(
-//               child: Expanded(child: Padding(
-//                 padding: const EdgeInsets.all(18.0),
-//                 child: Text(couse.details),
-//               )),
-//             ),
-//           ],
-//         ),
-//       ),
-//     );
-//   }
-// }

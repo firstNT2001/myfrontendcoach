@@ -19,7 +19,7 @@ class _ReviewService implements ReviewService {
   String? baseUrl;
 
   @override
-  Future<HttpResponse<List<ModelReview>>> review(coID) async {
+  Future<HttpResponse<List<ModelReview>>> review({required coID}) async {
     const _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{r'coID': coID};
     final _headers = <String, dynamic>{};

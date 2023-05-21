@@ -19,7 +19,7 @@ class _CustomerService implements CustomerService {
   String? baseUrl;
 
   @override
-  Future<HttpResponse<Customer>> customer(uid) async {
+  Future<HttpResponse<Customer>> customer({required uid}) async {
     const _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{r'uid': uid};
     final _headers = <String, dynamic>{};

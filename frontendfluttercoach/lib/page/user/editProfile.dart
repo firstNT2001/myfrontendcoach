@@ -73,7 +73,7 @@ class _editProfileCusState extends State<editProfileCus> {
 
   Future<void> loadData() async {
     try {
-      customer = await customerService.customer(widget.uid.toString());
+      customer = await customerService.customer(uid: widget.uid.toString());
 
       _uid.text = customer.data.uid.toString();
       _username.text = customer.data.username;

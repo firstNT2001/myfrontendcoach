@@ -12,5 +12,5 @@ part 'generated/review.g.dart';
 abstract class ReviewService {
   factory ReviewService(Dio dio, {String baseUrl}) = _ReviewService;
   @GET("/review")
-  Future<HttpResponse<List<ModelReview>>> review(@Query("coID") String coID);
+  Future<HttpResponse<List<ModelReview>>> review({@Query("coID") required String coID});
 }
