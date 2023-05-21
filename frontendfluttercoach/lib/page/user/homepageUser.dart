@@ -33,11 +33,13 @@ class _HomePageUserState extends State<HomePageUser> {
 
   List<Coach> coaches = [];
   List<ModelCourse> courses = [];
+  List<ModelCourse> coursesAll = [];
   TextEditingController myController = TextEditingController();
 
   int uid = 1;
   bool isVisible = false;
-  double bmi = 0 ;
+  bool isVisibles = true;
+  double bmi = 0;
   @override
   void initState() {
     // TODO: implement initState
@@ -92,12 +94,14 @@ class _HomePageUserState extends State<HomePageUser> {
                               //log("message"+coaches.first);
                               setState(() {
                                 isVisible = true;
+                                isVisibles = false;
                               });
 
                               log(coaches.length.toString());
                             } else {
                               setState(() {
                                 isVisible = false;
+                                isVisibles = true;
                               });
                             }
                           });
@@ -112,6 +116,11 @@ class _HomePageUserState extends State<HomePageUser> {
                               log(courses.length.toString());
                             }
                           });
+                        } else {
+                          setState(() {
+                            isVisible = false;
+                            isVisibles = true;
+                          });
                         }
                       },
                       child: const Text("แสดงชื่อโค้ช")),
@@ -122,51 +131,113 @@ class _HomePageUserState extends State<HomePageUser> {
           Row(
             mainAxisAlignment: MainAxisAlignment.end,
             children: [
-              IconButton(onPressed: () {}, icon: const Icon(Icons.tune_rounded)),
+              IconButton(
+                  onPressed: () {}, icon: const Icon(Icons.tune_rounded)),
             ],
           ),
-          Card(
-            child: ListTile(
-              leading: const Icon(Icons.girl_outlined, size: 110),
-              title: Padding(
-                padding: const EdgeInsets.all(15.0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text(customer.data.height.toString()),
-                        const Text("CM"),
-                      ],
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text(customer.data.weight.toString()),
-                        const Text("KG"),
-                      ],
-                    ),
-                    const Divider(
-                       //color of divider
-                      height: 5, //height spacing of divider
-                      thickness: 2, //thickness of divier line
-                      indent: 50, //spacing at the start of divider
-                      endIndent: 50,
-                    ),
-                    const Text("BMI"),
-                    Text(bmi.toString()),
-                    
-                  ],
+          Padding(
+            padding: const EdgeInsets.all(12),
+            child: Card(
+              child: ListTile(
+                leading: (customer.data.gender == '2')
+                    ? Icon(Icons.girl_outlined, size: 120)
+                    : (customer.data.gender == '1')
+                        ? Icon(Icons.boy_outlined, size: 120)
+                        : Icon(Icons.abc_outlined, size: 110),
+
+                title: Padding(
+                  padding: const EdgeInsets.all(15.0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text(customer.data.height.toString()),
+                          const Text("CM"),
+                        ],
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text(customer.data.weight.toString()),
+                          const Text("KG"),
+                        ],
+                      ),
+                      const Divider(
+                        //color of divider
+                        height: 5, //height spacing of divider
+                        thickness: 2, //thickness of divier line
+                        indent: 50, //spacing at the start of divider
+                        endIndent: 50,
+                      ),
+                      const Text("BMI"),
+                      Text(bmi.toString()),
+                    ],
+                  ),
                 ),
+                //subtitle: Text(review.details),
               ),
-              //subtitle: Text(review.details),
             ),
           ),
 
           const Padding(
             padding: EdgeInsets.only(left: 15),
             child: Text("รายการแนะนำ"),
+          ),
+
+          Visibility(
+            visible: isVisibles,
+            child: SizedBox(
+              height: 300,
+              child: Expanded(
+                  child: ListView.builder(
+                shrinkWrap: true,
+                itemCount: coursesAll.length,
+                itemBuilder: (context, index) {
+                  final listcours = coursesAll[index];
+
+                  return Padding(
+                    padding: const EdgeInsets.only(top: 8),
+                    child: Column(
+                      children: [
+                        Card(
+                          child: Container(
+                            height: 290,
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.end,
+                              children: [
+                                Image.network(listcours.image,
+                                    width: 400,
+                                    height: 160,
+                                    fit: BoxFit.fill),
+                                ListTile(
+                                  title: Text(listcours.name)
+                                  //subtitle: Text(listcours.details),
+                                ),
+                                Padding(
+                                  padding: const EdgeInsets.only(right: 12),
+                                  child: ElevatedButton(
+                                      onPressed: () {
+                                        log(listcours.coId.toString());
+                                        context.read<AppData>().idcourse =
+                                            listcours.coId;
+
+                                        Get.to(() => const showCousePage());
+                                      },
+                                      child: const Text(
+                                          "ดูรายละเอียดเพิ่มเติม")),
+                                )
+                              ],
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  );
+                },
+              )),
+            ),
           ),
 
           Visibility(
@@ -215,39 +286,38 @@ class _HomePageUserState extends State<HomePageUser> {
           ),
 
           //showCourse
-          (courses != null)
-              ? Expanded(
-                  child: Container(
-                    child: Padding(
-                      padding: const EdgeInsets.all(20.0),
-                      child: ListView.builder(
-                          shrinkWrap: true,
-                          itemCount: courses.length,
-                          itemBuilder: (context, index) {
-                            final course = courses[index];
-                            return Card(
-                              child: ListTile(
-                                leading: CircleAvatar(
-                                  radius: 30,
-                                  backgroundImage: NetworkImage(course.image),
-                                ),
-                                title: Text(course.name),
-                                subtitle: Text(course.details),
-                                trailing: const Icon(Icons.arrow_forward),
-                                onTap: () {
-                                  log(course.coId.toString());
-                                  context.read<AppData>().idcourse =
-                                      course.coId;
+          Visibility(
+            visible: isVisible,
+            child: Container(
+              child: Padding(
+                padding: const EdgeInsets.all(20.0),
+                child: ListView.builder(
+                    shrinkWrap: true,
+                    itemCount: courses.length,
+                    itemBuilder: (context, index) {
+                      final course = courses[index];
+                      return Card(
+                        child: ListTile(
+                          leading: CircleAvatar(
+                            radius: 30,
+                            backgroundImage: NetworkImage(course.image),
+                          ),
+                          title: Text(course.name),
+                          subtitle: Text(course.details),
+                          trailing: const Icon(Icons.arrow_forward),
+                          onTap: () {
+                            log(course.coId.toString());
+                            context.read<AppData>().idcourse = course.coId;
 
-                                  Get.to(() => const showCousePage());
-                                },
-                              ),
-                            );
-                          }),
-                    ),
-                  ),
-                )
-              : Container(color: Colors.amber),
+                            Get.to(() => const showCousePage());
+                          },
+                        ),
+                      );
+                    }),
+              ),
+            ),
+          ),
+
           Center(
             child: ElevatedButton(
                 onPressed: () {
@@ -263,12 +333,26 @@ class _HomePageUserState extends State<HomePageUser> {
   Future<void> loadData() async {
     try {
       customer = await customerService.customer(uid: uid.toString());
-      double h = ((customer.data.height) +.0)/100;
+      var datacourse = await courseService.course(coID: '', cid: '', name: '');
+      coursesAll = datacourse.data;
+      log("lengtt = " + coursesAll.length.toString());
+      double h = ((customer.data.height) + .0) / 100;
+      double w = customer.data.weight + .0;
       log('BMI=: $h');
-      bmi =  ((customer.data.weight) +.0)/(h*h) ; 
+      log('BMI=: $w');
+      bmi = (w / (h * h));
       log('BMI=: $bmi');
     } catch (err) {
       log('Error: $err');
     }
   }
 }
+// การทำมุมโค้งบางจุด
+//  ClipRRect(
+//                               borderRadius: const BorderRadius.only(
+//                                 topLeft: Radius.circular(10),
+//                                 topRight: Radius.circular(10),
+//                               ),
+//                               child: Image.network(listcours.image,
+//                                   width: 300, height: 100, fit: BoxFit.fill),
+//                             ),
