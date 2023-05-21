@@ -25,7 +25,7 @@ Future<void> main() async {
   final DefaultTheme defaultTheme = DefaultTheme();
   WidgetsFlutterBinding.ensureInitialized();
    // Screen size
-  Size screenSize = MediaQueryData.fromWindow(WidgetsBinding.instance.window).size;
+  Size screenSize = MediaQueryData.fromView(WidgetsBinding.instance.window).size;
   // Setup Timeout
   final sessionConfig = SessionConfig(
     invalidateSessionForAppLostFocus: const Duration(minutes: 3),

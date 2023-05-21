@@ -224,7 +224,7 @@ class _CourseEditPageState extends State<CourseEditPage> {
   Future<void> loadDataAsync() async {
     try {
       var res =
-          await _courseService.course(cid: '', name: '', coID: widget.coID);
+          await _courseService.course(cid: '', name: '', coID: '1');
       courses = res.data;
       data();
       // name.text = foods.name;

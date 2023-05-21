@@ -60,7 +60,7 @@ class _LoginPageState extends State<LoginPage> {
         child: Card(
           clipBehavior: Clip.antiAlias,
           child: SizedBox(
-            width: MediaQuery.of(context).size.width * 0.89,
+            width: MediaQuery.of(context).size.width * 0.8,
             height: MediaQuery.of(context).size.height * 0.6,
             child:
                 Column(mainAxisAlignment: MainAxisAlignment.center, children: [
