@@ -171,7 +171,7 @@ class _LoginPageState extends State<LoginPage> {
               //     buttonType: ButtonType.facebook,
               //     width: double.infinity,
               //     onPressed: () {
-                    
+
               //     },
               //   ),
               // ),
@@ -230,44 +230,81 @@ class _LoginPageState extends State<LoginPage> {
     //target widget
     SmartDialog.show(builder: (_) {
       return Container(
-        height: 200,
-        width: 300,
+        width: MediaQuery.of(context).size.width * 0.8,
+        height: MediaQuery.of(context).size.height * 0.4,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(20),
           color: Colors.white,
         ),
         alignment: Alignment.center,
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.start,
+          //crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            const Padding(
-              padding:
-                  EdgeInsets.only(left: 20, right: 20, top: 16, bottom: 16),
-              child: Text("คุณจะเข้าสู่ระบบเป็นผู้ใช้ประเภทใด"),
+            Padding(
+              padding: const EdgeInsets.only(
+                  left: 20, right: 20, top: 50, bottom: 16),
+              child: Text("Select Type ?",
+                  style: Theme.of(context).textTheme.headlineSmall),
             ),
-            Row(
-              //mainAxisSize: MainAxisSize.max,
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                ElevatedButton(
-                  onPressed: () {
-                    Get.to(() => const HomePageCoach());
-                   
-                    context.read<AppData>().cid = cid;
-                   
-                  },
-                  child: const Text('Coach'),
-                ),
-                ElevatedButton(
-                  onPressed: () {
-                    log("uid:$uid");
-                    Get.to(() => const HomePageUser());
-                    context.read<AppData>().uid = uid;
-                  },
-                  child: const Text('User'),
-                ),
-              ],
+            Padding(
+              padding: const EdgeInsets.only(
+                 top: 20),
+              child: Row(
+                //mainAxisSize: MainAxisSize.max,
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  InkWell(
+                    onTap: () {
+                      Get.to(() => const HomePageCoach());
+                  
+                      context.read<AppData>().cid = cid;
+                    },
+                    child: Column(
+                      children: [
+                        SizedBox(
+                            width: 100,
+                            height: 100,
+                            child: Image.asset("assets/images/football.png")),
+                        Text('Coach',style: Theme.of(context).textTheme.titleMedium,),
+                      ],
+                    ),
+                  ),
+                  InkWell(
+                    onTap: () {
+                      Get.to(() => const HomePageUser());
+            
+                      context.read<AppData>().uid = uid;
+                    },
+                    child: Column(
+                      children: [
+                        SizedBox(
+                            width: 100,
+                            height: 100,
+                            child: Image.asset("assets/images/single-person.png")),
+                        Text('User',style: Theme.of(context).textTheme.titleMedium,),
+                      ],
+                    ),
+                  ),
+                  // ElevatedButton(
+                  //   onPressed: () {
+                  //     Get.to(() => const HomePageCoach());
+            
+                  //     context.read<AppData>().cid = cid;
+            
+                  //   },
+                  //   child: const Text('Coach'),
+                  // ),
+                  // ElevatedButton(
+                  //   onPressed: () {
+                  //     log("uid:$uid");
+                  //     Get.to(() => const HomePageUser());
+                  //     context.read<AppData>().uid = uid;
+                  //   },
+                  //   child: const Text('User'),
+                  // ),
+                ],
+              ),
             ),
           ],
         ),
