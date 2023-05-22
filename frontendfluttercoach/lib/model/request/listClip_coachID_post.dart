@@ -11,28 +11,28 @@ String listClipCoachIdPostToJson(ListClipCoachIdPost data) => json.encode(data.t
 
 class ListClipCoachIdPost {
     String name;
-    String image;
+    String amountPerSet;
+    String video;
     String details;
-    int calories;
 
     ListClipCoachIdPost({
         required this.name,
-        required this.image,
+        required this.amountPerSet,
+        required this.video,
         required this.details,
-        required this.calories,
     });
 
     factory ListClipCoachIdPost.fromJson(Map<String, dynamic> json) => ListClipCoachIdPost(
         name: json["Name"],
-        image: json["Image"],
+        amountPerSet: json["AmountPerSet"],
+        video: json["Video"],
         details: json["Details"],
-        calories: json["Calories"],
     );
 
     Map<String, dynamic> toJson() => {
         "Name": name,
-        "Image": image,
+        "AmountPerSet": amountPerSet,
+        "Video": video,
         "Details": details,
-        "Calories": calories,
     };
 }

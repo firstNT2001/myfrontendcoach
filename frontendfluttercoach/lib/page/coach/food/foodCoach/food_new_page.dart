@@ -43,7 +43,7 @@ class _FoodNewCoachPageState extends State<FoodNewCoachPage> {
 
     _listfoodService = context.read<AppData>().listfoodServices;
     log(context.read<AppData>().baseurl);
-    cid = context.read<CoachData>().cid;
+    cid = context.read<AppData>().cid;
 
     name.text = "ไข่เจียวไร้น้ำมันหมู22";
     details.text =

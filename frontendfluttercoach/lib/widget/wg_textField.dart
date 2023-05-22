@@ -16,7 +16,7 @@ class _WidgetTextFieldStringState extends State<WidgetTextFieldString> {
             padding: const EdgeInsets.only(left: 20, right: 20, top: 16),
             child: TextField(
                 controller: widget.controller,
-                autofocus: true,
+                //autofocus: true,
                 // onChanged: (String value) {
                 //   setState(() => chackNameAndPassword = "");
                 // },

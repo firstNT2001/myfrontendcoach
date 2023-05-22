@@ -48,7 +48,8 @@ class _CourseNewPageState extends State<CourseNewPage> {
     super.initState();
     courseService =
         CourseService(Dio(), baseUrl: context.read<AppData>().baseurl);
-    cid = context.read<CoachData>().cid;
+    cid = context.read<AppData>().cid;
+    log(cid.toString());
   }
 
   @override
