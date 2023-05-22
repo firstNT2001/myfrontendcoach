@@ -3,6 +3,8 @@ import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:frontendfluttercoach/page/user/cousepage.dart';
 import '../../model/response/course_get_res.dart';
+import '../../model/response/md_Coach_get.dart';
+import '../../service/coach.dart';
 import '../../service/course.dart';
 import 'package:get/get.dart';
 import 'package:provider/provider.dart';
@@ -19,35 +21,45 @@ class ProfileCoachPage extends StatefulWidget {
 
 class _ProfileCoachPageState extends State<ProfileCoachPage> {
   late CourseService courseService;
+  late CoachService coachService;
   late Future<void> loadDataMethod;
-  List<ModelCourse> courses = [];
+  late List<ModelCourse> courses = [];
+  late List<Coach> coach = [];
   int cidCoach = 0;
   String qualificationCoach = "";
   String fullnameCoach = "";
   String userNameCoach = " ";
   String propertyC = " ";
 
+  int _selectedIndex = 0;
+  PageController pageController = PageController();
+  void onTapped(int index){
+    setState(() {
+      _selectedIndex = index;
+    });
+    pageController.jumpToPage(index);
+  }
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
     cidCoach = context.read<AppData>().cid;
-    fullnameCoach = context.read<AppData>().nameCoach;
-    qualificationCoach = context.read<AppData>().qualification;
-    userNameCoach = context.read<AppData>().usercoach;
-    propertyC = context.read<AppData>().propertycoach;
+    // fullnameCoach = context.read<AppData>().nameCoach;
+    // qualificationCoach = context.read<AppData>().qualification;
+    // userNameCoach = context.read<AppData>().usercoach;
+    // propertyC = context.read<AppData>().propertycoach;
 
     //couse
     courseService =
         CourseService(Dio(), baseUrl: context.read<AppData>().baseurl);
-
+    coachService = CoachService(Dio(), baseUrl: context.read<AppData>().baseurl);
     loadDataMethod = loadData();
 
     log("AAAA : " + cidCoach.toString());
-    log("BBB : " + qualificationCoach);
-    log("CCC : " + fullnameCoach);
-    log("DDD : " + userNameCoach);
-    log("EEE : " + propertyC);
+    // log("BBB : " + qualificationCoach);
+    // log("CCC : " + fullnameCoach);
+    // log("DDD : " + userNameCoach);
+    // log("EEE : " + propertyC);
   }
 
   @override
@@ -56,30 +68,37 @@ class _ProfileCoachPageState extends State<ProfileCoachPage> {
       appBar: AppBar(
         title: Text("test"),
       ),
-      body: Container(
-        child: Column(
+      body: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            loadcoach(),
+            Divider(
+              color: Colors.black,
+              indent: 8,
+              endIndent: 8,
+            ),
             Padding(
               padding: const EdgeInsets.all(8.0),
-              child: Container(color: Colors.pink[200], child: showText()),
+              child: Text("คอร์สทั้งหมด",style: TextStyle(fontSize: 16)),
             ),
-            SizedBox(height: 500, width: 390, child: loadshowcouse()),
+            SizedBox(
+              height: MediaQuery.of(context).size.height*0.4,
+              child: loadshowcouse()),
           ],
         ),
-      ),
     );
   }
 
-  Widget showText() {
-    return Column(
-      children: [
-        Text('@' + userNameCoach),
-        Text(fullnameCoach),
-        Text(qualificationCoach),
-        Text(propertyC),
-      ],
-    );
-  }
+  // Widget showText() {
+  //   return Column(
+  //     children: [
+  //       Text('@' + userNameCoach),
+  //       Text(fullnameCoach),
+  //       Text(qualificationCoach),
+  //       Text(propertyC),
+  //     ],
+  //   );
+  // }
 
   Widget loadshowcouse() {
     return FutureBuilder(
@@ -117,13 +136,79 @@ class _ProfileCoachPageState extends State<ProfileCoachPage> {
         });
   }
 
+  Widget loadcoach() {
+    return FutureBuilder(
+        future: loadDataMethod, // 3.1 object ของ async method
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.done) {
+            return Column(
+              children: [
+                if (coach != null)               
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.only(left: 15,top: 20),
+                        child: Row(
+                          children: [
+                            CircleAvatar(
+                              radius: 70,
+                              backgroundImage: NetworkImage(coach.first.image), 
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.only(left:30 ),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(coach.first.username,style: TextStyle(fontSize: 16)),
+                                  Text(coach.first.fullName,style: TextStyle(fontSize: 16)),
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(left: 8,top: 20),
+                        child: Text("การศึกษา",style: TextStyle(fontSize: 16)),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(left: 12),
+                        child: Text(coach.first.qualification),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(top: 10,left: 8),
+                        child: Text("คุณสมบัติ",style: TextStyle(fontSize: 16)),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(left: 12),
+                        child: Text(coach.first.property),
+                      ),
+                    ],
+                  )
+                else
+                  Container(),
+              ],
+            );
+          } else {
+            return const Center(child: CircularProgressIndicator());
+          }
+        });
+  }
+
   Future<void> loadData() async {
     try {
-      var datas = await courseService.course(cid: cidCoach.toString(), coID: '', name: '');
+      var datas = await courseService.course(
+          cid: cidCoach.toString(), coID: '', name: '');
+          log("iddddddddd= "+cidCoach.toString());
+      var datacoach = await coachService.coach(nameCoach: '', cid: cidCoach.toString());
+      log("idddddddddcoach= "+datacoach.data.first.fullName);
       courses = datas.data;
+      coach = datacoach.data;
       log('couse: $courses');
     } catch (err) {
       log('Error: $err');
     }
   }
+
 }

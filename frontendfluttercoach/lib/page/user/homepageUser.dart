@@ -7,7 +7,7 @@ import 'package:get/get.dart';
 import 'package:provider/provider.dart';
 import 'package:retrofit/retrofit.dart';
 import 'dart:developer';
-
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import '../../model/response/md_Coach_get.dart';
 import '../../model/response/course_get_res.dart';
 import '../../model/response/md_Customer_get.dart';
@@ -40,6 +40,29 @@ class _HomePageUserState extends State<HomePageUser> {
   bool isVisible = false;
   bool isVisibles = true;
   double bmi = 0;
+
+  //BottomNavigationBar
+  //  int _selectedIndex = 0;
+  //  static const TextStyle optionStyle =
+  //     TextStyle(fontSize: 30, fontWeight: FontWeight.bold);
+  // static const List<Widget> _widgetOptions = <Widget>[
+  //   Text(
+  //     'Index 0: Home',
+  //     style: optionStyle,
+  //   ),
+  //   Text(
+  //     'Index 1: Business',
+  //     style: optionStyle,
+  //   ),
+  //   ProfileUser(),
+  // ];
+
+  // void _onItemTapped(int index) {
+  //   setState(() {
+  //     _selectedIndex = index;
+  //   });
+  // }
+
   @override
   void initState() {
     // TODO: implement initState
@@ -57,9 +80,6 @@ class _HomePageUserState extends State<HomePageUser> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text("tesr"),
-      ),
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -128,115 +148,28 @@ class _HomePageUserState extends State<HomePageUser> {
               ],
             ),
           ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.end,
-            children: [
-              IconButton(
-                  onPressed: () {}, icon: const Icon(Icons.tune_rounded)),
-            ],
-          ),
+          
           Padding(
             padding: const EdgeInsets.all(12),
-            child: Card(
-              child: ListTile(
-                leading: (customer.data.gender == '2')
-                    ? Icon(Icons.girl_outlined, size: 120)
-                    : (customer.data.gender == '1')
-                        ? Icon(Icons.boy_outlined, size: 120)
-                        : Icon(Icons.abc_outlined, size: 110),
-
-                title: Padding(
-                  padding: const EdgeInsets.all(15.0),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Text(customer.data.height.toString()),
-                          const Text("CM"),
-                        ],
-                      ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Text(customer.data.weight.toString()),
-                          const Text("KG"),
-                        ],
-                      ),
-                      const Divider(
-                        //color of divider
-                        height: 5, //height spacing of divider
-                        thickness: 2, //thickness of divier line
-                        indent: 50, //spacing at the start of divider
-                        endIndent: 50,
-                      ),
-                      const Text("BMI"),
-                      Text(bmi.toString()),
-                    ],
-                  ),
-                ),
-                //subtitle: Text(review.details),
-              ),
-            ),
+            child: loadcustomer(),
           ),
 
-          const Padding(
-            padding: EdgeInsets.only(left: 15),
-            child: Text("รายการแนะนำ"),
+          Padding(
+            padding: const EdgeInsets.only(left: 10),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                const Text("รายการแนะนำ",style: TextStyle(fontSize: 18)),
+                const Icon(FontAwesomeIcons.fire,color: Color.fromARGB(255, 236, 1, 1),)
+              ],
+            ),
           ),
 
           Visibility(
             visible: isVisibles,
             child: SizedBox(
-              height: 300,
-              child: Expanded(
-                  child: ListView.builder(
-                shrinkWrap: true,
-                itemCount: coursesAll.length,
-                itemBuilder: (context, index) {
-                  final listcours = coursesAll[index];
-
-                  return Padding(
-                    padding: const EdgeInsets.only(top: 8),
-                    child: Column(
-                      children: [
-                        Card(
-                          child: Container(
-                            height: 290,
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.end,
-                              children: [
-                                Image.network(listcours.image,
-                                    width: 400,
-                                    height: 160,
-                                    fit: BoxFit.fill),
-                                ListTile(
-                                  title: Text(listcours.name)
-                                  //subtitle: Text(listcours.details),
-                                ),
-                                Padding(
-                                  padding: const EdgeInsets.only(right: 12),
-                                  child: ElevatedButton(
-                                      onPressed: () {
-                                        log(listcours.coId.toString());
-                                        context.read<AppData>().idcourse =
-                                            listcours.coId;
-
-                                        Get.to(() => const showCousePage());
-                                      },
-                                      child: const Text(
-                                          "ดูรายละเอียดเพิ่มเติม")),
-                                )
-                              ],
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  );
-                },
-              )),
+              height:MediaQuery.of(context).size.width*0.99,
+              child: loadcourse(),
             ),
           ),
 
@@ -284,7 +217,6 @@ class _HomePageUserState extends State<HomePageUser> {
               ),
             ),
           ),
-
           //showCourse
           Visibility(
             visible: isVisible,
@@ -316,15 +248,7 @@ class _HomePageUserState extends State<HomePageUser> {
                     }),
               ),
             ),
-          ),
-
-          Center(
-            child: ElevatedButton(
-                onPressed: () {
-                  Get.to(() => const ProfileUser());
-                },
-                child: const Text("โปรไฟล์ของฉัน")),
-          ),
+          ),     
         ],
       ),
     );
@@ -345,6 +269,116 @@ class _HomePageUserState extends State<HomePageUser> {
     } catch (err) {
       log('Error: $err');
     }
+  }
+  Widget loadcourse(){
+    return FutureBuilder(
+      future: loadDataMethod,
+      builder: (context, snapshot) {
+         if (snapshot.connectionState != ConnectionState.done) {
+          return const Center(child: CircularProgressIndicator());
+        } else {
+          return Column(
+            children: [
+              Expanded(
+                child: ListView.builder(
+                shrinkWrap: true,
+                itemCount: coursesAll.length,
+                itemBuilder: (context, index) {
+                  final listcours = coursesAll[index];
+            
+                  return Padding(
+                    padding: const EdgeInsets.only(top: 8),
+                    child: Card(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.end,
+                        children: [
+                          Image.network(listcours.image,
+                              width: 400,
+                              height: 150,
+                              fit: BoxFit.fill),
+                          ListTile(
+                            title: Text(listcours.name)
+                            //subtitle: Text(listcours.details),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.only(right: 8,bottom: 8),
+                            child: ElevatedButton(
+                                onPressed: () {
+                                  log(listcours.coId.toString());
+                                  context.read<AppData>().idcourse =
+                                      listcours.coId;
+            
+                                  Get.to(() => const showCousePage());
+                                },
+                                child: const Text(
+                                    "ดูรายละเอียดเพิ่มเติม")),
+                          ),
+                        ],
+                      ),
+                    ),
+                  );
+                },
+              ))
+            ],
+          );
+        }
+      },);
+  }
+  Widget loadcustomer(){
+    return FutureBuilder(
+      future: loadDataMethod,
+      builder: (context, snapshot) {
+         if (snapshot.connectionState != ConnectionState.done) {
+          return const Center(child: CircularProgressIndicator());
+        } else {
+          return Column(
+            children: [
+              Card(
+              child: ListTile(
+                leading: (customer.data.gender == '2')
+                    ? const Icon(Icons.girl_outlined, size: 120)
+                    : (customer.data.gender == '1')
+                        ? const Icon(Icons.boy_outlined, size: 120)
+                        : const Icon(Icons.abc_outlined, size: 110),
+
+                title: Padding(
+                  padding: const EdgeInsets.all(15.0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text(customer.data.height.toString()),
+                          const Text("CM"),
+                        ],
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text(customer.data.weight.toString()),
+                          const Text("KG"),
+                        ],
+                      ),
+                      const Divider(
+                        //color of divider
+                        height: 5, //height spacing of divider
+                        thickness: 2, //thickness of divier line
+                        indent: 50, //spacing at the start of divider
+                        endIndent: 50,
+                      ),
+                      const Text("BMI"),
+                      Text(bmi.toString()),
+                    ],
+                  ),
+                ),
+                //subtitle: Text(review.details),
+              ),
+            ),
+            ],
+          );
+        }
+      },);
   }
 }
 // การทำมุมโค้งบางจุด
