@@ -3,14 +3,12 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:frontendfluttercoach/model/response/md_ClipList_get.dart';
 import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
 import 'package:provider/provider.dart';
 
-
-import '../../../../service/listClip.dart';
-import '../../../../service/provider/appdata.dart';
-import '../../../../service/provider/coachData.dart';
+import '../../../service/listClip.dart';
+import '../../../service/provider/appdata.dart';
 import 'clip_edit_page.dart';
+import 'clip_new_page.dart';
 
 class ClipCoachPage extends StatefulWidget {
   const ClipCoachPage({super.key});
@@ -27,7 +25,7 @@ class _ClipCoachPageState extends State<ClipCoachPage> {
   @override
   void initState() {
     super.initState();
-    cid = context.read<CoachData>().cid.toString();
+    cid = context.read<AppData>().cid.toString();
     _listclipService = context.read<AppData>().listClipServices;
     loadDataMethod = loadDataAsync();
   }
@@ -41,6 +39,16 @@ class _ClipCoachPageState extends State<ClipCoachPage> {
             if (snapshot.connectionState == ConnectionState.done) {
               return Column(
                 children: [
+                  Container(
+                    padding: const EdgeInsets.only(top: 50, left: 5, right: 5),
+                    child: ElevatedButton(
+                      onPressed: () {
+                        Get.to(() => const ClipNewCoachPage());
+                      },
+                      child: const Text("สร้างรายการท่าออกกำลังกาย"),
+                    ),
+                  ),
+                  // ignore: unnecessary_null_comparison
                   (clips != null)
                       ? Expanded(
                           child: ListView.builder(

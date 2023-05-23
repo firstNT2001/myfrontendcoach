@@ -49,7 +49,8 @@ class _FoodEditCoachPageState extends State<FoodEditCoachPage> {
             future: _loadData,
             builder: (context, AsyncSnapshot snapshot) {
               if (snapshot.connectionState != ConnectionState.done) {
-                return Container();
+                 return Container();
+                //return const Center(child: CircularProgressIndicator());
               }
               return Column(
                 children: [
@@ -88,7 +89,7 @@ class _FoodEditCoachPageState extends State<FoodEditCoachPage> {
     try {
       var res = await _listfoodService.listFoods(ifid: widget.ifid.toString(), cid: '', name: '');
       foods = res.data;
-      //name.text = foods.name;
+      name.text = foods[0].name;
     } catch (err) {
       log('Error: $err');
     }

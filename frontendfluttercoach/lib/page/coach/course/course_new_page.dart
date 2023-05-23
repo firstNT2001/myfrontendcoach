@@ -4,6 +4,9 @@ import 'dart:developer';
 import 'package:dio/dio.dart';
 
 import 'package:flutter/material.dart';
+import 'package:frontendfluttercoach/page/coach/home_coach_page.dart';
+import 'package:get/get.dart';
+import 'package:get/get_core/src/get_main.dart';
 import 'package:provider/provider.dart';
 
 import '../../../model/request/course_coachID_post.dart';
@@ -45,7 +48,8 @@ class _CourseNewPageState extends State<CourseNewPage> {
     super.initState();
     courseService =
         CourseService(Dio(), baseUrl: context.read<AppData>().baseurl);
-    cid = context.read<CoachData>().cid;
+    cid = context.read<AppData>().cid;
+    log(cid.toString());
   }
 
   @override
@@ -106,10 +110,11 @@ class _CourseNewPageState extends State<CourseNewPage> {
                       log(jsonEncode(moduleResult.result));
                       if (moduleResult.result == "1") {
                         // ignore: use_build_context_synchronously
-                        showDialogRowsAffected(context, "บันทึกสำเร็จ");
+                        //showDialogRowsAffected(context, "บันทึกสำเร็จ");
+                        Get.to(() => const HomePageCoach());
                       } else {
                         // ignore: use_build_context_synchronously
-                        showDialogRowsAffected(context, "บันทึกไม่สำเร็จ");
+                        //showDialogRowsAffected(context, "บันทึกไม่สำเร็จ");
                       }
                     },
                     child: const Text('Enabled'),

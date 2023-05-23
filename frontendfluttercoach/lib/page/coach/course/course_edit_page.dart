@@ -2,9 +2,10 @@ import 'dart:convert';
 import 'dart:developer';
 //import 'dart:io';
 
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
-
+import 'package:flutter/services.dart';
 
 import 'package:get/get.dart';
 import 'package:provider/provider.dart';
@@ -18,34 +19,37 @@ import '../../../service/course.dart';
 import '../../../service/provider/appdata.dart';
 import '../../../service/provider/courseData.dart';
 import '../../../service/provider/dayOfCouseData.dart';
+import '../../../widget/wg_textField.dart';
 import '../daysCourse/days_course_page.dart';
 import '../home_coach_page.dart';
 
-
 class CourseEditPage extends StatefulWidget {
-  const CourseEditPage({super.key});
+  late String coID;
+  CourseEditPage({super.key, required this.coID});
 
   @override
   State<CourseEditPage> createState() => _CourseEditPageState();
 }
 
 class _CourseEditPageState extends State<CourseEditPage> {
-  late CourseService courseService;
+  late CourseService _courseService;
   late Future<void> loadDataMethod;
+  List<ModelCourse> courses = [];
+
   late ModelResult moduleResult;
-  late HttpResponse<ModelCourse> courses;
+
   bool switchOnOff = false;
-  int coID = 0;
+
   String statusCourse = "";
   String imageCourse = "";
   //Controller
-  final _name = TextEditingController();
-  final _details = TextEditingController();
-  final _level = TextEditingController();
-  final _amount = TextEditingController();
-  final _days = TextEditingController();
-  final _price = TextEditingController();
-  int days = 0;
+  final name = TextEditingController();
+  final details = TextEditingController();
+  final level = TextEditingController();
+  final amount = TextEditingController();
+  final days = TextEditingController();
+  final price = TextEditingController();
+  int day = 0;
   String status = "";
 
   //updateCourse
@@ -58,159 +62,102 @@ class _CourseEditPageState extends State<CourseEditPage> {
     super.initState();
     // 2.1 object ของ service โดยต้องส่ง baseUrl (จาก provider) เข้าไปด้วย
 
-    courseService =
-        CourseService(Dio(), baseUrl: context.read<AppData>().baseurl);
-    // ประกาศตัวแปลลง text
-    coID = context.read<CourseData>().coIDCourse;
-    _name.text = context.read<CourseData>().nameCourse;
-    _details.text = context.read<CourseData>().detailsCourse;
-    _level.text = context.read<CourseData>().lavelCourse;
-    _amount.text = context.read<CourseData>().amountCourse.toString();
-    imageCourse = context.read<CourseData>().imageCourse.toString();
-    _days.text = context.read<CourseData>().daysCourse.toString();
-    _price.text = context.read<CourseData>().priceCourse.toString();
-    statusCourse = context.read<CourseData>().statusCourse;
-    days = int.parse(_days.text);
-    log("L ${_details.text.length}");
-    //เช็ค สถานะการเปิดขายของคอร์ส
-    status = statusCourse;
-    if (statusCourse == "1") {
-      //log(courses.data.status);
-      log("message");
-      setState(() {
-        switchOnOff = true;
-      });
-    }
-    if (statusCourse == "0") {
-      setState(() {
-        switchOnOff = false;
-      });
-    }
-    log("day:$days");
-
-    // 2.2 async method
+    _courseService = context.read<AppData>().courseService;
+    loadDataMethod = loadDataAsync();
+    log(widget.coID);
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        body: Column(
-      children: [
-        Expanded(
-          child: ListView(
-        children: [
-          Expanded(child: Image.network(imageCourse)),
-          Padding(
-            padding: const EdgeInsets.only(top: 50, left: 5, right: 5),
-            child: Center(child: textField(_name, "ชื่อ")),
-          ),
-          Padding(
-            padding: const EdgeInsets.only(top: 10, left: 10, right: 10),
-            child: Center(
-              child: TextField(
-                  controller: _details,
-                  maxLines: 2,
-                  onChanged: (String value) {
-                    setState(() {
-                      log("Ls ${_details.text.length}");
-                    });
-                  },
-                  decoration: const InputDecoration(
-                    labelText: "รายระเอียด",
-                  )),
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.only(top: 10, left: 10, right: 10),
-            child: textFieldNumber(_amount, "จำนวนคน"),
-          ),
-          Padding(
-            padding: const EdgeInsets.only(top: 10, left: 10, right: 10),
-            child: textFieldNumber(_level, "ความยาก"),
-          ),
-          Padding(
-            padding: const EdgeInsets.only(top: 10, left: 10, right: 10),
-            child: textFieldNumber(_price, "ราคา"),
-          ),
-          Padding(
-            padding: const EdgeInsets.only(top: 10, left: 10, right: 10),
-            child: textFieldNumber(_days, "จำนวนวัน"),
-          ),
+        body: FutureBuilder(
+            future: loadDataMethod,
+            builder: (context, AsyncSnapshot snapshot) {
+              if (snapshot.connectionState == ConnectionState.done) {
+                return Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    //Expanded(child: Image.network(imageCourse)),
+                    WidgetTextFieldString(
+                      controller: name,
+                      labelText: 'ชื่อ',
+                    ),
+                    WidgetTextFieldString(
+                      controller: details,
+                      labelText: 'รายระเอียด',
+                    ),
+                    WidgetTextFieldString(
+                      controller: amount,
+                      labelText: 'จำนวนคน',
+                    ),
+                    WidgetTextFieldString(
+                      controller: level,
+                      labelText: 'ความยาก',
+                    ),
+                    WidgetTextFieldString(
+                      controller: price,
+                      labelText: 'ราคา',
+                    ),
+                    WidgetTextFieldString(
+                      controller: days,
+                      labelText: 'จำนวนวัน',
+                    ),
 
-          Column(
-            children: [
-              for (int i = 1; i <= days; i++) ...{
-                Container(
-                  width: double.infinity,
-                  padding: const EdgeInsets.all(20),
-                  child: ElevatedButton(
-                    onPressed: () {
-                      context.read<DayOfCourseData>().didDayOfCouse = i;
-                      Get.to(() => const DaysCoursePage());
-                    },
-                    child: Text('Day $i'),
-                  ),
-                )
+                    Column(
+                      children: [
+                        for (int i = 1; i <= day; i++) ...{
+                          Container(
+                            width: double.infinity,
+                            padding: const EdgeInsets.all(20),
+                            child: ElevatedButton(
+                              onPressed: () {
+                                context.read<DayOfCourseData>().didDayOfCouse =
+                                    i;
+                                Get.to(() => const DaysCoursePage());
+                              },
+                              child: Text('Day $i'),
+                            ),
+                          )
+                        }
+                      ],
+                    ),
+                    // Padding(
+                    //   padding: const EdgeInsets.all(50.0),
+                    //   child: Center(child: Text(courses.data.status)),
+                    // ),
+
+                    switchOnOffStatus(context),
+                    ElevatedButton(
+                      //style: style,
+                      onPressed: () async {
+                        CourseCourseIdPut updateCourseDTO = CourseCourseIdPut(
+                          name: name.text,
+                          details: details.text,
+                          level: level.text,
+                          amount: int.parse(amount.text),
+                          image: imageCourse,
+                          days: int.parse(days.text),
+                          price: int.parse(price.text),
+                          status: status,
+                        );
+                        log(jsonEncode(updateCourseDTO));
+                        log(widget.coID.toString());
+                        updateCourse =
+                            await _courseService.updateCourseByCourseID(
+                                widget.coID.toString(), updateCourseDTO);
+                        moduleResult = updateCourse.data;
+                        log(jsonEncode(moduleResult.result));
+                        //log("rowsAffected:"+updateCourse);
+                        Get.to(() => const HomePageCoach());
+                      },
+                      child: const Text('Enabled'),
+                    )
+                  ],
+                );
+              } else {
+                return const Center(child: CircularProgressIndicator());
               }
-            ],
-          ),
-          // Padding(
-          //   padding: const EdgeInsets.all(50.0),
-          //   child: Center(child: Text(courses.data.status)),
-          // ),
-
-          switchOnOffStatus(context),
-          ElevatedButton(
-            //style: style,
-            onPressed: () async {
-              CourseCourseIdPut updateCourseDTO = CourseCourseIdPut(
-                name: _name.text,
-                details: _details.text,
-                level: _level.text,
-                amount: int.parse(_amount.text),
-                image: imageCourse,
-                days: int.parse(_days.text),
-                price: int.parse(_price.text),
-                status: status,
-              );
-              log(jsonEncode(updateCourseDTO));
-              log(coID.toString());
-              updateCourse = await courseService.updateCourseByCourseID(
-                  coID.toString(), updateCourseDTO);
-              moduleResult = updateCourse.data;
-              log(jsonEncode(moduleResult.result));
-              //log("rowsAffected:"+updateCourse);
-              Get.to(() => const HomePageCoach());
-            },
-            child: const Text('Enabled'),
-          ),
-        ],
-          ),
-        ),
-      ],
-    ));
-  }
-
-  Center textFieldNumber(
-      // ignore: no_leading_underscores_for_local_identifiers
-      final TextEditingController _controller,
-      String textLabel) {
-    return Center(
-        child: TextField(
-            controller: _controller,
-            keyboardType: TextInputType.number,
-            decoration: InputDecoration(
-              labelText: textLabel,
-            )));
-  }
-
-  TextField textField(
-      final TextEditingController _controller, String textLabel) {
-    return TextField(
-        controller: _controller,
-        decoration: InputDecoration(
-          labelText: textLabel,
-        ));
+            }));
   }
 
   Switch switchOnOffStatus(BuildContext context) {
@@ -272,5 +219,43 @@ class _CourseEditPageState extends State<CourseEditPage> {
       },
       value: switchOnOff,
     );
+  }
+
+  Future<void> loadDataAsync() async {
+    try {
+      var res =
+          await _courseService.course(cid: '', name: '', coID: widget.coID);
+      courses = res.data;
+      data();
+      // name.text = foods.name;
+    } catch (err) {
+      log('Error: $err');
+    }
+  }
+
+  void data() {
+    name.text = courses[0].name;
+    details.text = courses[0].details;
+    level.text = courses[0].level;
+    amount.text = courses[0].amount.toString();
+    price.text = courses[0].price.toString();
+    days.text = courses[0].days.toString();
+    statusCourse = courses[0].status;
+    log("coachId: "+courses.first.coachId.toString());
+    //เช็ค สถานะการเปิดขายของคอร์ส
+    status = statusCourse;
+    if (statusCourse == "1") {
+      //log(courses.data.status);
+      log("message");
+      setState(() {
+        switchOnOff = true;
+      });
+    }
+    if (statusCourse == "0") {
+      setState(() {
+        switchOnOff = false;
+      });
+    }
+    // name.text = foods.name;
   }
 }
