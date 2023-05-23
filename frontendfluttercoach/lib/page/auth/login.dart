@@ -19,6 +19,7 @@ import '../../service/provider/appdata.dart';
 import '../../widget/wg_textField.dart';
 import '../coach/home_coach_page.dart';
 import '../user/homepageUser.dart';
+import '../user/navigationbar.dart';
 import '../waitingForEdit/register.dart';
 
 class LoginPage extends StatefulWidget {
@@ -272,7 +273,7 @@ class _LoginPageState extends State<LoginPage> {
                   ),
                   InkWell(
                     onTap: () {
-                      Get.to(() => const HomePageUser());
+                      Get.to(() => const homeScreen());
             
                       context.read<AppData>().uid = uid;
                     },
