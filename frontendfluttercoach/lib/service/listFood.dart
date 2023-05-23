@@ -29,4 +29,7 @@ abstract class ListFoodServices {
   Future<HttpResponse<ModelResult>> updateListFoodByFoodID(
       @Path("ifid") String ifid,
       @Body() ListFoodFoodIdPut listFoodFoodIdPut);
+
+   @DELETE("/listFood/foodID/{ifid}")
+  Future<HttpResponse<ModelResult>> deleteListFood(@Path() String ifid);
 }

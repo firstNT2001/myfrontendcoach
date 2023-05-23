@@ -1,4 +1,5 @@
 import 'package:dio/dio.dart';
+import 'package:frontendfluttercoach/model/request/listClip_clipID_put.dart';
 
 import 'package:retrofit/retrofit.dart';
 
@@ -20,7 +21,12 @@ abstract class ListClipServices {
 
   @POST("/listClip/coachID/{cid}")
   Future<HttpResponse<ModelResult>> insertListClipByCoachID(
-      @Path("cid") String cid,
-      @Body() ListClipCoachIdPost listClipCoachIdPost);
+      @Path("cid") String cid, @Body() ListClipCoachIdPost listClipCoachIdPost);
 
+  @PUT("/listClip/clipID/{ifid}")
+  Future<HttpResponse<ModelResult>> updateListClipByClipID(
+      @Path("icpID") String ifid, @Body() ListClipClipIdPut listClipClipIdPut);
+
+  @DELETE("/listClip/clipID/{icpID}")
+  Future<HttpResponse<ModelResult>> deleteListClip(@Path() String icpID);
 }

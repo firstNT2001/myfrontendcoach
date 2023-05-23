@@ -14,12 +14,14 @@ class ListFoodFoodIdPut {
     String image;
     String details;
     int calories;
+    int coachId;
 
     ListFoodFoodIdPut({
         required this.name,
         required this.image,
         required this.details,
         required this.calories,
+        required this.coachId,
     });
 
     factory ListFoodFoodIdPut.fromJson(Map<String, dynamic> json) => ListFoodFoodIdPut(
@@ -27,6 +29,7 @@ class ListFoodFoodIdPut {
         image: json["Image"],
         details: json["Details"],
         calories: json["Calories"],
+        coachId: json["CoachID"],
     );
 
     Map<String, dynamic> toJson() => {
@@ -34,5 +37,6 @@ class ListFoodFoodIdPut {
         "Image": image,
         "Details": details,
         "Calories": calories,
+        "CoachID": coachId,
     };
 }
