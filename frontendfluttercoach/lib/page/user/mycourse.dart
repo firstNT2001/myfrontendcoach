@@ -10,6 +10,7 @@ import 'package:retrofit/dio.dart';
 import '../../model/response/course_get_res.dart';
 import '../../service/course.dart';
 import '../../service/provider/appdata.dart';
+import 'cousepage.dart';
 
 class MyCouses extends StatefulWidget {
   const MyCouses({super.key});
@@ -79,42 +80,54 @@ class _MyCousesState extends State<MyCouses> {
     return FutureBuilder(
       future: loadDataMethod,
       builder: (context, snapshot) {
-        if (snapshot.connectionState != ConnectionState.done) {
+         if (snapshot.connectionState != ConnectionState.done) {
           return const Center(child: CircularProgressIndicator());
         } else {
           return Column(
             children: [
               Expanded(
                 child: ListView.builder(
-                  itemCount: courses.length,
-                  itemBuilder: (context, index) {
-                    final course = courses[index];
-                    print("img =" + course.image);
-                    return Card(
+                shrinkWrap: true,
+                itemCount: courses.length,
+                itemBuilder: (context, index) {
+                  final listcours = courses[index];
+            
+                  return Padding(
+                    padding: const EdgeInsets.only(top: 8),
+                    child: Card(
                       child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.end,
                         children: [
-                          Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Image.network(course.image),
-                          ),
+                          Image.network(listcours.image,
+                              width: 400,
+                              height: 150,
+                              fit: BoxFit.fill),
                           ListTile(
-                            title: Text(course.name),
-                            subtitle: Text(course.details),
-                            trailing: const Icon(Icons.arrow_forward),
-                            onTap: () {
-                              //Get.to(() => showCousePage());
-                            },
+                            title: Text(listcours.name)
+                            //subtitle: Text(listcours.details),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.only(right: 8,bottom: 8),
+                            child: ElevatedButton(
+                                onPressed: () {
+                                  log(listcours.coId.toString());
+                                  context.read<AppData>().idcourse =
+                                      listcours.coId;
+            
+                                  Get.to(() => const showCousePage());
+                                },
+                                child: const Text(
+                                    "ดูรายละเอียดเพิ่มเติม")),
                           ),
                         ],
                       ),
-                    );
-                  },
-                ),
-              ),
+                    ),
+                  );
+                },
+              ))
             ],
           );
         }
-      },
-    );
+      },);
   }
 }

@@ -2,6 +2,7 @@ import 'dart:developer';
 
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 import 'package:frontendfluttercoach/service/review.dart';
 import 'package:provider/provider.dart';
@@ -54,13 +55,18 @@ class _showCousePageState extends State<showCousePage> {
               child: Column(
                 children: [
                   Container(
-                     child: Column(children: [loadCourse()]),
-                  ),           
-                      SizedBox(
-                        height: 320,width: 390,
-                        child: loadReview()
-                        )
- 
+                    child: Column(children: [loadCourse()]),
+                  ),
+                  Divider(
+                    color: Colors.black,
+                    indent: 8,
+                    endIndent: 8,
+                  ),
+                  Center(
+                    child: Text("คะแนนจากผู้ซื้อ",style:
+                            TextStyle(fontSize: 16, fontWeight: FontWeight.bold),),
+                  ),
+                  SizedBox(height: 320, width: 390, child: loadReview())
                 ],
               ),
             ),
@@ -71,27 +77,29 @@ class _showCousePageState extends State<showCousePage> {
 
   Future<void> loadData() async {
     try {
-      
-      var datacouse = await courseService.course(coID: courseId.toString(), cid: '', name: '');
-      log("loadCoursereview"+courseId.toString());
+      var datacouse = await courseService.course(
+          coID: courseId.toString(), cid: '', name: '');
+      log("loadCoursereview" + courseId.toString());
       var datareview = await reviewService.review(coID: courseId.toString());
-      
+
       courses = datacouse.data;
       reviews = datareview.data;
-      log("loadCourseIDDatas"+courses[0].name);
-      log("loadCoursereview"+reviews.length.toString());
-      
+      log("loadCourseIDDatas" + courses[0].name);
+      log("loadCoursereview" + reviews.length.toString());
+
       //log('review: ${reviews.length}');
     } catch (err) {
       log('Error: $err');
     }
   }
-    Widget loadCourse() {
+
+  Widget loadCourse() {
     return FutureBuilder(
         future: loadDataMethod, // 3.1 object ของ async method
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.done) {
             return Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 SizedBox(
                     height: 35,
@@ -106,28 +114,59 @@ class _showCousePageState extends State<showCousePage> {
                   width: double.infinity,
                   fit: BoxFit.cover,
                 ),
-                Column(
+                Padding(
+                  padding: const EdgeInsets.only(left: 15, top: 25, bottom: 8),
+                  child: Text(courses.first.name,
+                      style:
+                          TextStyle(fontSize: 22, fontWeight: FontWeight.bold)),
+                ),
+                Row(
                   children: [
-                    SizedBox(
-                        width: 200, height: 100, child: Text(courses.first.name)),
-                    Row(
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.only(right: 20),
-                          child: Text(courses.first.days.toString() + "วัน/คอร์ส"),
-                        ),
-                        Text("27 คลิป")
-                      ],
+                    Padding(
+                      padding: const EdgeInsets.only(right: 8, left: 15),
+                      child: Icon(FontAwesomeIcons.calendar),
                     ),
-                    Row(
-                      children: [
-                        Text(courses.first.amount.toString() + "คน"),
-                        Text(courses.first.price.toString() + "บาท"),
-                      ],
+                    Padding(
+                      padding: const EdgeInsets.only(right: 20),
+                      child: Text(courses.first.days.toString() + "วัน/คอร์ส"),
                     ),
-                    Text("รายละเอียดคอร์ส"),
-                    Text(courses.first.details),
+                    Padding(
+                      padding: const EdgeInsets.only(right: 8),
+                      child: Icon(FontAwesomeIcons.moneyBills),
+                    ),
+                    Text("27 คลิป")
                   ],
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(top: 8, bottom: 20),
+                  child: Row(
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.only(right: 10, left: 15),
+                        child: Icon(FontAwesomeIcons.userPlus),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(right: 60),
+                        child: Text(courses.first.amount.toString() + "คน"),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(right: 8),
+                        child: Icon(FontAwesomeIcons.youtube),
+                      ),
+                      Text(courses.first.price.toString() + "บาท"),
+                    ],
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(left: 8),
+                  child: Text(
+                    "รายละเอียดคอร์ส",
+                    style: TextStyle(fontSize: 16),
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(left: 15, bottom: 12),
+                  child: Text(courses.first.details),
                 )
               ],
             );
@@ -137,7 +176,7 @@ class _showCousePageState extends State<showCousePage> {
         });
   }
 
-    Widget loadReview() {
+  Widget loadReview() {
     return FutureBuilder(
       future: loadDataMethod,
       builder: (context, snapshot) {
@@ -168,5 +207,4 @@ class _showCousePageState extends State<showCousePage> {
       },
     );
   }
-
 }

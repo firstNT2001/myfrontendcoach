@@ -1,3 +1,4 @@
+
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 
@@ -7,7 +8,7 @@ import 'package:get/get.dart';
 import 'package:provider/provider.dart';
 import 'package:retrofit/retrofit.dart';
 import 'dart:developer';
-
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import '../../model/response/md_Coach_get.dart';
 import '../../model/response/course_get_res.dart';
 import '../../model/response/md_Customer_get.dart';
@@ -33,11 +34,36 @@ class _HomePageUserState extends State<HomePageUser> {
 
   List<Coach> coaches = [];
   List<ModelCourse> courses = [];
+  List<ModelCourse> coursesAll = [];
   TextEditingController myController = TextEditingController();
 
   int uid = 1;
   bool isVisible = false;
-  double bmi = 0 ;
+  bool isVisibles = true;
+  double bmi = 0;
+
+  //BottomNavigationBar
+  //  int _selectedIndex = 0;
+  //  static const TextStyle optionStyle =
+  //     TextStyle(fontSize: 30, fontWeight: FontWeight.bold);
+  // static const List<Widget> _widgetOptions = <Widget>[
+  //   Text(
+  //     'Index 0: Home',
+  //     style: optionStyle,
+  //   ),
+  //   Text(
+  //     'Index 1: Business',
+  //     style: optionStyle,
+  //   ),
+  //   ProfileUser(),
+  // ];
+
+  // void _onItemTapped(int index) {
+  //   setState(() {
+  //     _selectedIndex = index;
+  //   });
+  // }
+
   @override
   void initState() {
     // TODO: implement initState
@@ -46,18 +72,11 @@ class _HomePageUserState extends State<HomePageUser> {
         CoachService(Dio(), baseUrl: context.read<AppData>().baseurl);
     courseService =
         CourseService(Dio(), baseUrl: context.read<AppData>().baseurl);
-
-    customerService =
-        CustomerService(Dio(), baseUrl: context.read<AppData>().baseurl);
-    loadDataMethod = loadData();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text("tesr"),
-      ),
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -92,12 +111,14 @@ class _HomePageUserState extends State<HomePageUser> {
                               //log("message"+coaches.first);
                               setState(() {
                                 isVisible = true;
+                                isVisibles = false;
                               });
 
                               log(coaches.length.toString());
                             } else {
                               setState(() {
                                 isVisible = false;
+                                isVisibles = true;
                               });
                             }
                           });
@@ -112,6 +133,11 @@ class _HomePageUserState extends State<HomePageUser> {
                               log(courses.length.toString());
                             }
                           });
+                        } else {
+                          setState(() {
+                            isVisible = false;
+                            isVisibles = true;
+                          });
                         }
                       },
                       child: const Text("แสดงชื่อโค้ช")),
@@ -119,54 +145,29 @@ class _HomePageUserState extends State<HomePageUser> {
               ],
             ),
           ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.end,
-            children: [
-              IconButton(onPressed: () {}, icon: const Icon(Icons.tune_rounded)),
-            ],
+          
+          Padding(
+            padding: const EdgeInsets.all(12),
+            child: loadcustomer(),
           ),
-          Card(
-            child: ListTile(
-              leading: const Icon(Icons.girl_outlined, size: 110),
-              title: Padding(
-                padding: const EdgeInsets.all(15.0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text(customer.data.height.toString()),
-                        const Text("CM"),
-                      ],
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text(customer.data.weight.toString()),
-                        const Text("KG"),
-                      ],
-                    ),
-                    const Divider(
-                       //color of divider
-                      height: 5, //height spacing of divider
-                      thickness: 2, //thickness of divier line
-                      indent: 50, //spacing at the start of divider
-                      endIndent: 50,
-                    ),
-                    const Text("BMI"),
-                    Text(bmi.toString()),
-                    
-                  ],
-                ),
-              ),
-              //subtitle: Text(review.details),
+
+          Padding(
+            padding: const EdgeInsets.only(left: 10),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                const Text("รายการแนะนำ",style: TextStyle(fontSize: 18)),
+                const Icon(FontAwesomeIcons.fire,color: Color.fromARGB(255, 236, 1, 1),)
+              ],
             ),
           ),
 
-          const Padding(
-            padding: EdgeInsets.only(left: 15),
-            child: Text("รายการแนะนำ"),
+          Visibility(
+            visible: isVisibles,
+            child: SizedBox(
+              height:MediaQuery.of(context).size.width*0.99,
+              child: loadcourse(),
+            ),
           ),
 
           Visibility(
@@ -213,48 +214,38 @@ class _HomePageUserState extends State<HomePageUser> {
               ),
             ),
           ),
-
           //showCourse
-          (courses != null)
-              ? Expanded(
-                  child: Container(
-                    child: Padding(
-                      padding: const EdgeInsets.all(20.0),
-                      child: ListView.builder(
-                          shrinkWrap: true,
-                          itemCount: courses.length,
-                          itemBuilder: (context, index) {
-                            final course = courses[index];
-                            return Card(
-                              child: ListTile(
-                                leading: CircleAvatar(
-                                  radius: 30,
-                                  backgroundImage: NetworkImage(course.image),
-                                ),
-                                title: Text(course.name),
-                                subtitle: Text(course.details),
-                                trailing: const Icon(Icons.arrow_forward),
-                                onTap: () {
-                                  log(course.coId.toString());
-                                  context.read<AppData>().idcourse =
-                                      course.coId;
+          Visibility(
+            visible: isVisible,
+            child: Container(
+              child: Padding(
+                padding: const EdgeInsets.all(20.0),
+                child: ListView.builder(
+                    shrinkWrap: true,
+                    itemCount: courses.length,
+                    itemBuilder: (context, index) {
+                      final course = courses[index];
+                      return Card(
+                        child: ListTile(
+                          leading: CircleAvatar(
+                            radius: 30,
+                            backgroundImage: NetworkImage(course.image),
+                          ),
+                          title: Text(course.name),
+                          subtitle: Text(course.details),
+                          trailing: const Icon(Icons.arrow_forward),
+                          onTap: () {
+                            log(course.coId.toString());
+                            context.read<AppData>().idcourse = course.coId;
 
-                                  Get.to(() => const showCousePage());
-                                },
-                              ),
-                            );
-                          }),
-                    ),
-                  ),
-                )
-              : Container(color: Colors.amber),
-          Center(
-            child: ElevatedButton(
-                onPressed: () {
-                  Get.to(() => const ProfileUser());
-                },
-                child: const Text("โปรไฟล์ของฉัน")),
-          ),
+                            Get.to(() => const showCousePage());
+                          },
+                        ),
+                      );
+                    }),
+              ),
+            ),
+          ),     
         ],
       ),
     );
@@ -263,12 +254,136 @@ class _HomePageUserState extends State<HomePageUser> {
   Future<void> loadData() async {
     try {
       customer = await customerService.customer(uid: uid.toString());
-      double h = ((customer.data.height) +.0)/100;
+      var datacourse = await courseService.course(coID: '', cid: '', name: '');
+      coursesAll = datacourse.data;
+      log("lengtt = " + coursesAll.length.toString());
+      double h = ((customer.data.height) + .0) / 100;
+      double w = customer.data.weight + .0;
       log('BMI=: $h');
-      bmi =  ((customer.data.weight) +.0)/(h*h) ; 
+      log('BMI=: $w');
+      bmi = (w / (h * h));
       log('BMI=: $bmi');
     } catch (err) {
       log('Error: $err');
     }
   }
+  Widget loadcourse(){
+    return FutureBuilder(
+      future: loadDataMethod,
+      builder: (context, snapshot) {
+         if (snapshot.connectionState != ConnectionState.done) {
+          return const Center(child: CircularProgressIndicator());
+        } else {
+          return Column(
+            children: [
+              Expanded(
+                child: ListView.builder(
+                shrinkWrap: true,
+                itemCount: coursesAll.length,
+                itemBuilder: (context, index) {
+                  final listcours = coursesAll[index];
+            
+                  return Padding(
+                    padding: const EdgeInsets.only(top: 8),
+                    child: Card(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.end,
+                        children: [
+                          Image.network(listcours.image,
+                              width: 400,
+                              height: 150,
+                              fit: BoxFit.fill),
+                          ListTile(
+                            title: Text(listcours.name)
+                            //subtitle: Text(listcours.details),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.only(right: 8,bottom: 8),
+                            child: ElevatedButton(
+                                onPressed: () {
+                                  log(listcours.coId.toString());
+                                  context.read<AppData>().idcourse =
+                                      listcours.coId;
+            
+                                  Get.to(() => const showCousePage());
+                                },
+                                child: const Text(
+                                    "ดูรายละเอียดเพิ่มเติม")),
+                          ),
+                        ],
+                      ),
+                    ),
+                  );
+                },
+              ))
+            ],
+          );
+        }
+      },);
+  }
+  Widget loadcustomer(){
+    return FutureBuilder(
+      future: loadDataMethod,
+      builder: (context, snapshot) {
+         if (snapshot.connectionState != ConnectionState.done) {
+          return const Center(child: CircularProgressIndicator());
+        } else {
+          return Column(
+            children: [
+              Card(
+              child: ListTile(
+                leading: (customer.data.gender == '2')
+                    ? const Icon(Icons.girl_outlined, size: 120)
+                    : (customer.data.gender == '1')
+                        ? const Icon(Icons.boy_outlined, size: 120)
+                        : const Icon(Icons.abc_outlined, size: 110),
+
+                title: Padding(
+                  padding: const EdgeInsets.all(15.0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text(customer.data.height.toString()),
+                          const Text("CM"),
+                        ],
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text(customer.data.weight.toString()),
+                          const Text("KG"),
+                        ],
+                      ),
+                      const Divider(
+                        //color of divider
+                        height: 5, //height spacing of divider
+                        thickness: 2, //thickness of divier line
+                        indent: 50, //spacing at the start of divider
+                        endIndent: 50,
+                      ),
+                      const Text("BMI"),
+                      Text(bmi.toString()),
+                    ],
+                  ),
+                ),
+                //subtitle: Text(review.details),
+              ),
+            ),
+            ],
+          );
+        }
+      },);
+  }
 }
+// การทำมุมโค้งบางจุด
+//  ClipRRect(
+//                               borderRadius: const BorderRadius.only(
+//                                 topLeft: Radius.circular(10),
+//                                 topRight: Radius.circular(10),
+//                               ),
+//                               child: Image.network(listcours.image,
+//                                   width: 300, height: 100, fit: BoxFit.fill),
+//                             ),
