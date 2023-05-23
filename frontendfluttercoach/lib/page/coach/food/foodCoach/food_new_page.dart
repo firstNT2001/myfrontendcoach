@@ -2,7 +2,10 @@ import 'dart:convert';
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
+import 'package:frontendfluttercoach/page/coach/food/foodCourse/food_page.dart';
 import 'package:frontendfluttercoach/page/showDialogWidget.dart';
+import 'package:get/get.dart';
+import 'package:get/get_core/src/get_main.dart';
 
 import 'package:provider/provider.dart';
 
@@ -12,6 +15,7 @@ import '../../../../model/response/md_Result.dart';
 import '../../../../service/listFood.dart';
 import '../../../../service/provider/appdata.dart';
 import '../../../../service/provider/coachData.dart';
+import 'food_page.dart';
 
 class FoodNewCoachPage extends StatefulWidget {
   const FoodNewCoachPage({super.key});
@@ -39,7 +43,7 @@ class _FoodNewCoachPageState extends State<FoodNewCoachPage> {
 
     _listfoodService = context.read<AppData>().listfoodServices;
     log(context.read<AppData>().baseurl);
-    cid = context.read<CoachData>().cid;
+    cid = context.read<AppData>().cid;
 
     name.text = "ไข่เจียวไร้น้ำมันหมู22";
     details.text =
@@ -100,6 +104,7 @@ class _FoodNewCoachPageState extends State<FoodNewCoachPage> {
                       // ignore: use_build_context_synchronously
                       // showDialogRowsAffected(context, "บันทึกสำเร็จ");
                       const ShowDialogWidget();
+                      Get.to(() => const FoodCoachPage());
                     } else {
                       // ignore: use_build_context_synchronously
                       const ShowDialogWidget();

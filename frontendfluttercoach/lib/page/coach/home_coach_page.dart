@@ -12,10 +12,10 @@ import '../../service/course.dart';
 import '../../service/provider/appdata.dart';
 import '../../service/provider/courseData.dart';
 
-import 'clip/clipCoach/clip_page.dart';
+import '../clip/clipCoach/clip_page.dart';
 import 'course/course_edit_page.dart';
+import 'course/course_new_page.dart';
 import 'food/foodCoach/food_page.dart';
-
 
 class HomePageCoach extends StatefulWidget {
   const HomePageCoach({super.key});
@@ -25,10 +25,10 @@ class HomePageCoach extends StatefulWidget {
 }
 
 class _HomePageCoachState extends State<HomePageCoach> {
-  late CourseService courseService;
+  late CourseService _courseService;
   late Future<void> loadDataMethod;
   List<ModelCourse> courses = [];
-  String cid = "2";
+  String cid = '';
   String statusName = "";
   String statusID = "";
   bool checkBoxVal = true;
@@ -38,11 +38,11 @@ class _HomePageCoachState extends State<HomePageCoach> {
   void initState() {
     super.initState();
     // 2.1 object ของ service โดยต้องส่ง baseUrl (จาก provider) เข้าไปด้วย
-    courseService =
-        CourseService(Dio(), baseUrl: context.read<AppData>().baseurl);
+    _courseService = context.read<AppData>().courseService;
     // courseService.getCoachByCid("1").then((cou) {
     //   log(cou.data.first.name);
     // });
+    cid = context.read<AppData>().cid.toString();
 
     // 2.2 async method
     loadDataMethod = loadData();
@@ -61,8 +61,7 @@ class _HomePageCoachState extends State<HomePageCoach> {
                     padding: const EdgeInsets.only(top: 50, left: 5, right: 5),
                     child: ElevatedButton(
                       onPressed: () {
-                        context.read<CoachData>().cid = int.parse(cid);
-                        Get.to(() => const CourseEditPage());
+                        Get.to(() => const CourseNewPage());
                       },
                       child: const Text("สร้างคอร์ส"),
                     ),
@@ -71,7 +70,6 @@ class _HomePageCoachState extends State<HomePageCoach> {
                     padding: const EdgeInsets.only(top: 20, left: 5, right: 5),
                     child: ElevatedButton(
                       onPressed: () {
-                        context.read<CoachData>().cid = int.parse(cid);
                         Get.to(() => const FoodCoachPage());
                       },
                       child: const Text("หน้าอาหาร"),
@@ -81,7 +79,6 @@ class _HomePageCoachState extends State<HomePageCoach> {
                     padding: const EdgeInsets.only(top: 20, left: 5, right: 5),
                     child: ElevatedButton(
                       onPressed: () {
-                        context.read<CoachData>().cid = int.parse(cid);
                         Get.to(() => const ClipCoachPage());
                       },
                       child: const Text("หน้าคลิป"),
@@ -102,25 +99,9 @@ class _HomePageCoachState extends State<HomePageCoach> {
                               subtitle: Text(courses[index].name),
                               //leading: Image.network(courses[index].image),
                               onTap: () {
-                                context.read<CourseData>().coIDCourse =
-                                    courses[index].coId;
-                                context.read<CourseData>().nameCourse =
-                                    courses[index].name;
-                                context.read<CourseData>().detailsCourse =
-                                    courses[index].details;
-                                context.read<CourseData>().lavelCourse =
-                                    courses[index].level;
-                                context.read<CourseData>().amountCourse =
-                                    courses[index].amount;
-                                context.read<CourseData>().imageCourse =
-                                    courses[index].image;
-                                context.read<CourseData>().daysCourse =
-                                    courses[index].days;
-                                context.read<CourseData>().priceCourse =
-                                    courses[index].price;
-                                context.read<CourseData>().statusCourse =
-                                    courses[index].status;
-                                Get.to(() => const CourseEditPage());
+                                Get.to(() => CourseEditPage(
+                                      coID: courses[index].coId.toString(),
+                                    ));
                               },
                             )),
                           );
@@ -140,7 +121,7 @@ class _HomePageCoachState extends State<HomePageCoach> {
 
   Future<void> loadData() async {
     try {
-      var datas = await courseService.course(coID: '', cid: cid, name: '');
+      var datas = await _courseService.course(coID: '', cid: cid, name: '');
       courses = datas.data;
     } catch (err) {
       log('Error: $err');

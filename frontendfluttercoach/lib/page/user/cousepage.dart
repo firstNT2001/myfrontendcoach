@@ -9,6 +9,7 @@ import 'package:provider/provider.dart';
 import 'package:retrofit/retrofit.dart';
 import 'package:retrofit/dio.dart';
 
+
 import '../../model/response/course_get_res.dart';
 import '../../model/response/md_Review_get.dart';
 import '../../service/course.dart';
@@ -26,7 +27,7 @@ class _showCousePageState extends State<showCousePage> {
   late Future<void> loadDataMethod;
   late ReviewService reviewService;
   List<ModelCourse> courses = [];
-
+  
   int courseId = 0;
   List<ModelReview> reviews = [];
   @override
@@ -70,7 +71,8 @@ class _showCousePageState extends State<showCousePage> {
               ),
             ),
           ],
-        ));
+        )
+        );
   }
 
   Future<void> loadData() async {

@@ -11,6 +11,7 @@ import '../../../../model/response/md_FoodList_get.dart';
 import '../../../../model/response/md_Result.dart';
 import '../../../../service/listFood.dart';
 import '../../../../service/provider/appdata.dart';
+import '../../../../service/provider/coachData.dart';
 
 class FoodEditCoachPage extends StatefulWidget {
   late int ifid;
@@ -49,7 +50,8 @@ class _FoodEditCoachPageState extends State<FoodEditCoachPage> {
             future: _loadData,
             builder: (context, AsyncSnapshot snapshot) {
               if (snapshot.connectionState != ConnectionState.done) {
-                return Container();
+                 return Container();
+                //return const Center(child: CircularProgressIndicator());
               }
               return Column(
                 children: [
@@ -69,7 +71,8 @@ class _FoodEditCoachPageState extends State<FoodEditCoachPage> {
                             name: name.text,
                             image: image,
                             details: 'tt',
-                            calories: 22);
+                            calories: 22, coachId: context.read<CoachData>().cid
+                            );
                         log(jsonEncode(request));    
                         editFood =
                          await _listfoodService.updateListFoodByFoodID(widget.ifid.toString(),request);
@@ -88,7 +91,7 @@ class _FoodEditCoachPageState extends State<FoodEditCoachPage> {
     try {
       var res = await _listfoodService.listFoods(ifid: widget.ifid.toString(), cid: '', name: '');
       foods = res.data;
-      //name.text = foods.name;
+      name.text = foods[0].name;
     } catch (err) {
       log('Error: $err');
     }

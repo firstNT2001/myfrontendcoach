@@ -1,3 +1,4 @@
+
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 
@@ -71,10 +72,6 @@ class _HomePageUserState extends State<HomePageUser> {
         CoachService(Dio(), baseUrl: context.read<AppData>().baseurl);
     courseService =
         CourseService(Dio(), baseUrl: context.read<AppData>().baseurl);
-
-    customerService =
-        CustomerService(Dio(), baseUrl: context.read<AppData>().baseurl);
-    loadDataMethod = loadData();
   }
 
   @override
