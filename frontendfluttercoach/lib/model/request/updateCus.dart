@@ -5,17 +5,16 @@
 import 'package:meta/meta.dart';
 import 'dart:convert';
 
-UpdateCustomer updateCustomerFromJson(String str) => UpdateCustomer.fromJson(json.decode(str));
+List<UpdateCustomer> updateCustomerFromJson(String str) => List<UpdateCustomer>.from(json.decode(str).map((x) => UpdateCustomer.fromJson(x)));
 
-String updateCustomerToJson(UpdateCustomer data) => json.encode(data.toJson());
+String updateCustomerToJson(List<UpdateCustomer> data) => json.encode(List<dynamic>.from(data.map((x) => x.toJson())));
 
 class UpdateCustomer {
-    int uid;
     String username;
     String password;
     String email;
     String fullName;
-    String birthday;
+    DateTime birthday;
     String gender;
     String phone;
     String image;
@@ -23,7 +22,6 @@ class UpdateCustomer {
     int height;
 
     UpdateCustomer({
-        required this.uid,
         required this.username,
         required this.password,
         required this.email,
@@ -37,12 +35,11 @@ class UpdateCustomer {
     });
 
     factory UpdateCustomer.fromJson(Map<String, dynamic> json) => UpdateCustomer(
-        uid: json["Uid"],
         username: json["Username"],
         password: json["Password"],
         email: json["Email"],
         fullName: json["FullName"],
-        birthday: json["Birthday"],
+        birthday: DateTime.parse(json["Birthday"]),
         gender: json["Gender"],
         phone: json["Phone"],
         image: json["Image"],
@@ -51,12 +48,11 @@ class UpdateCustomer {
     );
 
     Map<String, dynamic> toJson() => {
-        "Uid": uid,
         "Username": username,
         "Password": password,
         "Email": email,
         "FullName": fullName,
-        "Birthday": birthday,
+        "Birthday": "${birthday.year.toString().padLeft(4, '0')}-${birthday.month.toString().padLeft(2, '0')}-${birthday.day.toString().padLeft(2, '0')}",
         "Gender": gender,
         "Phone": phone,
         "Image": image,

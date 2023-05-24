@@ -43,26 +43,29 @@ class _CustomerService implements CustomerService {
   }
 
   @override
-  Future<HttpResponse<ModelRowsAffected>> updateCus(cusUpdate) async {
+  Future<HttpResponse<ModelResult>> updateCustomer(
+    uid,
+    cusUpdate,
+  ) async {
     const _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{};
     final _data = <String, dynamic>{};
     _data.addAll(cusUpdate.toJson());
     final _result = await _dio.fetch<Map<String, dynamic>>(
-        _setStreamType<HttpResponse<ModelRowsAffected>>(Options(
+        _setStreamType<HttpResponse<ModelResult>>(Options(
       method: 'PUT',
       headers: _headers,
       extra: _extra,
     )
             .compose(
               _dio.options,
-              '/user2/updateCus',
+              '/user/${uid}',
               queryParameters: queryParameters,
               data: _data,
             )
             .copyWith(baseUrl: baseUrl ?? _dio.options.baseUrl)));
-    final value = ModelRowsAffected.fromJson(_result.data!);
+    final value = ModelResult.fromJson(_result.data!);
     final httpResponse = HttpResponse(value, _result);
     return httpResponse;
   }

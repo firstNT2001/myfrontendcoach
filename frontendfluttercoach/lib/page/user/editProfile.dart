@@ -2,16 +2,21 @@ import 'dart:convert';
 import 'dart:developer';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:intl/intl.dart';
 
 import 'package:provider/provider.dart';
 import 'package:retrofit/retrofit.dart';
 import '../../model/request/updateCus.dart';
 
 import '../../model/response/md_Customer_get.dart';
+import '../../model/response/md_Result.dart';
 import '../../model/response/md_RowsAffected.dart';
 import '../../service/customer.dart';
 import '../../service/provider/appdata.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
+
+import 'navigationbar.dart';
 
 class editProfileCus extends StatefulWidget {
   //สร้างตัวแปรรับconstructure
@@ -28,7 +33,9 @@ class _editProfileCusState extends State<editProfileCus> {
   late Future<void> loadDataMethod;
   late CustomerService customerService;
   late HttpResponse<Customer> customer;
-  late ModelRowsAffected modelRowsAffected;
+  //late ModelRowsAffected modelRowsAffected;
+  late UpdateCustomer cusUpdate;
+  late ModelResult moduleResult;
   //controller
   TextEditingController _uid = TextEditingController();
   TextEditingController _username = TextEditingController();
@@ -42,6 +49,8 @@ class _editProfileCusState extends State<editProfileCus> {
   TextEditingController _height = TextEditingController();
   TextEditingController _facebookID = TextEditingController();
   int _price = 0;
+  var update;
+  
 
   final List<String> genders = ['ผู้หญิง', 'ผู้ชาย'];
 
@@ -87,6 +96,7 @@ class _editProfileCusState extends State<editProfileCus> {
       _price = customer.data.price;
       _weight.text = customer.data.weight.toString();
       _height.text = customer.data.height.toString();
+      
       //gender show
       if (_gender.text == "1") {
         _gender.text = "ชาย";
@@ -146,23 +156,25 @@ class _editProfileCusState extends State<editProfileCus> {
                           child: Text("บันทึก"),
                         ),
                         onPressed: ()async {
+                          //DateTime birthday = new DateFormat("yyyy-MM-dd 'T'HH:mm:ss.SSS'Z'").parse(_birthday.text);
                           UpdateCustomer updateCustomer  = UpdateCustomer(
-                              uid: widget.uid,
                               username: _username.text,
                               password: _password.text,
                               email: _email.text,
                               fullName: _fullName.text,
-                              birthday: _birthday.text,
+                              birthday: DateTime.parse(_birthday.text),
                               gender: _gender.text,
                               phone: _phone.text,
                               image: _image,
                               weight: int.parse(_weight.text),
-                              height: int.parse(_height.text),);
+                              height: int.parse(_height.text));
                           log(jsonEncode(updateCustomer));
-                          var update =
-                              (await customerService.updateCus(updateCustomer)) ;
-                          modelRowsAffected = update.data;
-                          log(modelRowsAffected.rowsAffected);
+                          log("log"+widget.uid.toString());
+                          update =
+                              await customerService.updateCustomer(widget.uid.toString(),updateCustomer);
+                          moduleResult = update.data;
+                          log(moduleResult.result);
+                          Get.to(() => const homeScreen());
                         }),
                   )
                 ],
