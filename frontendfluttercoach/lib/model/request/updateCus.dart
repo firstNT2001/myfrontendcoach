@@ -14,7 +14,7 @@ class UpdateCustomer {
     String password;
     String email;
     String fullName;
-    DateTime birthday;
+    String birthday;
     String gender;
     String phone;
     String image;
@@ -39,7 +39,7 @@ class UpdateCustomer {
         password: json["Password"],
         email: json["Email"],
         fullName: json["FullName"],
-        birthday: DateTime.parse(json["Birthday"]),
+        birthday: json["Birthday"],
         gender: json["Gender"],
         phone: json["Phone"],
         image: json["Image"],
@@ -52,8 +52,7 @@ class UpdateCustomer {
         "Password": password,
         "Email": email,
         "FullName": fullName,
-        "Birthday": "${birthday.year.toString().padLeft(4, '0')}-${birthday.month.toString().padLeft(2, '0')}-${birthday.day.toString().padLeft(2, '0')}",
-        "Gender": gender,
+        "Birthday": birthday,
         "Phone": phone,
         "Image": image,
         "Weight": weight,

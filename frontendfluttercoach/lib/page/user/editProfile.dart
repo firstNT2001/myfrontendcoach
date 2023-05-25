@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:developer';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:frontendfluttercoach/page/user/profileUser.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 
@@ -96,7 +97,8 @@ class _editProfileCusState extends State<editProfileCus> {
       _price = customer.data.price;
       _weight.text = customer.data.weight.toString();
       _height.text = customer.data.height.toString();
-      
+      log("b1"+_birthday.text);
+      log("b2"+customer.data.birthday);
       //gender show
       if (_gender.text == "1") {
         _gender.text = "ชาย";
@@ -136,11 +138,55 @@ class _editProfileCusState extends State<editProfileCus> {
               padding: const EdgeInsets.all(20.0),
               child: Column(
                 children: [
-                  CircleAvatar(
-                    minRadius: 35,
-                    maxRadius: 55,
-                    backgroundImage: NetworkImage(customer.data.image),
+                  Center(
+                    child: Stack(
+                      children: [
+                        Container(
+                          width: 130,
+                          height: 130,
+                          decoration: BoxDecoration(
+                            border: Border.all(width: 3,color: Colors.cyan),
+                            boxShadow: [
+                              BoxShadow(
+                                spreadRadius: 2,
+                                blurRadius: 10,
+                                color: Colors.black.withOpacity(0.1)
+                              )
+                            ],
+                            shape: BoxShape.circle,
+                            image: DecorationImage(
+                              fit: BoxFit.cover,
+                              image: NetworkImage(customer.data.image),)
+                          ),
+                        ),
+                        Positioned(
+                          bottom: 0,
+                          right: 0,
+                          child: Container(
+                            height: 40,
+                            width: 40,
+                            decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              border: Border.all(
+                                width: 4,
+                                color: Colors.white
+                              ),
+                              color: Colors.amber
+                            ),
+                            child: Icon(
+                              Icons.edit,
+                              color: Colors.white,
+                            ),
+
+                        ))
+                      ],
+                    ),
                   ),
+                  // CircleAvatar(
+                  //   minRadius: 35,
+                  //   maxRadius: 55,
+                  //   backgroundImage: NetworkImage(customer.data.image),
+                  // ),
                   txtfild(_username, "ชื่อผู้ใช้", "ชื่อผู้ใช้"),
                   txtfild(_email, "e-mail", "e-mail"),
                   txtfild(_fullName, "ชื่อ-นามสกุล", "ชื่อ-นามสกุล"),
@@ -162,7 +208,7 @@ class _editProfileCusState extends State<editProfileCus> {
                               password: _password.text,
                               email: _email.text,
                               fullName: _fullName.text,
-                              birthday: DateTime.parse(_birthday.text),
+                              birthday: _birthday.text,
                               gender: _gender.text,
                               phone: _phone.text,
                               image: _image,
@@ -170,11 +216,13 @@ class _editProfileCusState extends State<editProfileCus> {
                               height: int.parse(_height.text));
                           log(jsonEncode(updateCustomer));
                           log("log"+widget.uid.toString());
+                          log(_birthday.text);
+                          //log(_image.toString());
                           update =
                               await customerService.updateCustomer(widget.uid.toString(),updateCustomer);
                           moduleResult = update.data;
                           log(moduleResult.result);
-                          Get.to(() => const homeScreen());
+                          Get.to(() => const ProfileUser());
                         }),
                   )
                 ],
