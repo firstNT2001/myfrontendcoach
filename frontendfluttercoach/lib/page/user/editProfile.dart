@@ -1,17 +1,26 @@
 import 'dart:convert';
 import 'dart:developer';
+import 'dart:io';
 import 'package:dio/dio.dart';
+import 'package:file_picker/file_picker.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:frontendfluttercoach/page/user/profileUser.dart';
+import 'package:get/get.dart';
+import 'package:intl/intl.dart';
 
 import 'package:provider/provider.dart';
 import 'package:retrofit/retrofit.dart';
 import '../../model/request/updateCus.dart';
 
 import '../../model/response/md_Customer_get.dart';
+import '../../model/response/md_Result.dart';
 import '../../model/response/md_RowsAffected.dart';
 import '../../service/customer.dart';
 import '../../service/provider/appdata.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
+
+import 'navigationbar.dart';
 
 class editProfileCus extends StatefulWidget {
   //สร้างตัวแปรรับconstructure
@@ -28,7 +37,9 @@ class _editProfileCusState extends State<editProfileCus> {
   late Future<void> loadDataMethod;
   late CustomerService customerService;
   late HttpResponse<Customer> customer;
-  late ModelRowsAffected modelRowsAffected;
+  //late ModelRowsAffected modelRowsAffected;
+  late UpdateCustomer cusUpdate;
+  late ModelResult moduleResult;
   //controller
   TextEditingController _uid = TextEditingController();
   TextEditingController _username = TextEditingController();
@@ -42,10 +53,39 @@ class _editProfileCusState extends State<editProfileCus> {
   TextEditingController _height = TextEditingController();
   TextEditingController _facebookID = TextEditingController();
   int _price = 0;
-
+  var update;
   final List<String> genders = ['ผู้หญิง', 'ผู้ชาย'];
 
   String _image = " ";
+  String profile = " ";
+
+  //selectimg
+  PlatformFile? pickedImg;
+  UploadTask? uploadTask;
+
+  Future selectImg() async {
+    final result = await FilePicker.platform.pickFiles();
+    if (result == null) return;
+
+    setState(() {
+      pickedImg = result.files.first;
+    });
+  }
+
+  //uploadfile
+  Future uploadfile() async {
+    final path = 'files/${pickedImg!.name}';
+    final file = File(pickedImg!.path!);
+
+    final ref = FirebaseStorage.instance.ref().child(path);
+    uploadTask = ref.putFile(file);
+    final snapshot = await uploadTask!.whenComplete(() {});
+    final urlDownload = await snapshot.ref.getDownloadURL();
+    print('link img firebase $urlDownload');
+    profile = urlDownload;
+    
+    
+  }
 
   @override
   void initState() {
@@ -85,8 +125,12 @@ class _editProfileCusState extends State<editProfileCus> {
       _password.text = customer.data.password;
       _facebookID.text = customer.data.facebookId;
       _price = customer.data.price;
+      _image = customer.data.image;
       _weight.text = customer.data.weight.toString();
       _height.text = customer.data.height.toString();
+      log("b1" + _birthday.text);
+      log("b2" + customer.data.birthday);
+      log("_IMAGE=="+_image);
       //gender show
       if (_gender.text == "1") {
         _gender.text = "ชาย";
@@ -126,11 +170,78 @@ class _editProfileCusState extends State<editProfileCus> {
               padding: const EdgeInsets.all(20.0),
               child: Column(
                 children: [
-                  CircleAvatar(
-                    minRadius: 35,
-                    maxRadius: 55,
-                    backgroundImage: NetworkImage(customer.data.image),
+                  Center(
+                    child: Stack(
+                      children: [
+                        if (pickedImg != null)
+                          Container(
+                            width: 130,
+                            height: 130,
+                            decoration: BoxDecoration(
+                                border:
+                                    Border.all(width: 3, color: Colors.cyan),
+                                boxShadow: [
+                                  BoxShadow(
+                                      spreadRadius: 2,
+                                      blurRadius: 10,
+                                      color: Colors.black.withOpacity(0.1))
+                                ],
+                                shape: BoxShape.circle,
+                                image: DecorationImage(
+                                    image: FileImage(
+                                      File(pickedImg!.path!),
+                                    ),
+                                    fit: BoxFit.cover)),
+                          ),
+                        if (pickedImg == null)
+                          Container(
+                            width: 130,
+                            height: 130,
+                            decoration: BoxDecoration(
+                                border:
+                                    Border.all(width: 3, color: Colors.cyan),
+                                boxShadow: [
+                                  BoxShadow(
+                                      spreadRadius: 2,
+                                      blurRadius: 10,
+                                      color: Colors.black.withOpacity(0.1))
+                                ],
+                                shape: BoxShape.circle,
+                                image: DecorationImage(
+                                  fit: BoxFit.cover,
+                                  image: NetworkImage(customer.data.image),
+                                )),
+                          ),
+                        Positioned(
+                            bottom: 0,
+                            right: 0,
+                            child: InkWell(
+                              onTap: () {
+                                log("message");
+                                selectImg();
+                              },
+                              child: Container(
+                                height: 40,
+                                width: 40,
+                                decoration: BoxDecoration(
+                                    shape: BoxShape.circle,
+                                    border: Border.all(
+                                        width: 4, color: Colors.white),
+                                    color: Colors.amber),
+                                child: Icon(
+                                  Icons.edit,
+                                  color: Colors.white,
+                                ),
+                              ),
+                            ))
+                      ],
+                    ),
                   ),
+                  // CircleAvatar(
+                  //   minRadius: 35,
+                  //   maxRadius: 55,
+                  //   backgroundImage: NetworkImage(customer.data.image),
+                  // ),
                   txtfild(_username, "ชื่อผู้ใช้", "ชื่อผู้ใช้"),
                   txtfild(_email, "e-mail", "e-mail"),
                   txtfild(_fullName, "ชื่อ-นามสกุล", "ชื่อ-นามสกุล"),
@@ -145,9 +256,13 @@ class _editProfileCusState extends State<editProfileCus> {
                           padding: const EdgeInsets.all(10.0),
                           child: Text("บันทึก"),
                         ),
-                        onPressed: ()async {
-                          UpdateCustomer updateCustomer  = UpdateCustomer(
-                              uid: widget.uid,
+                        onPressed: () async {
+                          log("messageIMG="+_image);
+                          //DateTime birthday = new DateFormat("yyyy-MM-dd 'T'HH:mm:ss.SSS'Z'").parse(_birthday.text);
+                          if (pickedImg != null) await uploadfile();
+                          if (pickedImg == null) profile = _image;
+                          
+                          UpdateCustomer updateCustomer = UpdateCustomer(
                               username: _username.text,
                               password: _password.text,
                               email: _email.text,
@@ -155,16 +270,25 @@ class _editProfileCusState extends State<editProfileCus> {
                               birthday: _birthday.text,
                               gender: _gender.text,
                               phone: _phone.text,
-                              image: _image,
+                              image: profile,
                               weight: int.parse(_weight.text),
-                              height: int.parse(_height.text),);
+                              height: int.parse(_height.text));
                           log(jsonEncode(updateCustomer));
-                          var update =
-                              (await customerService.updateCus(updateCustomer)) ;
-                          modelRowsAffected = update.data;
-                          log(modelRowsAffected.rowsAffected);
+                          log("log" + widget.uid.toString());
+                          log(_birthday.text);
+                          //log(_image.toString());
+                          update = await customerService.updateCustomer(
+                              widget.uid.toString(), updateCustomer);
+                          moduleResult = update.data;
+                          log(moduleResult.result);
+                          Get.to(() => const ProfileUser());
                         }),
-                  )
+                  ),
+                  ElevatedButton(
+                      onPressed: () {
+                        uploadfile();
+                      },
+                      child: Text("upload"))
                 ],
               ),
             );

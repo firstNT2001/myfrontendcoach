@@ -5,12 +5,11 @@
 import 'package:meta/meta.dart';
 import 'dart:convert';
 
-UpdateCustomer updateCustomerFromJson(String str) => UpdateCustomer.fromJson(json.decode(str));
+List<UpdateCustomer> updateCustomerFromJson(String str) => List<UpdateCustomer>.from(json.decode(str).map((x) => UpdateCustomer.fromJson(x)));
 
-String updateCustomerToJson(UpdateCustomer data) => json.encode(data.toJson());
+String updateCustomerToJson(List<UpdateCustomer> data) => json.encode(List<dynamic>.from(data.map((x) => x.toJson())));
 
 class UpdateCustomer {
-    int uid;
     String username;
     String password;
     String email;
@@ -23,7 +22,6 @@ class UpdateCustomer {
     int height;
 
     UpdateCustomer({
-        required this.uid,
         required this.username,
         required this.password,
         required this.email,
@@ -37,7 +35,6 @@ class UpdateCustomer {
     });
 
     factory UpdateCustomer.fromJson(Map<String, dynamic> json) => UpdateCustomer(
-        uid: json["Uid"],
         username: json["Username"],
         password: json["Password"],
         email: json["Email"],
@@ -51,13 +48,11 @@ class UpdateCustomer {
     );
 
     Map<String, dynamic> toJson() => {
-        "Uid": uid,
         "Username": username,
         "Password": password,
         "Email": email,
         "FullName": fullName,
         "Birthday": birthday,
-        "Gender": gender,
         "Phone": phone,
         "Image": image,
         "Weight": weight,
