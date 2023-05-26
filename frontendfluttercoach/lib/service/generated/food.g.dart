@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of '../listClip.dart';
+part of '../food.dart';
 
 // **************************************************************************
 // RetrofitGenerator
@@ -8,8 +8,8 @@ part of '../listClip.dart';
 
 // ignore_for_file: unnecessary_brace_in_string_interps,no_leading_underscores_for_local_identifiers
 
-class _ListClipServices implements ListClipServices {
-  _ListClipServices(
+class _FoodServices implements FoodServices {
+  _FoodServices(
     this._dio, {
     this.baseUrl,
   });
@@ -19,49 +19,49 @@ class _ListClipServices implements ListClipServices {
   String? baseUrl;
 
   @override
-  Future<HttpResponse<List<ModelClipList>>> listClips({
-    required icpID,
-    required cid,
-    required name,
+  Future<HttpResponse<List<ModelFood>>> foods({
+    required fid,
+    required ifid,
+    required did,
   }) async {
     const _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{
-      r'icpID': icpID,
-      r'cid': cid,
-      r'name': name,
+      r'fid': fid,
+      r'ifid': ifid,
+      r'did': did,
     };
     final _headers = <String, dynamic>{};
     final _data = <String, dynamic>{};
     final _result = await _dio.fetch<List<dynamic>>(
-        _setStreamType<HttpResponse<List<ModelClipList>>>(Options(
+        _setStreamType<HttpResponse<List<ModelFood>>>(Options(
       method: 'GET',
       headers: _headers,
       extra: _extra,
     )
             .compose(
               _dio.options,
-              '/listClip',
+              '/food',
               queryParameters: queryParameters,
               data: _data,
             )
             .copyWith(baseUrl: baseUrl ?? _dio.options.baseUrl)));
     var value = _result.data!
-        .map((dynamic i) => ModelClipList.fromJson(i as Map<String, dynamic>))
+        .map((dynamic i) => ModelFood.fromJson(i as Map<String, dynamic>))
         .toList();
     final httpResponse = HttpResponse(value, _result);
     return httpResponse;
   }
 
   @override
-  Future<HttpResponse<ModelResult>> insertListClipByCoachID(
+  Future<HttpResponse<ModelResult>> insertFoodByDayID(
     cid,
-    listClipCoachIdPost,
+    foodDayIdPost,
   ) async {
     const _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{};
     final _data = <String, dynamic>{};
-    _data.addAll(listClipCoachIdPost.toJson());
+    _data.addAll(foodDayIdPost.toJson());
     final _result = await _dio.fetch<Map<String, dynamic>>(
         _setStreamType<HttpResponse<ModelResult>>(Options(
       method: 'POST',
@@ -70,7 +70,7 @@ class _ListClipServices implements ListClipServices {
     )
             .compose(
               _dio.options,
-              '/listClip/coachID/${cid}',
+              '/food/dayID/${cid}',
               queryParameters: queryParameters,
               data: _data,
             )
@@ -81,15 +81,15 @@ class _ListClipServices implements ListClipServices {
   }
 
   @override
-  Future<HttpResponse<ModelResult>> updateListClipByClipID(
-    icpID,
-    listClipClipIdPut,
+  Future<HttpResponse<ModelResult>> updateFoodByFoodID(
+    fid,
+    foodFoodIdPut,
   ) async {
     const _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{};
     final _data = <String, dynamic>{};
-    _data.addAll(listClipClipIdPut.toJson());
+    _data.addAll(foodFoodIdPut.toJson());
     final _result = await _dio.fetch<Map<String, dynamic>>(
         _setStreamType<HttpResponse<ModelResult>>(Options(
       method: 'PUT',
@@ -98,7 +98,7 @@ class _ListClipServices implements ListClipServices {
     )
             .compose(
               _dio.options,
-              '/listClip/clipID/${icpID}',
+              '/food/foodID/${fid}',
               queryParameters: queryParameters,
               data: _data,
             )
@@ -109,7 +109,7 @@ class _ListClipServices implements ListClipServices {
   }
 
   @override
-  Future<HttpResponse<ModelResult>> deleteListClip(icpID) async {
+  Future<HttpResponse<ModelResult>> deleteFood(fid) async {
     const _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{};
@@ -122,7 +122,7 @@ class _ListClipServices implements ListClipServices {
     )
             .compose(
               _dio.options,
-              '/listClip/clipID/${icpID}',
+              '/food/foodID/${fid}',
               queryParameters: queryParameters,
               data: _data,
             )

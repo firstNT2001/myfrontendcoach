@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of '../listClip.dart';
+part of '../clip.dart';
 
 // **************************************************************************
 // RetrofitGenerator
@@ -8,8 +8,8 @@ part of '../listClip.dart';
 
 // ignore_for_file: unnecessary_brace_in_string_interps,no_leading_underscores_for_local_identifiers
 
-class _ListClipServices implements ListClipServices {
-  _ListClipServices(
+class _ClipServices implements ClipServices {
+  _ClipServices(
     this._dio, {
     this.baseUrl,
   });
@@ -19,16 +19,16 @@ class _ListClipServices implements ListClipServices {
   String? baseUrl;
 
   @override
-  Future<HttpResponse<List<ModelClipList>>> listClips({
+  Future<HttpResponse<List<ModelClipList>>> clips({
+    required cpID,
     required icpID,
-    required cid,
-    required name,
+    required did,
   }) async {
     const _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{
+      r'cpID': cpID,
       r'icpID': icpID,
-      r'cid': cid,
-      r'name': name,
+      r'did': did,
     };
     final _headers = <String, dynamic>{};
     final _data = <String, dynamic>{};
@@ -40,7 +40,7 @@ class _ListClipServices implements ListClipServices {
     )
             .compose(
               _dio.options,
-              '/listClip',
+              '/clip',
               queryParameters: queryParameters,
               data: _data,
             )
@@ -53,15 +53,15 @@ class _ListClipServices implements ListClipServices {
   }
 
   @override
-  Future<HttpResponse<ModelResult>> insertListClipByCoachID(
-    cid,
-    listClipCoachIdPost,
+  Future<HttpResponse<ModelResult>> insertClipByDayID(
+    did,
+    clipDayIdPost,
   ) async {
     const _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{};
     final _data = <String, dynamic>{};
-    _data.addAll(listClipCoachIdPost.toJson());
+    _data.addAll(clipDayIdPost.toJson());
     final _result = await _dio.fetch<Map<String, dynamic>>(
         _setStreamType<HttpResponse<ModelResult>>(Options(
       method: 'POST',
@@ -70,7 +70,7 @@ class _ListClipServices implements ListClipServices {
     )
             .compose(
               _dio.options,
-              '/listClip/coachID/${cid}',
+              '/clip/dayID/${did}',
               queryParameters: queryParameters,
               data: _data,
             )
@@ -81,15 +81,15 @@ class _ListClipServices implements ListClipServices {
   }
 
   @override
-  Future<HttpResponse<ModelResult>> updateListClipByClipID(
-    icpID,
-    listClipClipIdPut,
+  Future<HttpResponse<ModelResult>> updateClipByClipID(
+    cpID,
+    clipClipIdPut,
   ) async {
     const _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{};
     final _data = <String, dynamic>{};
-    _data.addAll(listClipClipIdPut.toJson());
+    _data.addAll(clipClipIdPut.toJson());
     final _result = await _dio.fetch<Map<String, dynamic>>(
         _setStreamType<HttpResponse<ModelResult>>(Options(
       method: 'PUT',
@@ -98,7 +98,7 @@ class _ListClipServices implements ListClipServices {
     )
             .compose(
               _dio.options,
-              '/listClip/clipID/${icpID}',
+              '/clip/clipID/${cpID}',
               queryParameters: queryParameters,
               data: _data,
             )
@@ -109,7 +109,7 @@ class _ListClipServices implements ListClipServices {
   }
 
   @override
-  Future<HttpResponse<ModelResult>> deleteListClip(icpID) async {
+  Future<HttpResponse<ModelResult>> deleteClip(cpID) async {
     const _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{};
@@ -122,7 +122,7 @@ class _ListClipServices implements ListClipServices {
     )
             .compose(
               _dio.options,
-              '/listClip/clipID/${icpID}',
+              '/clip/clipID/${cpID}',
               queryParameters: queryParameters,
               data: _data,
             )
