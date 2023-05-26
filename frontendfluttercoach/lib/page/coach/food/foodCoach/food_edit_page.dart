@@ -2,6 +2,8 @@ import 'dart:convert';
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:get/get_core/src/get_main.dart';
 
 import 'package:provider/provider.dart';
 
@@ -12,6 +14,8 @@ import '../../../../model/response/md_Result.dart';
 import '../../../../service/listFood.dart';
 import '../../../../service/provider/appdata.dart';
 import '../../../../service/provider/coachData.dart';
+import '../../../../widget/wg_textField.dart';
+import 'food_page.dart';
 
 class FoodEditCoachPage extends StatefulWidget {
   late int ifid;
@@ -24,7 +28,7 @@ class FoodEditCoachPage extends StatefulWidget {
 class _FoodEditCoachPageState extends State<FoodEditCoachPage> {
   late Future<void> _loadData;
   late ListFoodServices _listfoodService;
-  List<ModelFoodList> foods=[];
+  List<ModelFoodList> foods = [];
   late ModelResult modelResult;
   var editFood;
 
@@ -39,59 +43,65 @@ class _FoodEditCoachPageState extends State<FoodEditCoachPage> {
     super.initState();
     _listfoodService = context.read<AppData>().listfoodServices;
     _loadData = loadDataAsync();
-    
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Container(
-        child: FutureBuilder(
-            future: _loadData,
-            builder: (context, AsyncSnapshot snapshot) {
-              if (snapshot.connectionState != ConnectionState.done) {
-                 return Container();
-                //return const Center(child: CircularProgressIndicator());
-              }
-              return Column(
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.all(100.0),
-                    child: TextField(controller: name),
-                  ),
-                  ElevatedButton(
+      body: FutureBuilder(
+          future: _loadData,
+          builder: (context, AsyncSnapshot snapshot) {
+            if (snapshot.connectionState != ConnectionState.done) {
+              return Container();
+              //return const Center(child: CircularProgressIndicator());
+            }
+            return ListView(
+              children: [
+                WidgetTextFieldString(
+                  controller: name,
+                  labelText: 'ชื่อ',
+                ),
+                WidgetTextFieldString(
+                  controller: details,
+                  labelText: 'details',
+                ),
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: ElevatedButton(
                       onPressed: () async {
-                        // ListFoodPutRequest request = ListFoodPutRequest(
-                        //     ifid: widget.ifid,
-                        //     name: name.text,
-                        //     image: image,
-                        //     details: details.text,
-                        //     calories: int.parse(calories.text));
+                        log(widget.ifid.toString());
+                        log(context.read<AppData>().cid.toString());
                         ListFoodFoodIdPut request = ListFoodFoodIdPut(
                             name: name.text,
                             image: image,
-                            details: 'tt',
-                            calories: 22, coachId: context.read<CoachData>().cid
-                            );
-                        log(jsonEncode(request));    
-                        editFood =
-                         await _listfoodService.updateListFoodByFoodID(widget.ifid.toString(),request);
+                            details: details.text,
+                            calories: int.parse(calories.text),
+                            coachId: context.read<AppData>().cid);
+                        log(jsonEncode(request));
+                        editFood = await _listfoodService.updateListFoodByFoodID(
+                            widget.ifid.toString(), request);
                         modelResult = editFood.data;
                         log(jsonEncode(modelResult.result));
+                         if (modelResult.result == "1") {
+                          Get.to(() => const FoodCoachPage());
+                         }
                       },
-                      child: const Text('บันทึก'))
-                ],
-              );
-            }),
-      ),
+                      child: const Text('บันทึก')),
+                )
+              ],
+            );
+          }),
     );
   }
 
   Future<void> loadDataAsync() async {
     try {
-      var res = await _listfoodService.listFoods(ifid: widget.ifid.toString(), cid: '', name: '');
+      var res = await _listfoodService.listFoods(
+          ifid: widget.ifid.toString(), cid: '', name: '');
       foods = res.data;
-      name.text = foods[0].name;
+      name.text = foods.first.name;
+      details.text = foods.first.details;
+      calories.text = foods.first.calories.toString();
     } catch (err) {
       log('Error: $err');
     }
