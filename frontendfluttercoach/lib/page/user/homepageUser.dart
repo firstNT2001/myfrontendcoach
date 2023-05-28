@@ -1,4 +1,3 @@
-
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 
@@ -72,7 +71,8 @@ class _HomePageUserState extends State<HomePageUser> {
         CoachService(Dio(), baseUrl: context.read<AppData>().baseurl);
     courseService =
         CourseService(Dio(), baseUrl: context.read<AppData>().baseurl);
-    customerService =CustomerService(Dio(), baseUrl: context.read<AppData>().baseurl);
+    customerService =
+        CustomerService(Dio(), baseUrl: context.read<AppData>().baseurl);
 
     loadDataMethod = loadData();
   }
@@ -83,25 +83,34 @@ class _HomePageUserState extends State<HomePageUser> {
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          const Padding(
+            padding: EdgeInsets.only(left: 15, top: 45),
+            child: Text("DAILY WORKOUT",
+                style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold)),
+          ),
+          const Padding(
+            padding: EdgeInsets.only(left: 15),
+            child: Text("COACHING",
+                style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold)),
+          ),
           Padding(
-            padding: const EdgeInsets.only(top: 35, left: 15),
+            padding: const EdgeInsets.only(top: 10, left: 15),
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 SizedBox(
-                  width: 250,
-                  height: 50,
-                  child: TextField(
-                    controller: myController,
-                    decoration: const InputDecoration(
-                      border: OutlineInputBorder(),
-                      labelText: 'ค้นหา',
-                    ),
-                  ),
+                  width: 310,
+
+                  child: TextField(               
+                          controller: myController,
+                          decoration:  const InputDecoration(
+                            contentPadding: EdgeInsets.symmetric(vertical: 10),
+                        hintText: '   ค้นหา', border: InputBorder.none),),
                 ),
                 Padding(
                   padding: const EdgeInsets.only(left: 10),
                   child: ElevatedButton(
+
                       onPressed: () {
                         if (myController.text.isNotEmpty) {
                           coachService
@@ -143,14 +152,15 @@ class _HomePageUserState extends State<HomePageUser> {
                           });
                         }
                       },
-                      child: const Text("แสดงชื่อโค้ช")),
+                      style: ElevatedButton.styleFrom(primary: const Color.fromARGB(230, 215, 35, 35)),
+                      child: const Text("ค้นหา")),
                 ),
               ],
             ),
           ),
-          
+
           Padding(
-            padding: const EdgeInsets.all(12),
+            padding: const EdgeInsets.only(left: 20,right: 20,top: 10,bottom: 12),
             child: loadcustomer(),
           ),
 
@@ -159,8 +169,11 @@ class _HomePageUserState extends State<HomePageUser> {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
-                const Text("รายการแนะนำ",style: TextStyle(fontSize: 18)),
-                const Icon(FontAwesomeIcons.fire,color: Color.fromARGB(255, 236, 1, 1),)
+                 const Text("รายการแนะนำ", style: TextStyle(fontSize: 18,fontWeight: FontWeight.bold)),
+                 const Icon(
+                  FontAwesomeIcons.fire,
+                  color: Color.fromARGB(255, 192, 0, 0),
+                )
               ],
             ),
           ),
@@ -168,8 +181,11 @@ class _HomePageUserState extends State<HomePageUser> {
           Visibility(
             visible: isVisibles,
             child: SizedBox(
-              height:MediaQuery.of(context).size.width*0.99,
-              child: loadcourse(),
+              height: MediaQuery.of(context).size.width * 1.06,
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: loadcourse(),
+              ),
             ),
           ),
 
@@ -248,7 +264,7 @@ class _HomePageUserState extends State<HomePageUser> {
                     }),
               ),
             ),
-          ),     
+          ),
         ],
       ),
     );
@@ -270,22 +286,45 @@ class _HomePageUserState extends State<HomePageUser> {
       log('Error: $err');
     }
   }
-  Widget loadcourse(){
+
+  Widget search() {
+    return Container(
+      child: Card(
+        child: ListTile( 
+          title: TextField(
+              controller: myController,
+              decoration: const InputDecoration(
+                border: OutlineInputBorder(),
+                labelText: 'ค้นหา',
+              )),
+          trailing: new IconButton(
+            icon: new Icon(Icons.cancel),
+            onPressed: () {
+              myController.clear();
+              // onSearchTextChanged('');
+            },
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget loadcourse() {
     return FutureBuilder(
       future: loadDataMethod,
       builder: (context, snapshot) {
-         if (snapshot.connectionState != ConnectionState.done) {
+        if (snapshot.connectionState != ConnectionState.done) {
           return const Center(child: CircularProgressIndicator());
         } else {
           return Column(
             children: [
               Expanded(
-                child: ListView.builder(
+                  child: ListView.builder(
                 shrinkWrap: true,
                 itemCount: coursesAll.length,
                 itemBuilder: (context, index) {
                   final listcours = coursesAll[index];
-            
+
                   return Padding(
                     padding: const EdgeInsets.only(top: 8),
                     child: Card(
@@ -293,25 +332,21 @@ class _HomePageUserState extends State<HomePageUser> {
                         crossAxisAlignment: CrossAxisAlignment.end,
                         children: [
                           Image.network(listcours.image,
-                              width: 400,
-                              height: 150,
-                              fit: BoxFit.fill),
-                          ListTile(
-                            title: Text(listcours.name)
-                            //subtitle: Text(listcours.details),
-                          ),
+                              width: 400, height: 150, fit: BoxFit.fill),
+                          ListTile(title: Text(listcours.name)
+                              //subtitle: Text(listcours.details),
+                              ),
                           Padding(
-                            padding: const EdgeInsets.only(right: 8,bottom: 8),
+                            padding: const EdgeInsets.only(right: 8, bottom: 8),
                             child: ElevatedButton(
                                 onPressed: () {
                                   log(listcours.coId.toString());
                                   context.read<AppData>().idcourse =
                                       listcours.coId;
-            
+
                                   Get.to(() => const showCousePage());
                                 },
-                                child: const Text(
-                                    "ดูรายละเอียดเพิ่มเติม")),
+                                child: const Text("ดูรายละเอียดเพิ่มเติม")),
                           ),
                         ],
                       ),
@@ -322,63 +357,67 @@ class _HomePageUserState extends State<HomePageUser> {
             ],
           );
         }
-      },);
+      },
+    );
   }
-  Widget loadcustomer(){
+
+  Widget loadcustomer() {
     return FutureBuilder(
       future: loadDataMethod,
       builder: (context, snapshot) {
-         if (snapshot.connectionState != ConnectionState.done) {
+        if (snapshot.connectionState != ConnectionState.done) {
           return const Center(child: CircularProgressIndicator());
         } else {
           return Column(
             children: [
               Card(
-              child: ListTile(
-                leading: (customer.data.gender == '2')
-                    ? const Icon(Icons.girl_outlined, size: 120)
-                    : (customer.data.gender == '1')
-                        ? const Icon(Icons.boy_outlined, size: 120)
-                        : const Icon(Icons.abc_outlined, size: 110),
+               color: const Color.fromARGB(255, 235, 235, 235),
+                child: ListTile(
+                  leading: (customer.data.gender == '2')
+                      ? const Icon(Icons.girl_outlined, size: 120)
+                      : (customer.data.gender == '1')
+                          ? const Icon(Icons.boy_outlined, size: 120)
+                          : const Icon(Icons.abc_outlined, size: 110),
 
-                title: Padding(
-                  padding: const EdgeInsets.all(15.0),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Text(customer.data.height.toString()),
-                          const Text("CM"),
-                        ],
-                      ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Text(customer.data.weight.toString()),
-                          const Text("KG"),
-                        ],
-                      ),
-                      const Divider(
-                        //color of divider
-                        height: 5, //height spacing of divider
-                        thickness: 2, //thickness of divier line
-                        indent: 50, //spacing at the start of divider
-                        endIndent: 50,
-                      ),
-                      const Text("BMI"),
-                      Text(bmi.toString()),
-                    ],
+                  title: Padding(
+                    padding: const EdgeInsets.all(15.0),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text(customer.data.height.toString()),
+                            const Text("CM"),
+                          ],
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text(customer.data.weight.toString()),
+                            const Text("KG"),
+                          ],
+                        ),
+                        const Divider(
+                          //color of divider
+                          height: 5, //height spacing of divider
+                          thickness: 2, //thickness of divier line
+                          indent: 50, //spacing at the start of divider
+                          endIndent: 50,
+                        ),
+                        const Text("BMI"),
+                        Text(bmi.toString()),
+                      ],
+                    ),
                   ),
+                  //subtitle: Text(review.details),
                 ),
-                //subtitle: Text(review.details),
               ),
-            ),
             ],
           );
         }
-      },);
+      },
+    );
   }
 }
 // การทำมุมโค้งบางจุด
