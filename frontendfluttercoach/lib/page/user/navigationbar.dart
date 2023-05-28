@@ -37,10 +37,12 @@ class _homeScreenState extends State<homeScreen> {
         BottomNavigationBarItem(
             icon: Icon(FontAwesomeIcons.house),
             label: 'หน้าหลัก',
+            backgroundColor: Color.fromARGB(255, 63, 63, 63),
           ),
           BottomNavigationBarItem(
             icon: Icon(FontAwesomeIcons.facebookMessenger),
             label: 'ข้อความ',
+            
           ),
           BottomNavigationBarItem(
             icon: Icon(FontAwesomeIcons.solidUser),
@@ -48,7 +50,7 @@ class _homeScreenState extends State<homeScreen> {
           ),
       ],
       currentIndex: _selectedIndex,
-      selectedItemColor: Color.fromARGB(255, 14, 7, 234),
+      selectedItemColor: Colors.amber[800],
       onTap: onTapped,),
       
     );
