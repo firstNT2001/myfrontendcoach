@@ -100,17 +100,17 @@ class _HomePageUserState extends State<HomePageUser> {
               children: [
                 SizedBox(
                   width: 310,
-
-                  child: TextField(               
-                          controller: myController,
-                          decoration:  const InputDecoration(
-                            contentPadding: EdgeInsets.symmetric(vertical: 10),
-                        hintText: '   ค้นหา', border: InputBorder.none),),
+                  child: TextField(
+                    controller: myController,
+                    decoration: const InputDecoration(
+                        contentPadding: EdgeInsets.symmetric(vertical: 10),
+                        hintText: '   ค้นหา',
+                        border: InputBorder.none),
+                  ),
                 ),
                 Padding(
                   padding: const EdgeInsets.only(left: 10),
                   child: ElevatedButton(
-
                       onPressed: () {
                         if (myController.text.isNotEmpty) {
                           coachService
@@ -152,7 +152,8 @@ class _HomePageUserState extends State<HomePageUser> {
                           });
                         }
                       },
-                      style: ElevatedButton.styleFrom(primary: const Color.fromARGB(230, 215, 35, 35)),
+                      style: ElevatedButton.styleFrom(
+                          primary: const Color.fromARGB(230, 215, 35, 35)),
                       child: const Text("ค้นหา")),
                 ),
               ],
@@ -160,7 +161,8 @@ class _HomePageUserState extends State<HomePageUser> {
           ),
 
           Padding(
-            padding: const EdgeInsets.only(left: 20,right: 20,top: 10,bottom: 12),
+            padding:
+                const EdgeInsets.only(left: 20, right: 20, top: 10, bottom: 12),
             child: loadcustomer(),
           ),
 
@@ -169,8 +171,10 @@ class _HomePageUserState extends State<HomePageUser> {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
-                 const Text("รายการแนะนำ", style: TextStyle(fontSize: 18,fontWeight: FontWeight.bold)),
-                 const Icon(
+                const Text("รายการแนะนำ",
+                    style:
+                        TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                const Icon(
                   FontAwesomeIcons.fire,
                   color: Color.fromARGB(255, 192, 0, 0),
                 )
@@ -183,7 +187,7 @@ class _HomePageUserState extends State<HomePageUser> {
             child: SizedBox(
               height: MediaQuery.of(context).size.width * 1.06,
               child: Padding(
-                padding: const EdgeInsets.all(8.0),
+                padding: const EdgeInsets.only(left: 8, right: 8),
                 child: loadcourse(),
               ),
             ),
@@ -287,28 +291,6 @@ class _HomePageUserState extends State<HomePageUser> {
     }
   }
 
-  Widget search() {
-    return Container(
-      child: Card(
-        child: ListTile( 
-          title: TextField(
-              controller: myController,
-              decoration: const InputDecoration(
-                border: OutlineInputBorder(),
-                labelText: 'ค้นหา',
-              )),
-          trailing: new IconButton(
-            icon: new Icon(Icons.cancel),
-            onPressed: () {
-              myController.clear();
-              // onSearchTextChanged('');
-            },
-          ),
-        ),
-      ),
-    );
-  }
-
   Widget loadcourse() {
     return FutureBuilder(
       future: loadDataMethod,
@@ -316,46 +298,45 @@ class _HomePageUserState extends State<HomePageUser> {
         if (snapshot.connectionState != ConnectionState.done) {
           return const Center(child: CircularProgressIndicator());
         } else {
-          return Column(
-            children: [
-              Expanded(
-                  child: ListView.builder(
-                shrinkWrap: true,
-                itemCount: coursesAll.length,
-                itemBuilder: (context, index) {
-                  final listcours = coursesAll[index];
+          return Expanded(
+              child: ListView.builder(
+            shrinkWrap: true,
+            itemCount: coursesAll.length,
+            itemBuilder: (context, index) {
+              final listcours = coursesAll[index];
+              return Card(
+                color: const Color.fromARGB(255, 235, 235, 235),
+                child: Container(
+                  height: 210,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.end,
+                    children: [
+                      Image.network(listcours.image,
+                          width: 400, height: 110, fit: BoxFit.fill),
+                      ListTile(
+                        title: Text(listcours.name),
+                        subtitle: Text(listcours.coachId.toString()),
+                         trailing: ElevatedButton(
+                            onPressed: () {
+                              log(listcours.coId.toString());
+                              context.read<AppData>().idcourse = listcours.coId;
 
-                  return Padding(
-                    padding: const EdgeInsets.only(top: 8),
-                    child: Card(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.end,
-                        children: [
-                          Image.network(listcours.image,
-                              width: 400, height: 150, fit: BoxFit.fill),
-                          ListTile(title: Text(listcours.name)
-                              //subtitle: Text(listcours.details),
-                              ),
-                          Padding(
-                            padding: const EdgeInsets.only(right: 8, bottom: 8),
-                            child: ElevatedButton(
-                                onPressed: () {
-                                  log(listcours.coId.toString());
-                                  context.read<AppData>().idcourse =
-                                      listcours.coId;
-
-                                  Get.to(() => const showCousePage());
-                                },
-                                child: const Text("ดูรายละเอียดเพิ่มเติม")),
-                          ),
-                        ],
+                              Get.to(() => const showCousePage());
+                            },
+                            style: ElevatedButton.styleFrom(
+                                primary:
+                                    const Color.fromARGB(230, 215, 35, 35)),
+                            child: const Text("ดูรายละเอียดเพิ่มเติม")),
+                        contentPadding: EdgeInsets.symmetric(
+                            vertical: 0.0, horizontal: 8.0),
                       ),
-                    ),
-                  );
-                },
-              ))
-            ],
-          );
+                      
+                    ],
+                  ),
+                ),
+              );
+            },
+          ));
         }
       },
     );
@@ -371,7 +352,7 @@ class _HomePageUserState extends State<HomePageUser> {
           return Column(
             children: [
               Card(
-               color: const Color.fromARGB(255, 235, 235, 235),
+                color: const Color.fromARGB(255, 235, 235, 235),
                 child: ListTile(
                   leading: (customer.data.gender == '2')
                       ? const Icon(Icons.girl_outlined, size: 120)
