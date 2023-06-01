@@ -249,8 +249,7 @@ class _LoginPageState extends State<LoginPage> {
                   style: Theme.of(context).textTheme.headlineSmall),
             ),
             Padding(
-              padding: const EdgeInsets.only(
-                 top: 20),
+              padding: const EdgeInsets.only(top: 20),
               child: Row(
                 //mainAxisSize: MainAxisSize.max,
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -258,7 +257,7 @@ class _LoginPageState extends State<LoginPage> {
                   InkWell(
                     onTap: () {
                       Get.to(() => const HomePageCoach());
-                  
+
                       context.read<AppData>().cid = cid;
                     },
                     child: Column(
@@ -267,14 +266,16 @@ class _LoginPageState extends State<LoginPage> {
                             width: 100,
                             height: 100,
                             child: Image.asset("assets/images/football.png")),
-                        Text('Coach',style: Theme.of(context).textTheme.titleMedium,),
+                        Text(
+                          'Coach',
+                          style: Theme.of(context).textTheme.titleMedium,
+                        ),
                       ],
                     ),
                   ),
                   InkWell(
                     onTap: () {
                       Get.to(() => const homeScreen());
-            
                       context.read<AppData>().uid = uid;
                     },
                     child: Column(
@@ -282,17 +283,21 @@ class _LoginPageState extends State<LoginPage> {
                         SizedBox(
                             width: 100,
                             height: 100,
-                            child: Image.asset("assets/images/single-person.png")),
-                        Text('User',style: Theme.of(context).textTheme.titleMedium,),
+                            child:
+                                Image.asset("assets/images/single-person.png")),
+                        Text(
+                          'User',
+                          style: Theme.of(context).textTheme.titleMedium,
+                        ),
                       ],
                     ),
                   ),
                   // ElevatedButton(
                   //   onPressed: () {
                   //     Get.to(() => const HomePageCoach());
-            
+
                   //     context.read<AppData>().cid = cid;
-            
+
                   //   },
                   //   child: const Text('Coach'),
                   // ),

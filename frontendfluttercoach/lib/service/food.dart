@@ -23,14 +23,14 @@ abstract class FoodServices {
 
   @POST("/food/dayID/{cid}")
   Future<HttpResponse<ModelResult>> insertFoodByDayID(
-      @Path("cid") String cid,
+      @Path() String cid,
       @Body() FoodDayIdPost foodDayIdPost);
 
   @PUT("/food/foodID/{fid}")
   Future<HttpResponse<ModelResult>> updateFoodByFoodID(
-      @Path("fid") String fid,
+      @Path() String fid,
       @Body() FoodFoodIdPut foodFoodIdPut);
 
    @DELETE("/food/foodID/{fid}")
-  Future<HttpResponse<ModelResult>> deleteFood(@Path("fid") String fid);
+  Future<HttpResponse<ModelResult>> deleteFood(@Path() String fid);
 }

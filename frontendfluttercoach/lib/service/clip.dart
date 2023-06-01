@@ -22,12 +22,12 @@ abstract class ClipServices {
 
   @POST("/clip/dayID/{did}")
   Future<HttpResponse<ModelResult>> insertClipByDayID(
-      @Path("did") String did, @Body() ClipDayIdPost clipDayIdPost);
+      @Path() String did, @Body() ClipDayIdPost clipDayIdPost);
 
   @PUT("/clip/clipID/{cpID}")
   Future<HttpResponse<ModelResult>> updateClipByClipID(
-      @Path("cpID") String cpID, @Body() ClipClipIdPut clipClipIdPut);
+      @Path() String cpID, @Body() ClipClipIdPut clipClipIdPut);
 
   @DELETE("/clip/clipID/{cpID}")
-  Future<HttpResponse<ModelResult>> deleteClip(@Path("cpID") String cpID);
+  Future<HttpResponse<ModelResult>> deleteClip(@Path() String cpID);
 }
