@@ -70,6 +70,7 @@ dependencies:
   flutter_localization: ^0.1.11
   searchbar_animation: ^0.0.4
   image: ^4.0.17
+  badges: ^3.1.1
   
   
   
