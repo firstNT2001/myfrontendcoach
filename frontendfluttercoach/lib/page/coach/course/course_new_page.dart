@@ -6,7 +6,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:frontendfluttercoach/page/coach/home_coach_page.dart';
 import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
+
 import 'package:provider/provider.dart';
 
 import '../../../model/request/course_coachID_post.dart';
@@ -14,7 +14,6 @@ import '../../../model/request/course_coachID_post.dart';
 import '../../../model/response/md_Result.dart';
 import '../../../service/course.dart';
 import '../../../service/provider/appdata.dart';
-import '../../../service/provider/coachData.dart';
 
 class CourseNewPage extends StatefulWidget {
   const CourseNewPage({super.key});

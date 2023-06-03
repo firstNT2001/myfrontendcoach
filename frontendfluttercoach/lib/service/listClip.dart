@@ -21,12 +21,12 @@ abstract class ListClipServices {
 
   @POST("/listClip/coachID/{cid}")
   Future<HttpResponse<ModelResult>> insertListClipByCoachID(
-      @Path("cid") String cid, @Body() ListClipCoachIdPost listClipCoachIdPost);
+      @Path() String cid, @Body() ListClipCoachIdPost listClipCoachIdPost);
 
   @PUT("/listClip/clipID/{icpID}")
   Future<HttpResponse<ModelResult>> updateListClipByClipID(
-      @Path("icpID") String icpID, @Body() ListClipClipIdPut listClipClipIdPut);
+      @Path() String icpID, @Body() ListClipClipIdPut listClipClipIdPut);
 
   @DELETE("/listClip/clipID/{icpID}")
-  Future<HttpResponse<ModelResult>> deleteListClip(@Path("icpID") String icpID);
+  Future<HttpResponse<ModelResult>> deleteListClip(@Path() String icpID);
 }
