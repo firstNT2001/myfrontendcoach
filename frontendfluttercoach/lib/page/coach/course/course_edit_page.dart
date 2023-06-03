@@ -70,94 +70,107 @@ class _CourseEditPageState extends State<CourseEditPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        body: FutureBuilder(
-            future: loadDataMethod,
-            builder: (context, AsyncSnapshot snapshot) {
-              if (snapshot.connectionState == ConnectionState.done) {
-                return Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    //Expanded(child: Image.network(imageCourse)),
-                    WidgetTextFieldString(
-                      controller: name,
-                      labelText: 'ชื่อ',
-                    ),
-                    WidgetTextFieldString(
-                      controller: details,
-                      labelText: 'รายระเอียด',
-                    ),
-                    WidgetTextFieldString(
-                      controller: amount,
-                      labelText: 'จำนวนคน',
-                    ),
-                    WidgetTextFieldString(
-                      controller: level,
-                      labelText: 'ความยาก',
-                    ),
-                    WidgetTextFieldString(
-                      controller: price,
-                      labelText: 'ราคา',
-                    ),
-                    WidgetTextFieldString(
-                      controller: days,
-                      labelText: 'จำนวนวัน',
-                    ),
-
-                    Column(
-                      children: [
-                        for (int i = 1; i <= day; i++) ...{
-                          Container(
-                            width: double.infinity,
-                            padding: const EdgeInsets.all(20),
-                            child: ElevatedButton(
-                              onPressed: () {
-                                context.read<DayOfCourseData>().didDayOfCouse =
-                                    i;
-                                Get.to(() => const DaysCoursePage());
-                              },
-                              child: Text('Day $i'),
-                            ),
+      appBar: AppBar(
+        iconTheme: const IconThemeData(
+          color: Colors.black, //change your color here
+        ),
+        title: const Text("Edit Course"),
+        centerTitle: true,
+      ),
+        body: SafeArea(
+          child: Column(
+            children: [
+              FutureBuilder(
+                  future: loadDataMethod,
+                  builder: (context, AsyncSnapshot snapshot) {
+                    if (snapshot.connectionState == ConnectionState.done) {
+                      return Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          //Expanded(child: Image.network(imageCourse)),
+                          WidgetTextFieldString(
+                            controller: name,
+                            labelText: 'ชื่อ',
+                          ),
+                          WidgetTextFieldString(
+                            controller: details,
+                            labelText: 'รายระเอียด',
+                          ),
+                          WidgetTextFieldString(
+                            controller: amount,
+                            labelText: 'จำนวนคน',
+                          ),
+                          WidgetTextFieldString(
+                            controller: level,
+                            labelText: 'ความยาก',
+                          ),
+                          WidgetTextFieldString(
+                            controller: price,
+                            labelText: 'ราคา',
+                          ),
+                          WidgetTextFieldString(
+                            controller: days,
+                            labelText: 'จำนวนวัน',
+                          ),
+                    
+                          Column(
+                            children: [
+                              for (int i = 1; i <= day; i++) ...{
+                                Container(
+                                  width: double.infinity,
+                                  padding: const EdgeInsets.all(20),
+                                  child: ElevatedButton(
+                                    onPressed: () {
+                                      context.read<DayOfCourseData>().didDayOfCouse =
+                                          i;
+                                      Get.to(() => const DaysCoursePage());
+                                    },
+                                    child: Text('Day $i'),
+                                  ),
+                                )
+                              }
+                            ],
+                          ),
+                          // Padding(
+                          //   padding: const EdgeInsets.all(50.0),
+                          //   child: Center(child: Text(courses.data.status)),
+                          // ),
+                    
+                          switchOnOffStatus(context),
+                          ElevatedButton(
+                            //style: style,
+                            onPressed: () async {
+                              CourseCourseIdPut updateCourseDTO = CourseCourseIdPut(
+                                name: name.text,
+                                details: details.text,
+                                level: level.text,
+                                amount: int.parse(amount.text),
+                                image: imageCourse,
+                                days: int.parse(days.text),
+                                price: int.parse(price.text),
+                                status: status,
+                              );
+                              log(jsonEncode(updateCourseDTO));
+                              log(widget.coID.toString());
+                              updateCourse =
+                                  await _courseService.updateCourseByCourseID(
+                                      widget.coID.toString(), updateCourseDTO);
+                              moduleResult = updateCourse.data;
+                              log(jsonEncode(moduleResult.result));
+                              //log("rowsAffected:"+updateCourse);
+                              Get.to(() => const HomePageCoach());
+                            },
+                            child: const Text('Enabled'),
                           )
-                        }
-                      ],
-                    ),
-                    // Padding(
-                    //   padding: const EdgeInsets.all(50.0),
-                    //   child: Center(child: Text(courses.data.status)),
-                    // ),
-
-                    switchOnOffStatus(context),
-                    ElevatedButton(
-                      //style: style,
-                      onPressed: () async {
-                        CourseCourseIdPut updateCourseDTO = CourseCourseIdPut(
-                          name: name.text,
-                          details: details.text,
-                          level: level.text,
-                          amount: int.parse(amount.text),
-                          image: imageCourse,
-                          days: int.parse(days.text),
-                          price: int.parse(price.text),
-                          status: status,
-                        );
-                        log(jsonEncode(updateCourseDTO));
-                        log(widget.coID.toString());
-                        updateCourse =
-                            await _courseService.updateCourseByCourseID(
-                                widget.coID.toString(), updateCourseDTO);
-                        moduleResult = updateCourse.data;
-                        log(jsonEncode(moduleResult.result));
-                        //log("rowsAffected:"+updateCourse);
-                        Get.to(() => const HomePageCoach());
-                      },
-                      child: const Text('Enabled'),
-                    )
-                  ],
-                );
-              } else {
-                return const Center(child: CircularProgressIndicator());
-              }
-            }));
+                        ],
+                      );
+                    } else {
+                      return const Center(child: CircularProgressIndicator());
+                    }
+                  }),
+            ],
+          ),
+        ));
   }
 
   Switch switchOnOffStatus(BuildContext context) {

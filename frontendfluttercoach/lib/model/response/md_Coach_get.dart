@@ -5,11 +5,27 @@
 import 'package:meta/meta.dart';
 import 'dart:convert';
 
-Coach coachFromJson(String str) => Coach.fromJson(json.decode(str));
+List<Coach> coachFromJson(String str) => List<Coach>.from(json.decode(str).map((x) => Coach.fromJson(x)));
 
-String coachToJson(Coach data) => json.encode(data.toJson());
+String coachToJson(List<Coach> data) => json.encode(List<dynamic>.from(data.map((x) => x.toJson())));
 
 class Coach {
+    int cid;
+    String username;
+    String password;
+    String email;
+    String fullName;
+    String birthday;
+    String gender;
+    String phone;
+    String image;
+    String qualification;
+    String property;
+    String facebookId;
+    int price;
+    dynamic buyings;
+    dynamic chats;
+
     Coach({
         required this.cid,
         required this.username,
@@ -23,22 +39,10 @@ class Coach {
         required this.qualification,
         required this.property,
         required this.facebookId,
+        required this.price,
+        required this.buyings,
         required this.chats,
     });
-
-    int cid;
-    String username;
-    String password;
-    String email;
-    String fullName;
-    String birthday;
-    String gender;
-    String phone;
-    String image;
-    String qualification;
-    String property;
-    String facebookId;
-    dynamic chats;
 
     factory Coach.fromJson(Map<String, dynamic> json) => Coach(
         cid: json["Cid"],
@@ -53,6 +57,8 @@ class Coach {
         qualification: json["Qualification"],
         property: json["Property"],
         facebookId: json["FacebookID"],
+        price: json["Price"],
+        buyings: json["Buyings"],
         chats: json["Chats"],
     );
 
@@ -69,6 +75,8 @@ class Coach {
         "Qualification": qualification,
         "Property": property,
         "FacebookID": facebookId,
+        "Price": price,
+        "Buyings": buyings,
         "Chats": chats,
     };
 }

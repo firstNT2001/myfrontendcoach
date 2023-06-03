@@ -71,6 +71,8 @@ dependencies:
   searchbar_animation: ^0.0.4
   image: ^4.0.17
   badges: ^3.1.1
+  flutter_side_menu: ^0.3.2
+  shrink_sidemenu: ^2.0.0+2-null-safety
   
   
   

@@ -491,6 +491,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.0.0"
+  flutter_side_menu:
+    dependency: "direct main"
+    description:
+      name: flutter_side_menu
+      sha256: "317efbecf7a7dc12e379950eebebf07fe81c48a0a9d2cbfa73d9b1de3828480d"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.3.2"
   flutter_smart_dialog:
     dependency: "direct main"
     description:
@@ -941,6 +949,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.0.3"
+  shrink_sidemenu:
+    dependency: "direct main"
+    description:
+      name: shrink_sidemenu
+      sha256: "556436717d004ed4573522dcc8772da50f4b7ed3b3a238c0c0e11bc265a0c95a"
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.0.0+2-null-safety"
   sign_button:
     dependency: "direct main"
     description:
