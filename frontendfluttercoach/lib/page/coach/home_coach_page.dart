@@ -20,6 +20,7 @@ import '../../service/coach.dart';
 import '../../service/course.dart';
 import '../../service/provider/appdata.dart';
 
+import '../../widget/wg_menu.dart';
 import '../Request/request_page.dart';
 import 'course/course_edit_page.dart';
 
@@ -55,6 +56,7 @@ class _HomePageCoachState extends State<HomePageCoach> {
   List<Coach> coachs = [];
   String cid = '';
   TextEditingController nameCoach = TextEditingController();
+  String username = '', price = '', image = '';
 
   //Request
   List<ModelRequest> requests = [];
@@ -103,7 +105,12 @@ class _HomePageCoachState extends State<HomePageCoach> {
                 FontAwesomeIcons.barsStaggered,
                 color: Colors.black,
               ),
-              onPressed: () {},
+              onPressed: () {
+                Get.to(() => SideMenu(
+                    name: coachs.first.username,
+                    price: coachs.first.price.toString(),
+                    image: coachs.first.image));
+              },
             ),
           ],
         ),
@@ -186,7 +193,7 @@ class _HomePageCoachState extends State<HomePageCoach> {
             Visibility(
               visible: onVisibles,
               child: SizedBox(
-                height: screenSize.height / 1.6,
+                height: MediaQuery.of(context).size.width,
                 width: double.infinity,
                 child: Padding(
                   padding: const EdgeInsets.all(8.0),
