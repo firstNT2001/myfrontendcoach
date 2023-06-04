@@ -41,10 +41,14 @@ class _ProfileUserState extends State<ProfileUser> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text("Profile")),
+    
       body: Column(
         children: [
-          Expanded(child: showProfile()),
+         
+          Padding(
+            padding: const EdgeInsets.only(top: 50),
+            child: Expanded(child: showProfile()),
+          ),
           Expanded(child: showMenu()),
         ],
       ),
