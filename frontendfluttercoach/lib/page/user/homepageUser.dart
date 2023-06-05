@@ -235,8 +235,9 @@ class _HomePageUserState extends State<HomePageUser> {
                           trailing: const Icon(Icons.arrow_forward),
                           onTap: () {
                             log(course.coId.toString());
+                            log(customer.data.price.toString());
                             context.read<AppData>().idcourse = course.coId;
-
+                            context.read<AppData>().money = customer.data.price;
                             Get.to(() => const showCousePage());
                           },
                         ),
@@ -295,7 +296,10 @@ class _HomePageUserState extends State<HomePageUser> {
                         onPressed: () {
                           log(listcours.coId.toString());
                           context.read<AppData>().idcourse = listcours.coId;
-
+                          log(" uid : "+customer.data.uid.toString());
+                          log(" money : "+customer.data.price.toString());
+                          context.read<AppData>().uid = customer.data.uid;
+                          context.read<AppData>().money = customer.data.price;
                           Get.to(() => const showCousePage());
                         },
                         style: ElevatedButton.styleFrom(
