@@ -32,6 +32,7 @@ class _HomePageUserState extends State<HomePageUser> {
   late HttpResponse<Customer> customer;
 
   List<Coach> coaches = [];
+  List<Coach> namecoache = [];
   List<ModelCourse> courses = [];
   List<ModelCourse> coursesAll = [];
   TextEditingController myController = TextEditingController();
@@ -253,10 +254,15 @@ class _HomePageUserState extends State<HomePageUser> {
 
   Future<void> loadData() async {
     try {
+     
       customer = await customerService.customer(uid: uid.toString());
       var datacourse = await courseService.course(coID: '', cid: '', name: '');
       coursesAll = datacourse.data;
-      log("lengtt = " + coursesAll.length.toString());
+      var coursecoach = await coachService.coach(nameCoach: '', cid: datacourse.data.first.coId.toString());
+      namecoache = coursecoach.data;
+
+      log("lengtt = " + coursesAll.last.coachId.toString());
+      //log("lengttCoach = " + coursesnameCoach.length.toString());
       double h = ((customer.data.height) + .0) / 100;
       double w = customer.data.weight + .0;
       log('BMI=: $h');
@@ -280,6 +286,8 @@ class _HomePageUserState extends State<HomePageUser> {
             itemCount: coursesAll.length,
             itemBuilder: (context, index) {
           final listcours = coursesAll[index];
+          final listcoach = namecoache[index];
+          log("nameCoach"+listcoach.fullName);
           return Card(
             color: Color.fromARGB(255, 235, 235, 235),
             child: Container(
@@ -291,7 +299,7 @@ class _HomePageUserState extends State<HomePageUser> {
                       width: 400, height: 110, fit: BoxFit.fill),
                   ListTile(
                     title: Text(listcours.name),
-                    subtitle: Text(listcours.coachId.toString()),
+                    subtitle: Text(listcoach.fullName),
                      trailing: ElevatedButton(
                         onPressed: () {
                           log(listcours.coId.toString());

@@ -26,11 +26,6 @@ class _ProfileCoachPageState extends State<ProfileCoachPage> {
   late List<ModelCourse> courses = [];
   late List<Coach> coach = [];
   int cidCoach = 0;
-  String qualificationCoach = "";
-  String fullnameCoach = "";
-  String userNameCoach = " ";
-  String propertyC = " ";
-
   int _selectedIndex = 0;
   PageController pageController = PageController();
   void onTapped(int index){
@@ -44,11 +39,6 @@ class _ProfileCoachPageState extends State<ProfileCoachPage> {
     // TODO: implement initState
     super.initState();
     cidCoach = context.read<AppData>().cid;
-    // fullnameCoach = context.read<AppData>().nameCoach;
-    // qualificationCoach = context.read<AppData>().qualification;
-    // userNameCoach = context.read<AppData>().usercoach;
-    // propertyC = context.read<AppData>().propertycoach;
-
     //couse
     courseService =
         CourseService(Dio(), baseUrl: context.read<AppData>().baseurl);
@@ -56,10 +46,6 @@ class _ProfileCoachPageState extends State<ProfileCoachPage> {
     loadDataMethod = loadData();
 
     log("AAAA : " + cidCoach.toString());
-    // log("BBB : " + qualificationCoach);
-    // log("CCC : " + fullnameCoach);
-    // log("DDD : " + userNameCoach);
-    // log("EEE : " + propertyC);
   }
 
   @override
@@ -88,17 +74,6 @@ class _ProfileCoachPageState extends State<ProfileCoachPage> {
         ),
     );
   }
-
-  // Widget showText() {
-  //   return Column(
-  //     children: [
-  //       Text('@' + userNameCoach),
-  //       Text(fullnameCoach),
-  //       Text(qualificationCoach),
-  //       Text(propertyC),
-  //     ],
-  //   );
-  // }
 
   Widget loadshowcouse() {
     return FutureBuilder(
