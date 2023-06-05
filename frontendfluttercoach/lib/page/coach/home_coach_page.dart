@@ -257,49 +257,115 @@ class _HomePageCoachState extends State<HomePageCoach> {
             itemCount: courses.length,
             itemBuilder: (context, index) {
               final listcours = courses[index];
-              return Card(
-                clipBehavior: Clip.antiAlias,
-                child: SizedBox(
-                  height: MediaQuery.of(context).size.height * 0.3,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Image.network(listcours.image,
-                          width: MediaQuery.of(context).size.width,
-                          height: MediaQuery.of(context).size.height * 0.201,
-                          fit: BoxFit.fill),
-                      ListTile(
-                        title: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              return SizedBox(
+                height: MediaQuery.of(context).size.height * 0.2,
+                child: Card(
+                  color: Colors.white,
+                  child: InkWell(
+                    onTap: () {
+                      Get.to(() => CourseEditPage(
+                            coID: courses[index].coId.toString(),
+                          ));
+                    },
+                    child: Row(
+                      //crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Padding(
+                          padding:
+                              const EdgeInsets.only(left: 8, top: 5, bottom: 5),
+                          child: Container(
+                              width: MediaQuery.of(context).size.width * 0.4,
+                              height: MediaQuery.of(context).size.height,
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(26),
+                                image: DecorationImage(
+                                  image: NetworkImage(listcours.image),
+                                ),
+                              )),
+                        ),
+                        Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
                               listcours.name,
                               style: Theme.of(context).textTheme.titleLarge,
                             ),
-                            // SizedBox(
-                            //   width: MediaQuery.of(context).size.width * 0.4,
-                            // ),
-                            // ignore: unrelated_type_equality_checks
+                            IntrinsicHeight(
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceEvenly,
+                                children:  [
+                                  const Icon(
+                                    FontAwesomeIcons.solidStar,
+                                    color: Colors.yellow,
+                                    size: 20,
+                                  ),
+                                  const SizedBox(
+                                    width: 10,
+                                  ),
+                                  const Text("4.5"),
+                                  const VerticalDivider(),
+                                  Text(listcours.price.toString()),
+                                ],
+                              ),
+                            ),
+                            
                             if (listcours.status == '1') ...{
                               Text(
                                 "กำลังขาย",
-                                style: Theme.of(context).textTheme.titleLarge,
+                                style: Theme.of(context).textTheme.titleMedium,
                               ),
                             } else
                               Text(
                                 "ปิดการขาย",
-                                style: Theme.of(context).textTheme.titleLarge,
+                                style: Theme.of(context).textTheme.titleMedium,
                               ),
                           ],
                         ),
-                        subtitle: Text(listcours.status.toString()),
-                        onTap: () {
-                          Get.to(() => CourseEditPage(
-                                coID: courses[index].coId.toString(),
-                              ));
-                        },
-                      ),
-                    ],
+                        const SizedBox(
+                          width: 50,
+                        )
+                        // ListTile(
+                        //   // leading: Container(
+                        //   //   width: MediaQuery.of(context).size.width * 0.5,
+                        //   //   height: MediaQuery.of(context).size.height,
+                        //   //   decoration: BoxDecoration(
+                        //   //     image: DecorationImage(
+                        //   //       fit: BoxFit.fill,
+                        //   //       image: NetworkImage(listcours.image),
+                        //   //     ),
+                        //   //   ),
+                        //   // ),
+                        //   title: Row(
+                        //     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        //     children: [
+                        //       Text(
+                        //         listcours.name,
+                        //         style: Theme.of(context).textTheme.titleLarge,
+                        //       ),
+                        //       if (listcours.status == '1') ...{
+                        //         Text(
+                        //           "กำลังขาย",
+                        //           style: Theme.of(context).textTheme.titleLarge,
+                        //         ),
+                        //       } else
+                        //         Text(
+                        //           "ปิดการขาย",
+                        //           style: Theme.of(context).textTheme.titleLarge,
+                        //         ),
+                        //     ],
+                        //   ),
+                        //   subtitle: Text(listcours.status.toString()),
+                        //   onTap: () {
+                        //     Get.to(() => CourseEditPage(
+                        //           coID: courses[index].coId.toString(),
+                        //         ));
+                        //   },
+                        // ),
+                      ],
+                    ),
                   ),
                 ),
               );

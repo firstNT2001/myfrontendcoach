@@ -1,15 +1,18 @@
 import 'dart:convert';
 import 'dart:developer';
+import 'dart:io';
 //import 'dart:io';
 
-import 'package:auto_size_text/auto_size_text.dart';
-import 'package:dio/dio.dart';
+
+
+import 'package:file_picker/file_picker.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
+
 
 import 'package:get/get.dart';
 import 'package:provider/provider.dart';
-import 'package:retrofit/dio.dart';
+
 
 import '../../../model/request/course_courseID_put.dart';
 import '../../../model/response/course_get_res.dart';
@@ -17,7 +20,7 @@ import '../../../model/response/md_Result.dart';
 import '../../../service/course.dart';
 
 import '../../../service/provider/appdata.dart';
-import '../../../service/provider/courseData.dart';
+
 import '../../../service/provider/dayOfCouseData.dart';
 import '../../../widget/wg_textField.dart';
 import '../daysCourse/days_course_page.dart';
@@ -57,6 +60,12 @@ class _CourseEditPageState extends State<CourseEditPage> {
   var updateCourse;
 
   Object? get destinations => null;
+
+  //selectimg
+  PlatformFile? pickedImg;
+  UploadTask? uploadTask;
+  String profile = " ";
+
   @override
   void initState() {
     super.initState();
@@ -70,13 +79,13 @@ class _CourseEditPageState extends State<CourseEditPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        iconTheme: const IconThemeData(
-          color: Colors.black, //change your color here
+        appBar: AppBar(
+          iconTheme: const IconThemeData(
+            color: Colors.black, //change your color here
+          ),
+          title: const Text("Edit Course"),
+          centerTitle: true,
         ),
-        title: const Text("Edit Course"),
-        centerTitle: true,
-      ),
         body: SafeArea(
           child: Column(
             children: [
@@ -87,6 +96,75 @@ class _CourseEditPageState extends State<CourseEditPage> {
                       return Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
+                          Stack(
+                            children: [
+                              if (pickedImg != null) ...{
+                                Container(
+                                  width: 130,
+                                  height: 130,
+                                  decoration: BoxDecoration(
+                                      border: Border.all(
+                                          width: 3, color: Colors.cyan),
+                                      boxShadow: [
+                                        BoxShadow(
+                                            spreadRadius: 2,
+                                            blurRadius: 10,
+                                            color:
+                                                Colors.black.withOpacity(0.1))
+                                      ],
+                                      shape: BoxShape.circle,
+                                      image: DecorationImage(
+                                          image: FileImage(
+                                            File(pickedImg!.path!),
+                                          ),
+                                          fit: BoxFit.cover)),
+                                ),
+                              } else
+                                Container(
+                                  width: 130,
+                                  height: 130,
+                                  decoration: BoxDecoration(
+                                      border: Border.all(
+                                          width: 3, color: Colors.cyan),
+                                      boxShadow: [
+                                        BoxShadow(
+                                            spreadRadius: 2,
+                                            blurRadius: 10,
+                                            color:
+                                                Colors.black.withOpacity(0.1))
+                                      ],
+                                      shape: BoxShape.circle,
+                                      image: DecorationImage(
+                                        fit: BoxFit.cover,
+                                        image:
+                                            NetworkImage(courses.first.image),
+                                      )),
+                                ),
+                              Positioned(
+                                  bottom: 0,
+                                  right: 0,
+                                  child: InkWell(
+                                    onTap: () {
+                                      log("message");
+                                      selectImg();
+                                    },
+                                    child: Container(
+                                      height: 40,
+                                      width: 40,
+                                      decoration: BoxDecoration(
+                                          shape: BoxShape.circle,
+                                          border: Border.all(
+                                              width: 4, color: Colors.white),
+                                          color: Colors.amber),
+                                      child: const Icon(
+                                        Icons.edit,
+                                        color: Colors.white,
+                                      ),
+                                    ),
+                                  )),
+                            ],
+                          ),
+
                           //Expanded(child: Image.network(imageCourse)),
                           WidgetTextFieldString(
                             controller: name,
@@ -112,7 +190,7 @@ class _CourseEditPageState extends State<CourseEditPage> {
                             controller: days,
                             labelText: 'จำนวนวัน',
                           ),
-                    
+
                           Column(
                             children: [
                               for (int i = 1; i <= day; i++) ...{
@@ -121,8 +199,9 @@ class _CourseEditPageState extends State<CourseEditPage> {
                                   padding: const EdgeInsets.all(20),
                                   child: ElevatedButton(
                                     onPressed: () {
-                                      context.read<DayOfCourseData>().didDayOfCouse =
-                                          i;
+                                      context
+                                          .read<DayOfCourseData>()
+                                          .didDayOfCouse = i;
                                       Get.to(() => const DaysCoursePage());
                                     },
                                     child: Text('Day $i'),
@@ -131,21 +210,19 @@ class _CourseEditPageState extends State<CourseEditPage> {
                               }
                             ],
                           ),
-                          // Padding(
-                          //   padding: const EdgeInsets.all(50.0),
-                          //   child: Center(child: Text(courses.data.status)),
-                          // ),
-                    
                           switchOnOffStatus(context),
                           ElevatedButton(
                             //style: style,
                             onPressed: () async {
-                              CourseCourseIdPut updateCourseDTO = CourseCourseIdPut(
+                              if (pickedImg != null) await uploadfile();
+                              if (pickedImg == null) profile = courses.first.image;
+                              CourseCourseIdPut updateCourseDTO =
+                                  CourseCourseIdPut(
                                 name: name.text,
                                 details: details.text,
                                 level: level.text,
                                 amount: int.parse(amount.text),
-                                image: imageCourse,
+                                image: profile,
                                 days: int.parse(days.text),
                                 price: int.parse(price.text),
                                 status: status,
@@ -247,14 +324,14 @@ class _CourseEditPageState extends State<CourseEditPage> {
   }
 
   void data() {
-    name.text = courses[0].name;
-    details.text = courses[0].details;
-    level.text = courses[0].level;
-    amount.text = courses[0].amount.toString();
-    price.text = courses[0].price.toString();
-    days.text = courses[0].days.toString();
-    statusCourse = courses[0].status;
-    log("coachId: "+courses.first.coachId.toString());
+    name.text = courses.first.name;
+    details.text = courses.first.details;
+    level.text = courses.first.level;
+    amount.text = courses.first.amount.toString();
+    price.text = courses.first.price.toString();
+    days.text = courses.first.days.toString();
+    statusCourse = courses.first.status;
+    log("coachId: ${courses.first.coachId}");
     //เช็ค สถานะการเปิดขายของคอร์ส
     status = statusCourse;
     if (statusCourse == "1") {
@@ -270,5 +347,27 @@ class _CourseEditPageState extends State<CourseEditPage> {
       });
     }
     // name.text = foods.name;
+  }
+
+  Future selectImg() async {
+    final result = await FilePicker.platform.pickFiles();
+    if (result == null) return;
+    
+    setState(() {
+      pickedImg = result.files.first;
+    });
+  }
+
+  //uploadfile
+  Future uploadfile() async {
+    final path = 'files/${pickedImg!.name}';
+    final file = File(pickedImg!.path!);
+
+    final ref = FirebaseStorage.instance.ref().child(path);
+    uploadTask = ref.putFile(file);
+    final snapshot = await uploadTask!.whenComplete(() {});
+    final urlDownload = await snapshot.ref.getDownloadURL();
+    // print('link img firebase $urlDownload');
+    profile = urlDownload;
   }
 }
