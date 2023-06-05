@@ -87,9 +87,6 @@ class _HomePageCoachState extends State<HomePageCoach> {
   Widget build(BuildContext context) {
     //Size
     Size screenSize = MediaQuery.of(context).size;
-    double width = (screenSize.width > 550) ? 550 : screenSize.width;
-    double height = (screenSize.height > 550) ? 550 : screenSize.height;
-    double padding = 8;
 
     return Scaffold(
       resizeToAvoidBottomInset: false,
@@ -125,7 +122,7 @@ class _HomePageCoachState extends State<HomePageCoach> {
       ),
       body: SafeArea(
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
+          // crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Container(
                 width: screenSize.height,
@@ -190,27 +187,26 @@ class _HomePageCoachState extends State<HomePageCoach> {
               height: 10,
             ),
             //show Course
-            Visibility(
-              visible: onVisibles,
-              child: SizedBox(
-                height: MediaQuery.of(context).size.width,
-                width: double.infinity,
-                child: Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: showCourse(),
+            if (onVisibles == true)
+              Expanded(
+                child: Visibility(
+                  visible: onVisibles,
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: showCourse(),
+                  ),
                 ),
               ),
-            ),
-            Visibility(
-              visible: offVisibles,
-              child: SizedBox(
-                height: MediaQuery.of(context).size.width * 1.06,
-                child: Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: showCourse(),
+            if (offVisibles == true)
+              Expanded(
+                child: Visibility(
+                  visible: offVisibles,
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: showCourse(),
+                  ),
                 ),
               ),
-            ),
           ],
         ),
       ),
@@ -251,69 +247,67 @@ class _HomePageCoachState extends State<HomePageCoach> {
   //Show Data
   Widget showCourse() {
     return FutureBuilder(
-        future: loadCourseDataMethod, // 3.1 object ของ async method
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.done) {
-            return Column(
-              children: <Widget>[
-                // ignore: unnecessary_null_comparison
-                if (courses != null)
-                  Expanded(
-                    child: ListView.builder(
-                      itemCount: courses.length,
-                      itemBuilder: (context, index) {
-                        return Container(
-                          padding:
-                              const EdgeInsets.only(top: 8, left: 8, right: 8),
-                          child: GestureDetector(
-                            onTap: () {
-                              Get.to(() => CourseEditPage(
-                                    coID: courses[index].coId.toString(),
-                                  ));
-                            },
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                ClipRRect(
-                                  borderRadius: BorderRadius.circular(8.0),
-                                  child: Image.network(courses[index].image,
-                                      width: 400,
-                                      height: 150,
-                                      fit: BoxFit.fill),
-                                ),
-                                Padding(
-                                  padding:
-                                      const EdgeInsets.only(top: 8, bottom: 5),
-                                  child: Row(
-                                    children: [
-                                      Text(
-                                        courses[index].name,
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .headlineSmall,
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                                Text("ราคา ${courses[index].price.toString()}",
-                                    style: const TextStyle(
-                                        color: Color.fromARGB(255, 39, 39, 39),
-                                        fontSize: 15)),
-                              ],
+      future: loadCourseDataMethod,
+      builder: (context, snapshot) {
+        if (snapshot.connectionState != ConnectionState.done) {
+          return const Center(child: CircularProgressIndicator());
+        } else {
+          return ListView.builder(
+            shrinkWrap: true,
+            itemCount: courses.length,
+            itemBuilder: (context, index) {
+              final listcours = courses[index];
+              return Card(
+                clipBehavior: Clip.antiAlias,
+                child: SizedBox(
+                  height: MediaQuery.of(context).size.height * 0.3,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Image.network(listcours.image,
+                          width: MediaQuery.of(context).size.width,
+                          height: MediaQuery.of(context).size.height * 0.201,
+                          fit: BoxFit.fill),
+                      ListTile(
+                        title: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: [
+                            Text(
+                              listcours.name,
+                              style: Theme.of(context).textTheme.titleLarge,
                             ),
-                          ),
-                        );
-                      },
-                    ),
-                  )
-                else
-                  Container(),
-              ],
-            );
-          } else {
-            return const Center(child: CircularProgressIndicator());
-          }
-        });
+                            // SizedBox(
+                            //   width: MediaQuery.of(context).size.width * 0.4,
+                            // ),
+                            // ignore: unrelated_type_equality_checks
+                            if (listcours.status == '1') ...{
+                              Text(
+                                "กำลังขาย",
+                                style: Theme.of(context).textTheme.titleLarge,
+                              ),
+                            } else
+                              Text(
+                                "ปิดการขาย",
+                                style: Theme.of(context).textTheme.titleLarge,
+                              ),
+                          ],
+                        ),
+                        subtitle: Text(listcours.status.toString()),
+                        onTap: () {
+                          Get.to(() => CourseEditPage(
+                                coID: courses[index].coId.toString(),
+                              ));
+                        },
+                      ),
+                    ],
+                  ),
+                ),
+              );
+            },
+          );
+        }
+      },
+    );
   }
 
   Widget showCoach() {
@@ -357,9 +351,14 @@ class _HomePageCoachState extends State<HomePageCoach> {
                     toAnimate: true,
                     animationDuration: Duration(seconds: 1),
                   ),
-                  badgeContent: Text(
-                    requests.length.toString(),
-                    style: const TextStyle(color: Colors.white),
+                  badgeContent: Row(
+                    children: [
+                      if (requests.length > 0)
+                        Text(
+                          requests.length.toString(),
+                          style: const TextStyle(color: Colors.white),
+                        ),
+                    ],
                   ),
                   onTap: () {
                     Get.to(() => const RequestPage());
@@ -368,7 +367,7 @@ class _HomePageCoachState extends State<HomePageCoach> {
                     //shape: badges.BadgeShape.square,
                     badgeColor: Theme.of(context).colorScheme.error,
                     borderSide: const BorderSide(color: Colors.white, width: 2),
-                    elevation: 4,
+                    elevation: 0,
                   ),
                   child: const Icon(
                     FontAwesomeIcons.bell,
