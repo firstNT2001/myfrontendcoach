@@ -158,14 +158,14 @@ class _showCousePageState extends State<showCousePage> {
 
                         var proposedDate = "${cdate2}T00:00:00.000Z";
                         log("Date time3 = $proposedDate");
-                        
+                        //log("Date time3 = $proposedDate");
                         BuyCoursecoIdPost buyCoursecoIdPost = BuyCoursecoIdPost(
                           customerId: cusID, 
                           buyDateTime:  proposedDate, 
                           image: "-");
                           log(jsonEncode(buyCoursecoIdPost));
                           log(cusID.toString());
-                          buycourse =  buyCourseService.buyCourse(cusID.toString(), buyCoursecoIdPost);
+                          buycourse =  buyCourseService.buyCourse(courseId.toString(), buyCoursecoIdPost);
                           Get.to(() => const HomePageUser());
               }, child: Text("ชำระเงิน"))
             ],
