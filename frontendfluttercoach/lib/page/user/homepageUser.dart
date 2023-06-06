@@ -258,8 +258,8 @@ class _HomePageUserState extends State<HomePageUser> {
       customer = await customerService.customer(uid: uid.toString());
       var datacourse = await courseService.course(coID: '', cid: '', name: '');
       coursesAll = datacourse.data;
-      var coursecoach = await coachService.coach(nameCoach: '', cid: datacourse.data.first.coId.toString());
-      namecoache = coursecoach.data;
+      // var coursenaamecoach = await coachService.coach(nameCoach: '', cid: datacourse.data.first.coId.toString());
+      // namecoache = coursenaamecoach.data;
 
       log("lengtt = " + coursesAll.last.coachId.toString());
       //log("lengttCoach = " + coursesnameCoach.length.toString());
@@ -286,8 +286,8 @@ class _HomePageUserState extends State<HomePageUser> {
             itemCount: coursesAll.length,
             itemBuilder: (context, index) {
           final listcours = coursesAll[index];
-          final listcoach = namecoache[index];
-          log("nameCoach"+listcoach.fullName);
+         // final listcoach = namecoache[index];
+         // log("nameCoach"+listcoach.fullName);
           return Card(
             color: Color.fromARGB(255, 235, 235, 235),
             child: Container(
@@ -299,7 +299,7 @@ class _HomePageUserState extends State<HomePageUser> {
                       width: 400, height: 110, fit: BoxFit.fill),
                   ListTile(
                     title: Text(listcours.name),
-                    subtitle: Text(listcoach.fullName),
+                    subtitle: Text(listcours.coachId.toString()),
                      trailing: ElevatedButton(
                         onPressed: () {
                           log(listcours.coId.toString());
