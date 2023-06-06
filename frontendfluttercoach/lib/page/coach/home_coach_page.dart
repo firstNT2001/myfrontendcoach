@@ -290,7 +290,7 @@ class _HomePageCoachState extends State<HomePageCoach> {
                           children: [
                             Text(
                               listcours.name,
-                              style: Theme.of(context).textTheme.titleLarge,
+                              style: Theme.of(context).textTheme.bodyMedium,
                             ),
                             IntrinsicHeight(
                               child: Row(
@@ -315,12 +315,12 @@ class _HomePageCoachState extends State<HomePageCoach> {
                             if (listcours.status == '1') ...{
                               Text(
                                 "กำลังขาย",
-                                style: Theme.of(context).textTheme.titleMedium,
+                                style: Theme.of(context).textTheme.bodySmall,
                               ),
                             } else
                               Text(
                                 "ปิดการขาย",
-                                style: Theme.of(context).textTheme.titleMedium,
+                                style: Theme.of(context).textTheme.bodySmall,
                               ),
                           ],
                         ),

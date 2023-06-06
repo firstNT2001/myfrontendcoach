@@ -9,6 +9,7 @@ import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 
 import '../page/coach/course/course_new_page.dart';
+import '../page/coach/food/foodCoach/food_page.dart';
 import '../page/coach/home_coach_page.dart';
 
 class SideMenu extends StatefulWidget {
@@ -68,7 +69,7 @@ class _SideMenuState extends State<SideMenu> {
                   ),
                   ListTile(
                     onTap: () {
-                      Get.to(() => const CourseNewPage());
+                      Get.to(() => const FoodCoachPage());
                     },
                     leading: const SizedBox(
                         height: 34,
