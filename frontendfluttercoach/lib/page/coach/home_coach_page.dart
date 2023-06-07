@@ -327,43 +327,6 @@ class _HomePageCoachState extends State<HomePageCoach> {
                         const SizedBox(
                           width: 50,
                         )
-                        // ListTile(
-                        //   // leading: Container(
-                        //   //   width: MediaQuery.of(context).size.width * 0.5,
-                        //   //   height: MediaQuery.of(context).size.height,
-                        //   //   decoration: BoxDecoration(
-                        //   //     image: DecorationImage(
-                        //   //       fit: BoxFit.fill,
-                        //   //       image: NetworkImage(listcours.image),
-                        //   //     ),
-                        //   //   ),
-                        //   // ),
-                        //   title: Row(
-                        //     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        //     children: [
-                        //       Text(
-                        //         listcours.name,
-                        //         style: Theme.of(context).textTheme.titleLarge,
-                        //       ),
-                        //       if (listcours.status == '1') ...{
-                        //         Text(
-                        //           "กำลังขาย",
-                        //           style: Theme.of(context).textTheme.titleLarge,
-                        //         ),
-                        //       } else
-                        //         Text(
-                        //           "ปิดการขาย",
-                        //           style: Theme.of(context).textTheme.titleLarge,
-                        //         ),
-                        //     ],
-                        //   ),
-                        //   subtitle: Text(listcours.status.toString()),
-                        //   onTap: () {
-                        //     Get.to(() => CourseEditPage(
-                        //           coID: courses[index].coId.toString(),
-                        //         ));
-                        //   },
-                        // ),
                       ],
                     ),
                   ),
