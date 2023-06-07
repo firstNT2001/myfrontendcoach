@@ -8,6 +8,7 @@ import 'package:retrofit/dio.dart';
 
 
 import '../../model/response/course_get_res.dart';
+import '../../model/response/md_coach_course_get.dart';
 import '../../service/course.dart';
 import '../../service/provider/appdata.dart';
 import 'cousepage.dart';
@@ -22,7 +23,7 @@ class MyCouses extends StatefulWidget {
 class _MyCousesState extends State<MyCouses> {
   late CourseService courseService;
  // late HttpResponse<ModelCourse> courses;
-  List<ModelCourse> courses = [];
+  List<Coachbycourse> courses = [];
   late Future<void> loadDataMethod;
 
   int uid = 0;

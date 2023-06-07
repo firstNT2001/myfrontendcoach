@@ -16,6 +16,7 @@ import '../../model/request/buycourse_coID_post.dart';
 import '../../model/response/course_get_res.dart';
 import '../../model/response/md_Result.dart';
 import '../../model/response/md_Review_get.dart';
+import '../../model/response/md_coach_course_get.dart';
 import '../../service/buy.dart';
 import '../../service/course.dart';
 import '../../service/provider/appdata.dart';
@@ -33,7 +34,7 @@ class _showCousePageState extends State<showCousePage> {
   late CourseService courseService;
   late Future<void> loadDataMethod;
   late ReviewService reviewService;
-  List<ModelCourse> courses = [];
+  List<Coachbycourse> courses = [];
   late ModelResult moduleResult;
   int courseId = 0;
   int cusID = 0;
@@ -158,14 +159,14 @@ class _showCousePageState extends State<showCousePage> {
 
                         var proposedDate = "${cdate2}T00:00:00.000Z";
                         log("Date time3 = $proposedDate");
-                        
+                        //log("Date time3 = $proposedDate");
                         BuyCoursecoIdPost buyCoursecoIdPost = BuyCoursecoIdPost(
                           customerId: cusID, 
                           buyDateTime:  proposedDate, 
                           image: "-");
                           log(jsonEncode(buyCoursecoIdPost));
                           log(cusID.toString());
-                          buycourse =  buyCourseService.buyCourse(cusID.toString(), buyCoursecoIdPost);
+                          buycourse =  buyCourseService.buyCourse(courseId.toString(), buyCoursecoIdPost);
                           Get.to(() => const HomePageUser());
               }, child: Text("ชำระเงิน"))
             ],
