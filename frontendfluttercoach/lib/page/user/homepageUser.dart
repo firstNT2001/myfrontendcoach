@@ -8,10 +8,11 @@ import 'package:provider/provider.dart';
 import 'package:retrofit/retrofit.dart';
 import 'dart:developer';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import '../../model/response/md_CoachInCourse.dart';
+
 import '../../model/response/md_Coach_get.dart';
 import '../../model/response/course_get_res.dart';
 import '../../model/response/md_Customer_get.dart';
+import '../../model/response/md_coach_course_get.dart';
 import '../../service/coach.dart';
 import '../../service/course.dart';
 import '../../service/customer.dart';
@@ -33,11 +34,11 @@ class _HomePageUserState extends State<HomePageUser> {
   late HttpResponse<Customer> customer;
 
   List<Coach> coaches = [];
-  List<ModelCourse> courses = [];
+  List<Coachbycourse> courses = [];
   //List<ModelCourse> coursesAll = [];
 
 
-  late HttpResponse<List<CoachInCourse>> datacoachname;
+  //late List<Coachbycourse> coachname=[];
   TextEditingController myController = TextEditingController();
 
   int uid = 1;
@@ -195,10 +196,10 @@ class _HomePageUserState extends State<HomePageUser> {
                             trailing: const Icon(Icons.arrow_forward),
                             onTap: () {
                               log(coach.cid.toString());
-                              log("q :" + coach.qualification);
-                              log("name :" + coach.fullName);
-                              log("ussername :" + coach.username);
-                              log("property :" + coach.property);
+                              log("q :${coach.qualification}");
+                              log("name :${coach.fullName}");
+                              log("ussername :${coach.username}");
+                              log("property :${coach.property}");
                               context.read<AppData>().cid = coach.cid;
                               context.read<AppData>().qualification =
                                   coach.qualification;
@@ -260,10 +261,9 @@ class _HomePageUserState extends State<HomePageUser> {
      
       customer = await customerService.customer(uid: uid.toString());
       var datacourse = await courseService.course(coID: '', cid: '', name: '');
-      courses = datacourse.data;
 
-      log("lengtt = " + courses.last.coachId.toString());
-      //log("lengttCoach = " + coursesnameCoach.length.toString());
+      courses = datacourse.data;
+      log("list coachname =${courses.length}");
       double h = ((customer.data.height) + .0) / 100;
       double w = customer.data.weight + .0;
       log('BMI=: $h');
@@ -287,8 +287,7 @@ class _HomePageUserState extends State<HomePageUser> {
             itemCount: courses.length,
             itemBuilder: (context, index) {
           final listcours = courses[index];
-         // final listcoach = namecoache[index];
-         // log("nameCoach"+listcoach.fullName);
+          
           return Card(
             color: Color.fromARGB(255, 235, 235, 235),
             child: Container(
@@ -300,13 +299,13 @@ class _HomePageUserState extends State<HomePageUser> {
                       width: 400, height: 110, fit: BoxFit.fill),
                   ListTile(
                     title: Text(listcours.name),
-                    subtitle: Text(listcours.coachId.toString()),
+                    subtitle: Text(listcours.coach.fullName),
                      trailing: ElevatedButton(
                         onPressed: () {
                           log(listcours.coId.toString());
                           context.read<AppData>().idcourse = listcours.coId;
-                          log(" uid : "+customer.data.uid.toString());
-                          log(" money : "+customer.data.price.toString());
+                          log(" uid : ${customer.data.uid}");
+                          log(" money : ${customer.data.price}");
                           context.read<AppData>().uid = customer.data.uid;
                           context.read<AppData>().money = customer.data.price;
                           Get.to(() => const showCousePage());

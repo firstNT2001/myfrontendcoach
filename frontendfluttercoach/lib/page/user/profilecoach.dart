@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:frontendfluttercoach/page/user/cousepage.dart';
 import '../../model/response/course_get_res.dart';
 import '../../model/response/md_Coach_get.dart';
+import '../../model/response/md_coach_course_get.dart';
 import '../../service/coach.dart';
 import '../../service/course.dart';
 import 'package:get/get.dart';
@@ -23,7 +24,7 @@ class _ProfileCoachPageState extends State<ProfileCoachPage> {
   late CourseService courseService;
   late CoachService coachService;
   late Future<void> loadDataMethod;
-  late List<ModelCourse> courses = [];
+  late List<Coachbycourse> courses = [];
   late List<Coach> coach = [];
   int cidCoach = 0;
   int _selectedIndex = 0;
