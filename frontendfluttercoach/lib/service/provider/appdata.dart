@@ -5,6 +5,7 @@ import 'package:frontendfluttercoach/service/course.dart';
 import 'package:frontendfluttercoach/service/listClip.dart';
 
 import '../auth.dart';
+import '../days.dart';
 import '../listFood.dart';
 import '../request.dart';
 
@@ -36,5 +37,6 @@ class AppData with ChangeNotifier {
   CourseService get courseService => CourseService(Dio(), baseUrl: baseurl);
   CoachService get couchService =>CoachService(Dio(), baseUrl: baseurl);  
   RequestService get requestService => RequestService(Dio(), baseUrl: baseurl);
+  DaysService get daysService => DaysService(Dio(), baseUrl: baseurl);
 
 }

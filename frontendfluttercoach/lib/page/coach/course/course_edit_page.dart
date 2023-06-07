@@ -105,33 +105,13 @@ class _CourseEditPageState extends State<CourseEditPage> {
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           //เพิ่มรูป || แสดงรูป
+                          inputImage(context),
 
-                          Stack(
-                            children: [
-                              //      const SizedBox(
-                              //   height: 18,
-                              // ),
-                              //     SizedBox(
-                              //   width: double.infinity,
-                              //   height: MediaQuery.of(context).size.height *0.6,
-                              //   child: Container(
-                              //     decoration: const BoxDecoration(
-                              //         borderRadius: BorderRadius.only(
-                              //             topLeft: Radius.circular(20),
-                              //             topRight: Radius.circular(20)),
-                              //         color: Colors.white),)),
-                              inputImage(context),
-                            ],
-                          ),
-
-                          // Container(
-                          //   width: MediaQuery.of(context).size.width ,
-                          //   height: double.infinity,
-                          //   color: Colors.black, //change your color here
-                          // ),
                           const SizedBox(
                             height: 18,
                           ),
+                          // TextField
+                          
                           SizedBox(
                             width: double.infinity,
                             height: MediaQuery.of(context).size.height * 0.6,
@@ -385,73 +365,75 @@ class _CourseEditPageState extends State<CourseEditPage> {
             widget.coID.toString(), updateCourseDTO);
         moduleResult = updateCourse.data;
         log(jsonEncode(moduleResult.result));
-        //log("rowsAffected:"+updateCourse);
-        Get.to(() => const HomePageCoach());
+        
+        Get.to(() => DaysCoursePage(
+              coID: widget.coID,
+            ));
       },
       child: const Text('Next'),
     );
   }
 
-  Switch switchOnOffStatus(BuildContext context) {
-    return Switch(
-      onChanged: (bool value) {
-        setState(() {
-          switchOnOff = value;
-        });
-        log(switchOnOff.toString());
-        if (value == true) {
-          showDialog<String>(
-              context: context,
-              builder: (BuildContext context) => AlertDialog(
-                    title: const Text('เปิดขายคอร์สหรือไม'),
-                    content: const Text('ต้องการเปิดขายคอร์สหรือไม'),
-                    actions: <Widget>[
-                      TextButton(
-                          child: const Text('Cancel'),
-                          onPressed: () {
-                            Navigator.pop(context, 'Cancel');
-                            setState(() {
-                              switchOnOff = false;
-                            });
-                          }),
-                      TextButton(
-                        onPressed: () {
-                          Navigator.pop(context, 'OK');
-                          status = "1";
-                        },
-                        child: const Text('OK'),
-                      ),
-                    ],
-                  ));
-        } else if (value == false) {
-          showDialog<String>(
-              context: context,
-              builder: (BuildContext context) => AlertDialog(
-                    title: const Text('ปิดขายคอร์สหรือไม'),
-                    content: const Text('ต้องการปิดขายคอร์สหรือไม'),
-                    actions: <Widget>[
-                      TextButton(
-                          child: const Text('Cancel'),
-                          onPressed: () {
-                            Navigator.pop(context, 'Cancel');
-                            setState(() {
-                              switchOnOff = true;
-                            });
-                          }),
-                      TextButton(
-                        onPressed: () {
-                          Navigator.pop(context, 'OK');
-                          status = "0";
-                        },
-                        child: const Text('OK'),
-                      ),
-                    ],
-                  ));
-        }
-      },
-      value: switchOnOff,
-    );
-  }
+  // Switch switchOnOffStatus(BuildContext context) {
+  //   return Switch(
+  //     onChanged: (bool value) {
+  //       setState(() {
+  //         switchOnOff = value;
+  //       });
+  //       log(switchOnOff.toString());
+  //       if (value == true) {
+  //         showDialog<String>(
+  //             context: context,
+  //             builder: (BuildContext context) => AlertDialog(
+  //                   title: const Text('เปิดขายคอร์สหรือไม'),
+  //                   content: const Text('ต้องการเปิดขายคอร์สหรือไม'),
+  //                   actions: <Widget>[
+  //                     TextButton(
+  //                         child: const Text('Cancel'),
+  //                         onPressed: () {
+  //                           Navigator.pop(context, 'Cancel');
+  //                           setState(() {
+  //                             switchOnOff = false;
+  //                           });
+  //                         }),
+  //                     TextButton(
+  //                       onPressed: () {
+  //                         Navigator.pop(context, 'OK');
+  //                         status = "1";
+  //                       },
+  //                       child: const Text('OK'),
+  //                     ),
+  //                   ],
+  //                 ));
+  //       } else if (value == false) {
+  //         showDialog<String>(
+  //             context: context,
+  //             builder: (BuildContext context) => AlertDialog(
+  //                   title: const Text('ปิดขายคอร์สหรือไม'),
+  //                   content: const Text('ต้องการปิดขายคอร์สหรือไม'),
+  //                   actions: <Widget>[
+  //                     TextButton(
+  //                         child: const Text('Cancel'),
+  //                         onPressed: () {
+  //                           Navigator.pop(context, 'Cancel');
+  //                           setState(() {
+  //                             switchOnOff = true;
+  //                           });
+  //                         }),
+  //                     TextButton(
+  //                       onPressed: () {
+  //                         Navigator.pop(context, 'OK');
+  //                         status = "0";
+  //                       },
+  //                       child: const Text('OK'),
+  //                     ),
+  //                   ],
+  //                 ));
+  //       }
+  //     },
+  //     value: switchOnOff,
+  //   );
+  // }
 
   Future<void> loadDataAsync() async {
     try {
