@@ -8,9 +8,11 @@ import 'package:provider/provider.dart';
 import 'package:retrofit/retrofit.dart';
 import 'dart:developer';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+
 import '../../model/response/md_Coach_get.dart';
 import '../../model/response/course_get_res.dart';
 import '../../model/response/md_Customer_get.dart';
+import '../../model/response/md_coach_course_get.dart';
 import '../../service/coach.dart';
 import '../../service/course.dart';
 import '../../service/customer.dart';
@@ -32,8 +34,11 @@ class _HomePageUserState extends State<HomePageUser> {
   late HttpResponse<Customer> customer;
 
   List<Coach> coaches = [];
-  List<ModelCourse> courses = [];
-  List<ModelCourse> coursesAll = [];
+  List<Coachbycourse> courses = [];
+  //List<ModelCourse> coursesAll = [];
+
+
+  //late List<Coachbycourse> coachname=[];
   TextEditingController myController = TextEditingController();
 
   int uid = 1;
@@ -148,9 +153,9 @@ class _HomePageUserState extends State<HomePageUser> {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
-                const Text("รายการแนะนำ",
+                 Text("คอร์สแนะนำ",
                     style:
-                        TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                        Theme.of(context).textTheme.bodyLarge),
                 const Icon(
                   FontAwesomeIcons.fire,
                   color: Color.fromARGB(255, 192, 0, 0),
@@ -191,10 +196,10 @@ class _HomePageUserState extends State<HomePageUser> {
                             trailing: const Icon(Icons.arrow_forward),
                             onTap: () {
                               log(coach.cid.toString());
-                              log("q :" + coach.qualification);
-                              log("name :" + coach.fullName);
-                              log("ussername :" + coach.username);
-                              log("property :" + coach.property);
+                              log("q :${coach.qualification}");
+                              log("name :${coach.fullName}");
+                              log("ussername :${coach.username}");
+                              log("property :${coach.property}");
                               context.read<AppData>().cid = coach.cid;
                               context.read<AppData>().qualification =
                                   coach.qualification;
@@ -235,8 +240,9 @@ class _HomePageUserState extends State<HomePageUser> {
                           trailing: const Icon(Icons.arrow_forward),
                           onTap: () {
                             log(course.coId.toString());
+                            log(customer.data.price.toString());
                             context.read<AppData>().idcourse = course.coId;
-
+                            context.read<AppData>().money = customer.data.price;
                             Get.to(() => const showCousePage());
                           },
                         ),
@@ -252,10 +258,12 @@ class _HomePageUserState extends State<HomePageUser> {
 
   Future<void> loadData() async {
     try {
+     
       customer = await customerService.customer(uid: uid.toString());
       var datacourse = await courseService.course(coID: '', cid: '', name: '');
-      coursesAll = datacourse.data;
-      log("lengtt = " + coursesAll.length.toString());
+
+      courses = datacourse.data;
+      log("list coachname =${courses.length}");
       double h = ((customer.data.height) + .0) / 100;
       double w = customer.data.weight + .0;
       log('BMI=: $h');
@@ -276,9 +284,10 @@ class _HomePageUserState extends State<HomePageUser> {
         } else {
           return ListView.builder(
             shrinkWrap: true,
-            itemCount: coursesAll.length,
+            itemCount: courses.length,
             itemBuilder: (context, index) {
-          final listcours = coursesAll[index];
+          final listcours = courses[index];
+          
           return Card(
             color: Color.fromARGB(255, 235, 235, 235),
             child: Container(
@@ -290,12 +299,15 @@ class _HomePageUserState extends State<HomePageUser> {
                       width: 400, height: 110, fit: BoxFit.fill),
                   ListTile(
                     title: Text(listcours.name),
-                    subtitle: Text(listcours.coachId.toString()),
+                    subtitle: Text(listcours.coach.fullName),
                      trailing: ElevatedButton(
                         onPressed: () {
                           log(listcours.coId.toString());
                           context.read<AppData>().idcourse = listcours.coId;
-
+                          log(" uid : ${customer.data.uid}");
+                          log(" money : ${customer.data.price}");
+                          context.read<AppData>().uid = customer.data.uid;
+                          context.read<AppData>().money = customer.data.price;
                           Get.to(() => const showCousePage());
                         },
                         style: ElevatedButton.styleFrom(

@@ -15,6 +15,7 @@ import 'package:provider/provider.dart';
 
 import '../../model/response/course_get_res.dart';
 import '../../model/response/md_Coach_get.dart';
+import '../../model/response/md_coach_course_get.dart';
 import '../../model/response/md_request.dart';
 import '../../service/coach.dart';
 import '../../service/course.dart';
@@ -35,7 +36,7 @@ class _HomePageCoachState extends State<HomePageCoach> {
   // Courses
   late Future<void> loadCourseDataMethod;
   late CourseService _courseService;
-  List<ModelCourse> courses = [];
+  List<Coachbycourse> courses = [];
   TextEditingController search = TextEditingController();
   String statusName = "";
   String statusID = "";

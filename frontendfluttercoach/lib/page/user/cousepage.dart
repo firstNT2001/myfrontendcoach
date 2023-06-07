@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:developer';
 
 import 'package:dio/dio.dart';
@@ -5,15 +6,21 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 import 'package:frontendfluttercoach/service/review.dart';
+import 'package:get/get.dart';
+import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:retrofit/retrofit.dart';
 import 'package:retrofit/dio.dart';
 
-
+import '../../model/request/buycourse_coID_post.dart';
 import '../../model/response/course_get_res.dart';
+import '../../model/response/md_Result.dart';
 import '../../model/response/md_Review_get.dart';
+import '../../model/response/md_coach_course_get.dart';
+import '../../service/buy.dart';
 import '../../service/course.dart';
 import '../../service/provider/appdata.dart';
+import 'homepageUser.dart';
 
 class showCousePage extends StatefulWidget {
   const showCousePage({super.key});
@@ -23,23 +30,31 @@ class showCousePage extends StatefulWidget {
 }
 
 class _showCousePageState extends State<showCousePage> {
+  late BuyCourseService buyCourseService;
   late CourseService courseService;
   late Future<void> loadDataMethod;
   late ReviewService reviewService;
-  List<ModelCourse> courses = [];
-  
+  List<Coachbycourse> courses = [];
+  late ModelResult moduleResult;
   int courseId = 0;
+  int cusID = 0;
+  int moneycus = 0;
   List<ModelReview> reviews = [];
+  var buycourse;
+  final now = DateTime.now();
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
     courseId = context.read<AppData>().idcourse;
+    cusID = context.read<AppData>().uid;
+    moneycus = context.read<AppData>().money;
     courseService =
         CourseService(Dio(), baseUrl: context.read<AppData>().baseurl);
     reviewService =
         ReviewService(Dio(), baseUrl: context.read<AppData>().baseurl);
-
+    buyCourseService =
+        BuyCourseService(Dio(), baseUrl: context.read<AppData>().baseurl);
     loadDataMethod = loadData();
   }
 
@@ -63,18 +78,99 @@ class _showCousePageState extends State<showCousePage> {
                     endIndent: 8,
                   ),
                   Center(
-                    child: Text("คะแนนจากผู้ซื้อ",style:
-                            TextStyle(fontSize: 16, fontWeight: FontWeight.bold),),
+                    child: Text(
+                      "คะแนนจากผู้ซื้อ",
+                      style:
+                          TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                    ),
                   ),
-                  SizedBox(height: 320, width: 390, child: loadReview())
+                  SizedBox(height: 150, width: 390, child: loadReview()),
+                  SizedBox(
+                    width: 65,
+                    height: 65,
+                    child: ElevatedButton(
+                      onPressed: () {
+                        openDialog();
+                      },
+                      style: ElevatedButton.styleFrom(
+                        primary: Color.fromARGB(255, 15, 15, 15),
+                        shape: CircleBorder(), //<-- SEE HERE
+                        //padding: EdgeInsets.all(30),
+                      ),
+                      child: Icon(
+                        //<-- SEE HERE
+                        Icons.shopping_basket_outlined,
+                        color: Color.fromARGB(255, 255, 255, 255),
+                        size: 35,
+                      ),
+                    ),
+                  ),
                 ],
               ),
             ),
           ],
-        )
-        );
+        ));
   }
 
+  Future openDialog() => showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+            title: Text("กรุณาชำระเงิน"),
+            content: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text("คอร์สที่ซื้อ"),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: [
+                    Text(courses.first.name),
+                    Text(courses.first.price.toString()),
+                  ],
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(top: 10,bottom: 10),
+                  child: Divider(
+                    color: Colors.black,
+                    indent: 8,
+                    endIndent: 8,
+                  ),
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: [
+                    Text("ยอดคงเหลือ"),
+                    Text(moneycus.toString()),
+                  ],
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: [
+                    Text("ยอดสุทธิ"),
+                    Text(courses.first.price.toString()),
+                  ],
+                ),
+              ],
+            ),
+            actions: [
+              TextButton(onPressed: () {
+                 log("Date time = "+ now.toString());
+                        String cdate2 = DateFormat("yyyy-dd-MM").format(DateTime.now());
+                        log("Date time2 = "+ cdate2);
+
+                        var proposedDate = "${cdate2}T00:00:00.000Z";
+                        log("Date time3 = $proposedDate");
+                        //log("Date time3 = $proposedDate");
+                        BuyCoursecoIdPost buyCoursecoIdPost = BuyCoursecoIdPost(
+                          customerId: cusID, 
+                          buyDateTime:  proposedDate, 
+                          image: "-");
+                          log(jsonEncode(buyCoursecoIdPost));
+                          log(cusID.toString());
+                          buycourse =  buyCourseService.buyCourse(courseId.toString(), buyCoursecoIdPost);
+                          Get.to(() => const HomePageUser());
+              }, child: Text("ชำระเงิน"))
+            ],
+          ));
   Future<void> loadData() async {
     try {
       var datacouse = await courseService.course(

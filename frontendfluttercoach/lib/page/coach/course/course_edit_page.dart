@@ -14,6 +14,7 @@ import 'package:provider/provider.dart';
 import '../../../model/request/course_courseID_put.dart';
 import '../../../model/response/course_get_res.dart';
 import '../../../model/response/md_Result.dart';
+import '../../../model/response/md_coach_course_get.dart';
 import '../../../service/course.dart';
 
 import '../../../service/provider/appdata.dart';
@@ -35,7 +36,7 @@ class CourseEditPage extends StatefulWidget {
 class _CourseEditPageState extends State<CourseEditPage> {
   late CourseService _courseService;
   late Future<void> loadDataMethod;
-  List<ModelCourse> courses = [];
+  List<Coachbycourse> courses = [];
 
   late ModelResult moduleResult;
 
