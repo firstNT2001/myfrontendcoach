@@ -95,22 +95,17 @@ class _HomePageCoachState extends State<HomePageCoach> {
       appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.primaryContainer,
         elevation: 0,
-        leading: Row(
-          mainAxisAlignment: MainAxisAlignment.end,
-          children: [
-            IconButton(
-              icon: const Icon(
-                FontAwesomeIcons.barsStaggered,
-                color: Colors.black,
-              ),
-              onPressed: () {
-                Get.to(() => SideMenu(
-                    name: coachs.first.username,
-                    price: coachs.first.price.toString(),
-                    image: coachs.first.image));
-              },
-            ),
-          ],
+        leading: IconButton(
+          icon: const Icon(
+            FontAwesomeIcons.barsStaggered,
+            color: Colors.black,
+          ),
+          onPressed: () {
+            Get.to(() => SideMenu(
+                name: coachs.first.username,
+                price: coachs.first.price.toString(),
+                image: coachs.first.image));
+          },
         ),
         actions: [
           Visibility(
