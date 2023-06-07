@@ -24,6 +24,10 @@ class AppData with ChangeNotifier {
 
   //course
   int idcourse = 0;
+  String  img = "";
+  String  namecourse = "";
+  String  namecoach = "";
+  String  detail = "";
 
   //user
   int uid = 0;
