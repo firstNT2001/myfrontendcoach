@@ -52,7 +52,7 @@ dependencies:
   firebase_storage: ^11.0.10
   cloud_firestore: ^4.3.1
   video_player: ^2.4.10
-  intl: ^0.18.1
+  intl: ^0.17.0
   appinio_video_player: ^1.2.0
   build_config: ^1.1.1
   source_gen: ^1.2.7
@@ -73,7 +73,8 @@ dependencies:
   badges: ^3.1.1
   flutter_side_menu: ^0.3.2
   shrink_sidemenu: ^2.0.0+2-null-safety
-  
+  persistent_bottom_nav_bar_v2: ^4.2.8
+  implicitly_animated_reorderable_list_2: ^0.5.1
   
   
 dev_dependencies:
