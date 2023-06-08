@@ -101,25 +101,20 @@ class _DaysCoursePageState extends State<DaysCoursePage> {
                                   child: ListTile(
                                     key: ValueKey(listday),
                                     title: Text(listday.sequence.toString()),
-                                    onTap: () {
-                                      Get.to(() => HomeFoodAndClipPage(
-                                            did: listday.did.toString(),
-                                            sequence:
-                                                listday.sequence.toString(),
-                                          ));
-                                    },
+                                    trailing: IconButton(onPressed: () {}, icon: Icon(FontAwesomeIcons.trash,)),
+                                    // onTap: () {
+                                    //   Get.to(() => HomeFoodAndClipPage(
+                                    //         did: listday.did.toString(),
+                                    //         sequence:
+                                    //             listday.sequence.toString(),
+                                    //       ));
+                                    // },
                                   ),
                                 ),
                               );
                             },
                             onReorder: ((oldIndex, newIndex) =>
                                 updateDays(oldIndex, newIndex)),
-
-                            // for (final listday in days)
-                            //   ListTile(
-                            //       key: ValueKey(listday),
-                            //       title: Text(listday.sequence.toString()),
-                            //       onTap: () {},)
                           ),
                         ),
                       ),
@@ -141,7 +136,8 @@ class _DaysCoursePageState extends State<DaysCoursePage> {
                                       child: ListTile(
                                         title:
                                             Text(listdays.sequence.toString()),
-                                        subtitle: Text(listdays.did.toString()),
+                                        //subtitle: Text(listdays.did.toString()),
+                                        trailing: Icon(Icons.more_vert),
                                         onTap: () {
                                           Get.to(() => HomeFoodAndClipPage(
                                                 did: listdays.did.toString(),
@@ -156,17 +152,6 @@ class _DaysCoursePageState extends State<DaysCoursePage> {
                           ),
                         ),
                       ),
-                    if (offVisibles == true)
-                      Visibility(
-                          visible: offVisibles,
-                          child: SizedBox(
-                            width: double.infinity,
-                            height: 100,
-                            child: ElevatedButton(
-                              child: Text('yes'),
-                              onPressed: () {},
-                            ),
-                          )),
                   ],
                 );
               } else {
@@ -190,7 +175,7 @@ class _DaysCoursePageState extends State<DaysCoursePage> {
   }
 
   void updateDays(int oldIndex, int newIndex) {
-    setState(() async {
+    setState(()  {
       if (oldIndex < newIndex) {
         newIndex--;
       }
@@ -209,8 +194,9 @@ class _DaysCoursePageState extends State<DaysCoursePage> {
       //log(days[i].sequence.toString());
       DayDayIdPut request = DayDayIdPut(sequence: i + 1);
 
-       var response = await _daysService.updateDayByDayID(days[i].did.toString(),request);
-      // modelResult = response.data;
+      var response =
+          await _daysService.updateDayByDayID(days[i].did.toString(), request);
+      modelResult = response.data;
       log("${days[i].did.toString()} : ${jsonEncode(request)}");
     }
     setState(() {
