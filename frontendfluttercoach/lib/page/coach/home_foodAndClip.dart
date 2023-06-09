@@ -5,6 +5,9 @@ import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter/src/widgets/placeholder.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:frontendfluttercoach/model/response/food_get_res.dart';
+import 'package:frontendfluttercoach/page/coach/food/foodCourse/edit_food.dart';
+import 'package:get/get.dart';
+import 'package:get/get_core/src/get_main.dart';
 import 'package:provider/provider.dart';
 
 import '../../service/food.dart';
@@ -19,22 +22,27 @@ class HomeFoodAndClipPage extends StatefulWidget {
 }
 
 class _HomeFoodAndClipPageState extends State<HomeFoodAndClipPage> {
-   // FoodService
+  // FoodService
   late Future<void> loadFoodDataMethod;
   late FoodServices _foodService;
   List<ModelFood> foods = [];
 
-    // ClipService
+  // ClipService
   late Future<void> loadClipDataMethod;
   late FoodServices _ClipService;
   //List<ModelClip> clips = [];
-  
+
+  //onoffShow
+  bool onVisibles = true;
+  bool offVisibles = false;
+
   @override
   void initState() {
     super.initState();
     _foodService = context.read<AppData>().foodServices;
     loadFoodDataMethod = loadFoodData();
   }
+
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
@@ -47,6 +55,7 @@ class _HomeFoodAndClipPageState extends State<HomeFoodAndClipPage> {
               color: Colors.black, //change your color here
             ),
             title: Text("Day ${widget.sequence}"),
+           
             bottom: const TabBar(tabs: [
               Tab(
                 icon: Icon(
@@ -65,23 +74,34 @@ class _HomeFoodAndClipPageState extends State<HomeFoodAndClipPage> {
           ),
           body: TabBarView(
             children: [
+
               //Food
               ListView(
                 children: [
-                 showFood()
+                  const SizedBox(
+                    height: 10,
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(
+                        left: 8, right: 8, top: 5, bottom: 5),
+                    child: showFood(),
+                  )
                 ],
               ),
 
               //Clip
-              Column(
+              ListView(
                 children: [
-                  Text('Clip'),
+                  const SizedBox(
+                    height: 10,
+                  ),
                 ],
               ),
             ],
           )),
     );
   }
+
   Future<void> loadFoodData() async {
     try {
       log(widget.did);
@@ -112,41 +132,51 @@ class _HomeFoodAndClipPageState extends State<HomeFoodAndClipPage> {
                   color: Colors.white,
                   child: InkWell(
                     onTap: () {
-                      // Get.to(() => CourseEditPage(
-                      //       coID: courses[index].coId.toString(),
-                      //     ));
+                      Get.to(()=> EditFoodPage(fid: listfood.fid.toString()));
                     },
                     child: Row(
-                      //crossAxisAlignment: CrossAxisAlignment.start,
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Padding(
-                          padding:
-                              const EdgeInsets.only(left: 8, top: 5, bottom: 5),
-                          child: Container(
-                              width: MediaQuery.of(context).size.width * 0.4,
-                              height: MediaQuery.of(context).size.height,
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(26),
-                                image: DecorationImage(
-                                  image: NetworkImage(listfood.listFood.image),
-                                ),
-                              )),
-                        ),
+                        // Padding(
+                        //   padding:
+                        //       const EdgeInsets.only(left: 8, top: 5, bottom: 5),
+                        //   child: Container(
+                        //       width: MediaQuery.of(context).size.width * 0.3,
+                        //       height: MediaQuery.of(context).size.height,
+                        //       decoration: BoxDecoration(
+                        //         borderRadius: BorderRadius.circular(26),
+                        //         image: DecorationImage(
+                        //           image: NetworkImage(listfood.listFood.image),
+                        //         ),
+                        //       )),
+                        // ),
                         Column(
                           mainAxisAlignment: MainAxisAlignment.center,
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
+                            Padding(
+                              padding: const EdgeInsets.only(bottom: 10),
+                              child: Text(
+                                listfood.listFood.name,
+                                style: Theme.of(context).textTheme.titleMedium,
+                              ),
+                            ),
                             Text(
-                              listfood.listFood.name,
+                              listfood.time == '1'
+                                  ? 'มื้อเช้า'
+                                  : listfood.time == '2'
+                                      ? 'มื้อเที่ยง'
+                                      : listfood.time == '3'
+                                          ? 'มื้อเย็น'
+                                          : 'มื้อใดก็ได้',
                               style: Theme.of(context).textTheme.bodyMedium,
                             ),
-                          
                           ],
                         ),
                         const SizedBox(
                           width: 50,
-                        )
+                        ),
                       ],
                     ),
                   ),

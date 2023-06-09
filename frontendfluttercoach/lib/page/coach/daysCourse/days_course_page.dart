@@ -83,6 +83,7 @@ class _DaysCoursePageState extends State<DaysCoursePage> {
               if (snapshot.connectionState == ConnectionState.done) {
                 return Column(
                   children: [
+                    //edit Day
                     if (offVisibles == true)
                       Expanded(
                         child: Visibility(
@@ -101,14 +102,8 @@ class _DaysCoursePageState extends State<DaysCoursePage> {
                                   child: ListTile(
                                     key: ValueKey(listday),
                                     title: Text(listday.sequence.toString()),
+                                    subtitle: Text(listday.did.toString()),
                                     trailing: IconButton(onPressed: () {}, icon: Icon(FontAwesomeIcons.trash,)),
-                                    // onTap: () {
-                                    //   Get.to(() => HomeFoodAndClipPage(
-                                    //         did: listday.did.toString(),
-                                    //         sequence:
-                                    //             listday.sequence.toString(),
-                                    //       ));
-                                    // },
                                   ),
                                 ),
                               );
@@ -118,6 +113,7 @@ class _DaysCoursePageState extends State<DaysCoursePage> {
                           ),
                         ),
                       ),
+                    //Not Edit Day
                     if (onVisibles == true)
                       Expanded(
                         child: Visibility(
@@ -136,7 +132,7 @@ class _DaysCoursePageState extends State<DaysCoursePage> {
                                       child: ListTile(
                                         title:
                                             Text(listdays.sequence.toString()),
-                                        //subtitle: Text(listdays.did.toString()),
+                                        subtitle: Text(listdays.did.toString()),
                                         trailing: Icon(Icons.more_vert),
                                         onTap: () {
                                           Get.to(() => HomeFoodAndClipPage(
@@ -199,13 +195,13 @@ class _DaysCoursePageState extends State<DaysCoursePage> {
       modelResult = response.data;
       log("${days[i].did.toString()} : ${jsonEncode(request)}");
     }
-    setState(() {
-      onVisibles = !onVisibles;
-      offVisibles = !offVisibles;
-      if (offVisibles == true)
-        title = 'Edit days';
-      else
-        title = 'Days';
-    });
+    // setState(() {
+    //   onVisibles = !onVisibles;
+    //   offVisibles = !offVisibles;
+    //   if (offVisibles == true)
+    //     title = 'Edit days';
+    //   else
+    //     title = 'Days';
+    // });
   }
 }
