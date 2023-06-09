@@ -61,10 +61,14 @@ class _DaysCoursePageState extends State<DaysCoursePage> {
               setState(() {
                 onVisibles = !onVisibles;
                 offVisibles = !offVisibles;
-                if (offVisibles == true)
+                if (offVisibles == true) {
                   title = 'Edit days';
-                else
-                  title = 'Days';
+                } else {
+                  // Get.to(() => DaysCoursePage(
+                  //       coID: widget.coID,
+                  //     ));
+                  loadDaysDataMethod = loadDaysDataAsync();
+                }
               });
             },
           )
@@ -103,7 +107,11 @@ class _DaysCoursePageState extends State<DaysCoursePage> {
                                     key: ValueKey(listday),
                                     title: Text(listday.sequence.toString()),
                                     subtitle: Text(listday.did.toString()),
-                                    trailing: IconButton(onPressed: () {}, icon: Icon(FontAwesomeIcons.trash,)),
+                                    trailing: IconButton(
+                                        onPressed: () {},
+                                        icon: Icon(
+                                          FontAwesomeIcons.trash,
+                                        )),
                                   ),
                                 ),
                               );
@@ -171,7 +179,7 @@ class _DaysCoursePageState extends State<DaysCoursePage> {
   }
 
   void updateDays(int oldIndex, int newIndex) {
-    setState(()  {
+    setState(() {
       if (oldIndex < newIndex) {
         newIndex--;
       }
