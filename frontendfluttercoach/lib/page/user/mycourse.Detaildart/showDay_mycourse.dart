@@ -2,6 +2,8 @@ import 'dart:developer';
 
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:frontendfluttercoach/page/user/mycourse.Detaildart/showFood.dart';
+import 'package:get/get.dart';
 import 'package:provider/provider.dart';
 
 import '../../../model/response/md_Day_showmycourse.dart';
@@ -46,7 +48,8 @@ class _ShowDayMycourseState extends State<ShowDayMycourse> {
       body: Column(
         children: [
           //loadCourse(),
-        Expanded(child: loadDay())],
+          Expanded(child: loadDay())
+        ],
       ),
     );
   }
@@ -73,49 +76,46 @@ class _ShowDayMycourseState extends State<ShowDayMycourse> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               SizedBox(
-                    height: 35,
-                    width: 390,
-                    child: Text(
-                      "Daily workout",
-                      style: TextStyle(fontSize: 25),
-                    )),
-                Image.network(
-                  img,
-                  height: 200,
-                  width: double.infinity,
-                  fit: BoxFit.cover,
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(left: 15, top: 25),
-                  child: Text(namecourse,
-                      style:
-                          Theme.of(context).textTheme.bodyLarge),
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(left: 15, bottom: 8),
-                  child: Text(namecoach,
-                      style:
-                          Theme.of(context).textTheme.bodyLarge),
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(left: 15),
-                  child: Text("รายละเอียดคอร์ส",
-                      style:
-                          Theme.of(context).textTheme.bodyLarge),
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(left: 17, bottom: 8,right: 8),
-                  child: Text(detail,
-                      style:
-                          Theme.of(context).textTheme.bodyLarge),
-                ),
+                  height: 35,
+                  width: 390,
+                  child: Text(
+                    "Daily workout",
+                    style: TextStyle(fontSize: 25),
+                  )),
+              Image.network(
+                img,
+                height: 200,
+                width: double.infinity,
+                fit: BoxFit.cover,
+              ),
+              Padding(
+                padding: const EdgeInsets.only(left: 15, top: 25),
+                child: Text(namecourse,
+                    style: Theme.of(context).textTheme.bodyLarge),
+              ),
+              Padding(
+                padding: const EdgeInsets.only(left: 15, bottom: 8),
+                child: Text(namecoach,
+                    style: Theme.of(context).textTheme.bodyLarge),
+              ),
+              Padding(
+                padding: const EdgeInsets.only(left: 15),
+                child: Text("รายละเอียดคอร์ส",
+                    style: Theme.of(context).textTheme.bodyLarge),
+              ),
+              Padding(
+                padding: const EdgeInsets.only(left: 17, bottom: 8, right: 8),
+                child:
+                    Text(detail, style: Theme.of(context).textTheme.bodyLarge),
+              ),
             ],
           );
         }
       },
     );
   }
-    Widget loadDay() {
+
+  Widget loadDay() {
     return FutureBuilder(
       future: loadDataMethod,
       builder: (context, snapshot) {
@@ -125,66 +125,66 @@ class _ShowDayMycourseState extends State<ShowDayMycourse> {
           return ListView(
             children: [
               SizedBox(
-                    height: 35,
-                    width: 390,
-                    child: Text(
-                      "Daily workout",
-                      style: TextStyle(fontSize: 25),
-                    )),
-                Image.network(
-                  img,
-                  height: 200,
-                  width: double.infinity,
-                  fit: BoxFit.cover,
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(left: 15, top: 25),
-                  child: Text(namecourse,
-                      style:
-                          Theme.of(context).textTheme.bodyLarge),
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(left: 15, bottom: 8),
-                  child: Text(namecoach,
-                      style:
-                          Theme.of(context).textTheme.bodyLarge),
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(left: 15),
-                  child: Text("รายละเอียดคอร์ส",
-                      style:
-                          Theme.of(context).textTheme.bodyLarge),
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(left: 17, bottom: 8,right: 8),
-                  child: Text(detail,
-                      style:
-                          Theme.of(context).textTheme.bodyLarge),
-                ),
-
+                  height: 35,
+                  width: 390,
+                  child: Text(
+                    "Daily workout",
+                    style: TextStyle(fontSize: 25),
+                  )),
+              Image.network(
+                img,
+                height: 200,
+                width: double.infinity,
+                fit: BoxFit.cover,
+              ),
+              Padding(
+                padding: const EdgeInsets.only(left: 15, top: 25),
+                child: Text(namecourse,
+                    style: Theme.of(context).textTheme.bodyLarge),
+              ),
+              Padding(
+                padding: const EdgeInsets.only(left: 15, bottom: 8),
+                child: Text(namecoach,
+                    style: Theme.of(context).textTheme.bodyLarge),
+              ),
+              Padding(
+                padding: const EdgeInsets.only(left: 15),
+                child: Text("รายละเอียดคอร์ส",
+                    style: Theme.of(context).textTheme.bodyLarge),
+              ),
+              Padding(
+                padding: const EdgeInsets.only(left: 17, bottom: 8, right: 8),
+                child:
+                    Text(detail, style: Theme.of(context).textTheme.bodyLarge),
+              ),
               Expanded(
                 child: ListView.builder(
-                shrinkWrap: true,
-                itemCount: days.length,
-                 itemBuilder:(context, index) {
-                   final listday = days[index];
-                   return Card(
-                     child: ListTile(
-                      title: Row(
-                        children: [
-                          Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Text("วันที่"),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.only(top: 4),
-                            child: Text(listday.sequence.toString()),
-                          ),
-                        ],
+                  shrinkWrap: true,
+                  itemCount: days.length,
+                  itemBuilder: (context, index) {
+                    final listday = days[index];
+                    return Card(
+                      child: ListTile(
+                       title: Row(
+                         children: [
+                           Padding(
+                             padding: const EdgeInsets.all(8.0),
+                             child: Text("วันที่", style: Theme.of(context).textTheme.bodyLarge),
+                           ),
+                           Padding(
+                             padding: const EdgeInsets.only(top: 4),
+                             child: Text(listday.sequence.toString(), style: Theme.of(context).textTheme.bodyLarge),
+                           ),
+                         ],
+                       ),
+                       trailing: ElevatedButton(onPressed: (){
+                        log(" DID:= "+listday.did.toString());
+                        context.read<AppData>().did = listday.did;
+                        Get.to(() => const showFood());
+                       }, child: Text("เริ่ม", style: Theme.of(context).textTheme.bodyLarge)),
                       ),
-                     ),
-                   );
-                 },
+                    );
+                  },
                 ),
               ),
             ],

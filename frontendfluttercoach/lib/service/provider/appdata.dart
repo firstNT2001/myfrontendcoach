@@ -33,6 +33,9 @@ class AppData with ChangeNotifier {
   int uid = 0;
   String nameCus = " ";
   int money = 0;
+
+  //Day
+  int did =0;
   
   ListFoodServices get listfoodServices => ListFoodServices(Dio(), baseUrl: baseurl);
   ListClipServices get listClipServices => ListClipServices(Dio(), baseUrl: baseurl);

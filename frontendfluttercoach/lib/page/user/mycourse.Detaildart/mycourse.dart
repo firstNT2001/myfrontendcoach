@@ -7,12 +7,12 @@ import 'package:provider/provider.dart';
 import 'package:retrofit/dio.dart';
 
 
-import '../../model/response/course_get_res.dart';
-import '../../model/response/md_coach_course_get.dart';
-import '../../service/course.dart';
-import '../../service/provider/appdata.dart';
-import 'cousepage.dart';
-import 'mycourse.Detaildart/showDay_mycourse.dart';
+import '../../../model/response/course_get_res.dart';
+import '../../../model/response/md_coach_course_get.dart';
+import '../../../service/course.dart';
+import '../../../service/provider/appdata.dart';
+import '../cousepage.dart';
+import 'showDay_mycourse.dart';
 
 class MyCouses extends StatefulWidget {
   const MyCouses({super.key});
