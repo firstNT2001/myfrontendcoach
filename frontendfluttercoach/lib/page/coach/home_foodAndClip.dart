@@ -1,15 +1,18 @@
 import 'dart:developer';
 
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter/src/widgets/placeholder.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:frontendfluttercoach/model/response/food_get_res.dart';
 import 'package:frontendfluttercoach/page/coach/food/foodCourse/edit_food.dart';
+import 'package:frontendfluttercoach/service/clip.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:provider/provider.dart';
 
+import '../../model/response/md_Clip_get.dart';
 import '../../service/food.dart';
 import '../../service/provider/appdata.dart';
 
@@ -29,8 +32,8 @@ class _HomeFoodAndClipPageState extends State<HomeFoodAndClipPage> {
 
   // ClipService
   late Future<void> loadClipDataMethod;
-  late FoodServices _ClipService;
-  //List<ModelClip> clips = [];
+  late ClipServices _ClipService;
+  List<ModelClip> clips = [];
 
   //onoffShow
   bool onVisibles = true;
@@ -39,8 +42,13 @@ class _HomeFoodAndClipPageState extends State<HomeFoodAndClipPage> {
   @override
   void initState() {
     super.initState();
+    //Food
     _foodService = context.read<AppData>().foodServices;
     loadFoodDataMethod = loadFoodData();
+
+    //Clip
+    _ClipService = context.read<AppData>().clipServices;
+    loadClipDataMethod = loadClipData();
   }
 
   @override
@@ -55,7 +63,15 @@ class _HomeFoodAndClipPageState extends State<HomeFoodAndClipPage> {
               color: Colors.black, //change your color here
             ),
             title: Text("Day ${widget.sequence}"),
-           
+            actions: [
+              IconButton(
+                icon: const Icon(
+                  FontAwesomeIcons.plus,
+                  color: Colors.black,
+                ),
+                onPressed: () {},
+              )
+            ],
             bottom: const TabBar(tabs: [
               Tab(
                 icon: Icon(
@@ -74,7 +90,6 @@ class _HomeFoodAndClipPageState extends State<HomeFoodAndClipPage> {
           ),
           body: TabBarView(
             children: [
-
               //Food
               ListView(
                 children: [
@@ -90,11 +105,16 @@ class _HomeFoodAndClipPageState extends State<HomeFoodAndClipPage> {
               ),
 
               //Clip
-              ListView(
+             ListView(
                 children: [
                   const SizedBox(
                     height: 10,
                   ),
+                  Padding(
+                    padding: const EdgeInsets.only(
+                        left: 8, right: 8, top: 5, bottom: 5),
+                    child: showClip(),
+                  )
                 ],
               ),
             ],
@@ -102,11 +122,22 @@ class _HomeFoodAndClipPageState extends State<HomeFoodAndClipPage> {
     );
   }
 
+  //LoadData
   Future<void> loadFoodData() async {
     try {
       log(widget.did);
       var datas = await _foodService.foods(fid: '', ifid: '', did: widget.did);
       foods = datas.data;
+    } catch (err) {
+      log('Error: $err');
+    }
+  }
+
+  Future<void> loadClipData() async {
+    try {
+      var datas =
+          await _ClipService.clips(cpID: '', icpID: '', did: widget.did);
+      clips = datas.data;
     } catch (err) {
       log('Error: $err');
     }
@@ -132,33 +163,52 @@ class _HomeFoodAndClipPageState extends State<HomeFoodAndClipPage> {
                   color: Colors.white,
                   child: InkWell(
                     onTap: () {
-                      Get.to(()=> EditFoodPage(fid: listfood.fid.toString()));
+                      Get.to(() => EditFoodPage(fid: listfood.fid.toString()));
                     },
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        // Padding(
-                        //   padding:
-                        //       const EdgeInsets.only(left: 8, top: 5, bottom: 5),
-                        //   child: Container(
-                        //       width: MediaQuery.of(context).size.width * 0.3,
-                        //       height: MediaQuery.of(context).size.height,
-                        //       decoration: BoxDecoration(
-                        //         borderRadius: BorderRadius.circular(26),
-                        //         image: DecorationImage(
-                        //           image: NetworkImage(listfood.listFood.image),
-                        //         ),
-                        //       )),
-                        // ),
+                        if (listfood.listFood.image != null) ...{
+                          Padding(
+                            padding: const EdgeInsets.only(
+                                left: 8, right: 8, top: 5, bottom: 5),
+                            child: Container(
+                                width: MediaQuery.of(context).size.width * 0.3,
+                                height: MediaQuery.of(context).size.height,
+                                decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(26),
+                                    color: Colors.pink
+                                    // image: DecorationImage(
+                                    //   image:
+                                    //       NetworkImage(listfood.listFood.image),
+                                    // ),
+                                    )),
+                          ),
+                        } else
+                          Padding(
+                            padding: const EdgeInsets.only(
+                                left: 8, top: 5, bottom: 5),
+                            child: Container(
+                                width: MediaQuery.of(context).size.width * 0.3,
+                                height: MediaQuery.of(context).size.height,
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(26),
+                                  image: DecorationImage(
+                                    image:
+                                        NetworkImage(listfood.listFood.image),
+                                  ),
+                                )),
+                          ),
                         Column(
                           mainAxisAlignment: MainAxisAlignment.center,
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Padding(
-                              padding: const EdgeInsets.only(bottom: 10),
-                              child: Text(
+                            SizedBox(
+                              width: MediaQuery.of(context).size.width * 0.4,
+                              child: AutoSizeText(
                                 listfood.listFood.name,
+                                maxLines: 5,
                                 style: Theme.of(context).textTheme.titleMedium,
                               ),
                             ),
@@ -173,6 +223,66 @@ class _HomeFoodAndClipPageState extends State<HomeFoodAndClipPage> {
                               style: Theme.of(context).textTheme.bodyMedium,
                             ),
                           ],
+                        ),
+                        const SizedBox(
+                          width: 50,
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              );
+            },
+          );
+        }
+      },
+    );
+  }
+
+  Widget showClip() {
+    return FutureBuilder(
+      future: loadClipDataMethod,
+      builder: (context, snapshot) {
+        if (snapshot.connectionState != ConnectionState.done) {
+          return const Center(child: CircularProgressIndicator());
+        } else {
+          return ListView.builder(
+            shrinkWrap: true,
+            itemCount: clips.length,
+            itemBuilder: (context, index) {
+              final listClip = clips[index];
+              return SizedBox(
+                height: MediaQuery.of(context).size.height * 0.2,
+                child: Card(
+                  color: Colors.white,
+                  child: InkWell(
+                    onTap: () {
+                      // Get.to(() => EditFoodPage(fid: listfood.fid.toString()));
+                    },
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.only(
+                              left: 8, right: 8, top: 5, bottom: 5),
+                          child: Container(
+                              width: MediaQuery.of(context).size.width * 0.3,
+                              height: MediaQuery.of(context).size.height,
+                              decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(26),
+                                  color: Colors.pink
+                                  )),
+                        ),
+                        Center(
+                          child: SizedBox(
+                            width: MediaQuery.of(context).size.width * 0.4,
+                            child: AutoSizeText(
+                              listClip.listClip.name,
+                              maxLines: 5,
+                              style: Theme.of(context).textTheme.titleMedium,
+                            ),
+                          ),
                         ),
                         const SizedBox(
                           width: 50,

@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
@@ -6,9 +8,9 @@ import 'package:frontendfluttercoach/model/response/md_FoodList_get.dart';
 
 class WidgetDropdownFoodInCoach extends StatefulWidget {
    WidgetDropdownFoodInCoach({super.key, required this.selectedValue, required this.ModelfoodCoachs, required this.numberFoods});
-  late String selectedValue;
+  late TextEditingController selectedValue;
   late int numberFoods;
-  late List<ModelFoodList> ModelfoodCoachs;
+  late List<String> ModelfoodCoachs;
   @override
   State<WidgetDropdownFoodInCoach> createState() => _WidgetDropdownFoodInCoachState();
 }
@@ -18,6 +20,7 @@ class _WidgetDropdownFoodInCoachState extends State<WidgetDropdownFoodInCoach> {
   Widget build(BuildContext context) {
     return DropdownFoodInCoach();
   }
+  // ignore: non_constant_identifier_names
   DropdownButtonFormField2<Object> DropdownFoodInCoach() {
     return DropdownButtonFormField2(
       decoration: InputDecoration(
@@ -36,12 +39,12 @@ class _WidgetDropdownFoodInCoachState extends State<WidgetDropdownFoodInCoach> {
         'เลือกเมนูอาหาร',
         style: TextStyle(fontSize: 14),
       ),
-      value: widget.ModelfoodCoachs[widget.numberFoods],
+      value: widget.selectedValue.text,
       items: widget.ModelfoodCoachs
-          .map((item) => DropdownMenuItem<ModelFoodList>(
+          .map((item) => DropdownMenuItem<String>(
                 value: item,
                 child: Text(
-                  item.name,
+                  item,
                   style: const TextStyle(
                     fontSize: 14,
                   ),
@@ -56,9 +59,12 @@ class _WidgetDropdownFoodInCoachState extends State<WidgetDropdownFoodInCoach> {
       },
       onChanged: (value) {
         //Do something when changing the item if you want.
+        widget.selectedValue.text = value.toString();
+        //log(widget.selectedValue.text);
       },
       onSaved: (value) {
-        widget.selectedValue = value.toString();
+        // widget.selectedValue.text = value.toString();
+        // log(widget.selectedValue.text);
       },
       buttonStyleData: const ButtonStyleData(
         height: 39,

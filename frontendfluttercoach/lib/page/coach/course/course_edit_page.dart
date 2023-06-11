@@ -18,8 +18,10 @@ import '../../../model/response/md_coach_course_get.dart';
 import '../../../service/course.dart';
 
 import '../../../service/provider/appdata.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 import '../../../service/provider/dayOfCouseData.dart';
+import '../../../widget/wg_dropdown_string.dart';
 import '../../../widget/wg_textField.dart';
 import '../../../widget/wg_textFieldLines.dart';
 import '../daysCourse/days_course_page.dart';
@@ -50,8 +52,12 @@ class _CourseEditPageState extends State<CourseEditPage> {
   final amount = TextEditingController();
   final days = TextEditingController();
   final price = TextEditingController();
+  int lavel = 0;
   int day = 0;
   String status = "";
+
+  ///deleteCourse
+  late ModelResult modelResult;
 
   //updateCourse
   // ignore: prefer_typing_uninitialized_variables
@@ -65,8 +71,9 @@ class _CourseEditPageState extends State<CourseEditPage> {
   String profile = " ";
 
   //selectLevel
+  // ignore: non_constant_identifier_names
   final List<String> LevelItems = ['ง่าย', 'ปานกลาง', 'ยาก'];
-  String? selectedValue;
+  final selectedValue = TextEditingController();
 
   @override
   void initState() {
@@ -92,6 +99,17 @@ class _CourseEditPageState extends State<CourseEditPage> {
           ),
           title: const Text("Edit Course"),
           centerTitle: true,
+          actions: [
+          IconButton(
+            icon:  const Icon(
+              FontAwesomeIcons.trash,
+              color: Colors.black,
+            ),
+            onPressed: () async {
+             var response = await _courseService.deleteCourse(widget.coID);
+            },
+          )
+        ],
         ),
         backgroundColor: Theme.of(context).colorScheme.primaryContainer,
         body: SafeArea(
@@ -111,7 +129,7 @@ class _CourseEditPageState extends State<CourseEditPage> {
                             height: 18,
                           ),
                           // TextField
-                          
+
                           SizedBox(
                             width: double.infinity,
                             height: MediaQuery.of(context).size.height * 0.6,
@@ -181,67 +199,10 @@ class _CourseEditPageState extends State<CourseEditPage> {
                                         SizedBox(
                                           width:
                                               (width - 16 - (3 * padding)) / 2,
-                                          child: DropdownButtonFormField2(
-                                            decoration: InputDecoration(
-                                              //Add isDense true and zero Padding.
-                                              //Add Horizontal padding using buttonPadding and Vertical padding by increasing buttonHeight instead of add Padding here so that The whole TextField Button become clickable, and also the dropdown menu open under The whole TextField Button.
-                                              isDense: true,
-                                              contentPadding: EdgeInsets.zero,
-                                              border: OutlineInputBorder(
-                                                borderRadius:
-                                                    BorderRadius.circular(15),
-                                              ),
-                                              //Add more decoration as you want here
-                                              //Add label If you want but add hint outside the decoration to be aligned in the button perfectly.
-                                            ),
-                                            isExpanded: true,
-                                            hint: const Text(
-                                              'เลือกความยากง่าย',
-                                              style: TextStyle(fontSize: 14),
-                                            ),
-                                            value: selectedValue,
-                                            items: LevelItems.map((item) =>
-                                                DropdownMenuItem<String>(
-                                                  value: item,
-                                                  child: Text(
-                                                    item,
-                                                    style: const TextStyle(
-                                                      fontSize: 14,
-                                                    ),
-                                                  ),
-                                                )).toList(),
-                                            validator: (value) {
-                                              if (value == null) {
-                                                return 'Please select Level.';
-                                              }
-                                              return null;
-                                            },
-                                            onChanged: (value) {
-                                              //Do something when changing the item if you want.
-                                            },
-                                            onSaved: (value) {
-                                              selectedValue = value.toString();
-                                            },
-                                            buttonStyleData:
-                                                const ButtonStyleData(
-                                              height: 39,
-                                              padding: EdgeInsets.only(
-                                                  left: 0, right: 5),
-                                            ),
-                                            iconStyleData: const IconStyleData(
-                                              icon: Icon(
-                                                Icons.arrow_drop_down,
-                                                color: Colors.black45,
-                                              ),
-                                              iconSize: 30,
-                                            ),
-                                            dropdownStyleData:
-                                                DropdownStyleData(
-                                              decoration: BoxDecoration(
-                                                borderRadius:
-                                                    BorderRadius.circular(15),
-                                              ),
-                                            ),
+                                          child: WidgetDropdownString(
+                                            title: 'เลือกความยากง่าย',
+                                            selectedValue: selectedValue,
+                                            ListItems: LevelItems,
                                           ),
                                         ),
                                       ],
@@ -347,12 +308,21 @@ class _CourseEditPageState extends State<CourseEditPage> {
     return ElevatedButton(
       //style: style,
       onPressed: () async {
+        log("selectedValue${selectedValue.text}");
+        if (selectedValue.text == 'ง่าย') {
+          lavel = 1;
+        } else if (selectedValue.text == 'ปานกลาง') {
+          lavel = 2;
+        } else {
+          lavel = 3;
+        }
+        log(selectedValue.text);
         if (pickedImg != null) await uploadfile();
         if (pickedImg == null) profile = courses.first.image;
         CourseCourseIdPut updateCourseDTO = CourseCourseIdPut(
           name: name.text,
           details: details.text,
-          level: '',
+          level: lavel.toString(),
           amount: int.parse(amount.text),
           image: profile,
           days: int.parse(days.text),
@@ -365,7 +335,7 @@ class _CourseEditPageState extends State<CourseEditPage> {
             widget.coID.toString(), updateCourseDTO);
         moduleResult = updateCourse.data;
         log(jsonEncode(moduleResult.result));
-        
+
         Get.to(() => DaysCoursePage(
               coID: widget.coID,
             ));
@@ -452,13 +422,13 @@ class _CourseEditPageState extends State<CourseEditPage> {
     details.text = courses.first.details;
     //level.text = courses.first.level;
     if (courses.first.level == '1') {
-      selectedValue = LevelItems[0];
+      selectedValue.text = LevelItems[0];
     } else if (courses.first.level == '2') {
-      selectedValue = LevelItems[1];
+      selectedValue.text = LevelItems[1];
     } else if (courses.first.level == '3') {
-      selectedValue = LevelItems[2];
+      selectedValue.text = LevelItems[2];
     }
-    log("selectedValue ${selectedValue}");
+    log("selectedValue $selectedValue");
     amount.text = courses.first.amount.toString();
     price.text = courses.first.price.toString();
     days.text = courses.first.days.toString();

@@ -1,5 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:frontendfluttercoach/service/clip.dart';
 import 'package:frontendfluttercoach/service/coach.dart';
 import 'package:frontendfluttercoach/service/course.dart';
 import 'package:frontendfluttercoach/service/food.dart';
@@ -34,6 +35,7 @@ class AppData with ChangeNotifier {
   
   FoodServices get foodServices => FoodServices(Dio(), baseUrl: baseurl);
   ListFoodServices get listfoodServices => ListFoodServices(Dio(), baseUrl: baseurl);
+  ClipServices get clipServices => ClipServices(Dio(), baseUrl: baseurl);
   ListClipServices get listClipServices => ListClipServices(Dio(), baseUrl: baseurl);
   AuthService get authService => AuthService(Dio(), baseUrl: baseurl);
   CourseService get courseService => CourseService(Dio(), baseUrl: baseurl);

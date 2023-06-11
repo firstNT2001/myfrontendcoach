@@ -54,7 +54,7 @@ class _FoodServices implements FoodServices {
 
   @override
   Future<HttpResponse<ModelResult>> insertFoodByDayID(
-    cid,
+    did,
     foodDayIdPost,
   ) async {
     const _extra = <String, dynamic>{};
@@ -70,7 +70,7 @@ class _FoodServices implements FoodServices {
     )
             .compose(
               _dio.options,
-              '/food/dayID/${cid}',
+              '/food/dayID/${did}',
               queryParameters: queryParameters,
               data: _data,
             )

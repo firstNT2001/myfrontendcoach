@@ -20,7 +20,9 @@ abstract class CourseService {
       @Query("name") required String name});
 
   @GET("/courses")
-  Future<HttpResponse<List<Coachbycourse>>> courseByUid({@Query("uid") required String uid,});
+  Future<HttpResponse<List<Coachbycourse>>> courseByUid({
+    @Query("uid") required String uid,
+  });
 
   @PUT("/course/courseID/{coID}")
   Future<HttpResponse<ModelResult>> updateCourseByCourseID(
@@ -29,4 +31,7 @@ abstract class CourseService {
   @POST("/course/coachID/{cid}")
   Future<HttpResponse<ModelResult>> insetCourseByCoachID(
       @Path("cid") String cid, @Body() CourseCoachIdPost courseCoachIdPost);
+
+  @DELETE("/course/courseID/{coID}")
+  Future<HttpResponse<ModelResult>> deleteCourse(@Path() String coID);
 }

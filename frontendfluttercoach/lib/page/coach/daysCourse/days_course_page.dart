@@ -109,7 +109,7 @@ class _DaysCoursePageState extends State<DaysCoursePage> {
                                     subtitle: Text(listday.did.toString()),
                                     trailing: IconButton(
                                         onPressed: () {},
-                                        icon: Icon(
+                                        icon: const Icon(
                                           FontAwesomeIcons.trash,
                                         )),
                                   ),
@@ -203,13 +203,5 @@ class _DaysCoursePageState extends State<DaysCoursePage> {
       modelResult = response.data;
       log("${days[i].did.toString()} : ${jsonEncode(request)}");
     }
-    // setState(() {
-    //   onVisibles = !onVisibles;
-    //   offVisibles = !offVisibles;
-    //   if (offVisibles == true)
-    //     title = 'Edit days';
-    //   else
-    //     title = 'Days';
-    // });
   }
 }
