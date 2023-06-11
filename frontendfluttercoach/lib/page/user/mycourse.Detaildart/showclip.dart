@@ -27,7 +27,8 @@ class _showCilpState extends State<showCilp> {
   late String videoUrl = "";
   late VideoPlayerController _videoPlayerController;
   late CustomVideoPlayerController _customVideoPlayerController;
-  
+  final CustomVideoPlayerSettings _customVideoPlayerSettings =
+      const CustomVideoPlayerSettings();
   void initState() {
     // TODO: implement initState
     super.initState();
@@ -47,8 +48,14 @@ class _showCilpState extends State<showCilp> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: SafeArea(child: loadclips()),
-    );
+        body: Flex(
+      direction: Axis.horizontal,
+      children: [
+        Expanded(
+          child: loadclips(),
+        ),
+      ],
+    ));
   }
 
   Future<void> loadData() async {
@@ -75,30 +82,23 @@ class _showCilpState extends State<showCilp> {
                 itemBuilder: (context, index) {
                   final listclip = clips[index];
                   videoUrl = listclip.listClip.video;
-                  late VideoPlayerController _videoPlayerController =
-                      VideoPlayerController.network(videoUrl);
+                  _videoPlayerController =
+                      VideoPlayerController.network(videoUrl)
+                        ..initialize().then((value) => setState(() {}));
                   _customVideoPlayerController = CustomVideoPlayerController(
                     context: context,
-
                     videoPlayerController: _videoPlayerController,
                   );
-                  log("videoPlayerController" + videoUrl);
-                  return Column(
-                    children: [
-                      Text(listclip.listClip.name),
-                      
-      VideoPlayer(_videoPlayerController),
-     
-        
-                      // CupertinoButton(
-                      //   child: const Text("Play Fullscreen"),
-                      //   onPressed: () {
-                      //     _customVideoPlayerController.setFullscreen(true);
-                      //     _customVideoPlayerController.videoPlayerController
-                      //         .play();
-                      //   },
-                      // )
-                    ],
+                  log(_videoPlayerController.dataSource);
+                  return CupertinoPageScaffold(
+                    navigationBar: CupertinoNavigationBar(
+                      middle: Text(listclip.listClip.name),
+                    ),
+                    child: SafeArea(
+                      child: CustomVideoPlayer(
+                          customVideoPlayerController:
+                              _customVideoPlayerController),
+                    ),
                   );
                 });
           }
