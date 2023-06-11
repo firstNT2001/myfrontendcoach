@@ -52,8 +52,8 @@ dependencies:
   firebase_storage: ^11.0.10
   cloud_firestore: ^4.3.1
   video_player: ^2.4.10
-  intl: ^0.17.0
-  appinio_video_player: ^1.2.0
+  intl: ^0.18.1
+  appinio_video_player: ^1.2.1
   build_config: ^1.1.1
   source_gen: ^1.2.7
   dropdown_button2: ^2.1.0
@@ -77,6 +77,9 @@ dependencies:
   implicitly_animated_reorderable_list_2: ^0.5.1
   flutter_slidable: ^3.0.0
   drag_and_drop_lists: ^0.3.3
+  persistent_bottom_nav_bar_v2: ^4.2.8
+  implicitly_animated_reorderable_list_2: ^0.5.1
+  expansion_tile_card: ^3.0.0
   
   
 dev_dependencies:

@@ -4,7 +4,8 @@ import 'package:retrofit/retrofit.dart';
 
 import '../model/request/clip_clipID_put.dart';
 import '../model/request/clip_dayID_post.dart';
-import '../model/response/md_Clip_get.dart';
+import '../model/response/clip_get_res.dart';
+import '../model/response/md_ClipList_get.dart';
 import '../model/response/md_Result.dart';
 
 part 'generated/clip.g.dart';

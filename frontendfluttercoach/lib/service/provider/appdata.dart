@@ -27,11 +27,18 @@ class AppData with ChangeNotifier {
 
   //course
   int idcourse = 0;
+  String  img = "";
+  String  namecourse = "";
+  String  namecoach = "";
+  String  detail = "";
 
   //user
   int uid = 0;
   String nameCus = " ";
   int money = 0;
+
+  //Day
+  int did =0;
   
   FoodServices get foodServices => FoodServices(Dio(), baseUrl: baseurl);
   ListFoodServices get listfoodServices => ListFoodServices(Dio(), baseUrl: baseurl);

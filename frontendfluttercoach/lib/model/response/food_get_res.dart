@@ -5,6 +5,8 @@
 import 'package:meta/meta.dart';
 import 'dart:convert';
 
+import 'md_FoodList_get.dart';
+
 List<ModelFood> modelFoodFromJson(String str) => List<ModelFood>.from(json.decode(str).map((x) => ModelFood.fromJson(x)));
 
 String modelFoodToJson(List<ModelFood> data) => json.encode(List<dynamic>.from(data.map((x) => x.toJson())));
@@ -14,7 +16,7 @@ class ModelFood {
     int listFoodId;
     int dayOfCouseId;
     String time;
-    ListFood listFood;
+    ModelFoodList listFood;
 
     ModelFood({
         required this.fid,
@@ -29,7 +31,7 @@ class ModelFood {
         listFoodId: json["ListFoodID"],
         dayOfCouseId: json["DayOfCouseID"],
         time: json["Time"],
-        listFood: ListFood.fromJson(json["ListFood"]),
+        listFood: ModelFoodList.fromJson(json["ListFood"]),
     );
 
     Map<String, dynamic> toJson() => {
@@ -41,38 +43,3 @@ class ModelFood {
     };
 }
 
-class ListFood {
-    int ifid;
-    int coachId;
-    String name;
-    String image;
-    String details;
-    int calories;
-
-    ListFood({
-        required this.ifid,
-        required this.coachId,
-        required this.name,
-        required this.image,
-        required this.details,
-        required this.calories,
-    });
-
-    factory ListFood.fromJson(Map<String, dynamic> json) => ListFood(
-        ifid: json["Ifid"],
-        coachId: json["CoachID"],
-        name: json["Name"],
-        image: json["Image"],
-        details: json["Details"],
-        calories: json["Calories"],
-    );
-
-    Map<String, dynamic> toJson() => {
-        "Ifid": ifid,
-        "CoachID": coachId,
-        "Name": name,
-        "Image": image,
-        "Details": details,
-        "Calories": calories,
-    };
-}

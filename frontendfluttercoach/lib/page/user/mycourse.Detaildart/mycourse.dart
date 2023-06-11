@@ -7,11 +7,12 @@ import 'package:provider/provider.dart';
 import 'package:retrofit/dio.dart';
 
 
-import '../../model/response/course_get_res.dart';
-import '../../model/response/md_coach_course_get.dart';
-import '../../service/course.dart';
-import '../../service/provider/appdata.dart';
-import 'cousepage.dart';
+import '../../../model/response/course_get_res.dart';
+import '../../../model/response/md_coach_course_get.dart';
+import '../../../service/course.dart';
+import '../../../service/provider/appdata.dart';
+import '../cousepage.dart';
+import 'showDay_mycourse.dart';
 
 class MyCouses extends StatefulWidget {
   const MyCouses({super.key});
@@ -104,18 +105,28 @@ class _MyCousesState extends State<MyCouses> {
                               height: 150,
                               fit: BoxFit.fill),
                           ListTile(
-                            title: Text(listcours.name)
-                            //subtitle: Text(listcours.details),
+                            title: Text(listcours.name),
+                            subtitle: Text(listcours.coach.fullName),
                           ),
                           Padding(
                             padding: const EdgeInsets.only(right: 8,bottom: 8),
                             child: ElevatedButton(
                                 onPressed: () {
                                   log(listcours.coId.toString());
+                                  log(listcours.image);
                                   context.read<AppData>().idcourse =
                                       listcours.coId;
+                                  context.read<AppData>().img =
+                                      listcours.image; 
+                                      context.read<AppData>().namecourse =
+                                      listcours.name;
+                                      context.read<AppData>().namecoach =
+                                      listcours.coach.fullName; 
+                                      context.read<AppData>().detail =
+                                      listcours.details; 
+                                        
             
-                                  Get.to(() => const showCousePage());
+                                  Get.to(() => const ShowDayMycourse());
                                 },
                                 child: const Text(
                                     "ดูรายละเอียดเพิ่มเติม")),
