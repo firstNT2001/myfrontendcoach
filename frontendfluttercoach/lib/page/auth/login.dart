@@ -6,17 +6,16 @@ import 'package:flutter/material.dart';
 import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
+
 import 'package:local_session_timeout/src/session_timeout_manager.dart';
 import 'package:provider/provider.dart';
-import 'package:sign_button/constants.dart';
-import 'package:sign_button/create_button.dart';
+
 
 import '../../model/request/auth_login_post.dart';
 import '../../model/response/auth_login_res.dart';
 import '../../service/auth.dart';
 import '../../service/provider/appdata.dart';
-import '../../widget/wg_textField.dart';
+
 import '../coach/home_coach_page.dart';
 import '../user/homepageUser.dart';
 import '../user/navigationbar.dart';
@@ -166,16 +165,6 @@ class _LoginPageState extends State<LoginPage> {
                       )),
                 ),
               ),
-              // Padding(
-              //   padding: const EdgeInsets.only(left: 20, right: 20),
-              //   child: SignInButton(
-              //     buttonType: ButtonType.facebook,
-              //     width: double.infinity,
-              //     onPressed: () {
-
-              //     },
-              //   ),
-              // ),
               Padding(
                   padding:
                       const EdgeInsets.only(left: 20, right: 20, bottom: 16),
@@ -292,23 +281,7 @@ class _LoginPageState extends State<LoginPage> {
                       ],
                     ),
                   ),
-                  // ElevatedButton(
-                  //   onPressed: () {
-                  //     Get.to(() => const HomePageCoach());
-
-                  //     context.read<AppData>().cid = cid;
-
-                  //   },
-                  //   child: const Text('Coach'),
-                  // ),
-                  // ElevatedButton(
-                  //   onPressed: () {
-                  //     log("uid:$uid");
-                  //     Get.to(() => const HomePageUser());
-                  //     context.read<AppData>().uid = uid;
-                  //   },
-                  //   child: const Text('User'),
-                  // ),
+                 
                 ],
               ),
             ),

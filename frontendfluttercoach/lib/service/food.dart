@@ -21,9 +21,9 @@ abstract class FoodServices {
       @Query("ifid") required String ifid,
       @Query("did") required String did});
 
-  @POST("/food/dayID/{cid}")
+  @POST("/food/dayID/{did}")
   Future<HttpResponse<ModelResult>> insertFoodByDayID(
-      @Path() String cid,
+      @Path() String did,
       @Body() FoodDayIdPost foodDayIdPost);
 
   @PUT("/food/foodID/{fid}")

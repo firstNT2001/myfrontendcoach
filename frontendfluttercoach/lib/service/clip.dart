@@ -1,10 +1,10 @@
 import 'package:dio/dio.dart';
-import 'package:frontendfluttercoach/model/request/listClip_clipID_put.dart';
 
 import 'package:retrofit/retrofit.dart';
 
 import '../model/request/clip_clipID_put.dart';
 import '../model/request/clip_dayID_post.dart';
+import '../model/response/clip_get_res.dart';
 import '../model/response/md_ClipList_get.dart';
 import '../model/response/md_Result.dart';
 
@@ -15,7 +15,7 @@ abstract class ClipServices {
   factory ClipServices(Dio dio, {String baseUrl}) = _ClipServices;
 
   @GET("/clip")
-  Future<HttpResponse<List<ModelClipList>>> clips(
+  Future<HttpResponse<List<ModelClip>>> clips(
       {@Query("cpID") required String cpID,
       @Query("icpID") required String icpID,
       @Query("did") required String did});

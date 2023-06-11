@@ -29,4 +29,7 @@ abstract class CourseService {
   @POST("/course/coachID/{cid}")
   Future<HttpResponse<ModelResult>> insetCourseByCoachID(
       @Path("cid") String cid, @Body() CourseCoachIdPost courseCoachIdPost);
+
+  @DELETE("/course/courseID/{coID}")
+  Future<HttpResponse<ModelResult>> deleteCourse(@Path() String coID);
 }

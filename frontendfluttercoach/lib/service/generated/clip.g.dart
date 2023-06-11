@@ -19,7 +19,7 @@ class _ClipServices implements ClipServices {
   String? baseUrl;
 
   @override
-  Future<HttpResponse<List<ModelClipList>>> clips({
+  Future<HttpResponse<List<ModelClip>>> clips({
     required cpID,
     required icpID,
     required did,
@@ -33,7 +33,7 @@ class _ClipServices implements ClipServices {
     final _headers = <String, dynamic>{};
     final _data = <String, dynamic>{};
     final _result = await _dio.fetch<List<dynamic>>(
-        _setStreamType<HttpResponse<List<ModelClipList>>>(Options(
+        _setStreamType<HttpResponse<List<ModelClip>>>(Options(
       method: 'GET',
       headers: _headers,
       extra: _extra,
@@ -46,7 +46,7 @@ class _ClipServices implements ClipServices {
             )
             .copyWith(baseUrl: baseUrl ?? _dio.options.baseUrl)));
     var value = _result.data!
-        .map((dynamic i) => ModelClipList.fromJson(i as Map<String, dynamic>))
+        .map((dynamic i) => ModelClip.fromJson(i as Map<String, dynamic>))
         .toList();
     final httpResponse = HttpResponse(value, _result);
     return httpResponse;
