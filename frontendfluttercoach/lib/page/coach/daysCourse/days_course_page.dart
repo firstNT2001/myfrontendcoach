@@ -193,7 +193,7 @@ class _DaysCoursePageState extends State<DaysCoursePage> {
     });
   }
 
-  Future<void> updateDay(days) async {
+  Future<void> updateDay(List<ModelDay> days) async {
     for (int i = 0; i < days.length; i++) {
       //log(days[i].sequence.toString());
       DayDayIdPut request = DayDayIdPut(sequence: i + 1);
