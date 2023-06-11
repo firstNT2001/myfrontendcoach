@@ -12,7 +12,7 @@ import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:provider/provider.dart';
 
-import '../../model/response/md_Clip_get.dart';
+import '../../model/response/clip_get_res.dart';
 import '../../service/food.dart';
 import '../../service/provider/appdata.dart';
 
