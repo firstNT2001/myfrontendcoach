@@ -4,6 +4,7 @@ import 'package:appinio_video_player/appinio_video_player.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:frontendfluttercoach/page/user/mycourse.Detaildart/widget_loadcilcp.dart';
 import 'package:provider/provider.dart';
 
 import '../../../model/response/clip_get_res.dart';
@@ -79,25 +80,26 @@ class _showCilpState extends State<showCilp> {
             return ListView.builder(
                 shrinkWrap: true,
                 itemCount: clips.length,
-                itemBuilder: (context, index) {
+                itemBuilder: (context, index)  {
                   final listclip = clips[index];
                   videoUrl = listclip.listClip.video;
-                  _videoPlayerController =
-                      VideoPlayerController.network(videoUrl)
-                        ..initialize().then((value) => setState(() {}));
-                  _customVideoPlayerController = CustomVideoPlayerController(
-                    context: context,
-                    videoPlayerController: _videoPlayerController,
-                  );
-                  log(_videoPlayerController.dataSource);
-                  return CupertinoPageScaffold(
-                    navigationBar: CupertinoNavigationBar(
-                      middle: Text(listclip.listClip.name),
-                    ),
-                    child: SafeArea(
-                      child: CustomVideoPlayer(
-                          customVideoPlayerController:
-                              _customVideoPlayerController),
+                  // _videoPlayerController =
+                  //     VideoPlayerController.network(videoUrl)
+                  //       ..initialize().then((value) => setState(() {}));
+
+                  // _customVideoPlayerController = CustomVideoPlayerController(
+                  //   context: context,
+                  //   videoPlayerController: _videoPlayerController,
+                  // );
+                 // log(_videoPlayerController.dataSource);
+                  return Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Column(
+                      children: [
+                        Text(listclip.listClip.name),
+                        WidgetloadCilp(urlVideo: videoUrl, nameclip: listclip.listClip.name,),
+                        Text(listclip.listClip.details)
+                        ],
                     ),
                   );
                 });
