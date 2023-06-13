@@ -8,7 +8,7 @@ import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:frontendfluttercoach/model/response/food_get_res.dart';
 import 'package:frontendfluttercoach/page/coach/food/foodCourse/edit_food.dart';
-import 'package:frontendfluttercoach/page/coach/food/foodCourse/food_new_page.dart';
+import 'package:frontendfluttercoach/page/coach/food/foodCourse/insertFood/food_new_page.dart';
 import 'package:frontendfluttercoach/service/clip.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
