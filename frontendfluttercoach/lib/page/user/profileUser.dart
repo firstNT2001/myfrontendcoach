@@ -2,7 +2,7 @@ import 'dart:developer';
 
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
-import 'package:frontendfluttercoach/page/user/money.dart';
+import 'package:frontendfluttercoach/page/user/money/money.dart';
 import 'package:get/get.dart';
 import 'package:provider/provider.dart';
 import 'package:retrofit/dio.dart';

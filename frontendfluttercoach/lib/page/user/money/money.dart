@@ -12,5 +12,12 @@ class _addCoinState extends State<addCoin> {
   Widget build(BuildContext context) {
      return Scaffold(
       appBar: AppBar(title: Text("เติมเงิน"),),
+      body: Column(
+        children: [
+          Text("กรุณาใส่จำนวนเงิน"),
+          TextFormField()
+          
+        ],
+      ),
     );}
 }

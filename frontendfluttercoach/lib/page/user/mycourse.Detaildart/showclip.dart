@@ -4,6 +4,7 @@ import 'package:appinio_video_player/appinio_video_player.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:frontendfluttercoach/page/user/mycourse.Detaildart/widget_loadcilcp.dart';
 import 'package:provider/provider.dart';
 
 import '../../../model/response/clip_get_res.dart';
@@ -27,7 +28,8 @@ class _showCilpState extends State<showCilp> {
   late String videoUrl = "";
   late VideoPlayerController _videoPlayerController;
   late CustomVideoPlayerController _customVideoPlayerController;
-  
+  final CustomVideoPlayerSettings _customVideoPlayerSettings =
+      const CustomVideoPlayerSettings();
   void initState() {
     // TODO: implement initState
     super.initState();
@@ -47,8 +49,14 @@ class _showCilpState extends State<showCilp> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: SafeArea(child: loadclips()),
-    );
+        body: Flex(
+      direction: Axis.horizontal,
+      children: [
+        Expanded(
+          child: loadclips(),
+        ),
+      ],
+    ));
   }
 
   Future<void> loadData() async {
@@ -72,33 +80,27 @@ class _showCilpState extends State<showCilp> {
             return ListView.builder(
                 shrinkWrap: true,
                 itemCount: clips.length,
-                itemBuilder: (context, index) {
+                itemBuilder: (context, index)  {
                   final listclip = clips[index];
                   videoUrl = listclip.listClip.video;
-                  late VideoPlayerController _videoPlayerController =
-                      VideoPlayerController.network(videoUrl);
-                  _customVideoPlayerController = CustomVideoPlayerController(
-                    context: context,
+                  // _videoPlayerController =
+                  //     VideoPlayerController.network(videoUrl)
+                  //       ..initialize().then((value) => setState(() {}));
 
-                    videoPlayerController: _videoPlayerController,
-                  );
-                  log("videoPlayerController" + videoUrl);
-                  return Column(
-                    children: [
-                      Text(listclip.listClip.name),
-                      
-      VideoPlayer(_videoPlayerController),
-     
-        
-                      // CupertinoButton(
-                      //   child: const Text("Play Fullscreen"),
-                      //   onPressed: () {
-                      //     _customVideoPlayerController.setFullscreen(true);
-                      //     _customVideoPlayerController.videoPlayerController
-                      //         .play();
-                      //   },
-                      // )
-                    ],
+                  // _customVideoPlayerController = CustomVideoPlayerController(
+                  //   context: context,
+                  //   videoPlayerController: _videoPlayerController,
+                  // );
+                 // log(_videoPlayerController.dataSource);
+                  return Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Column(
+                      children: [
+                        Text(listclip.listClip.name),
+                        WidgetloadCilp(urlVideo: videoUrl, nameclip: listclip.listClip.name,),
+                        Text(listclip.listClip.details)
+                        ],
+                    ),
                   );
                 });
           }
