@@ -2,7 +2,8 @@ import 'dart:developer';
 
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
-
+import 'package:badges/badges.dart' as badges;
+import 'package:badges/badges.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:frontendfluttercoach/model/response/md_FoodList_get.dart';
 import 'package:frontendfluttercoach/service/listFood.dart';
@@ -29,7 +30,7 @@ class _FoodNewCoursePageState extends State<FoodNewCoursePage> {
   List<Color> colorFood = [];
 
   //ListIncrease
-  List<String> idFood = [];
+  List<ModelFoodList> increaseFood = [];
 
   @override
   void initState() {
@@ -44,27 +45,62 @@ class _FoodNewCoursePageState extends State<FoodNewCoursePage> {
         resizeToAvoidBottomInset: false,
         appBar: AppBar(
           actions: [
-            IconButton(
-              icon: const Icon(
-                FontAwesomeIcons.angleRight,
-                color: Colors.black,
+            // IconButton(
+            //   icon: const Icon(
+            //     FontAwesomeIcons.angleRight,
+            //     color: Colors.black,
+            //   ),
+            //   onPressed: () {
+            //     if (idFood.length > 0) {
+            //       Get.to(() => FoodSelectTimePage(idFood: idFood));
+            //     }
+            //   },
+            // ),
+
+            badges.Badge(
+              position: badges.BadgePosition.topEnd(top: -7, end: 5),
+              showBadge: true,
+              ignorePointer: false,
+              badgeAnimation: const BadgeAnimation.slide(
+                toAnimate: true,
+                animationDuration: Duration(seconds: 0),
               ),
-              onPressed: () {
-                // for (var index in idFood) {
-                //   log(index);
-                // }
-                if(idFood.length > 0) {
-                   Get.to(() => FoodSelectTimePage(idFood: idFood));
-                }
-               
-              },
+              badgeContent: Row(
+                children: [
+                  if (increaseFood.isNotEmpty)
+                    Text(
+                      increaseFood.length.toString(),
+                      style: const TextStyle(color: Colors.white),
+                    ),
+                ],
+              ),
+              badgeStyle: badges.BadgeStyle(
+                //shape: badges.BadgeShape.square,
+                badgeColor: Theme.of(context).colorScheme.error,
+                borderSide: const BorderSide(color: Colors.white, width: 2),
+                elevation: 0,
+              ),
+              child: IconButton(
+                icon: const Icon(
+                  FontAwesomeIcons.angleRight,
+                  color: Colors.black,
+                ),
+                onPressed: () {
+                  if (increaseFood.isNotEmpty) {
+                    Get.to(() => FoodSelectTimePage(
+                          did: widget.did,
+                          modelFoodList: increaseFood,
+                        ));
+                  }
+                },
+              ),
             )
           ],
           backgroundColor: Theme.of(context).colorScheme.primaryContainer,
           iconTheme: const IconThemeData(
             color: Colors.black, //change your color here
           ),
-          title: const Text('เพิ่มเมนูอาหาร'),
+          title: const Text('เลือกเมนูอาหาร'),
           centerTitle: true,
         ),
         body: SafeArea(
@@ -123,13 +159,23 @@ class _FoodNewCoursePageState extends State<FoodNewCoursePage> {
                     onTap: () {
                       setState(() {
                         if (colorFood[index] != Colors.black12) {
+                           //เปลี่ยนสีเมือเลือกเมนู฿อาหาร
                           colorFood[index] = Colors.black12;
 
-                          idFood.add(listFood.ifid.toString());
+                          // เพิ่มเมนูอาหารนั้นเมือกกดเลือก
+                          ModelFoodList request = ModelFoodList(
+                              ifid: listFood.ifid,
+                              name: listFood.name,
+                              image: listFood.image,
+                              details: listFood.details,
+                              calories: listFood.calories);
+                          increaseFood.add(request);
+
                         } else {
+                          //กลับเป็นสีเดิมเมือเลือกเมนูอาหารซํ้า
                           colorFood[index] = Colors.white;
-                          idFood.removeWhere(
-                              (item) => item == listFood.ifid.toString());
+                          //เอาเมนูอาหารที่เลือกออกจาก list model
+                          increaseFood.removeWhere((item) => item.ifid == listFood.ifid);
                         }
                       });
                     },
@@ -170,7 +216,16 @@ class _FoodNewCoursePageState extends State<FoodNewCoursePage> {
                               child: AutoSizeText(
                                 listFood.name,
                                 maxLines: 5,
-                                style: Theme.of(context).textTheme.titleMedium,
+                                style: Theme.of(context).textTheme.bodyLarge,
+                              ),
+                            ),
+                            const SizedBox(height: 8),
+                            SizedBox(
+                              width: MediaQuery.of(context).size.width * 0.4,
+                              child: AutoSizeText(
+                                'Calories: ${listFood.calories.toString()}',
+                                maxLines: 5,
+                                style: Theme.of(context).textTheme.bodyLarge,
                               ),
                             ),
                           ],
