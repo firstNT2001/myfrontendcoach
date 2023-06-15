@@ -1,28 +1,46 @@
+
+
+import 'dart:developer';
+
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter/src/widgets/placeholder.dart';
+import 'package:provider/provider.dart';
 
+import '../../../../../model/request/food_dayID_post.dart';
 import '../../../../../model/response/md_FoodList_get.dart';
 import '../../../../../service/listFood.dart';
 
 class FoodSelectTimePage extends StatefulWidget {
   FoodSelectTimePage(
-      {super.key, required this.did, required this.modelFoodList});
+      {super.key,
+      required this.did,
+      required this.modelFoodList,
+      required this.increaseFood});
   //id Day
   late String did;
   //Food
   late List<ModelFoodList> modelFoodList;
+  late List<FoodDayIdPost> increaseFood;
 
   @override
   State<FoodSelectTimePage> createState() => _FoodSelectTimePageState();
 }
 
 class _FoodSelectTimePageState extends State<FoodSelectTimePage> {
+  int caloriesSum = 0;
   // FoodService
   late Future<void> loadListFoodDataMethod;
   late ListFoodServices _listFoodService;
   List<ModelFoodList> listFoods = [];
+  @override
+  void initState() {
+    super.initState();
+    for (var index in widget.modelFoodList) {
+      caloriesSum = caloriesSum + index.calories;
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -38,7 +56,61 @@ class _FoodSelectTimePageState extends State<FoodSelectTimePage> {
       ),
       body: SafeArea(
           child: Column(
-        children: [showFood()],
+        children: [
+          Expanded(child: showFood()),
+          Container(
+            height: MediaQuery.of(context).size.height * 0.2,
+            decoration: const BoxDecoration(
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.grey,
+                    blurRadius: 5.0, // Soften the shaodw
+                    spreadRadius: 1.0,
+                    offset: Offset(0.0, 0.0),
+                  )
+                ],
+                borderRadius: BorderRadius.only(
+                    topLeft: Radius.circular(15),
+                    topRight: Radius.circular(15)),
+                color: Colors.white),
+            child: SizedBox(
+                width: MediaQuery.of(context).size.width,
+                height: MediaQuery.of(context).size.height,
+                child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.only(left: 18, right: 18,bottom: 8),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(
+                              'แคลอรี่ทั้งหมด',
+                              style: Theme.of(context).textTheme.titleLarge,
+                            ),
+                            Text(
+                              caloriesSum.toString(),
+                              style: Theme.of(context).textTheme.titleLarge,
+                            ),
+                          ],
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(left: 18, right: 18),
+                        child: SizedBox(
+                           width:MediaQuery.of(context).size.width,
+                            child: ElevatedButton(
+                                onPressed: () {
+                                  for(var index in widget.increaseFood){
+                                    log('id :${index.listFoodId}');
+                                   
+                                  }
+                                }, child: const Text('บันทึก'))),
+                      )
+                    ])),
+          )
+        ],
       )),
     );
   }
@@ -102,6 +174,20 @@ class _FoodSelectTimePageState extends State<FoodSelectTimePage> {
                         width: MediaQuery.of(context).size.width * 0.4,
                         child: AutoSizeText(
                           'Calories: ${foods.calories.toString()}',
+                          maxLines: 5,
+                          style: Theme.of(context).textTheme.bodyLarge,
+                        ),
+                      ),
+                      SizedBox(
+                        width: MediaQuery.of(context).size.width * 0.4,
+                        child: AutoSizeText(
+                          widget.increaseFood[index].time == '1'
+                              ? 'มื้อเช้า'
+                              : widget.increaseFood[index].time == '2'
+                                  ? 'มื้อเที่ยง'
+                                  : widget.increaseFood[index].time == '3'
+                                      ? 'มื้อเย็น'
+                                      : 'มื้อใดก็ได้',
                           maxLines: 5,
                           style: Theme.of(context).textTheme.bodyLarge,
                         ),
