@@ -2,8 +2,7 @@ import 'dart:developer';
 
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/framework.dart';
-import 'package:flutter/src/widgets/placeholder.dart';
+
 import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:frontendfluttercoach/model/response/food_get_res.dart';
@@ -17,11 +16,14 @@ import 'package:provider/provider.dart';
 import '../../model/response/clip_get_res.dart';
 import '../../service/food.dart';
 import '../../service/provider/appdata.dart';
+import 'daysCourse/days_course_page.dart';
 
 class HomeFoodAndClipPage extends StatefulWidget {
   HomeFoodAndClipPage({super.key, required this.did, required this.sequence});
+
   late String did;
   late String sequence;
+
   @override
   State<HomeFoodAndClipPage> createState() => _HomeFoodAndClipPageState();
 }
@@ -44,6 +46,8 @@ class _HomeFoodAndClipPageState extends State<HomeFoodAndClipPage> {
   @override
   void initState() {
     super.initState();
+    context.read<AppData>().sequence = widget.sequence;
+
     //Food
     _foodService = context.read<AppData>().foodServices;
     loadFoodDataMethod = loadFoodData();
@@ -61,10 +65,21 @@ class _HomeFoodAndClipPageState extends State<HomeFoodAndClipPage> {
           resizeToAvoidBottomInset: false,
           appBar: AppBar(
             backgroundColor: Theme.of(context).colorScheme.primaryContainer,
-            iconTheme: const IconThemeData(
-              color: Colors.black, //change your color here
-            ),
+            // iconTheme: const IconThemeData(
+            //   color: Colors.black, //change your color here
+            // ),
             title: Text("Day ${widget.sequence}"),
+            leading: IconButton(
+              icon: const Icon(
+                FontAwesomeIcons.chevronLeft,
+                color: Colors.black,
+              ),
+              onPressed: () {
+                Get.to(() => DaysCoursePage(
+                      coID: context.read<AppData>().coID.toString(),
+                    ));
+              },
+            ),
             actions: [
               IconButton(
                 icon: const Icon(
@@ -167,7 +182,12 @@ class _HomeFoodAndClipPageState extends State<HomeFoodAndClipPage> {
                   color: Colors.white,
                   child: InkWell(
                     onTap: () {
-                      Get.to(() => EditFoodPage(fid: listfood.fid.toString()));
+                      Get.to(() => EditFoodPage(
+                            fid: listfood.fid.toString(),
+                            did: widget.did,
+                            sequence: widget.sequence,
+                            coID: context.read<AppData>().coID.toString(),
+                          ));
                     },
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -331,7 +351,7 @@ class _HomeFoodAndClipPageState extends State<HomeFoodAndClipPage> {
                 children: [
                   InkWell(
                     onTap: () {
-                       Get.to(() =>  FoodNewCoursePage(did: widget.did));
+                      Get.to(() => FoodNewCoursePage(did: widget.did));
                     },
                     child: Column(
                       children: [

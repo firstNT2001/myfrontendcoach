@@ -13,6 +13,7 @@ import 'package:provider/provider.dart';
 
 import '../../../service/days.dart';
 import '../../../service/provider/appdata.dart';
+import '../course/course_edit_page.dart';
 import '../home_foodAndClip.dart';
 
 class DaysCoursePage extends StatefulWidget {
@@ -41,6 +42,7 @@ class _DaysCoursePageState extends State<DaysCoursePage> {
   @override
   void initState() {
     super.initState();
+    context.read<AppData>().coID = int.parse(widget.coID);
 
     _daysService = context.read<AppData>().daysService;
     loadDaysDataMethod = loadDaysDataAsync();
@@ -51,6 +53,17 @@ class _DaysCoursePageState extends State<DaysCoursePage> {
     return Scaffold(
       resizeToAvoidBottomInset: false,
       appBar: AppBar(
+        leading: IconButton(
+          icon: const Icon(
+            FontAwesomeIcons.chevronLeft,
+            color: Colors.black,
+          ),
+          onPressed: () {
+            Get.to(() => CourseEditPage(
+                  coID: widget.coID,
+                ));
+          },
+        ),
         actions: [
           IconButton(
             icon: const Icon(

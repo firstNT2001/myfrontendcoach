@@ -99,17 +99,27 @@ class _CourseEditPageState extends State<CourseEditPage> {
           ),
           title: const Text("Edit Course"),
           centerTitle: true,
-          actions: [
-          IconButton(
-            icon:  const Icon(
-              FontAwesomeIcons.trash,
+          leading: IconButton(
+            icon: const Icon(
+              FontAwesomeIcons.chevronLeft,
               color: Colors.black,
             ),
-            onPressed: () async {
-             var response = await _courseService.deleteCourse(widget.coID);
+            onPressed: () {
+              Get.to(() => const HomePageCoach());
             },
-          )
-        ],
+          ),
+          actions: [
+            IconButton(
+              icon: const Icon(
+                FontAwesomeIcons.trash,
+                color: Colors.black,
+              ),
+              onPressed: () async {
+                var response = await _courseService.deleteCourse(widget.coID);
+                modelResult = response.data;
+              },
+            )
+          ],
         ),
         backgroundColor: Theme.of(context).colorScheme.primaryContainer,
         body: SafeArea(

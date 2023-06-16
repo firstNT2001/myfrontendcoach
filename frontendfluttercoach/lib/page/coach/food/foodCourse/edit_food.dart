@@ -1,6 +1,8 @@
 import 'dart:convert';
 import 'dart:developer';
 
+import 'package:cherry_toast/cherry_toast.dart';
+import 'package:cherry_toast/resources/arrays.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
@@ -9,6 +11,8 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:frontendfluttercoach/model/request/food_foodID_put.dart';
 import 'package:frontendfluttercoach/model/response/md_FoodList_get.dart';
 import 'package:frontendfluttercoach/service/listFood.dart';
+import 'package:get/get.dart';
+import 'package:get/get_core/src/get_main.dart';
 import 'package:provider/provider.dart';
 
 import '../../../../model/response/food_get_res.dart';
@@ -17,10 +21,19 @@ import '../../../../service/food.dart';
 import '../../../../service/provider/appdata.dart';
 import '../../../../widget/wg_dropdownFood_coach.dart';
 import '../../../../widget/wg_dropdown_string.dart';
+import '../../home_foodAndClip.dart';
 
 class EditFoodPage extends StatefulWidget {
-  EditFoodPage({super.key, required this.fid});
+  EditFoodPage(
+      {super.key,
+      required this.fid,
+      required this.did,
+      required this.sequence,
+      required this.coID});
   late String fid;
+  late String did;
+  late String sequence;
+  late String coID;
 
   @override
   State<EditFoodPage> createState() => _EditFoodPageState();
@@ -74,6 +87,18 @@ class _EditFoodPageState extends State<EditFoodPage> {
     return Scaffold(
       resizeToAvoidBottomInset: false,
       appBar: AppBar(
+        leading: IconButton(
+          icon: const Icon(
+            FontAwesomeIcons.chevronLeft,
+            color: Colors.black,
+          ),
+          onPressed: () {
+            Get.to(() => HomeFoodAndClipPage(
+                  did: widget.did,
+                  sequence: widget.sequence,
+                ));
+          },
+        ),
         actions: [
           IconButton(
             icon: const Icon(
@@ -83,6 +108,34 @@ class _EditFoodPageState extends State<EditFoodPage> {
             onPressed: () async {
               var response = await _foodCourseService.deleteFood(widget.fid);
               modelResult = response.data;
+              if (modelResult.result == '1') {
+                // ignore: use_build_context_synchronously
+                // CherryToast.success(
+                //   title: const Text('ลบสำเร็จ'),
+                //   displayTitle: false,
+                //   description: const Text('ลบสำเร็จ'),
+                //   toastPosition: Position.bottom,
+                //   animationDuration: const Duration(milliseconds: 1000),
+                //   autoDismiss: true,
+                //   actionHandler: () {},
+                // ).show(context);
+                // Get.back();
+
+                Get.to(() => HomeFoodAndClipPage(
+                      did: widget.did,
+                      sequence: widget.sequence,
+                    ));
+              } else {
+                // ignore: use_build_context_synchronously
+                CherryToast.warning(
+                  title: const Text('ลบไม่สำเร็จ'),
+                  displayTitle: false,
+                  description: const Text('ลบไม่สำเร็จ'),
+                  toastPosition: Position.bottom,
+                  animationDuration: const Duration(milliseconds: 1000),
+                  autoDismiss: true,
+                ).show(context);
+              }
             },
           )
         ],
@@ -204,9 +257,37 @@ class _EditFoodPageState extends State<EditFoodPage> {
                       FoodFoodIdPut foodFoodIdPut =
                           FoodFoodIdPut(listFoodId: ifid, time: time);
                       log(jsonEncode(foodFoodIdPut));
-                      var response = await _foodCourseService.updateFoodByFoodID(widget.fid, foodFoodIdPut);
+                      var response = await _foodCourseService
+                          .updateFoodByFoodID(widget.fid, foodFoodIdPut);
                       modelResult = response.data;
                       log(modelResult.result);
+                      if (modelResult.result == '1') {
+                        // ignore: use_build_context_synchronously
+                        // CherryToast.success(
+                        //   title: const Text('บันทึกสำเร็จ'),
+                        //   displayTitle: false,
+                        //   description: const Text('บันทึกสำเร็จ'),
+                        //   toastPosition: Position.bottom,
+                        //   animationDuration: const Duration(milliseconds: 1000),
+                        //   autoDismiss: true,
+                        //   actionHandler: () {},
+                        // ).show(context);
+                        //Navigator.pop(context);
+                        Get.to(() => HomeFoodAndClipPage(
+                              did: widget.did,
+                              sequence: widget.sequence,
+                            ));
+                      } else {
+                        // ignore: use_build_context_synchronously
+                        CherryToast.warning(
+                          title: const Text('บันทึกไม่สำเร็จ'),
+                          displayTitle: false,
+                          description: const Text('บันทึกไม่สำเร็จ'),
+                          toastPosition: Position.bottom,
+                          animationDuration: const Duration(milliseconds: 1000),
+                          autoDismiss: true,
+                        ).show(context);
+                      }
                     },
                     child: const Text('บันทีก')),
               ],

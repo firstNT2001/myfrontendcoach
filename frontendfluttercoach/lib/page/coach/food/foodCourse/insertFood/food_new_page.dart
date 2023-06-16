@@ -16,11 +16,13 @@ import 'package:provider/provider.dart';
 import '../../../../../model/request/food_dayID_post.dart';
 import '../../../../../service/provider/appdata.dart';
 import '../../../../../widget/wg_dropdown_string.dart';
+import '../../../home_foodAndClip.dart';
 import 'food_select_time_page.dart';
 
 class FoodNewCoursePage extends StatefulWidget {
   FoodNewCoursePage({super.key, required this.did});
   late String did;
+
   @override
   State<FoodNewCoursePage> createState() => _FoodNewCoursePageState();
 }
@@ -54,6 +56,18 @@ class _FoodNewCoursePageState extends State<FoodNewCoursePage> {
     return Scaffold(
         resizeToAvoidBottomInset: false,
         appBar: AppBar(
+          leading: IconButton(
+            icon: const Icon(
+              FontAwesomeIcons.chevronLeft,
+              color: Colors.black,
+            ),
+            onPressed: () {
+              Get.to(() => HomeFoodAndClipPage(
+                    did: widget.did,
+                    sequence: context.read<AppData>().sequence,
+                  ));
+            },
+          ),
           actions: [
             badges.Badge(
               position: badges.BadgePosition.topEnd(top: -7, end: 5),
@@ -87,7 +101,8 @@ class _FoodNewCoursePageState extends State<FoodNewCoursePage> {
                   if (increaseFood.isNotEmpty) {
                     Get.to(() => FoodSelectTimePage(
                           did: widget.did,
-                          modelFoodList: increaseFood, increaseFood: increaseFoodDay,
+                          modelFoodList: increaseFood,
+                          increaseFood: increaseFoodDay,
                         ));
                   }
                 },
@@ -336,7 +351,7 @@ class _FoodNewCoursePageState extends State<FoodNewCoursePage> {
                       onPressed: () {
                         setState(() {
                           increaseFood.add(listFood);
-                          
+
                           FoodDayIdPost requestFoodPost = FoodDayIdPost(
                             listFoodId: listFood.ifid,
                             time: selectedValuehand.text == 'มื้อเช้า'

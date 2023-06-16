@@ -1,16 +1,19 @@
-
-
 import 'dart:developer';
 
 import 'package:auto_size_text/auto_size_text.dart';
+import 'package:cherry_toast/cherry_toast.dart';
+import 'package:cherry_toast/resources/arrays.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/framework.dart';
-import 'package:flutter/src/widgets/placeholder.dart';
+import 'package:frontendfluttercoach/service/food.dart';
+import 'package:get/get.dart';
+import 'package:get/get_core/src/get_main.dart';
 import 'package:provider/provider.dart';
 
 import '../../../../../model/request/food_dayID_post.dart';
 import '../../../../../model/response/md_FoodList_get.dart';
-import '../../../../../service/listFood.dart';
+import '../../../../../model/response/md_Result.dart';
+import '../../../../../service/provider/appdata.dart';
+import '../../../home_foodAndClip.dart';
 
 class FoodSelectTimePage extends StatefulWidget {
   FoodSelectTimePage(
@@ -32,11 +35,14 @@ class _FoodSelectTimePageState extends State<FoodSelectTimePage> {
   int caloriesSum = 0;
   // FoodService
   late Future<void> loadListFoodDataMethod;
-  late ListFoodServices _listFoodService;
-  List<ModelFoodList> listFoods = [];
+  late FoodServices _foodCourseService;
+  late ModelResult modelResult;
   @override
   void initState() {
     super.initState();
+
+    _foodCourseService = context.read<AppData>().foodServices;
+
     for (var index in widget.modelFoodList) {
       caloriesSum = caloriesSum + index.calories;
     }
@@ -81,7 +87,8 @@ class _FoodSelectTimePageState extends State<FoodSelectTimePage> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Padding(
-                        padding: const EdgeInsets.only(left: 18, right: 18,bottom: 8),
+                        padding: const EdgeInsets.only(
+                            left: 18, right: 18, bottom: 8),
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
@@ -99,14 +106,49 @@ class _FoodSelectTimePageState extends State<FoodSelectTimePage> {
                       Padding(
                         padding: const EdgeInsets.only(left: 18, right: 18),
                         child: SizedBox(
-                           width:MediaQuery.of(context).size.width,
+                            width: MediaQuery.of(context).size.width,
                             child: ElevatedButton(
-                                onPressed: () {
-                                  for(var index in widget.increaseFood){
+                                onPressed: () async {
+                                  for (var index in widget.increaseFood) {
                                     log('id :${index.listFoodId}');
-                                   
+                                    var response = await _foodCourseService
+                                        .insertFoodByDayID(widget.did, index);
+                                    modelResult = response.data;
                                   }
-                                }, child: const Text('บันทึก'))),
+                                  log("result:${modelResult.result}");
+                                  if (modelResult.result == '1') {
+                                    // ignore: use_build_context_synchronously
+                                    CherryToast.success(
+                                      title: const Text('บันทึกสำเร็จ'),
+                                      displayTitle: false,
+                                      description: const Text('บันทึกสำเร็จ'),
+                                      toastPosition: Position.bottom,
+                                      animationDuration:
+                                          const Duration(milliseconds: 1000),
+                                      autoDismiss: true,
+                                      actionHandler: () {},
+                                    ).show(context);
+
+                                    Get.to(() => HomeFoodAndClipPage(
+                                          did: widget.did,
+                                          sequence:
+                                              context.read<AppData>().sequence,
+                                        ));
+                                  } else {
+                                    // ignore: use_build_context_synchronously
+                                    CherryToast.warning(
+                                      title: const Text('บันทึกไม่สำเร็จ'),
+                                      displayTitle: false,
+                                      description:
+                                          const Text('บันทึกไม่สำเร็จ'),
+                                      toastPosition: Position.bottom,
+                                      animationDuration:
+                                          const Duration(milliseconds: 1000),
+                                      autoDismiss: true,
+                                    ).show(context);
+                                  }
+                                },
+                                child: const Text('บันทึก'))),
                       )
                     ])),
           )
