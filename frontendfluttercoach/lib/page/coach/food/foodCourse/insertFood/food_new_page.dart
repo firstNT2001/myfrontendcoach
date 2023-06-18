@@ -170,8 +170,8 @@ class _FoodNewCoursePageState extends State<FoodNewCoursePage> {
                   color: colorFood[index],
                   child: InkWell(
                     onTap: () {
-                      setState(() {
-                        if (colorFood[index] != Colors.black12) {
+                      if (colorFood[index] != Colors.black12) {
+                        setState(() {
                           // เพิ่มเมนูอาหารนั้นเมือกกดเลือก
                           ModelFoodList request = ModelFoodList(
                               ifid: listFood.ifid,
@@ -183,14 +183,16 @@ class _FoodNewCoursePageState extends State<FoodNewCoursePage> {
                           _dialog(context, request, colorFood, index);
                           //เปลี่ยนสีเมือเลือกเมนู฿อาหาร
                           // colorFood[index] = Colors.black12;
-                        } else {
+                        });
+                      } else {
+                        setState(() {
                           //กลับเป็นสีเดิมเมือเลือกเมนูอาหารซํ้า
                           colorFood[index] = Colors.white;
                           //เอาเมนูอาหารที่เลือกออกจาก list model
                           increaseFood.removeWhere(
                               (item) => item.ifid == listFood.ifid);
-                        }
-                      });
+                        });
+                      }
                     },
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,

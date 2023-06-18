@@ -74,15 +74,17 @@ class _DaysCoursePageState extends State<DaysCoursePage> {
               setState(() {
                 onVisibles = !onVisibles;
                 offVisibles = !offVisibles;
-                if (offVisibles == true) {
-                  title = 'Edit days';
-                } else {
-                  // Get.to(() => DaysCoursePage(
-                  //       coID: widget.coID,
-                  //     ));
-                  loadDaysDataMethod = loadDaysDataAsync();
-                }
               });
+              if (offVisibles == true) {
+                setState(() {
+                  title = 'Edit days';
+                });
+              } else {
+                setState(() { 
+                   title = 'Days';
+                  loadDaysDataMethod = loadDaysDataAsync();
+                });
+              }
             },
           )
         ],
