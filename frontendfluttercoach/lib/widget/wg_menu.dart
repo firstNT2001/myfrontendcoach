@@ -69,7 +69,7 @@ class _SideMenuState extends State<SideMenu> {
                   ),
                   ListTile(
                     onTap: () {
-                      Get.to(() => const FoodCoachPage());
+                      Get.to(() => const CourseNewPage());
                     },
                     leading: const SizedBox(
                         height: 34,

@@ -1,9 +1,13 @@
 import 'dart:convert';
 import 'dart:developer';
+import 'dart:io';
 
 import 'package:dio/dio.dart';
+import 'package:file_picker/file_picker.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:frontendfluttercoach/page/coach/home_coach_page.dart';
 import 'package:get/get.dart';
 
@@ -14,6 +18,11 @@ import '../../../model/request/course_coachID_post.dart';
 import '../../../model/response/md_Result.dart';
 import '../../../service/course.dart';
 import '../../../service/provider/appdata.dart';
+import '../../../widget/wg_dropdown_notValue_string.dart';
+import '../../../widget/wg_dropdown_string.dart';
+import '../../../widget/wg_textField.dart';
+import '../../../widget/wg_textFieldLines.dart';
+import '../daysCourse/days_course_page.dart';
 
 class CourseNewPage extends StatefulWidget {
   const CourseNewPage({super.key});
@@ -30,21 +39,35 @@ class _CourseNewPageState extends State<CourseNewPage> {
   String status = "1";
   bool switchOnOff = true;
   // String expirationDate = "";
-  final _name = TextEditingController();
-  final _details = TextEditingController();
-  final _level = TextEditingController();
-  final _amount = TextEditingController();
-  final _days = TextEditingController();
-  final _price = TextEditingController();
+
+  //Controller
+  final name = TextEditingController();
+  final details = TextEditingController();
+  final amount = TextEditingController();
+  final days = TextEditingController();
+  final price = TextEditingController();
+  int lavel = 0;
+  //selectLevel
+  // ignore: non_constant_identifier_names
+  final List<String> LevelItems = ['ง่าย', 'ปานกลาง', 'ยาก'];
+  final selectedValue = TextEditingController();
 
   // ignore: prefer_typing_uninitialized_variables
   var insertCourse;
 
+  //selectimg
+  PlatformFile? pickedImg;
+  UploadTask? uploadTask;
+  String profile = " ";
+
+  String statusCourse = "";
+  String imageCourse = "";
   @override
   void initState() {
     // ignore: todo
     // TODO: implement initState
     super.initState();
+
     courseService =
         CourseService(Dio(), baseUrl: context.read<AppData>().baseurl);
     cid = context.read<AppData>().cid;
@@ -53,183 +76,279 @@ class _CourseNewPageState extends State<CourseNewPage> {
 
   @override
   Widget build(BuildContext context) {
+    Size screenSize = MediaQuery.of(context).size;
+    double width = (screenSize.width > 550) ? 550 : screenSize.width;
+    double padding = 8;
     return Scaffold(
-      body: Column(
-        children: [
-          Expanded(
-            child: ListView(
+      body: SafeArea(
+        child: ListView(
+          children: [
+            Stack(
               children: [
-                //Expanded(child: Image.network(imageCourse)),
+                inputImage(context),
                 Padding(
-                  padding: const EdgeInsets.only(top: 50, left: 10, right: 10),
-                  child: Center(child: textField(_name, "ชื่อ")),
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(top: 10, left: 10, right: 10),
-                  child: Center(child: textField(_details, "รายละเอียด")),
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(top: 10, left: 10, right: 10),
-                  // child: Center(child: textField(_amount, "จำนวนคน")),
-                  child: textFieldNumber(_amount, "จำนวนคน"),
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(top: 10, left: 10, right: 10),
-                  child: textFieldNumber(_level, "ความยาก"),
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(top: 10, left: 10, right: 10),
-                  child: textFieldNumber(_price, "ราคา"),
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(top: 10, left: 10, right: 10),
-                  child: textFieldNumber(_days, "จำนวนวัน"),
-                ),
-                switchOnOffStatus(context),
-                Padding(
-                  padding: const EdgeInsets.only(top: 10, left: 10, right: 10),
-                  child: ElevatedButton(
-                    //style: style,
-                    onPressed: () async {
-                      CourseCoachIdPost courseCoachIdPost = CourseCoachIdPost(
-                          bid: null,
-                          name: _name.text,
-                          details: _details.text,
-                          level: _level.text,
-                          amount: int.parse(_amount.text),
-                          image: image,
-                          days: int.parse(_days.text),
-                          price: int.parse(_price.text),
-                          status: status,
-                          expirationDate: null);
-                      log(jsonEncode(courseCoachIdPost));
-                      insertCourse = await courseService.insetCourseByCoachID(
-                          cid.toString(), courseCoachIdPost);
-                      moduleResult = insertCourse.data;
-                      log(jsonEncode(moduleResult.result));
-                      if (moduleResult.result == "1") {
-                        // ignore: use_build_context_synchronously
-                        //showDialogRowsAffected(context, "บันทึกสำเร็จ");
-                        Get.to(() => const HomePageCoach());
-                      } else {
-                        // ignore: use_build_context_synchronously
-                        //showDialogRowsAffected(context, "บันทึกไม่สำเร็จ");
-                      }
-                    },
-                    child: const Text('Enabled'),
+                  padding: const EdgeInsets.only(top: 250),
+                  child: SizedBox(
+                    width: MediaQuery.of(context).size.width,
+                    height: MediaQuery.of(context).size.height * 0.6,
+                    child: Container(
+                      decoration: const BoxDecoration(
+                          borderRadius: BorderRadius.only(
+                              topLeft: Radius.circular(20),
+                              topRight: Radius.circular(20)),
+                          color: Colors.white),
+                      child: Column(
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.only(
+                                bottom: 8, top: 28, left: 13, right: 13),
+                            child: WidgetTextFieldString(
+                              controller: name,
+                              labelText: 'ชื่อ',
+                            ),
+                          ),
+
+                          Padding(
+                            padding: const EdgeInsets.only(bottom: 8),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                SizedBox(
+                                  width: (width - 16 - (3 * padding)) / 2,
+                                  child: WidgetTextFieldString(
+                                    controller: amount,
+                                    labelText: 'จำนวนคน',
+                                  ),
+                                ),
+                                  SizedBox(
+                                      width: (width - 16 - (3 * padding)) / 2,
+                                      child: WidgetTextFieldString(
+                                        controller: days,
+                                        labelText: 'จำนวนวัน',
+                                      ),
+                                    ),
+                              ],
+                            ),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.only(bottom: 8),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                SizedBox(
+                                  width: (width - 16 - (3 * padding)) / 2,
+                                  child: WidgetTextFieldString(
+                                    controller: price,
+                                    labelText: 'ราคา',
+                                  ),
+                                ),
+                                SizedBox(
+                                  width: (width - 16 - (3 * padding)) / 2,
+                                  child: WidgetDropdownStringNotValue(
+                                    title: 'เลือกความยากง่าย',
+                                    selectedValue: selectedValue,
+                                    ListItems: LevelItems,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+
+                          Padding(
+                              padding: const EdgeInsets.only(
+                                  bottom: 8, top: 8, left: 13, right: 13),
+                              child: WidgetTextFieldLines(
+                                controller: details,
+                                labelText: 'รายละเอียด',
+                              )),
+                          // switchOnOffStatus(context),
+                          SizedBox(
+                              width: MediaQuery.of(context).size.width * 0.6,
+                              child: buttonNext())
+                        ],
+                      ),
+                    ),
                   ),
                 ),
               ],
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
 
-  Future<String?> showDialogRowsAffected(BuildContext context, String name) {
-    return showDialog<String>(
-        context: context,
-        builder: (BuildContext context) => AlertDialog(
-              title: Text(name),
-              actions: <Widget>[
-                TextButton(
-                    child: const Text('Cancel'),
-                    onPressed: () {
-                      Navigator.pop(context, 'Cancel');
-                    }),
-                TextButton(
-                  onPressed: () {
-                    Navigator.pop(context, 'OK');
-                  },
-                  child: const Text('OK'),
-                ),
-              ],
-            ));
-  }
-
-  Center textFieldNumber(
-      // ignore: no_leading_underscores_for_local_identifiers
-      final TextEditingController _controller,
-      String textLabel) {
-    return Center(
-        child: TextField(
-            controller: _controller,
-            keyboardType: TextInputType.number,
-            decoration: InputDecoration(
-              labelText: textLabel,
-            )));
-  }
-
-  TextField textField(
-      // ignore: no_leading_underscores_for_local_identifiers
-      final TextEditingController _controller,
-      String textLabel) {
-    return TextField(
-        controller: _controller,
-        decoration: InputDecoration(
-          labelText: textLabel,
-        ));
-  }
-
-  Switch switchOnOffStatus(BuildContext context) {
-    return Switch(
-      onChanged: (bool value) {
-        setState(() {
-          switchOnOff = value;
-        });
-        log(switchOnOff.toString());
-        if (value == true) {
-          showDialog<String>(
-              context: context,
-              builder: (BuildContext context) => AlertDialog(
-                    title: const Text('เปิดขายคอร์สหรือไม'),
-                    content: const Text('ต้องการเปิดขายคอร์สหรือไม'),
-                    actions: <Widget>[
-                      TextButton(
-                          child: const Text('Cancel'),
-                          onPressed: () {
-                            Navigator.pop(context, 'Cancel');
-                            setState(() {
-                              switchOnOff = false;
-                            });
-                          }),
-                      TextButton(
-                        onPressed: () {
-                          Navigator.pop(context, 'OK');
-                          status = "1";
-                        },
-                        child: const Text('OK'),
-                      ),
-                    ],
-                  ));
-        } else if (value == false) {
-          showDialog<String>(
-              context: context,
-              builder: (BuildContext context) => AlertDialog(
-                    title: const Text('ปิดขายคอร์สหรือไม'),
-                    content: const Text('ต้องการปิดขายคอร์สหรือไม'),
-                    actions: <Widget>[
-                      TextButton(
-                          child: const Text('Cancel'),
-                          onPressed: () {
-                            Navigator.pop(context, 'Cancel');
-                            setState(() {
-                              switchOnOff = true;
-                            });
-                          }),
-                      TextButton(
-                        onPressed: () {
-                          Navigator.pop(context, 'OK');
-                          status = "0";
-                        },
-                        child: const Text('OK'),
-                      ),
-                    ],
-                  ));
+  ElevatedButton buttonNext() {
+    return ElevatedButton(
+      //style: style,
+      onPressed: () async {
+        log("selectedValue${selectedValue.text}");
+        if (selectedValue.text == 'ง่าย') {
+          lavel = 1;
+        } else if (selectedValue.text == 'ปานกลาง') {
+          lavel = 2;
+        } else {
+          lavel = 3;
         }
+        log(selectedValue.text);
+        if (pickedImg != null) await uploadfile();
+        //if (pickedImg == null) profile = courses.first.image;
+        CourseCoachIdPost courseCoachIdPost = CourseCoachIdPost(
+            bid: null,
+            name: name.text,
+            details: details.text,
+            level: lavel.toString(),
+            amount: int.parse(amount.text),
+            image: profile,
+            days: int.parse(days.text),
+            price: int.parse(price.text),
+            status: status,
+            expirationDate: null);
+        log(jsonEncode(courseCoachIdPost));
+        insertCourse = await courseService.insetCourseByCoachID(
+            cid.toString(), courseCoachIdPost);
+        moduleResult = insertCourse.data;
+        log(moduleResult.result);
+        // if (moduleResult.result == "1") {
+        //   // ignore: use_build_context_synchronously
+        //   //showDialogRowsAffected(context, "บันทึกสำเร็จ");
+        //   Get.to(() => const HomePageCoach());
+        // } else {
+        //   // ignore: use_build_context_synchronously
+        //   //showDialogRowsAffected(context, "บันทึกไม่สำเร็จ");
+        // }
+
+         Get.to(() => DaysCoursePage(
+              coID: moduleResult.result,
+            ));
       },
-      value: switchOnOff,
+      child: const Text('Next'),
     );
+  }
+
+  // Image
+  Stack inputImage(BuildContext context) {
+    return Stack(
+      children: [
+        if (pickedImg != null) ...{
+          Container(
+            width: MediaQuery.of(context).size.width,
+            height: MediaQuery.of(context).size.height * 0.4,
+            decoration: BoxDecoration(
+                //borderRadius: BorderRadius.circular(20),
+                boxShadow: [
+                  BoxShadow(
+                      spreadRadius: 2,
+                      blurRadius: 10,
+                      color: Colors.black.withOpacity(0.1))
+                ],
+                // shape: BoxShape.circle,
+                image: DecorationImage(
+                    image: FileImage(
+                      File(pickedImg!.path!),
+                    ),
+                    fit: BoxFit.cover)),
+          ),
+        } else
+          Container(
+            width: MediaQuery.of(context).size.width,
+            height: MediaQuery.of(context).size.height * 0.4,
+            decoration: BoxDecoration(
+                //borderRadius: BorderRadius.circular(20),
+                boxShadow: [
+                  BoxShadow(
+                      spreadRadius: 2,
+                      blurRadius: 10,
+                      color: Colors.black.withOpacity(0.1))
+                ],
+                //shape: BoxShape.circle,
+                image: const DecorationImage(
+                  fit: BoxFit.cover,
+                  image: NetworkImage(
+                      "https://www.finearts.cmu.ac.th/wp-content/uploads/2021/07/blank-profile-picture-973460_1280-1.png"),
+                )),
+          ),
+        Positioned(
+            bottom: 70,
+            right: 8,
+            child: InkWell(
+              onTap: () {
+                log("message");
+                selectImg();
+              },
+              child: Container(
+                height: 40,
+                width: 40,
+                decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    border: Border.all(width: 4, color: Colors.white),
+                    color: Colors.amber),
+                child: const Icon(
+                  Icons.edit,
+                  color: Colors.white,
+                ),
+              ),
+            )),
+        Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              CircleAvatar(
+                backgroundColor: Colors.white,
+                radius: 20,
+                child: IconButton(
+                  icon: const Icon(
+                    FontAwesomeIcons.chevronLeft,
+                    color: Colors.black,
+                  ),
+                  onPressed: () {
+                    Get.to(() => const HomePageCoach());
+                  },
+                ),
+              ),
+              // CircleAvatar(
+              //     backgroundColor: Colors.white,
+              //     radius: 20,
+              //     child: IconButton(
+              //       icon: const Icon(
+              //         FontAwesomeIcons.trash,
+              //         color: Colors.black,
+              //       ),
+              //       onPressed: () async {
+              //         var response =
+              //             await _courseService.deleteCourse(widget.coID);
+              //         modelResult = response.data;
+              //       },
+              //     )),
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+
+  Future selectImg() async {
+    final result = await FilePicker.platform.pickFiles();
+    if (result == null) return;
+
+    setState(() {
+      pickedImg = result.files.first;
+    });
+  }
+
+  //uploadfile
+  Future uploadfile() async {
+    final path = 'files/${pickedImg!.name}';
+    final file = File(pickedImg!.path!);
+
+    final ref = FirebaseStorage.instance.ref().child(path);
+    uploadTask = ref.putFile(file);
+    final snapshot = await uploadTask!.whenComplete(() {});
+    final urlDownload = await snapshot.ref.getDownloadURL();
+    // print('link img firebase $urlDownload');
+    profile = urlDownload;
   }
 }
