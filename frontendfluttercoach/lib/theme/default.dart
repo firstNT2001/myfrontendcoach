@@ -17,7 +17,7 @@ class DefaultTheme {
     theme: FlexThemeData.light(
       colors: const FlexSchemeColor(
         primary: Color(0xff0d9a20),
-        primaryContainer: Color.fromARGB(255, 255, 255, 255),
+        primaryContainer: Color.fromARGB(255, 184, 255, 167),
         secondary: Color.fromARGB(255, 0, 0, 0),
         secondaryContainer: Color.fromARGB(255, 109, 0, 0),
         tertiary: Color(0xff33c046),
