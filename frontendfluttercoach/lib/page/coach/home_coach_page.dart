@@ -92,14 +92,14 @@ class _HomePageCoachState extends State<HomePageCoach> {
 
     return Scaffold(
       resizeToAvoidBottomInset: false,
-      backgroundColor: const Color.fromRGBO(244, 243, 243, 1),
+      //backgroundColor: const Color.fromRGBO(244, 243, 243, 1),
       appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.primaryContainer,
         elevation: 0,
         leading: IconButton(
           icon: const Icon(
             FontAwesomeIcons.barsStaggered,
-            color: Colors.black,
+            //color: Colors.black,
           ),
           onPressed: () {
             Get.to(() => SideMenu(
@@ -257,7 +257,7 @@ class _HomePageCoachState extends State<HomePageCoach> {
               return SizedBox(
                 height: MediaQuery.of(context).size.height * 0.2,
                 child: Card(
-                  color: Colors.white,
+                 // color: Colors.white,
                   child: InkWell(
                     onTap: () {
                       Get.to(() => CourseEditPage(
@@ -349,8 +349,8 @@ class _HomePageCoachState extends State<HomePageCoach> {
               children: [
                 Text(
                   "Hello Coach ${coachs.first.username}",
-                  style: const TextStyle(
-                      color: Color.fromARGB(221, 46, 46, 46), fontSize: 20),
+                  // style: const TextStyle(
+                  //     color: Color.fromARGB(221, 46, 46, 46), fontSize: 20),
                 ),
                 Text(
                   "เรามาสร้างคอร์สกัน",
@@ -400,7 +400,7 @@ class _HomePageCoachState extends State<HomePageCoach> {
                   ),
                   child: const Icon(
                     FontAwesomeIcons.bell,
-                    color: Colors.black,
+                   // color: Colors.black,
                   ),
                 )
               ],

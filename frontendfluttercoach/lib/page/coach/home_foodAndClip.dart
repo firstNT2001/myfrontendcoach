@@ -110,29 +110,33 @@ class _HomeFoodAndClipPageState extends State<HomeFoodAndClipPage> {
           body: TabBarView(
             children: [
               //Food
-              ListView(
+              Column(
                 children: [
                   const SizedBox(
                     height: 10,
                   ),
-                  Padding(
-                    padding: const EdgeInsets.only(
-                        left: 8, right: 8, top: 5, bottom: 5),
-                    child: showFood(),
-                  )
+                  Expanded(
+                    child: Padding(
+                      padding: const EdgeInsets.only(
+                          left: 8, right: 8, top: 5, bottom: 5),
+                      child: showFood(),
+                    ),
+                  ),
                 ],
               ),
 
               //Clip
-              ListView(
+              Column(
                 children: [
                   const SizedBox(
                     height: 10,
                   ),
-                  Padding(
-                    padding: const EdgeInsets.only(
-                        left: 8, right: 8, top: 5, bottom: 5),
-                    child: showClip(),
+                  Expanded(
+                    child: Padding(
+                      padding: const EdgeInsets.only(
+                          left: 8, right: 8, top: 5, bottom: 5),
+                      child: showClip(),
+                    ),
                   )
                 ],
               ),
@@ -177,7 +181,7 @@ class _HomeFoodAndClipPageState extends State<HomeFoodAndClipPage> {
             itemBuilder: (context, index) {
               final listfood = foods[index];
               return SizedBox(
-                height: MediaQuery.of(context).size.height * 0.2,
+                height: MediaQuery.of(context).size.height * 0.4,
                 child: Card(
                   color: Colors.white,
                   child: InkWell(
@@ -189,67 +193,60 @@ class _HomeFoodAndClipPageState extends State<HomeFoodAndClipPage> {
                             coID: context.read<AppData>().coID.toString(),
                           ));
                     },
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      crossAxisAlignment: CrossAxisAlignment.start,
+                    child: Column(
                       children: [
-                        if (listfood.listFood.image != null) ...{
-                          Padding(
-                            padding: const EdgeInsets.only(
-                                left: 8, right: 8, top: 5, bottom: 5),
-                            child: Container(
-                                width: MediaQuery.of(context).size.width * 0.3,
-                                height: MediaQuery.of(context).size.height,
-                                decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(26),
-                                    color: Colors.pink
-                                    // image: DecorationImage(
-                                    //   image:
-                                    //       NetworkImage(listfood.listFood.image),
-                                    // ),
-                                    )),
+                        if (listfood.listFood.image != '') ...{
+                          SizedBox(
+                            width: MediaQuery.of(context).size.width,
+                            height: MediaQuery.of(context).size.height * 0.28,
+                            child: Image.network(
+                              listfood.listFood.image,
+                              fit: BoxFit.fill,
+                            ),
                           ),
                         } else
-                          Padding(
-                            padding: const EdgeInsets.only(
-                                left: 8, top: 5, bottom: 5),
-                            child: Container(
-                                width: MediaQuery.of(context).size.width * 0.3,
-                                height: MediaQuery.of(context).size.height,
-                                decoration: BoxDecoration(
+                          Container(
+                              width: MediaQuery.of(context).size.width,
+                              height:
+                                  MediaQuery.of(context).size.height * 0.28,
+                              decoration: BoxDecoration(
                                   borderRadius: BorderRadius.circular(26),
-                                  image: DecorationImage(
-                                    image:
-                                        NetworkImage(listfood.listFood.image),
-                                  ),
-                                )),
-                          ),
-                        Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
+                                  color: Colors.pink
+                                  )),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            SizedBox(
-                              width: MediaQuery.of(context).size.width * 0.4,
-                              child: AutoSizeText(
-                                listfood.listFood.name,
-                                maxLines: 5,
-                                style: Theme.of(context).textTheme.titleMedium,
-                              ),
+                            Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                SizedBox(
+                                  width:
+                                      MediaQuery.of(context).size.width * 0.4,
+                                  child: AutoSizeText(
+                                    listfood.listFood.name,
+                                    maxLines: 5,
+                                    style:
+                                        Theme.of(context).textTheme.titleMedium,
+                                  ),
+                                ),
+                                Text(
+                                  listfood.time == '1'
+                                      ? 'มื้อเช้า'
+                                      : listfood.time == '2'
+                                          ? 'มื้อเที่ยง'
+                                          : listfood.time == '3'
+                                              ? 'มื้อเย็น'
+                                              : 'มื้อใดก็ได้',
+                                  style: Theme.of(context).textTheme.bodyMedium,
+                                ),
+                              ],
                             ),
-                            Text(
-                              listfood.time == '1'
-                                  ? 'มื้อเช้า'
-                                  : listfood.time == '2'
-                                      ? 'มื้อเที่ยง'
-                                      : listfood.time == '3'
-                                          ? 'มื้อเย็น'
-                                          : 'มื้อใดก็ได้',
-                              style: Theme.of(context).textTheme.bodyMedium,
+                            const SizedBox(
+                              width: 50,
                             ),
                           ],
-                        ),
-                        const SizedBox(
-                          width: 50,
                         ),
                       ],
                     ),
