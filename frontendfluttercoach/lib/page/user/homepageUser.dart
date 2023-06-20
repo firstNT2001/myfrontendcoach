@@ -92,7 +92,7 @@ class _HomePageUserState extends State<HomePageUser> {
                 ),
                 Padding(
                   padding: const EdgeInsets.only(left: 10),
-                  child: ElevatedButton(
+                  child: FilledButton(
                       onPressed: () {
                         if (myController.text.isNotEmpty) {
                           coachService
@@ -134,19 +134,19 @@ class _HomePageUserState extends State<HomePageUser> {
                           });
                         }
                       },
-                      style: ElevatedButton.styleFrom(
-                          primary: Color.fromARGB(230, 18, 17, 17)),
-                      child: const Text("ค้นหา",style: TextStyle(color: Colors.white),)),
+                      // style: ElevatedButton.styleFrom(
+                      //     primary: Color.fromARGB(230, 18, 17, 17)),
+                      child: const Text("ค้นหา")),
                 ),
               ],
             ),
           ),
-
-          Padding(
-            padding:
-                const EdgeInsets.only(left: 20, right: 20, top: 10, bottom: 12),
-            child: loadcustomer(),
-          ),
+          //BMI
+          // Padding(
+          //   padding:
+          //       const EdgeInsets.only(left: 20, right: 20, top: 10, bottom: 12),
+          //   child: loadcustomer(),
+          // ),
 
           Padding(
             padding: const EdgeInsets.only(left: 10),
@@ -186,6 +186,7 @@ class _HomePageUserState extends State<HomePageUser> {
                       itemBuilder: (context, index) {
                         final coach = coaches[index];
                         return Card(
+                          color: Theme.of(context).colorScheme.outline,
                           child: ListTile(
                             leading: CircleAvatar(
                               radius: 50,
@@ -230,6 +231,7 @@ class _HomePageUserState extends State<HomePageUser> {
                     itemBuilder: (context, index) {
                       final course = courses[index];
                       return Card(
+
                         child: ListTile(
                           leading: CircleAvatar(
                             radius: 30,
@@ -289,7 +291,8 @@ class _HomePageUserState extends State<HomePageUser> {
           final listcours = courses[index];
           
           return Card(
-            color: Color.fromARGB(255, 235, 235, 235),
+            elevation: 0,
+            color: Theme.of(context).colorScheme.outlineVariant,
             child: Container(
               height: 210,
               child: Column(
@@ -300,7 +303,7 @@ class _HomePageUserState extends State<HomePageUser> {
                   ListTile(
                     title: Text(listcours.name),
                     subtitle: Text(listcours.coach.fullName),
-                     trailing: ElevatedButton(
+                     trailing: FilledButton(
                         onPressed: () {
                           log(listcours.coId.toString());
                           context.read<AppData>().idcourse = listcours.coId;
@@ -309,11 +312,8 @@ class _HomePageUserState extends State<HomePageUser> {
                           context.read<AppData>().uid = customer.data.uid;
                           context.read<AppData>().money = customer.data.price;
                           Get.to(() => const showCousePage());
-                        },
-                        style: ElevatedButton.styleFrom(
-                            primary:
-                                Color.fromARGB(230, 18, 17, 17)),
-                        child: const Text("ดูรายละเอียดเพิ่มเติม",style: TextStyle(color: Colors.white),)),
+                        },                       
+                        child: const Text("ดูรายละเอียดเพิ่มเติม")),
                     contentPadding: EdgeInsets.symmetric(
                         vertical: 0.0, horizontal: 8.0),
                   ),
@@ -338,8 +338,7 @@ class _HomePageUserState extends State<HomePageUser> {
         } else {
           return Column(
             children: [
-              Card(
-                color: const Color.fromARGB(255, 235, 235, 235),
+              Card(             
                 child: ListTile(
                   leading: (customer.data.gender == '2')
                       ? const Icon(Icons.girl_outlined, size: 120)

@@ -134,7 +134,7 @@ const ColorScheme flexSchemeDark = ColorScheme(
   surfaceVariant: Color(0xff3d2c2c),
   onSurfaceVariant: Color(0xffffffff),
   outline: Color(0xff8c8c8c),
-  outlineVariant: Color(0xff404040),
+  outlineVariant: Color.fromARGB(255, 77, 77, 77),
   shadow: Color(0xff000000),
   scrim: Color(0xff000000),
   inverseSurface: Color(0xfffaf2f2),
