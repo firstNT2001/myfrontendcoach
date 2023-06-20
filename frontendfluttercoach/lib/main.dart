@@ -87,7 +87,7 @@ Future<void> main() async {
                       );
                     },
                   ),
-                  themeMode: ThemeMode.system,
+                  themeMode: ThemeMode.dark,
                   theme: defaultTheme.flexTheme.theme.copyWith(
                       scaffoldBackgroundColor: Colors.white,
                       inputDecorationTheme: defaultTheme.flexTheme.theme.inputDecorationTheme.copyWith(
