@@ -42,6 +42,7 @@ class AppData with ChangeNotifier {
 
   //Day
   int did =0;
+  String sequence = "";
   
   FoodServices get foodServices => FoodServices(Dio(), baseUrl: baseurl);
   ListFoodServices get listfoodServices => ListFoodServices(Dio(), baseUrl: baseurl);

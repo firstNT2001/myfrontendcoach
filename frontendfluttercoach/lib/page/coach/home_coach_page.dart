@@ -3,6 +3,7 @@
 import 'dart:convert';
 import 'dart:developer';
 import 'dart:typed_data';
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:badges/badges.dart' as badges;
 import 'package:badges/badges.dart';
 
@@ -284,15 +285,19 @@ class _HomePageCoachState extends State<HomePageCoach> {
                           mainAxisAlignment: MainAxisAlignment.center,
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Text(
-                              listcours.name,
-                              style: Theme.of(context).textTheme.bodyMedium,
+                            SizedBox(
+                              width: MediaQuery.of(context).size.width * 0.35,
+                              child: AutoSizeText(
+                                listcours.name,
+                                maxLines: 5,
+                                style: Theme.of(context).textTheme.bodyLarge,
+                              ),
                             ),
                             IntrinsicHeight(
                               child: Row(
                                 mainAxisAlignment:
                                     MainAxisAlignment.spaceEvenly,
-                                children:  [
+                                children: [
                                   const Icon(
                                     FontAwesomeIcons.solidStar,
                                     color: Colors.yellow,
@@ -307,7 +312,6 @@ class _HomePageCoachState extends State<HomePageCoach> {
                                 ],
                               ),
                             ),
-                            
                             if (listcours.status == '1') ...{
                               Text(
                                 "กำลังขาย",

@@ -78,6 +78,7 @@ dependencies:
   flutter_slidable: ^3.0.0
   drag_and_drop_lists: ^0.3.3
   expansion_tile_card: ^3.0.0
+  cherry_toast: ^1.2.1
    
   
 dev_dependencies:

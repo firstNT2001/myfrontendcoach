@@ -2,11 +2,12 @@ import 'dart:developer';
 
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/framework.dart';
-import 'package:flutter/src/widgets/placeholder.dart';
+
+import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:frontendfluttercoach/model/response/food_get_res.dart';
 import 'package:frontendfluttercoach/page/coach/food/foodCourse/edit_food.dart';
+import 'package:frontendfluttercoach/page/coach/food/foodCourse/insertFood/food_new_page.dart';
 import 'package:frontendfluttercoach/service/clip.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
@@ -15,11 +16,14 @@ import 'package:provider/provider.dart';
 import '../../model/response/clip_get_res.dart';
 import '../../service/food.dart';
 import '../../service/provider/appdata.dart';
+import 'daysCourse/days_course_page.dart';
 
 class HomeFoodAndClipPage extends StatefulWidget {
   HomeFoodAndClipPage({super.key, required this.did, required this.sequence});
+
   late String did;
   late String sequence;
+
   @override
   State<HomeFoodAndClipPage> createState() => _HomeFoodAndClipPageState();
 }
@@ -42,6 +46,8 @@ class _HomeFoodAndClipPageState extends State<HomeFoodAndClipPage> {
   @override
   void initState() {
     super.initState();
+    context.read<AppData>().sequence = widget.sequence;
+
     //Food
     _foodService = context.read<AppData>().foodServices;
     loadFoodDataMethod = loadFoodData();
@@ -59,17 +65,30 @@ class _HomeFoodAndClipPageState extends State<HomeFoodAndClipPage> {
           resizeToAvoidBottomInset: false,
           appBar: AppBar(
             backgroundColor: Theme.of(context).colorScheme.primaryContainer,
-            iconTheme: const IconThemeData(
-              color: Colors.black, //change your color here
-            ),
+            // iconTheme: const IconThemeData(
+            //   color: Colors.black, //change your color here
+            // ),
             title: Text("Day ${widget.sequence}"),
+            leading: IconButton(
+              icon: const Icon(
+                FontAwesomeIcons.chevronLeft,
+                color: Colors.black,
+              ),
+              onPressed: () {
+                Get.to(() => DaysCoursePage(
+                      coID: context.read<AppData>().coID.toString(),
+                    ));
+              },
+            ),
             actions: [
               IconButton(
                 icon: const Icon(
                   FontAwesomeIcons.plus,
                   color: Colors.black,
                 ),
-                onPressed: () {},
+                onPressed: () {
+                  _dialog(context);
+                },
               )
             ],
             bottom: const TabBar(tabs: [
@@ -105,7 +124,7 @@ class _HomeFoodAndClipPageState extends State<HomeFoodAndClipPage> {
               ),
 
               //Clip
-             ListView(
+              ListView(
                 children: [
                   const SizedBox(
                     height: 10,
@@ -163,7 +182,12 @@ class _HomeFoodAndClipPageState extends State<HomeFoodAndClipPage> {
                   color: Colors.white,
                   child: InkWell(
                     onTap: () {
-                      Get.to(() => EditFoodPage(fid: listfood.fid.toString()));
+                      Get.to(() => EditFoodPage(
+                            fid: listfood.fid.toString(),
+                            did: widget.did,
+                            sequence: widget.sequence,
+                            coID: context.read<AppData>().coID.toString(),
+                          ));
                     },
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -271,8 +295,7 @@ class _HomeFoodAndClipPageState extends State<HomeFoodAndClipPage> {
                               height: MediaQuery.of(context).size.height,
                               decoration: BoxDecoration(
                                   borderRadius: BorderRadius.circular(26),
-                                  color: Colors.pink
-                                  )),
+                                  color: Colors.pink)),
                         ),
                         Center(
                           child: SizedBox(
@@ -297,5 +320,86 @@ class _HomeFoodAndClipPageState extends State<HomeFoodAndClipPage> {
         }
       },
     );
+  }
+
+  void _dialog(BuildContext ctx) {
+    //target widget
+    SmartDialog.show(builder: (_) {
+      return Container(
+        width: MediaQuery.of(context).size.width * 0.8,
+        height: MediaQuery.of(context).size.height * 0.35,
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(20),
+          color: Colors.white,
+        ),
+        alignment: Alignment.center,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          //crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Padding(
+              padding: const EdgeInsets.only(
+                  left: 20, right: 20, top: 50, bottom: 16),
+              child: Text("รายการเพิ่ม",
+                  style: Theme.of(context).textTheme.headlineSmall),
+            ),
+            Padding(
+              padding: const EdgeInsets.only(top: 20),
+              child: Row(
+                //mainAxisSize: MainAxisSize.max,
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  InkWell(
+                    onTap: () {
+                      Get.to(() => FoodNewCoursePage(did: widget.did));
+                    },
+                    child: Column(
+                      children: [
+                        const SizedBox(
+                          width: 100,
+                          height: 50,
+                          child: Icon(
+                            FontAwesomeIcons.bowlFood,
+                            size: 50,
+                            //color: Colors.black,
+                          ),
+                        ),
+                        Text(
+                          'เพิ่มเมนู',
+                          style: Theme.of(context).textTheme.titleMedium,
+                        ),
+                      ],
+                    ),
+                  ),
+                  InkWell(
+                    onTap: () {
+                      // Get.to(() => const homeScreen());
+                      // context.read<AppData>().uid = uid;
+                    },
+                    child: Column(
+                      children: [
+                        const SizedBox(
+                          width: 100,
+                          height: 50,
+                          child: Icon(
+                            FontAwesomeIcons.dumbbell,
+                            color: Colors.black,
+                            size: 50,
+                          ),
+                        ),
+                        Text(
+                          'เพิ่มคลิป',
+                          style: Theme.of(context).textTheme.titleMedium,
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+      );
+    });
   }
 }

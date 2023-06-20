@@ -92,151 +92,138 @@ class _CourseEditPageState extends State<CourseEditPage> {
     double padding = 8;
     return Scaffold(
         resizeToAvoidBottomInset: false,
-        appBar: AppBar(
-          backgroundColor: Theme.of(context).colorScheme.primaryContainer,
-          iconTheme: const IconThemeData(
-            color: Colors.black, //change your color here
-          ),
-          title: const Text("Edit Course"),
-          centerTitle: true,
-          actions: [
-          IconButton(
-            icon:  const Icon(
-              FontAwesomeIcons.trash,
-              color: Colors.black,
-            ),
-            onPressed: () async {
-             var response = await _courseService.deleteCourse(widget.coID);
-            },
-          )
-        ],
-        ),
-        backgroundColor: Theme.of(context).colorScheme.primaryContainer,
+        //backgroundColor: Theme.of(context).colorScheme.primaryContainer,
         body: SafeArea(
           child: ListView(
             children: [
-              FutureBuilder(
-                  future: loadDataMethod,
-                  builder: (context, AsyncSnapshot snapshot) {
-                    if (snapshot.connectionState == ConnectionState.done) {
-                      return Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          //เพิ่มรูป || แสดงรูป
-                          inputImage(context),
-
-                          const SizedBox(
-                            height: 18,
-                          ),
-                          // TextField
-
-                          SizedBox(
-                            width: double.infinity,
-                            height: MediaQuery.of(context).size.height * 0.6,
-                            child: Container(
-                              decoration: const BoxDecoration(
-                                  borderRadius: BorderRadius.only(
-                                      topLeft: Radius.circular(20),
-                                      topRight: Radius.circular(20)),
-                                  color: Colors.white),
-                              child: Column(
-                                children: [
-                                  Padding(
-                                    padding: const EdgeInsets.only(
-                                        bottom: 8,
-                                        top: 28,
-                                        left: 13,
-                                        right: 13),
-                                    child: WidgetTextFieldString(
-                                      controller: name,
-                                      labelText: 'ชื่อ',
-                                    ),
-                                  ),
-
-                                  Padding(
-                                    padding: const EdgeInsets.only(bottom: 8),
-                                    child: Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceEvenly,
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        SizedBox(
-                                          width:
-                                              (width - 16 - (3 * padding)) / 2,
-                                          child: WidgetTextFieldString(
-                                            controller: amount,
-                                            labelText: 'จำนวนคน',
-                                          ),
-                                        ),
-                                        SizedBox(
-                                          width:
-                                              (width - 16 - (3 * padding)) / 2,
-                                          child: WidgetTextFieldString(
-                                            controller: days,
-                                            labelText: 'จำนวนวัน',
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                  Padding(
-                                    padding: const EdgeInsets.only(bottom: 8),
-                                    child: Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceEvenly,
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        SizedBox(
-                                          width:
-                                              (width - 16 - (3 * padding)) / 2,
-                                          child: WidgetTextFieldString(
-                                            controller: price,
-                                            labelText: 'ราคา',
-                                          ),
-                                        ),
-                                        SizedBox(
-                                          width:
-                                              (width - 16 - (3 * padding)) / 2,
-                                          child: WidgetDropdownString(
-                                            title: 'เลือกความยากง่าย',
-                                            selectedValue: selectedValue,
-                                            ListItems: LevelItems,
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-
-                                  Padding(
-                                      padding: const EdgeInsets.only(
-                                          bottom: 8,
-                                          top: 8,
-                                          left: 13,
-                                          right: 13),
-                                      child: WidgetTextFieldLines(
-                                        controller: details,
-                                        labelText: 'รายละเอียด',
-                                      )),
-                                  // switchOnOffStatus(context),
-                                  SizedBox(
-                                      width: MediaQuery.of(context).size.width *
-                                          0.6,
-                                      child: buttonNext())
-                                ],
-                              ),
-                            ),
-                          ),
-                        ],
-                      );
-                    } else {
-                      return const Center(child: CircularProgressIndicator());
-                    }
-                  }),
+              showCourse(width, padding),
             ],
           ),
         ));
+  }
+
+  FutureBuilder<void> showCourse(double width, double padding) {
+    return FutureBuilder(
+        future: loadDataMethod,
+        builder: (context, AsyncSnapshot snapshot) {
+          if (snapshot.connectionState == ConnectionState.done) {
+            return Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Stack(
+                  children: [
+                    //เพิ่มรูป || แสดงรูป
+                    inputImage(context),
+
+                    const SizedBox(
+                      height: 18,
+                    ),
+                    // TextField
+
+                    Padding(
+                      padding: const EdgeInsets.only(top: 250),
+                      child: SizedBox(
+                        width: MediaQuery.of(context).size.width,
+                        height: MediaQuery.of(context).size.height * 0.6,
+                        child: Container(
+                          decoration: const BoxDecoration(
+                              borderRadius: BorderRadius.only(
+                                  topLeft: Radius.circular(20),
+                                  topRight: Radius.circular(20)),
+                              color: Colors.white),
+                          child: Column(
+                            children: [
+                              Padding(
+                                padding: const EdgeInsets.only(
+                                    bottom: 8, top: 28, left: 13, right: 13),
+                                child: WidgetTextFieldString(
+                                  controller: name,
+                                  labelText: 'ชื่อ',
+                                ),
+                              ),
+
+                              Padding(
+                                padding: const EdgeInsets.only(bottom: 8),
+                                child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceEvenly,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    SizedBox(
+                                      width: (width - 16 - (3 * padding)) / 2,
+                                      child: WidgetTextFieldString(
+                                        controller: amount,
+                                        labelText: 'จำนวนคน',
+                                      ),
+                                    ),
+                                    SizedBox(
+                                        width: (width - 16 - (3 * padding)) / 2,
+                                        child: TextField(
+                                            controller: days,
+                                            readOnly: true,
+                                            textAlignVertical:
+                                                TextAlignVertical.center,
+                                            textAlign: TextAlign.center,
+                                            decoration: InputDecoration(
+                                                labelText: 'จำนวนวัน',
+                                                filled: true,
+                                                fillColor: Theme.of(context)
+                                                    .colorScheme
+                                                    .background))),
+                                  ],
+                                ),
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.only(bottom: 8),
+                                child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceEvenly,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    SizedBox(
+                                      width: (width - 16 - (3 * padding)) / 2,
+                                      child: WidgetTextFieldString(
+                                        controller: price,
+                                        labelText: 'ราคา',
+                                      ),
+                                    ),
+                                    SizedBox(
+                                      width: (width - 16 - (3 * padding)) / 2,
+                                      child: WidgetDropdownString(
+                                        title: 'เลือกความยากง่าย',
+                                        selectedValue: selectedValue,
+                                        ListItems: LevelItems,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+
+                              Padding(
+                                  padding: const EdgeInsets.only(
+                                      bottom: 8, top: 8, left: 13, right: 13),
+                                  child: WidgetTextFieldLines(
+                                    controller: details,
+                                    labelText: 'รายละเอียด',
+                                  )),
+                              // switchOnOffStatus(context),
+                              SizedBox(
+                                  width:
+                                      MediaQuery.of(context).size.width * 0.6,
+                                  child: buttonNext())
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            );
+          } else {
+            return const Center(child: CircularProgressIndicator());
+          }
+        });
   }
 
   Stack inputImage(BuildContext context) {
@@ -244,17 +231,17 @@ class _CourseEditPageState extends State<CourseEditPage> {
       children: [
         if (pickedImg != null) ...{
           Container(
-            width: MediaQuery.of(context).size.width * 0.9,
-            height: MediaQuery.of(context).size.height * 0.3,
+            width: MediaQuery.of(context).size.width,
+            height: MediaQuery.of(context).size.height * 0.4,
             decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(20),
+                //borderRadius: BorderRadius.circular(20),
                 boxShadow: [
                   BoxShadow(
                       spreadRadius: 2,
                       blurRadius: 10,
                       color: Colors.black.withOpacity(0.1))
                 ],
-                shape: BoxShape.circle,
+                //shape: BoxShape.circle,
                 image: DecorationImage(
                     image: FileImage(
                       File(pickedImg!.path!),
@@ -263,10 +250,10 @@ class _CourseEditPageState extends State<CourseEditPage> {
           ),
         } else
           Container(
-            width: MediaQuery.of(context).size.width * 0.9,
-            height: MediaQuery.of(context).size.height * 0.3,
+            width: MediaQuery.of(context).size.width,
+            height: MediaQuery.of(context).size.height * 0.4,
             decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(20),
+                //borderRadius: BorderRadius.circular(20),
                 boxShadow: [
                   BoxShadow(
                       spreadRadius: 2,
@@ -280,8 +267,8 @@ class _CourseEditPageState extends State<CourseEditPage> {
                 )),
           ),
         Positioned(
-            bottom: 0,
-            right: 0,
+            bottom: 70,
+            right: 8,
             child: InkWell(
               onTap: () {
                 log("message");
@@ -300,6 +287,41 @@ class _CourseEditPageState extends State<CourseEditPage> {
                 ),
               ),
             )),
+        Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              CircleAvatar(
+                backgroundColor: Colors.white,
+                radius: 20,
+                child: IconButton(
+                  icon: const Icon(
+                    FontAwesomeIcons.chevronLeft,
+                    color: Colors.black,
+                  ),
+                  onPressed: () {
+                    Get.to(() => const HomePageCoach());
+                  },
+                ),
+              ),
+              CircleAvatar(
+                  backgroundColor: Colors.white,
+                  radius: 20,
+                  child: IconButton(
+                    icon: const Icon(
+                      FontAwesomeIcons.trash,
+                      color: Colors.black,
+                    ),
+                    onPressed: () async {
+                      var response =
+                          await _courseService.deleteCourse(widget.coID);
+                      modelResult = response.data;
+                    },
+                  )),
+            ],
+          ),
+        ),
       ],
     );
   }
