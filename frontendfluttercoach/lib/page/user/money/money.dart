@@ -12,6 +12,7 @@ import 'package:provider/provider.dart';
 import '../../../model/request/wallet_uid.dart';
 import '../../../model/response/md_Result.dart';
 import '../../../service/provider/appdata.dart';
+import 'moneyQrcode.dart';
 
 class addCoin extends StatefulWidget {
   const addCoin({super.key});
@@ -90,9 +91,11 @@ class _addCoinState extends State<addCoin> {
                       if (moduleResult.result == "0") {
                         // ignore: use_build_context_synchronously
                         //showDialogRowsAffected(context, "บันทึกสำเร็จ");
-                       // Get.to(() => const HomePageCoach());
-                          CircularProgressIndicator();
-                      } 
+                       Get.to(() =>  getQrcode(money: double.parse(_money.text),refNo: referenceNo,));
+                          
+                      } else{
+                        CircularProgressIndicator();
+                      }
               }, child: Text("เติมเงิน",style: Theme.of(context).textTheme.bodyLarge
 ,)),
             )
