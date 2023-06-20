@@ -64,7 +64,8 @@ class _LoginPageState extends State<LoginPage> {
       body: Center(
         child: Card(
           clipBehavior: Clip.antiAlias,
-          color: Theme.of(context).colorScheme.primaryContainer,
+          //color: Theme.of(context).colorScheme.primaryContainer,
+          
           child: SizedBox(
             width: MediaQuery.of(context).size.width * 0.8,
             height: MediaQuery.of(context).size.height * 0.65,

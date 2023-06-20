@@ -127,11 +127,11 @@ class _CourseEditPageState extends State<CourseEditPage> {
                         width: MediaQuery.of(context).size.width,
                         height: MediaQuery.of(context).size.height * 0.6,
                         child: Container(
-                          decoration: const BoxDecoration(
-                              borderRadius: BorderRadius.only(
+                          decoration:  BoxDecoration(
+                              borderRadius: const BorderRadius.only(
                                   topLeft: Radius.circular(20),
                                   topRight: Radius.circular(20)),
-                              color: Colors.white),
+                              color: Theme.of(context).colorScheme.primaryContainer),
                           child: Column(
                             children: [
                               Padding(
@@ -294,12 +294,12 @@ class _CourseEditPageState extends State<CourseEditPage> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               CircleAvatar(
-                backgroundColor: Colors.white,
+                //backgroundColor: Colors.white,
                 radius: 20,
                 child: IconButton(
                   icon: const Icon(
                     FontAwesomeIcons.chevronLeft,
-                    color: Colors.black,
+                  
                   ),
                   onPressed: () {
                     Get.to(() => const HomePageCoach());
@@ -307,12 +307,12 @@ class _CourseEditPageState extends State<CourseEditPage> {
                 ),
               ),
               CircleAvatar(
-                  backgroundColor: Colors.white,
+                  //backgroundColor: Colors.white,
                   radius: 20,
                   child: IconButton(
                     icon: const Icon(
                       FontAwesomeIcons.trash,
-                      color: Colors.black,
+                      
                     ),
                     onPressed: () async {
                       var response =
@@ -327,8 +327,8 @@ class _CourseEditPageState extends State<CourseEditPage> {
     );
   }
 
-  ElevatedButton buttonNext() {
-    return ElevatedButton(
+  FilledButton buttonNext() {
+    return FilledButton(
       //style: style,
       onPressed: () async {
         log("selectedValue${selectedValue.text}");

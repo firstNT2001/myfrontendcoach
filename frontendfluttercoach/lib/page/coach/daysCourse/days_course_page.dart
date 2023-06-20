@@ -56,7 +56,7 @@ class _DaysCoursePageState extends State<DaysCoursePage> {
         leading: IconButton(
           icon: const Icon(
             FontAwesomeIcons.chevronLeft,
-            color: Colors.black,
+            color: Colors.white,
           ),
           onPressed: () {
             Get.to(() => CourseEditPage(
@@ -68,7 +68,6 @@ class _DaysCoursePageState extends State<DaysCoursePage> {
           IconButton(
             icon: const Icon(
               FontAwesomeIcons.penToSquare,
-              color: Colors.black,
             ),
             onPressed: () {
               setState(() {
@@ -80,8 +79,8 @@ class _DaysCoursePageState extends State<DaysCoursePage> {
                   title = 'Edit days';
                 });
               } else {
-                setState(() { 
-                   title = 'Days';
+                setState(() {
+                  title = 'Days';
                   loadDaysDataMethod = loadDaysDataAsync();
                 });
               }
