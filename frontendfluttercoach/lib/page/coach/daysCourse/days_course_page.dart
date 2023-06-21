@@ -87,7 +87,7 @@ class _DaysCoursePageState extends State<DaysCoursePage> {
             },
           )
         ],
-        backgroundColor: Theme.of(context).colorScheme.primaryContainer,
+        //backgroundColor: Theme.of(context).colorScheme.primaryContainer,
         iconTheme: const IconThemeData(
           color: Colors.black, //change your color here
         ),
@@ -151,6 +151,7 @@ class _DaysCoursePageState extends State<DaysCoursePage> {
                                   return Padding(
                                     padding: const EdgeInsets.only(bottom: 8),
                                     child: Card(
+                                      elevation: 1000,
                                       child: ListTile(
                                         title:
                                             Text(listdays.sequence.toString()),

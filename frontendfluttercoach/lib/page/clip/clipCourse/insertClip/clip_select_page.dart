@@ -1,54 +1,62 @@
 import 'dart:convert';
 import 'dart:developer';
+import 'dart:io';
+import 'dart:typed_data';
+
+import 'package:flutter/services.dart';
+import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
+import 'package:path_provider/path_provider.dart';
+
 
 import 'package:auto_size_text/auto_size_text.dart';
-import 'package:flutter/material.dart';
-import 'package:badges/badges.dart' as badges;
 import 'package:badges/badges.dart';
-import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
+import 'package:flutter/material.dart';
 
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:frontendfluttercoach/model/response/md_FoodList_get.dart';
-import 'package:frontendfluttercoach/service/listFood.dart';
 import 'package:get/get.dart';
+
 import 'package:provider/provider.dart';
+import 'package:badges/badges.dart' as badges;
 
-import '../../../../../model/request/food_dayID_post.dart';
-import '../../../../../service/provider/appdata.dart';
-import '../../../../../widget/wg_dropdown_string.dart';
-import '../../../home_foodAndClip.dart';
-import 'food_select_time_page.dart';
+import '../../../../model/request/clip_dayID_post.dart';
+import '../../../../model/response/md_ClipList_get.dart';
+import '../../../../service/listClip.dart';
+import '../../../../service/provider/appdata.dart';
+import '../../../coach/home_foodAndClip.dart';
 
-class FoodNewCoursePage extends StatefulWidget {
-  FoodNewCoursePage({super.key, required this.did});
+class ClipSelectPage extends StatefulWidget {
+  ClipSelectPage({super.key, required this.did});
   late String did;
 
   @override
-  State<FoodNewCoursePage> createState() => _FoodNewCoursePageState();
+  State<ClipSelectPage> createState() => _ClipSelectPageState();
 }
 
-class _FoodNewCoursePageState extends State<FoodNewCoursePage> {
-  // FoodService
-  late Future<void> loadListFoodDataMethod;
-  late ListFoodServices _listFoodService;
-  List<ModelFoodList> listFoods = [];
+class _ClipSelectPageState extends State<ClipSelectPage> {
+  //ClipService
+  late Future<void> loadListClipDataMethod;
+  late ListClipServices _listClipService;
+  List<ModelClipList> listClips = [];
 
   //Color
-  List<Color> colorFood = [];
+  List<Color> colorClips = [];
 
   //ListIncrease
-  List<ModelFoodList> increaseFood = [];
-  List<FoodDayIdPost> increaseFoodDay = [];
-  //มืออาหาร
-  final selectedValuehand = TextEditingController();
-  final List<String> listhand = ['มื้อเช้า', 'มื้อเที่ยง', 'มื้อเย็น'];
+  List<ModelClipList> increaseClips = [];
+  List<ClipDayIdPost> increaseClipDays = [];
 
+  //image vdieo
+  String? _thumbnailFile;
+  String? _thumbnailUrl;
+
+  Uint8List? _thumbnailData;
+
+  List<String> imageURL = [];
   @override
   void initState() {
     super.initState();
-    selectedValuehand.text = 'มื้อเช้า';
-    _listFoodService = context.read<AppData>().listfoodServices;
-    loadListFoodDataMethod = loadListFoodData();
+    _listClipService = context.read<AppData>().listClipServices;
+    loadListClipDataMethod = loadListClipsData();
   }
 
   @override
@@ -79,9 +87,9 @@ class _FoodNewCoursePageState extends State<FoodNewCoursePage> {
               ),
               badgeContent: Row(
                 children: [
-                  if (increaseFood.isNotEmpty)
+                  if (increaseClips.isNotEmpty)
                     Text(
-                      increaseFood.length.toString(),
+                      increaseClips.length.toString(),
                       // style: const TextStyle(color: Colors.white),
                     ),
                 ],
@@ -97,12 +105,12 @@ class _FoodNewCoursePageState extends State<FoodNewCoursePage> {
                   FontAwesomeIcons.angleRight,
                 ),
                 onPressed: () {
-                  if (increaseFood.isNotEmpty) {
-                    Get.to(() => FoodSelectTimePage(
-                          did: widget.did,
-                          modelFoodList: increaseFood,
-                          increaseFood: increaseFoodDay,
-                        ));
+                  if (increaseClips.isNotEmpty) {
+                    // Get.to(() => FoodSelectTimePage(
+                    //       did: widget.did,
+                    //       modelFoodList: increaseFood,
+                    //       increaseFood: increaseFoodDay,
+                    //     ));
                   }
                 },
               ),
@@ -126,7 +134,7 @@ class _FoodNewCoursePageState extends State<FoodNewCoursePage> {
                   visible: true,
                   child: Padding(
                     padding: const EdgeInsets.all(8.0),
-                    child: showFood(),
+                    child: showClips(),
                   ),
                 ),
               ),
@@ -135,81 +143,121 @@ class _FoodNewCoursePageState extends State<FoodNewCoursePage> {
         ));
   }
 
+  // //Image Vdieo
+  // void generateThumbnail(String url) async {
+  //   File videoTempFile = await copyAssetFile(url);
+
+  //   _thumbnailFile = await VideoThumbnail.thumbnailFile(
+  //       video: videoTempFile.path,
+  //       thumbnailPath: (await getTemporaryDirectory()).path,
+  //       imageFormat: ImageFormat.PNG);
+  //   imageURL.add(_thumbnailFile!);
+  //   // _thumbnailUrl = await VideoThumbnail.thumbnailFile(
+  //   //     video:
+  //   //         "https://flutter.github.io/assets-for-api-docs/assets/videos/butterfly.mp4",
+  //   //     thumbnailPath: (await getTemporaryDirectory()).path,
+  //   //     imageFormat: ImageFormat.WEBP);
+
+  //   // _thumbnailData = await VideoThumbnail.thumbnailData(
+  //   //   video: videoTempFile2.path,
+  //   //   imageFormat: ImageFormat.JPEG,
+  //   //   // maxHeight: 300,
+  //   //   // maxWidth: 300,
+  //   //   quality: 75,
+  //   // );
+
+  //   setState(() {});
+  // }
+
+  // Future<File> copyAssetFile(String assetFileName) async {
+  //   Directory tempDir = await getTemporaryDirectory();
+  //   final byteData = await rootBundle.load(assetFileName);
+
+  //   var videoThumbnailFile = File("${tempDir.path}/$assetFileName")
+  //     ..createSync(recursive: true)
+  //     ..writeAsBytesSync(byteData.buffer
+  //         .asUint8List(byteData.offsetInBytes, byteData.lengthInBytes));
+  //   return videoThumbnailFile;
+  // }
+
   //LoadData
-  Future<void> loadListFoodData() async {
+  Future<void> loadListClipsData() async {
     try {
-      var datas = await _listFoodService.listFoods(
-          ifid: '', cid: context.read<AppData>().cid.toString(), name: '');
-      listFoods = datas.data;
+      var datas = await _listClipService.listClips(
+          icpID: '', cid: context.read<AppData>().cid.toString(), name: '');
+      listClips = datas.data;
       // ignore: unused_local_variable
-      for (var index in listFoods) {
-        colorFood.add(context.read<AppData>().colorNotSelect);
+      for (var index in listClips) {
+        colorClips.add(context.read<AppData>().colorNotSelect);
+        //generateThumbnail(index.video.toString());
       }
-      log("image${listFoods[2].image}");
+
+      // log("image${listFoods[2].image}");
     } catch (err) {
       log('Error: $err');
     }
   }
 
-  Widget showFood() {
+  Widget showClips() {
     return FutureBuilder(
-      future: loadListFoodDataMethod,
+      future: loadListClipDataMethod,
       builder: (context, snapshot) {
         if (snapshot.connectionState != ConnectionState.done) {
           return const Center(child: CircularProgressIndicator());
         } else {
           return ListView.builder(
             shrinkWrap: true,
-            itemCount: listFoods.length,
+            itemCount: listClips.length,
             itemBuilder: (context, index) {
-              final listFood = listFoods[index];
+              final listClip = listClips[index];
               return SizedBox(
                 height: MediaQuery.of(context).size.height * 0.2,
                 child: Card(
-                  color: colorFood[index],
+                  color: colorClips[index],
                   child: InkWell(
                     onTap: () {
-                      if (colorFood[index] != context.read<AppData>().colorSelect) {
+                      if (colorClips[index] != context.read<AppData>().colorSelect) {
                         setState(() {
                           // เพิ่มเมนูอาหารนั้นเมือกกดเลือก
-                          ModelFoodList request = ModelFoodList(
-                              ifid: listFood.ifid,
-                              name: listFood.name,
-                              image: listFood.image,
-                              details: listFood.details,
-                              calories: listFood.calories);
+                          ModelClipList request = ModelClipList(
+                              icpId: listClip.icpId,
+                              coachId: listClip.coachId,
+                              name: listClip.name,
+                              details: listClip.details,
+                              amountPerSet: listClip.amountPerSet,
+                              video: listClip.video);
 
-                          _dialog(context, request, colorFood, index);
+                          _dialog(context, request, colorClips, index);
                           //เปลี่ยนสีเมือเลือกเมนู฿อาหาร
                           // colorFood[index] = Colors.black12;
                         });
                       } else {
                         setState(() {
                           //กลับเป็นสีเดิมเมือเลือกเมนูอาหารซํ้า
-                          colorFood[index] = context.read<AppData>().colorNotSelect;
+                          colorClips[index] = context.read<AppData>().colorNotSelect;
                           //เอาเมนูอาหารที่เลือกออกจาก list model
-                          increaseFood.removeWhere(
-                              (item) => item.ifid == listFood.ifid);
+                          increaseClips.removeWhere(
+                              (item) => item.icpId == listClip.icpId);
                         });
                       }
                     },
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        if (listFood.image != '') ...{
-                          Padding(
-                            padding: const EdgeInsets.only(
-                                left: 8, top: 5, bottom: 5),
-                            child: Container(
-                                width: MediaQuery.of(context).size.width * 0.3,
-                                height: MediaQuery.of(context).size.height,
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(26),
-                                  image: DecorationImage(
-                                    image: NetworkImage(listFood.image),
-                                  ),
-                                )),
-                          ),
+                        if (listClip.video != '') ...{
+                          // Padding(
+                          //   padding: const EdgeInsets.only(
+                          //       left: 8, top: 5, bottom: 5),
+                          //   child: Container(
+                          //       width: MediaQuery.of(context).size.width * 0.3,
+                          //       height: MediaQuery.of(context).size.height,
+                          //       decoration: BoxDecoration(
+                          //         borderRadius: BorderRadius.circular(26),
+                          //         image: DecorationImage(
+                          //           image: NetworkImage(imageURL[0]),
+                          //         ),
+                          //       )),
+                          // ),
                         } else
                           Padding(
                             padding: const EdgeInsets.only(
@@ -228,20 +276,20 @@ class _FoodNewCoursePageState extends State<FoodNewCoursePage> {
                             SizedBox(
                               width: MediaQuery.of(context).size.width * 0.4,
                               child: AutoSizeText(
-                                listFood.name,
+                                listClip.name,
                                 maxLines: 5,
                                 style: Theme.of(context).textTheme.bodyLarge,
                               ),
                             ),
                             const SizedBox(height: 8),
-                            SizedBox(
-                              width: MediaQuery.of(context).size.width * 0.4,
-                              child: AutoSizeText(
-                                'Calories: ${listFood.calories.toString()}',
-                                maxLines: 5,
-                                style: Theme.of(context).textTheme.bodyLarge,
-                              ),
-                            ),
+                            // SizedBox(
+                            //   width: MediaQuery.of(context).size.width * 0.4,
+                            //   child: AutoSizeText(
+                            //     'Calories: ${listFood.calories.toString()}',
+                            //     maxLines: 5,
+                            //     style: Theme.of(context).textTheme.bodyLarge,
+                            //   ),
+                            // ),
                           ],
                         ),
                         const SizedBox(
@@ -258,8 +306,7 @@ class _FoodNewCoursePageState extends State<FoodNewCoursePage> {
       },
     );
   }
-
-  void _dialog(BuildContext ctx, ModelFoodList listFood, List<Color> colorList,
+  void _dialog(BuildContext ctx, ModelClipList listClip, List<Color> colorList,
       int index) {
     //target widget
     SmartDialog.show(builder: (_) {
@@ -281,15 +328,15 @@ class _FoodNewCoursePageState extends State<FoodNewCoursePage> {
               child: Text("เมนูอาหาร",
                   style: Theme.of(context).textTheme.headlineSmall),
             ),
-            if (listFood.image != '') ...{
+            if (listClip.video != '') ...{
               Container(
                   width: MediaQuery.of(context).size.width * 0.7,
                   height: MediaQuery.of(context).size.height * 0.3,
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(26),
-                    image: DecorationImage(
-                      image: NetworkImage(listFood.image),
-                    ),
+                    // image: DecorationImage(
+                    //   image: NetworkImage(listFood.image),
+                    // ),
                   )),
             } else ...{
               Container(
@@ -307,7 +354,7 @@ class _FoodNewCoursePageState extends State<FoodNewCoursePage> {
               child: SizedBox(
                 width: MediaQuery.of(context).size.width * 0.7,
                 child: AutoSizeText(
-                  'ชื่อเมนู: ${listFood.name}',
+                  'ชื่อเมนู: ${listClip.name}',
                   maxLines: 5,
                   //style: Theme.of(context).textTheme.bodyLarge,
                 ),
@@ -318,7 +365,7 @@ class _FoodNewCoursePageState extends State<FoodNewCoursePage> {
               child: SizedBox(
                 width: MediaQuery.of(context).size.width * 0.7,
                 child: AutoSizeText(
-                  'รายละเอียด: ${listFood.details}',
+                  'รายละเอียด: ${listClip.details}',
                   maxLines: 5,
                   //style: Theme.of(context).textTheme.bodyLarge,
                 ),
@@ -327,46 +374,26 @@ class _FoodNewCoursePageState extends State<FoodNewCoursePage> {
             SizedBox(
                 width: MediaQuery.of(context).size.width * 0.7,
                 child: Text(
-                  'Calories: ${listFood.calories.toString()}',
+                  'Calories: ${listClip.amountPerSet.toString()}',
                   style: Theme.of(context).textTheme.bodyLarge,
                 )),
             Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              mainAxisAlignment: MainAxisAlignment.end,
               //MainAxisAlignment.end,
               children: [
-                Padding(
-                  padding: const EdgeInsets.only(left: 30),
-                  child: SizedBox(
-                    width: MediaQuery.of(context).size.width * 0.4,
-                    //height: MediaQuery.of(context).size.height * 0.2,
-                    child: WidgetDropdownString(
-                      title: 'เลือกมืออาหาร',
-                      selectedValue: selectedValuehand,
-                      ListItems: listhand,
-                    ),
-                  ),
-                ),
                 Padding(
                   padding: const EdgeInsets.only(right: 30),
                   child: ElevatedButton(
                       onPressed: () {
                         setState(() {
-                          increaseFood.add(listFood);
+                          increaseClips.add(listClip);
 
-                          FoodDayIdPost requestFoodPost = FoodDayIdPost(
-                            listFoodId: listFood.ifid,
-                            time: selectedValuehand.text == 'มื้อเช้า'
-                                ? '1'
-                                : selectedValuehand.text == 'มื้อเที่ยง'
-                                    ? '2'
-                                    : selectedValuehand.text == 'มื้อเย็น'
-                                        ? '3'
-                                        : '',
+                          ClipDayIdPost requestFoodPost = ClipDayIdPost(listClipId: listClip.icpId, status: 0
+                            
                           );
-                          increaseFoodDay.add(requestFoodPost);
+                          increaseClipDays.add(requestFoodPost);
                           log(jsonEncode(requestFoodPost));
-                          selectedValuehand.text = 'มื้อเช้า';
-                          //เปลี่ยนสีเมือเลือกเมนู฿อาหาร
+                         
                           colorList[index] = context.read<AppData>().colorSelect;
                         });
 

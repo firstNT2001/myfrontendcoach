@@ -94,7 +94,7 @@ class _HomePageCoachState extends State<HomePageCoach> {
       resizeToAvoidBottomInset: false,
       //backgroundColor: const Color.fromRGBO(244, 243, 243, 1),
       appBar: AppBar(
-        backgroundColor: Theme.of(context).colorScheme.primaryContainer,
+        backgroundColor: Theme.of(context).colorScheme.primary,
         elevation: 0,
         leading: IconButton(
           icon: const Icon(
@@ -130,7 +130,7 @@ class _HomePageCoachState extends State<HomePageCoach> {
                           blurRadius: 10.0,
                           offset: Offset(0.0, 0.75))
                     ],
-                    color: Theme.of(context).colorScheme.primaryContainer,
+                    color: Theme.of(context).colorScheme.primary,
                     borderRadius: const BorderRadius.vertical(
                         bottom: Radius.circular(20))),
                 padding: const EdgeInsets.all(20),

@@ -16,6 +16,7 @@ import 'package:provider/provider.dart';
 import '../../model/response/clip_get_res.dart';
 import '../../service/food.dart';
 import '../../service/provider/appdata.dart';
+import '../clip/clipCourse/insertClip/clip_select_page.dart';
 import 'daysCourse/days_course_page.dart';
 
 class HomeFoodAndClipPage extends StatefulWidget {
@@ -64,7 +65,7 @@ class _HomeFoodAndClipPageState extends State<HomeFoodAndClipPage> {
       child: Scaffold(
           resizeToAvoidBottomInset: false,
           appBar: AppBar(
-            backgroundColor: Theme.of(context).colorScheme.primaryContainer,
+            backgroundColor: Theme.of(context).colorScheme.primary,
             // iconTheme: const IconThemeData(
             //   color: Colors.black, //change your color here
             // ),
@@ -72,7 +73,6 @@ class _HomeFoodAndClipPageState extends State<HomeFoodAndClipPage> {
             leading: IconButton(
               icon: const Icon(
                 FontAwesomeIcons.chevronLeft,
-                color: Colors.black,
               ),
               onPressed: () {
                 Get.to(() => DaysCoursePage(
@@ -84,7 +84,6 @@ class _HomeFoodAndClipPageState extends State<HomeFoodAndClipPage> {
               IconButton(
                 icon: const Icon(
                   FontAwesomeIcons.plus,
-                  color: Colors.black,
                 ),
                 onPressed: () {
                   _dialog(context);
@@ -95,13 +94,11 @@ class _HomeFoodAndClipPageState extends State<HomeFoodAndClipPage> {
               Tab(
                 icon: Icon(
                   FontAwesomeIcons.bowlFood,
-                  color: Colors.black,
                 ),
               ),
               Tab(
                 icon: Icon(
                   FontAwesomeIcons.dumbbell,
-                  color: Colors.black,
                 ),
               )
             ]),
@@ -183,7 +180,8 @@ class _HomeFoodAndClipPageState extends State<HomeFoodAndClipPage> {
               return SizedBox(
                 height: MediaQuery.of(context).size.height * 0.4,
                 child: Card(
-                  color: Colors.white,
+                  //color: Colors.white,
+                  elevation: 1000,
                   child: InkWell(
                     onTap: () {
                       Get.to(() => EditFoodPage(
@@ -207,12 +205,10 @@ class _HomeFoodAndClipPageState extends State<HomeFoodAndClipPage> {
                         } else
                           Container(
                               width: MediaQuery.of(context).size.width,
-                              height:
-                                  MediaQuery.of(context).size.height * 0.28,
+                              height: MediaQuery.of(context).size.height * 0.28,
                               decoration: BoxDecoration(
                                   borderRadius: BorderRadius.circular(26),
-                                  color: Colors.pink
-                                  )),
+                                  color: Colors.pink)),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           crossAxisAlignment: CrossAxisAlignment.start,
@@ -275,7 +271,8 @@ class _HomeFoodAndClipPageState extends State<HomeFoodAndClipPage> {
               return SizedBox(
                 height: MediaQuery.of(context).size.height * 0.2,
                 child: Card(
-                  color: Colors.white,
+                  //color: Colors.white,
+                  elevation: 1000,
                   child: InkWell(
                     onTap: () {
                       // Get.to(() => EditFoodPage(fid: listfood.fid.toString()));
@@ -327,7 +324,7 @@ class _HomeFoodAndClipPageState extends State<HomeFoodAndClipPage> {
         height: MediaQuery.of(context).size.height * 0.35,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(20),
-          color: Colors.white,
+          color: Theme.of(context).colorScheme.background,
         ),
         alignment: Alignment.center,
         child: Column(
@@ -370,8 +367,7 @@ class _HomeFoodAndClipPageState extends State<HomeFoodAndClipPage> {
                   ),
                   InkWell(
                     onTap: () {
-                      // Get.to(() => const homeScreen());
-                      // context.read<AppData>().uid = uid;
+                      Get.to(() => ClipSelectPage(did: widget.did));
                     },
                     child: Column(
                       children: [
@@ -380,7 +376,7 @@ class _HomeFoodAndClipPageState extends State<HomeFoodAndClipPage> {
                           height: 50,
                           child: Icon(
                             FontAwesomeIcons.dumbbell,
-                            color: Colors.black,
+                           // color: Colors.white,
                             size: 50,
                           ),
                         ),

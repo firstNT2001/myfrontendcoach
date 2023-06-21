@@ -79,6 +79,8 @@ dependencies:
   drag_and_drop_lists: ^0.3.3
   expansion_tile_card: ^3.0.0
   cherry_toast: ^1.2.1
+  tflite_flutter: ^0.10.1
+  # video_thumbnail: ^0.5.3
    
   
 dev_dependencies:

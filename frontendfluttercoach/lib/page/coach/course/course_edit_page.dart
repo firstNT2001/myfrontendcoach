@@ -131,7 +131,7 @@ class _CourseEditPageState extends State<CourseEditPage> {
                               borderRadius: const BorderRadius.only(
                                   topLeft: Radius.circular(20),
                                   topRight: Radius.circular(20)),
-                              color: Theme.of(context).colorScheme.primaryContainer),
+                              color: Theme.of(context).colorScheme.onSecondary),
                           child: Column(
                             children: [
                               Padding(
