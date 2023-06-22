@@ -22,7 +22,8 @@ import '../../../../model/response/md_ClipList_get.dart';
 import '../../../../service/listClip.dart';
 import '../../../../service/provider/appdata.dart';
 import '../../../coach/home_foodAndClip.dart';
-import '../../../user/mycourse.Detaildart/widget_loadcilcp.dart';
+
+import '../../../user/mycourse.Detaildart/myClipinCourse/widget_loadcilcp.dart';
 import 'clip_insert_page.dart';
 
 class ClipSelectPage extends StatefulWidget {

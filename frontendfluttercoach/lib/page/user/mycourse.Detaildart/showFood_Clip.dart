@@ -2,7 +2,6 @@ import 'dart:developer';
 
 import 'package:appinio_video_player/appinio_video_player.dart';
 import 'package:flutter/material.dart';
-import 'package:frontendfluttercoach/page/user/mycourse.Detaildart/myClipinCourse/showclip.dart';
 import 'package:video_player/video_player.dart';
 import '../../../../model/response/clip_get_res.dart';
 import '../../../../service/clip.dart';
@@ -141,14 +140,17 @@ class _showFoodState extends State<showFood> {
                   //   videoPlayerController: _videoPlayerController,
                   // );
                  // log(_videoPlayerController.dataSource);
-                  return Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Column(
-                      children: [
-                        Text(listclip.listClip.name),
-                        WidgetloadCilp(urlVideo: videoUrl, nameclip: listclip.listClip.name,),
-                        Text(listclip.listClip.details)
-                        ],
+                  return Card(
+                    color: Colors.amber,
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Column(
+                        children: [
+                          Text(listclip.listClip.name),
+                          WidgetloadCilp(urlVideo: videoUrl, nameclip: listclip.listClip.name,),
+                          Text(listclip.listClip.details)
+                          ],
+                      ),
                     ),
                   );
                 });
