@@ -1,8 +1,5 @@
 import 'dart:convert';
 import 'dart:developer';
-import 'dart:ffi';
-
-
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:frontendfluttercoach/service/wallet.dart';
@@ -88,7 +85,7 @@ class _addCoinState extends State<addCoin> {
                     uid.toString(), walletUser);
                     moduleResult = insertWallet.data;
                     log(jsonEncode(moduleResult.result));
-                      if (moduleResult.result == "0") {
+                      if (moduleResult.result == "1") {
                         // ignore: use_build_context_synchronously
                         //showDialogRowsAffected(context, "บันทึกสำเร็จ");
                        Get.to(() =>  getQrcode(money: double.parse(_money.text),refNo: referenceNo,));
