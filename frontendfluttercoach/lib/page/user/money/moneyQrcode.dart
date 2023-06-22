@@ -4,8 +4,12 @@ import 'dart:typed_data';
 
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
-
-
+import 'package:get/get.dart';
+import 'package:retrofit/dio.dart';
+import '../../../model/response/md_Result.dart';
+import '../../../model/response/md_res_gbprime.dart';
+import '../../../service/wallet.dart';
+import '../profileUser.dart';
 
 class getQrcode extends StatefulWidget {
   getQrcode({super.key, required this.money, required this.refNo});
@@ -18,14 +22,17 @@ class getQrcode extends StatefulWidget {
 
 class _getQrcodeState extends State<getQrcode> {
   late Future<void> loadDataMethod;
+  late WalletService walletService;
+  late ModelResult moduleResult;
+  var updatetWallet;
   var model;
   double _money = 0;
   String _refNo = "";
   String _token =
       "M1Cm5LbSMxNBWFTSs/+1Bvx0lY762Jsg2tZRNsrA84BKk7fBphv554YSg5oJFjYu7t7o6EZqDEws5gyseCPsenqzjQ14wr0ECiKSF0Hirtl3F2Bmexc+qqkSdtE37vPRTrh5AdDZU09BavRKb/jSRT1bH4pr6kimy5d0RDpevZJd8clY";
   String _backgroundUrl = "https://cslab.it.msu.ac.th/gbprimepay/callback.php";
-  List<int> _imagebytes=[] ;
-  String base64string ="";
+  List<int> _imagebytes = [];
+  String base64string = "";
   @override
   void initState() {
     // TODO: implement initState
@@ -40,11 +47,13 @@ class _getQrcodeState extends State<getQrcode> {
     return Scaffold(
       body: Center(
           child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-        children: [Padding(
-          padding: const EdgeInsets.all(15.0),
-          child: showQr(),
-        )],
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Padding(
+            padding: const EdgeInsets.all(15.0),
+            child: showQr(),
+          )
+        ],
       )),
     );
   }
@@ -70,7 +79,9 @@ class _getQrcodeState extends State<getQrcode> {
       final response = await dio.post(
         url,
         data: body,
-        options: Options(contentType: Headers.formUrlEncodedContentType,responseType: ResponseType.bytes),
+        options: Options(
+            contentType: Headers.formUrlEncodedContentType,
+            responseType: ResponseType.bytes),
       );
 
       if (response.statusCode == 200) {
@@ -78,7 +89,7 @@ class _getQrcodeState extends State<getQrcode> {
         log("A");
         _imagebytes = response.data;
         log("B");
-       // print(response.data);
+        // print(response.data);
         //log("showimg"+_imagebytes);
         //return RqGbprime.fromJson(json.decode(response.data));
       } else {
@@ -86,7 +97,7 @@ class _getQrcodeState extends State<getQrcode> {
         throw Exception('Failed to load post');
       }
     } catch (err) {
-      log('111'+err.toString());
+      log('111' + err.toString());
     }
   }
 
@@ -99,7 +110,7 @@ class _getQrcodeState extends State<getQrcode> {
           String base64string = base64.encode(_imagebytes);
           //log("base64string"+base64string.toString());
           //2. webType + step1
-          String _imagetype = 'data:image/png;base64,'+base64string;
+          String _imagetype = 'data:image/png;base64,' + base64string;
           //log("_imagetype : "+_imagetype.toString());
           //3. convert
           final List<int> codeUnits = _imagetype.codeUnits;
@@ -112,20 +123,51 @@ class _getQrcodeState extends State<getQrcode> {
             return const Center(child: CircularProgressIndicator());
           } else {
             return SizedBox(
-              height: 450,width: 350,
+              height: 450,
+              width: 350,
               child: Card(
                 child: Center(
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Card(
-                         child: SizedBox(
-                        width: 250,
-                        height: 380,
-                        child: Image.memory(imgQr.contentAsBytes(),fit: BoxFit.cover,)),
-                      )
-                      
-                     
+                        child: SizedBox(
+                            width: 250,
+                            height: 380,
+                            child: Image.memory(
+                              imgQr.contentAsBytes(),
+                              fit: BoxFit.cover,
+                            )),
+                      ),
+                      FilledButton(
+                          onPressed: () {
+                            ResponseGbprime wallet = ResponseGbprime(
+                                amount: 0,
+                                retryFlag: "",
+                                referenceNo: "",
+                                gbpReferenceNo: "",
+                                currencyCode: "",
+                                resultCode: "",
+                                totalAmount: 0,
+                                fee: 0,
+                                vat: 0,
+                                thbAmount: 0,
+                                customerName: "",
+                                date: "",
+                                time: "",
+                                paymentType: "");
+                            log(jsonEncode(wallet));
+                            moduleResult = updatetWallet.data;
+                            log(jsonEncode(moduleResult.result));
+                            if (moduleResult.result == "1") {
+                        // ignore: use_build_context_synchronously
+                        //showDialogRowsAffected(context, "บันทึกสำเร็จ");
+                       Get.to(() =>  ProfileUser());
+                          
+                      }
+
+                          },
+                          child: Text("กลับสู่หน้าหลัก"))
                     ],
                   ),
                 ),
