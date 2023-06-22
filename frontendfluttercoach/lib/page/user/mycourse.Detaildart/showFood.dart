@@ -1,7 +1,7 @@
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
-import 'package:frontendfluttercoach/page/user/mycourse.Detaildart/showclip.dart';
+import 'package:frontendfluttercoach/page/user/mycourse.Detaildart/myClipinCourse/showclip.dart';
 
 import '../../../model/response/food_get_res.dart';
 import '../../../service/food.dart';
