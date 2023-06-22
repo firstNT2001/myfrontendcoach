@@ -16,7 +16,7 @@ import '../request.dart';
 class AppData with ChangeNotifier {
   //Api baseurl
   String baseurl = "https://cslab.it.msu.ac.th:9775";
- 
+  String baseUrlGB = "https://api.gbprimepay.com";
   //Color
   //Color colorCard;
   Color colorSelect = Color(0xff872100);

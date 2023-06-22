@@ -7,7 +7,6 @@ import 'package:flutter/services.dart';
 import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
 import 'package:path_provider/path_provider.dart';
 
-
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:badges/badges.dart';
 import 'package:flutter/material.dart';
@@ -23,6 +22,8 @@ import '../../../../model/response/md_ClipList_get.dart';
 import '../../../../service/listClip.dart';
 import '../../../../service/provider/appdata.dart';
 import '../../../coach/home_foodAndClip.dart';
+import '../../../user/mycourse.Detaildart/widget_loadcilcp.dart';
+import 'clip_insert_page.dart';
 
 class ClipSelectPage extends StatefulWidget {
   ClipSelectPage({super.key, required this.did});
@@ -106,11 +107,11 @@ class _ClipSelectPageState extends State<ClipSelectPage> {
                 ),
                 onPressed: () {
                   if (increaseClips.isNotEmpty) {
-                    // Get.to(() => FoodSelectTimePage(
-                    //       did: widget.did,
-                    //       modelFoodList: increaseFood,
-                    //       increaseFood: increaseFoodDay,
-                    //     ));
+                    Get.to(() => ClipInsertPage(
+                          did: widget.did,
+                          modelClipList: increaseClips,
+                          increaseClip: increaseClipDays,
+                        ));
                   }
                 },
               ),
@@ -216,7 +217,8 @@ class _ClipSelectPageState extends State<ClipSelectPage> {
                   color: colorClips[index],
                   child: InkWell(
                     onTap: () {
-                      if (colorClips[index] != context.read<AppData>().colorSelect) {
+                      if (colorClips[index] !=
+                          context.read<AppData>().colorSelect) {
                         setState(() {
                           // เพิ่มเมนูอาหารนั้นเมือกกดเลือก
                           ModelClipList request = ModelClipList(
@@ -234,7 +236,8 @@ class _ClipSelectPageState extends State<ClipSelectPage> {
                       } else {
                         setState(() {
                           //กลับเป็นสีเดิมเมือเลือกเมนูอาหารซํ้า
-                          colorClips[index] = context.read<AppData>().colorNotSelect;
+                          colorClips[index] =
+                              context.read<AppData>().colorNotSelect;
                           //เอาเมนูอาหารที่เลือกออกจาก list model
                           increaseClips.removeWhere(
                               (item) => item.icpId == listClip.icpId);
@@ -306,6 +309,7 @@ class _ClipSelectPageState extends State<ClipSelectPage> {
       },
     );
   }
+
   void _dialog(BuildContext ctx, ModelClipList listClip, List<Color> colorList,
       int index) {
     //target widget
@@ -328,23 +332,15 @@ class _ClipSelectPageState extends State<ClipSelectPage> {
               child: Text("เมนูอาหาร",
                   style: Theme.of(context).textTheme.headlineSmall),
             ),
-            if (listClip.video != '') ...{
-              Container(
-                  width: MediaQuery.of(context).size.width * 0.7,
-                  height: MediaQuery.of(context).size.height * 0.3,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(26),
-                    // image: DecorationImage(
-                    //   image: NetworkImage(listFood.image),
-                    // ),
-                  )),
+            if (listClip.video != '' ) ...{
+              WidgetloadCilp(urlVideo: listClip.video, nameclip: listClip.name),
             } else ...{
               Container(
                   width: MediaQuery.of(context).size.width * 0.7,
                   height: MediaQuery.of(context).size.height * 0.3,
                   decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(26),
-                      color: Colors.black26)),
+                      color: Theme.of(context).colorScheme.primary)),
               const SizedBox(
                 height: 8,
               ),
@@ -354,7 +350,7 @@ class _ClipSelectPageState extends State<ClipSelectPage> {
               child: SizedBox(
                 width: MediaQuery.of(context).size.width * 0.7,
                 child: AutoSizeText(
-                  'ชื่อเมนู: ${listClip.name}',
+                  'ชื่อคลิป: ${listClip.name}',
                   maxLines: 5,
                   //style: Theme.of(context).textTheme.bodyLarge,
                 ),
@@ -374,7 +370,7 @@ class _ClipSelectPageState extends State<ClipSelectPage> {
             SizedBox(
                 width: MediaQuery.of(context).size.width * 0.7,
                 child: Text(
-                  'Calories: ${listClip.amountPerSet.toString()}',
+                  'จำนวนเซ็ท: ${listClip.amountPerSet.toString()}',
                   style: Theme.of(context).textTheme.bodyLarge,
                 )),
             Row(
@@ -388,13 +384,13 @@ class _ClipSelectPageState extends State<ClipSelectPage> {
                         setState(() {
                           increaseClips.add(listClip);
 
-                          ClipDayIdPost requestFoodPost = ClipDayIdPost(listClipId: listClip.icpId, status: 0
-                            
-                          );
+                          ClipDayIdPost requestFoodPost = ClipDayIdPost(
+                              listClipId: listClip.icpId);
                           increaseClipDays.add(requestFoodPost);
                           log(jsonEncode(requestFoodPost));
-                         
-                          colorList[index] = context.read<AppData>().colorSelect;
+
+                          colorList[index] =
+                              context.read<AppData>().colorSelect;
                         });
 
                         SmartDialog.dismiss();
