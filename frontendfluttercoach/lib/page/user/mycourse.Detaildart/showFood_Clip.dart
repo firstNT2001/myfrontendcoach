@@ -30,7 +30,7 @@ class _showFoodState extends State<showFood> {
   List<ModelClip> clips = [];
   late FoodServices foodService;
   late Future<void> loadDataMethod;
-
+  List<bool> isChecked = [];
   int did = 0;
   String namecourse = "";
   late String videoUrl = "";
@@ -43,7 +43,7 @@ class _showFoodState extends State<showFood> {
     super.initState();
     did = context.read<AppData>().did;
     namecourse = context.read<AppData>().namecourse;
-    log("did"+did.toString());
+    log("did" + did.toString());
     clipServices =
         ClipServices(Dio(), baseUrl: context.read<AppData>().baseurl);
     foodService = FoodServices(Dio(), baseUrl: context.read<AppData>().baseurl);
@@ -55,40 +55,43 @@ class _showFoodState extends State<showFood> {
     return DefaultTabController(
         length: 2,
         child: Scaffold(
-            appBar: AppBar(
-              automaticallyImplyLeading: false,
-          bottom: const TabBar(tabs: [
-            Tab(
-              icon: Icon(Icons.fastfood_outlined),
-              text: "เมนูอาหาร",
+          appBar: AppBar(
+            automaticallyImplyLeading: false,
+            bottom: const TabBar(tabs: [
+              Tab(
+                icon: Icon(Icons.fastfood_outlined),
+                text: "เมนูอาหาร",
+              ),
+              Tab(
+                icon: Icon(Icons.fitness_center_sharp),
+                text: "คลิปออกกำลังกาย",
+              ),
+            ]),
+            title: Center(
+              child: Text(namecourse),
             ),
-            Tab(
-              icon: Icon(Icons.fitness_center_sharp),
-              text: "คลิปออกกำลังกาย",
+          ),
+          body: TabBarView(children: [
+            Column(
+              children: [
+                Expanded(
+                    child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: loadfoods(),
+                )),
+              ],
+            ),
+            Column(
+              children: [
+                Expanded(
+                    child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: loadclips(),
+                )),
+              ],
             ),
           ]),
-          title: Center(child: Text(namecourse),
-          ),
-        ), body: TabBarView(children: [
-          Column(
-            children: [
-              Expanded(child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: loadfoods(),
-              )),
-            ],
-          ),
-          Column(
-            children: [
-              Expanded(child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: loadclips(),
-              )),
-            ],
-          ),
-          
-        ]),
-       ));
+        ));
     // Scaffold(
     //   body: Column(children: [Flexible(child: loadfoods()),
     //   Flexible(
@@ -118,6 +121,7 @@ class _showFoodState extends State<showFood> {
     //   ]),
     // );
   }
+
   Widget loadclips() {
     return FutureBuilder(
         future: loadDataMethod,
@@ -128,8 +132,9 @@ class _showFoodState extends State<showFood> {
             return ListView.builder(
                 shrinkWrap: true,
                 itemCount: clips.length,
-                itemBuilder: (context, index)  {
+                itemBuilder: (context, index) {
                   final listclip = clips[index];
+                  final listcheac = isChecked[index];
                   videoUrl = listclip.listClip.video;
                   // _videoPlayerController =
                   //     VideoPlayerController.network(videoUrl)
@@ -139,17 +144,57 @@ class _showFoodState extends State<showFood> {
                   //   context: context,
                   //   videoPlayerController: _videoPlayerController,
                   // );
-                 // log(_videoPlayerController.dataSource);
-                  return Card(
-                    color: Colors.amber,
-                    child: Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Column(
-                        children: [
-                          Text(listclip.listClip.name),
-                          WidgetloadCilp(urlVideo: videoUrl, nameclip: listclip.listClip.name,),
-                          Text(listclip.listClip.details)
+                  // log(_videoPlayerController.dataSource);
+                  return SizedBox(
+                    width: MediaQuery.of(context).size.width * 0.8,
+                    child: Card(
+                      elevation: 0,
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Center(
+                                  child: Text(listclip.listClip.name,
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .bodyLarge)),
+                            ),
+                            WidgetloadCilp(
+                              urlVideo: videoUrl,
+                              nameclip: listclip.listClip.name,
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.only(left: 8),
+                              child: Text(listclip.listClip.details,
+                                  style: Theme.of(context).textTheme.bodyLarge),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.only(left: 8),
+                              child: Text(listclip.listClip.amountPerSet,
+                                  style: Theme.of(context).textTheme.bodyLarge),
+                            ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.end,
+                              children: [
+                                Checkbox(
+                                  value: listcheac,
+                                  onChanged: (listcheac) {
+                                    setState(() {
+                                      listcheac = listcheac!;
+                                    });
+                                  },
+                                ),
+                                Text(
+                                  "ออกกำลังกายแล้ว",
+                                  style: TextStyle(fontSize: 17.0),
+                                ),
+                              ],
+                            ),
                           ],
+                        ),
                       ),
                     ),
                   );
@@ -176,16 +221,16 @@ class _showFoodState extends State<showFood> {
                     baseColor: const Color.fromARGB(255, 212, 212, 212),
                     expandedColor: const Color.fromARGB(255, 191, 191, 191),
                     key: cardA,
-                   leading:SizedBox(
+                    leading: SizedBox(
                         height: 200,
                         width: 200,
                         child: Image.network(
                           listfood.listFood.image,
                         )),
-                  // Container(
-                  //   alignment: Alignment.topCenter,
-                  //   child: AspectRatio(aspectRatio: 16/9,child: Image.network(listfood.listFood.image, fit: BoxFit.cover)),                 
-                  // ),
+                    // Container(
+                    //   alignment: Alignment.topCenter,
+                    //   child: AspectRatio(aspectRatio: 16/9,child: Image.network(listfood.listFood.image, fit: BoxFit.cover)),
+                    // ),
                     // SizedBox(
                     //     height: 200,
                     //     width: 200,
@@ -254,6 +299,9 @@ class _showFoodState extends State<showFood> {
           await foodService.foods(fid: '', ifid: '', did: did.toString());
       foods = datafood.data;
       log('food leng: ${foods.length}');
+      for (var index in clips) {
+        isChecked.add(false);
+      }
     } catch (err) {
       log('Error: $err');
     }
