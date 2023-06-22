@@ -141,31 +141,8 @@ class _getQrcodeState extends State<getQrcode> {
                       ),
                       FilledButton(
                           onPressed: () {
-                            ResponseGbprime wallet = ResponseGbprime(
-                                amount: 0,
-                                retryFlag: "",
-                                referenceNo: "",
-                                gbpReferenceNo: "",
-                                currencyCode: "",
-                                resultCode: "",
-                                totalAmount: 0,
-                                fee: 0,
-                                vat: 0,
-                                thbAmount: 0,
-                                customerName: "",
-                                date: "",
-                                time: "",
-                                paymentType: "");
-                            log(jsonEncode(wallet));
-                            moduleResult = updatetWallet.data;
-                            log(jsonEncode(moduleResult.result));
-                            if (moduleResult.result == "1") {
-                        // ignore: use_build_context_synchronously
-                        //showDialogRowsAffected(context, "บันทึกสำเร็จ");
-                       Get.to(() =>  ProfileUser());
-                          
-                      }
-
+                            
+                            Get.to(() => ProfileUser());
                           },
                           child: Text("กลับสู่หน้าหลัก"))
                     ],

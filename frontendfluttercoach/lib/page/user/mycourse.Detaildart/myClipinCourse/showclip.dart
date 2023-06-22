@@ -52,9 +52,7 @@ class _showCilpState extends State<showCilp> {
         body: Flex(
       direction: Axis.horizontal,
       children: [
-        Expanded(
-          child: loadclips(),
-        ),
+       
       ],
     ));
   }
@@ -70,40 +68,5 @@ class _showCilpState extends State<showCilp> {
     }
   }
 
-  Widget loadclips() {
-    return FutureBuilder(
-        future: loadDataMethod,
-        builder: (context, snapshot) {
-          if (snapshot.connectionState != ConnectionState.done) {
-            return const Center(child: CircularProgressIndicator());
-          } else {
-            return ListView.builder(
-                shrinkWrap: true,
-                itemCount: clips.length,
-                itemBuilder: (context, index)  {
-                  final listclip = clips[index];
-                  videoUrl = listclip.listClip.video;
-                  // _videoPlayerController =
-                  //     VideoPlayerController.network(videoUrl)
-                  //       ..initialize().then((value) => setState(() {}));
-
-                  // _customVideoPlayerController = CustomVideoPlayerController(
-                  //   context: context,
-                  //   videoPlayerController: _videoPlayerController,
-                  // );
-                 // log(_videoPlayerController.dataSource);
-                  return Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Column(
-                      children: [
-                        Text(listclip.listClip.name),
-                        WidgetloadCilp(urlVideo: videoUrl, nameclip: listclip.listClip.name,),
-                        Text(listclip.listClip.details)
-                        ],
-                    ),
-                  );
-                });
-          }
-        });
-  }
+  
 }

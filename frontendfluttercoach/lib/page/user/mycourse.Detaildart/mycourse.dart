@@ -41,9 +41,6 @@ class _MyCousesState extends State<MyCouses> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text("รายการซื้อของฉัน"),
-      ),
       body: Column(children: [
         Row(
           children: [
@@ -53,7 +50,7 @@ class _MyCousesState extends State<MyCouses> {
             ),
             Padding(
               padding: const EdgeInsets.only(left: 10),
-              child: Text("รายการซื้อของฉัน"),
+              child: Text("รายการซื้อของฉัน",style: Theme.of(context).textTheme.bodyLarge),
             )
           
           ],
@@ -97,6 +94,7 @@ class _MyCousesState extends State<MyCouses> {
                   return Padding(
                     padding: const EdgeInsets.only(top: 8),
                     child: Card(
+                      elevation: 0,
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.end,
                         children: [
@@ -105,12 +103,12 @@ class _MyCousesState extends State<MyCouses> {
                               height: 150,
                               fit: BoxFit.fill),
                           ListTile(
-                            title: Text(listcours.name),
-                            subtitle: Text(listcours.coach.fullName),
+                            title: Text(listcours.name,style: Theme.of(context).textTheme.bodyLarge),
+                            subtitle: Text(listcours.coach.fullName,style: Theme.of(context).textTheme.bodyMedium),
                           ),
                           Padding(
                             padding: const EdgeInsets.only(right: 8,bottom: 8),
-                            child: ElevatedButton(
+                            child: FilledButton(
                                 onPressed: () {
                                   log(listcours.coId.toString());
                                   log(listcours.image);
@@ -128,8 +126,8 @@ class _MyCousesState extends State<MyCouses> {
             
                                   Get.to(() => const ShowDayMycourse());
                                 },
-                                child: const Text(
-                                    "ดูรายละเอียดเพิ่มเติม")),
+                                child: Text(
+                                    "ดูรายละเอียดเพิ่มเติม",style: Theme.of(context).textTheme.bodyMedium)),
                           ),
                         ],
                       ),

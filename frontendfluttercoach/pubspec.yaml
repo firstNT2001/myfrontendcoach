@@ -52,7 +52,7 @@ dependencies:
   firebase_storage: ^11.0.10
   cloud_firestore: ^4.3.1
   video_player: ^2.4.10
-  intl: ^0.17.0
+  intl: ^0.18.1
   appinio_video_player: ^1.2.1
   build_config: ^1.1.1
   source_gen: ^1.2.7
