@@ -16,6 +16,11 @@ import '../request.dart';
 class AppData with ChangeNotifier {
   //Api baseurl
   String baseurl = "https://cslab.it.msu.ac.th:9775";
+ 
+  //Color
+  //Color colorCard;
+  Color colorSelect = Color(0xff872100);
+  Color colorNotSelect = Color(0xff3d2c2c);
 
   Map<String,dynamic> userFacebook = {} ; 
   int coID = 0;
