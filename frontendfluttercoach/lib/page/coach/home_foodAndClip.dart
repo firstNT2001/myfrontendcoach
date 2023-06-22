@@ -1,6 +1,7 @@
 import 'dart:developer';
 
 import 'package:auto_size_text/auto_size_text.dart';
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 
 import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
@@ -10,7 +11,6 @@ import 'package:frontendfluttercoach/page/coach/food/foodCourse/edit_food.dart';
 import 'package:frontendfluttercoach/page/coach/food/foodCourse/insertFood/food_new_page.dart';
 import 'package:frontendfluttercoach/service/clip.dart';
 import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
 import 'package:provider/provider.dart';
 
 import '../../model/response/clip_get_res.dart';
@@ -37,7 +37,7 @@ class _HomeFoodAndClipPageState extends State<HomeFoodAndClipPage> {
 
   // ClipService
   late Future<void> loadClipDataMethod;
-  late ClipServices _ClipService;
+  late ClipServices _clipService;
   List<ModelClip> clips = [];
 
   //onoffShow
@@ -54,7 +54,7 @@ class _HomeFoodAndClipPageState extends State<HomeFoodAndClipPage> {
     loadFoodDataMethod = loadFoodData();
 
     //Clip
-    _ClipService = context.read<AppData>().clipServices;
+    _clipService = context.read<AppData>().clipServices;
     loadClipDataMethod = loadClipData();
   }
 
@@ -145,9 +145,10 @@ class _HomeFoodAndClipPageState extends State<HomeFoodAndClipPage> {
   //LoadData
   Future<void> loadFoodData() async {
     try {
-      log(widget.did);
+      // log(widget.did);
       var datas = await _foodService.foods(fid: '', ifid: '', did: widget.did);
       foods = datas.data;
+      // log(foods.length.toString());
     } catch (err) {
       log('Error: $err');
     }
@@ -155,10 +156,15 @@ class _HomeFoodAndClipPageState extends State<HomeFoodAndClipPage> {
 
   Future<void> loadClipData() async {
     try {
+      log('message');
+      log(widget.did);
       var datas =
-          await _ClipService.clips(cpID: '', icpID: '', did: widget.did);
+          await _clipService.clips(cpID: '', icpID: '', did: widget.did);
       clips = datas.data;
+      // log(clips.length.toString());
     } catch (err) {
+      var e = err as DioError;
+      log(e.response!.data.toString());
       log('Error: $err');
     }
   }

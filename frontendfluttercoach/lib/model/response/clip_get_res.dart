@@ -2,6 +2,11 @@
 //
 //     final modelClip = modelClipFromJson(jsonString);
 
+
+
+import 'dart:developer';
+
+import 'package:flutter/material.dart';
 import 'package:meta/meta.dart';
 import 'dart:convert';
 
@@ -15,7 +20,7 @@ class ModelClip {
     int cpId;
     int listClipId;
     int dayOfCouseId;
-    int status;
+    String status;
     ModelClipList listClip;
 
     ModelClip({
@@ -26,13 +31,16 @@ class ModelClip {
         required this.listClip,
     });
 
-    factory ModelClip.fromJson(Map<String, dynamic> json) => ModelClip(
+    factory ModelClip.fromJson(Map<String, dynamic> json) {
+      // debugPrint(json.toString());
+      return ModelClip(
         cpId: json["CpID"],
         listClipId: json["ListClipID"],
         dayOfCouseId: json["DayOfCouseID"],
         status: json["Status"],
         listClip: ModelClipList.fromJson(json["ListClip"]),
     );
+    }
 
     Map<String, dynamic> toJson() => {
         "CpID": cpId,
