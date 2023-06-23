@@ -81,6 +81,8 @@ dependencies:
   cherry_toast: ^1.2.1
   tflite_flutter: ^0.10.1
   water_drop_nav_bar: ^2.2.0+5
+  anim_search_bar: ^2.0.3
+  firestore_search: ^0.2.0
   # video_thumbnail: ^0.5.3
    
   

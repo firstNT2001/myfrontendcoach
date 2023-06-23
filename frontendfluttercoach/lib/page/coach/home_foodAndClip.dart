@@ -1,12 +1,15 @@
 import 'dart:developer';
 
+import 'package:anim_search_bar/anim_search_bar.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:dio/dio.dart';
+import 'package:firestore_search/firestore_search.dart';
 import 'package:flutter/material.dart';
 
 import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:frontendfluttercoach/model/response/food_get_res.dart';
+import 'package:frontendfluttercoach/model/response/md_FoodList_get.dart';
 import 'package:frontendfluttercoach/page/coach/food/foodCourse/edit_food.dart';
 import 'package:frontendfluttercoach/page/coach/food/foodCourse/insertFood/food_new_page.dart';
 import 'package:frontendfluttercoach/service/clip.dart';
@@ -16,6 +19,8 @@ import 'package:provider/provider.dart';
 import '../../model/response/clip_get_res.dart';
 import '../../service/food.dart';
 import '../../service/provider/appdata.dart';
+
+import '../../widget/wg_search.dart';
 import '../clip/clipCourse/insertClip/clip_select_page.dart';
 import 'daysCourse/days_course_page.dart';
 
@@ -44,6 +49,11 @@ class _HomeFoodAndClipPageState extends State<HomeFoodAndClipPage> {
   bool onVisibles = true;
   bool offVisibles = false;
 
+  ///SearchBar
+  var searchName = TextEditingController();
+
+  //Title
+  String title = "";
   @override
   void initState() {
     super.initState();
@@ -56,6 +66,8 @@ class _HomeFoodAndClipPageState extends State<HomeFoodAndClipPage> {
     //Clip
     _clipService = context.read<AppData>().clipServices;
     loadClipDataMethod = loadClipData();
+
+    title = "Day ${widget.sequence}";
   }
 
   @override
@@ -69,7 +81,14 @@ class _HomeFoodAndClipPageState extends State<HomeFoodAndClipPage> {
             // iconTheme: const IconThemeData(
             //   color: Colors.black, //change your color here
             // ),
-            title: Text("Day ${widget.sequence}"),
+            title: TextButton(
+                onPressed: () {
+                  _dialog(context);
+                },
+                child: Text(
+                  title,
+                  style: Theme.of(context).textTheme.headlineMedium,
+                )),
             leading: IconButton(
               icon: const Icon(
                 FontAwesomeIcons.chevronLeft,
@@ -82,12 +101,14 @@ class _HomeFoodAndClipPageState extends State<HomeFoodAndClipPage> {
             ),
             actions: [
               IconButton(
-                icon: const Icon(
-                  FontAwesomeIcons.plus,
-                ),
                 onPressed: () {
-                  _dialog(context);
+                  Get.to(() => WidgetSearchFood(
+                        searchName: searchName, did: widget.did,
+                      ));
                 },
+                icon: const Icon(
+                  FontAwesomeIcons.magnifyingGlass,
+                ),
               )
             ],
             bottom: const TabBar(tabs: [
@@ -109,6 +130,48 @@ class _HomeFoodAndClipPageState extends State<HomeFoodAndClipPage> {
               //Food
               Column(
                 children: [
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: GestureDetector(
+                      onTap: () {
+                        Get.to(() => WidgetSearchFood(
+                              searchName: searchName, did: widget.did,
+                            ));
+                      },
+                      child: Container(
+                          width: MediaQuery.of(context).size.width,
+                          height: 45,
+                          decoration: BoxDecoration(
+                              boxShadow: <BoxShadow>[
+                                BoxShadow(
+                                    color: Colors.grey,
+                                    blurRadius: 5.0,
+                                    offset: Offset(0.0, 0.75))
+                              ],
+                              color: const Color.fromRGBO(244, 243, 243, 1),
+                              borderRadius: BorderRadius.circular(30)),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: [
+                              TextButton.icon(
+                                onPressed: () {
+                                  Get.to(() => WidgetSearchFood(
+                                        searchName: searchName, did: widget.did,
+                                      ));
+                                },
+                                icon: const Icon(
+                                  FontAwesomeIcons.magnifyingGlass,
+                                  color: Colors.black,
+                                ),
+                                label: const Text(
+                                  "ค้นหารายการอาหาร...",
+                                  style: TextStyle(color: Colors.grey),
+                                ),
+                              ),
+                            ],
+                          )),
+                    ),
+                  ),
                   const SizedBox(
                     height: 10,
                   ),
@@ -184,7 +247,7 @@ class _HomeFoodAndClipPageState extends State<HomeFoodAndClipPage> {
             itemBuilder: (context, index) {
               final listfood = foods[index];
               return SizedBox(
-                height: MediaQuery.of(context).size.height * 0.4,
+                height: MediaQuery.of(context).size.height * 0.2,
                 child: Card(
                   //color: Colors.white,
                   elevation: 1000,
@@ -197,24 +260,35 @@ class _HomeFoodAndClipPageState extends State<HomeFoodAndClipPage> {
                             coID: context.read<AppData>().coID.toString(),
                           ));
                     },
-                    child: Column(
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         if (listfood.listFood.image != '') ...{
                           SizedBox(
-                            width: MediaQuery.of(context).size.width,
-                            height: MediaQuery.of(context).size.height * 0.28,
-                            child: Image.network(
-                              listfood.listFood.image,
-                              fit: BoxFit.fill,
+                            width: MediaQuery.of(context).size.width * 0.35,
+                            height: MediaQuery.of(context).size.height,
+                            child: Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: ClipRRect(
+                                borderRadius: BorderRadius.circular(8.0),
+                                child: Image.network(
+                                  listfood.listFood.image,
+                                  fit: BoxFit.fill,
+                                ),
+                              ),
                             ),
                           ),
                         } else
-                          Container(
-                              width: MediaQuery.of(context).size.width,
-                              height: MediaQuery.of(context).size.height * 0.28,
-                              decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(26),
-                                  color: Colors.pink)),
+                          Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Container(
+                                width: MediaQuery.of(context).size.width * 0.3,
+                                height: MediaQuery.of(context).size.height,
+                                decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(8),
+                                    color: Colors.pink)),
+                          ),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           crossAxisAlignment: CrossAxisAlignment.start,
@@ -382,7 +456,7 @@ class _HomeFoodAndClipPageState extends State<HomeFoodAndClipPage> {
                           height: 50,
                           child: Icon(
                             FontAwesomeIcons.dumbbell,
-                           // color: Colors.white,
+                            // color: Colors.white,
                             size: 50,
                           ),
                         ),
