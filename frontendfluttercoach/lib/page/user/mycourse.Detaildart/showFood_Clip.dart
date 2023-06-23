@@ -318,7 +318,7 @@ class _showFoodState extends State<showFood> {
           await clipServices.clips(cpID: '', icpID: '', did: did.toString());
       clips = dataclip.data;
       var datafood =
-          await foodService.foods(fid: '', ifid: '', did: did.toString());
+          await foodService.foods(fid: '', ifid: '', did: did.toString(), name: '');
       foods = datafood.data;
       log('food leng: ${foods.length}');
       for (var index in clips) {
