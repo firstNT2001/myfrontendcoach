@@ -64,9 +64,11 @@ class _LoginPageState extends State<LoginPage> {
       body: Center(
         child: Card(
           clipBehavior: Clip.antiAlias,
+          //color: Theme.of(context).colorScheme.primaryContainer,
+          elevation: 5,
           child: SizedBox(
             width: MediaQuery.of(context).size.width * 0.8,
-            height: MediaQuery.of(context).size.height * 0.6,
+            height: MediaQuery.of(context).size.height * 0.65,
             child:
                 Column(mainAxisAlignment: MainAxisAlignment.center, children: [
               Padding(
@@ -129,7 +131,7 @@ class _LoginPageState extends State<LoginPage> {
                 padding: const EdgeInsets.only(left: 20, right: 20, bottom: 16),
                 child: SizedBox(
                   width: double.infinity,
-                  child: ElevatedButton.icon(
+                  child: FilledButton.icon(
                       icon: const FaIcon(FontAwesomeIcons.rightToBracket,
                           size: 16),
                       onPressed: () async {
@@ -224,7 +226,7 @@ class _LoginPageState extends State<LoginPage> {
         height: MediaQuery.of(context).size.height * 0.4,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(20),
-          color: Colors.white,
+          color: Theme.of(context).colorScheme.primaryContainer,
         ),
         alignment: Alignment.center,
         child: Column(

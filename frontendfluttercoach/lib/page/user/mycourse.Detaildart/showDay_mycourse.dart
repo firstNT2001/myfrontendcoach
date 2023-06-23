@@ -2,7 +2,7 @@ import 'dart:developer';
 
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
-import 'package:frontendfluttercoach/page/user/mycourse.Detaildart/showFood.dart';
+import 'package:frontendfluttercoach/page/user/mycourse.Detaildart/showFood_Clip.dart';
 import 'package:get/get.dart';
 import 'package:provider/provider.dart';
 

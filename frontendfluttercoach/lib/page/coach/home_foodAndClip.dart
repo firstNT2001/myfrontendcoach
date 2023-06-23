@@ -1,6 +1,7 @@
 import 'dart:developer';
 
 import 'package:auto_size_text/auto_size_text.dart';
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 
 import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
@@ -10,12 +11,12 @@ import 'package:frontendfluttercoach/page/coach/food/foodCourse/edit_food.dart';
 import 'package:frontendfluttercoach/page/coach/food/foodCourse/insertFood/food_new_page.dart';
 import 'package:frontendfluttercoach/service/clip.dart';
 import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
 import 'package:provider/provider.dart';
 
 import '../../model/response/clip_get_res.dart';
 import '../../service/food.dart';
 import '../../service/provider/appdata.dart';
+import '../clip/clipCourse/insertClip/clip_select_page.dart';
 import 'daysCourse/days_course_page.dart';
 
 class HomeFoodAndClipPage extends StatefulWidget {
@@ -36,7 +37,7 @@ class _HomeFoodAndClipPageState extends State<HomeFoodAndClipPage> {
 
   // ClipService
   late Future<void> loadClipDataMethod;
-  late ClipServices _ClipService;
+  late ClipServices _clipService;
   List<ModelClip> clips = [];
 
   //onoffShow
@@ -53,7 +54,7 @@ class _HomeFoodAndClipPageState extends State<HomeFoodAndClipPage> {
     loadFoodDataMethod = loadFoodData();
 
     //Clip
-    _ClipService = context.read<AppData>().clipServices;
+    _clipService = context.read<AppData>().clipServices;
     loadClipDataMethod = loadClipData();
   }
 
@@ -64,7 +65,7 @@ class _HomeFoodAndClipPageState extends State<HomeFoodAndClipPage> {
       child: Scaffold(
           resizeToAvoidBottomInset: false,
           appBar: AppBar(
-            backgroundColor: Theme.of(context).colorScheme.primaryContainer,
+            backgroundColor: Theme.of(context).colorScheme.primary,
             // iconTheme: const IconThemeData(
             //   color: Colors.black, //change your color here
             // ),
@@ -72,7 +73,6 @@ class _HomeFoodAndClipPageState extends State<HomeFoodAndClipPage> {
             leading: IconButton(
               icon: const Icon(
                 FontAwesomeIcons.chevronLeft,
-                color: Colors.black,
               ),
               onPressed: () {
                 Get.to(() => DaysCoursePage(
@@ -84,7 +84,6 @@ class _HomeFoodAndClipPageState extends State<HomeFoodAndClipPage> {
               IconButton(
                 icon: const Icon(
                   FontAwesomeIcons.plus,
-                  color: Colors.black,
                 ),
                 onPressed: () {
                   _dialog(context);
@@ -95,13 +94,11 @@ class _HomeFoodAndClipPageState extends State<HomeFoodAndClipPage> {
               Tab(
                 icon: Icon(
                   FontAwesomeIcons.bowlFood,
-                  color: Colors.black,
                 ),
               ),
               Tab(
                 icon: Icon(
                   FontAwesomeIcons.dumbbell,
-                  color: Colors.black,
                 ),
               )
             ]),
@@ -110,29 +107,33 @@ class _HomeFoodAndClipPageState extends State<HomeFoodAndClipPage> {
           body: TabBarView(
             children: [
               //Food
-              ListView(
+              Column(
                 children: [
                   const SizedBox(
                     height: 10,
                   ),
-                  Padding(
-                    padding: const EdgeInsets.only(
-                        left: 8, right: 8, top: 5, bottom: 5),
-                    child: showFood(),
-                  )
+                  Expanded(
+                    child: Padding(
+                      padding: const EdgeInsets.only(
+                          left: 8, right: 8, top: 5, bottom: 5),
+                      child: showFood(),
+                    ),
+                  ),
                 ],
               ),
 
               //Clip
-              ListView(
+              Column(
                 children: [
                   const SizedBox(
                     height: 10,
                   ),
-                  Padding(
-                    padding: const EdgeInsets.only(
-                        left: 8, right: 8, top: 5, bottom: 5),
-                    child: showClip(),
+                  Expanded(
+                    child: Padding(
+                      padding: const EdgeInsets.only(
+                          left: 8, right: 8, top: 5, bottom: 5),
+                      child: showClip(),
+                    ),
                   )
                 ],
               ),
@@ -144,9 +145,10 @@ class _HomeFoodAndClipPageState extends State<HomeFoodAndClipPage> {
   //LoadData
   Future<void> loadFoodData() async {
     try {
-      log(widget.did);
+      // log(widget.did);
       var datas = await _foodService.foods(fid: '', ifid: '', did: widget.did);
       foods = datas.data;
+      // log(foods.length.toString());
     } catch (err) {
       log('Error: $err');
     }
@@ -154,10 +156,15 @@ class _HomeFoodAndClipPageState extends State<HomeFoodAndClipPage> {
 
   Future<void> loadClipData() async {
     try {
+      log('message');
+      log(widget.did);
       var datas =
-          await _ClipService.clips(cpID: '', icpID: '', did: widget.did);
+          await _clipService.clips(cpID: '', icpID: '', did: widget.did);
       clips = datas.data;
+      // log(clips.length.toString());
     } catch (err) {
+      var e = err as DioError;
+      log(e.response!.data.toString());
       log('Error: $err');
     }
   }
@@ -177,9 +184,10 @@ class _HomeFoodAndClipPageState extends State<HomeFoodAndClipPage> {
             itemBuilder: (context, index) {
               final listfood = foods[index];
               return SizedBox(
-                height: MediaQuery.of(context).size.height * 0.2,
+                height: MediaQuery.of(context).size.height * 0.4,
                 child: Card(
-                  color: Colors.white,
+                  //color: Colors.white,
+                  elevation: 1000,
                   child: InkWell(
                     onTap: () {
                       Get.to(() => EditFoodPage(
@@ -189,67 +197,58 @@ class _HomeFoodAndClipPageState extends State<HomeFoodAndClipPage> {
                             coID: context.read<AppData>().coID.toString(),
                           ));
                     },
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      crossAxisAlignment: CrossAxisAlignment.start,
+                    child: Column(
                       children: [
-                        if (listfood.listFood.image != null) ...{
-                          Padding(
-                            padding: const EdgeInsets.only(
-                                left: 8, right: 8, top: 5, bottom: 5),
-                            child: Container(
-                                width: MediaQuery.of(context).size.width * 0.3,
-                                height: MediaQuery.of(context).size.height,
-                                decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(26),
-                                    color: Colors.pink
-                                    // image: DecorationImage(
-                                    //   image:
-                                    //       NetworkImage(listfood.listFood.image),
-                                    // ),
-                                    )),
+                        if (listfood.listFood.image != '') ...{
+                          SizedBox(
+                            width: MediaQuery.of(context).size.width,
+                            height: MediaQuery.of(context).size.height * 0.28,
+                            child: Image.network(
+                              listfood.listFood.image,
+                              fit: BoxFit.fill,
+                            ),
                           ),
                         } else
-                          Padding(
-                            padding: const EdgeInsets.only(
-                                left: 8, top: 5, bottom: 5),
-                            child: Container(
-                                width: MediaQuery.of(context).size.width * 0.3,
-                                height: MediaQuery.of(context).size.height,
-                                decoration: BoxDecoration(
+                          Container(
+                              width: MediaQuery.of(context).size.width,
+                              height: MediaQuery.of(context).size.height * 0.28,
+                              decoration: BoxDecoration(
                                   borderRadius: BorderRadius.circular(26),
-                                  image: DecorationImage(
-                                    image:
-                                        NetworkImage(listfood.listFood.image),
-                                  ),
-                                )),
-                          ),
-                        Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
+                                  color: Colors.pink)),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            SizedBox(
-                              width: MediaQuery.of(context).size.width * 0.4,
-                              child: AutoSizeText(
-                                listfood.listFood.name,
-                                maxLines: 5,
-                                style: Theme.of(context).textTheme.titleMedium,
-                              ),
+                            Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                SizedBox(
+                                  width:
+                                      MediaQuery.of(context).size.width * 0.4,
+                                  child: AutoSizeText(
+                                    listfood.listFood.name,
+                                    maxLines: 5,
+                                    style:
+                                        Theme.of(context).textTheme.titleMedium,
+                                  ),
+                                ),
+                                Text(
+                                  listfood.time == '1'
+                                      ? 'มื้อเช้า'
+                                      : listfood.time == '2'
+                                          ? 'มื้อเที่ยง'
+                                          : listfood.time == '3'
+                                              ? 'มื้อเย็น'
+                                              : 'มื้อใดก็ได้',
+                                  style: Theme.of(context).textTheme.bodyMedium,
+                                ),
+                              ],
                             ),
-                            Text(
-                              listfood.time == '1'
-                                  ? 'มื้อเช้า'
-                                  : listfood.time == '2'
-                                      ? 'มื้อเที่ยง'
-                                      : listfood.time == '3'
-                                          ? 'มื้อเย็น'
-                                          : 'มื้อใดก็ได้',
-                              style: Theme.of(context).textTheme.bodyMedium,
+                            const SizedBox(
+                              width: 50,
                             ),
                           ],
-                        ),
-                        const SizedBox(
-                          width: 50,
                         ),
                       ],
                     ),
@@ -278,7 +277,8 @@ class _HomeFoodAndClipPageState extends State<HomeFoodAndClipPage> {
               return SizedBox(
                 height: MediaQuery.of(context).size.height * 0.2,
                 child: Card(
-                  color: Colors.white,
+                  //color: Colors.white,
+                  elevation: 1000,
                   child: InkWell(
                     onTap: () {
                       // Get.to(() => EditFoodPage(fid: listfood.fid.toString()));
@@ -330,7 +330,7 @@ class _HomeFoodAndClipPageState extends State<HomeFoodAndClipPage> {
         height: MediaQuery.of(context).size.height * 0.35,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(20),
-          color: Colors.white,
+          color: Theme.of(context).colorScheme.background,
         ),
         alignment: Alignment.center,
         child: Column(
@@ -373,8 +373,7 @@ class _HomeFoodAndClipPageState extends State<HomeFoodAndClipPage> {
                   ),
                   InkWell(
                     onTap: () {
-                      // Get.to(() => const homeScreen());
-                      // context.read<AppData>().uid = uid;
+                      Get.to(() => ClipSelectPage(did: widget.did));
                     },
                     child: Column(
                       children: [
@@ -383,7 +382,7 @@ class _HomeFoodAndClipPageState extends State<HomeFoodAndClipPage> {
                           height: 50,
                           child: Icon(
                             FontAwesomeIcons.dumbbell,
-                            color: Colors.black,
+                           // color: Colors.white,
                             size: 50,
                           ),
                         ),

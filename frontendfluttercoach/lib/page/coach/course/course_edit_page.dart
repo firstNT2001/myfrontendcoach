@@ -89,6 +89,7 @@ class _CourseEditPageState extends State<CourseEditPage> {
   Widget build(BuildContext context) {
     Size screenSize = MediaQuery.of(context).size;
     double width = (screenSize.width > 550) ? 550 : screenSize.width;
+    //double height = (screenSize.height > 550) ? 550 : screenSize.height;
     double padding = 8;
     return Scaffold(
         resizeToAvoidBottomInset: false,
@@ -115,22 +116,22 @@ class _CourseEditPageState extends State<CourseEditPage> {
                     //เพิ่มรูป || แสดงรูป
                     inputImage(context),
 
-                    const SizedBox(
-                      height: 18,
+                    SizedBox(
+                      height: MediaQuery.of(context).size.height,
                     ),
                     // TextField
 
                     Padding(
-                      padding: const EdgeInsets.only(top: 250),
+                      padding:  EdgeInsets.only(top: MediaQuery.of(context).size.height * 0.35),
                       child: SizedBox(
                         width: MediaQuery.of(context).size.width,
                         height: MediaQuery.of(context).size.height * 0.6,
                         child: Container(
-                          decoration: const BoxDecoration(
-                              borderRadius: BorderRadius.only(
+                          decoration:  BoxDecoration(
+                              borderRadius: const BorderRadius.only(
                                   topLeft: Radius.circular(20),
                                   topRight: Radius.circular(20)),
-                              color: Colors.white),
+                              color: Theme.of(context).colorScheme.onSecondary),
                           child: Column(
                             children: [
                               Padding(
@@ -267,7 +268,7 @@ class _CourseEditPageState extends State<CourseEditPage> {
                 )),
           ),
         Positioned(
-            bottom: 70,
+            bottom: 60,
             right: 8,
             child: InkWell(
               onTap: () {
@@ -293,12 +294,12 @@ class _CourseEditPageState extends State<CourseEditPage> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               CircleAvatar(
-                backgroundColor: Colors.white,
+                //backgroundColor: Colors.white,
                 radius: 20,
                 child: IconButton(
                   icon: const Icon(
                     FontAwesomeIcons.chevronLeft,
-                    color: Colors.black,
+                  
                   ),
                   onPressed: () {
                     Get.to(() => const HomePageCoach());
@@ -306,12 +307,12 @@ class _CourseEditPageState extends State<CourseEditPage> {
                 ),
               ),
               CircleAvatar(
-                  backgroundColor: Colors.white,
+                  //backgroundColor: Colors.white,
                   radius: 20,
                   child: IconButton(
                     icon: const Icon(
                       FontAwesomeIcons.trash,
-                      color: Colors.black,
+                      
                     ),
                     onPressed: () async {
                       var response =
@@ -326,8 +327,8 @@ class _CourseEditPageState extends State<CourseEditPage> {
     );
   }
 
-  ElevatedButton buttonNext() {
-    return ElevatedButton(
+  FilledButton buttonNext() {
+    return FilledButton(
       //style: style,
       onPressed: () async {
         log("selectedValue${selectedValue.text}");

@@ -11,20 +11,16 @@ String clipDayIdPostToJson(ClipDayIdPost data) => json.encode(data.toJson());
 
 class ClipDayIdPost {
     int listClipId;
-    int status;
 
     ClipDayIdPost({
         required this.listClipId,
-        required this.status,
     });
 
     factory ClipDayIdPost.fromJson(Map<String, dynamic> json) => ClipDayIdPost(
         listClipId: json["ListClipID"],
-        status: json["Status"],
     );
 
     Map<String, dynamic> toJson() => {
         "ListClipID": listClipId,
-        "Status": status,
     };
 }
