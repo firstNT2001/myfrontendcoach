@@ -18,8 +18,7 @@ class WidgetSearchFood extends StatefulWidget {
   TextEditingController searchName;
   String did;
   @override
-  State<WidgetSearchFood> createState() =>
-      _WidgetSearchFoodState();
+  State<WidgetSearchFood> createState() => _WidgetSearchFoodState();
 }
 
 class _WidgetSearchFoodState extends State<WidgetSearchFood> {
@@ -71,24 +70,23 @@ class _WidgetSearchFoodState extends State<WidgetSearchFood> {
           onChanged: (value) {
             setState(() {
               isVisibles = true;
-              // _listfoodService
-              //     .listFoods(
-              //         ifid: '',
-              //         cid: context.read<AppData>().cid.toString(),
-              //         name: widget.searchName.text)
-              //     .then((fooddata) {
-              //   var datafoods = fooddata.data;
-              //   listfoods = datafoods;
-              //   if (listfoods.isNotEmpty) {
-              //     setState(() {});
-              //     log(listfoods.length.toString());
-              //   }
-              // });
+              _foodService
+                  .foods(
+                      fid: '',
+                      ifid: '',
+                      did: widget.did,
+                      name: widget.searchName.text)
+                  .then((fooddata) {
+                var datafoods = fooddata.data;
+                foods = datafoods;
+                if (foods.isNotEmpty) {
+                  setState(() {});
+                  log(foods.length.toString());
+                }
+              });
             });
           },
-          onSubmitted: (value) {
-            
-          },
+          onSubmitted: (value) {},
           decoration: const InputDecoration(
               border: InputBorder.none,
               enabledBorder: InputBorder.none,
@@ -106,9 +104,10 @@ class _WidgetSearchFoodState extends State<WidgetSearchFood> {
 
   //LoadData
   Future<void> loadFoodData() async {
-     try {
+    try {
       // log(widget.did);
-      var datas = await _foodService.foods(fid: '', ifid: '', did: widget.did);
+      var datas = await _foodService.foods(
+          fid: '', ifid: '', did: widget.did, name: '');
       foods = datas.data;
       // log(foods.length.toString());
     } catch (err) {

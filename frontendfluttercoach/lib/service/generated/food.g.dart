@@ -23,12 +23,14 @@ class _FoodServices implements FoodServices {
     required fid,
     required ifid,
     required did,
+    required name,
   }) async {
     const _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{
       r'fid': fid,
       r'ifid': ifid,
       r'did': did,
+      r'name': name,
     };
     final _headers = <String, dynamic>{};
     final _data = <String, dynamic>{};

@@ -209,7 +209,7 @@ class _HomeFoodAndClipPageState extends State<HomeFoodAndClipPage> {
   Future<void> loadFoodData() async {
     try {
       // log(widget.did);
-      var datas = await _foodService.foods(fid: '', ifid: '', did: widget.did);
+      var datas = await _foodService.foods(fid: '', ifid: '', did: widget.did, name: '');
       foods = datas.data;
       // log(foods.length.toString());
     } catch (err) {
