@@ -19,7 +19,8 @@ abstract class FoodServices {
   Future<HttpResponse<List<ModelFood>>> foods(
       {@Query("fid") required String fid,
       @Query("ifid") required String ifid,
-      @Query("did") required String did});
+      @Query("did") required String did,
+      @Query("name") required String name});
 
   @POST("/food/dayID/{did}")
   Future<HttpResponse<ModelResult>> insertFoodByDayID(

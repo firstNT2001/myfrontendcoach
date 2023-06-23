@@ -52,7 +52,7 @@ dependencies:
   firebase_storage: ^11.0.10
   cloud_firestore: ^4.3.1
   video_player: ^2.4.10
-  intl: ^0.18.1
+  intl: ^0.17.0
   appinio_video_player: ^1.2.1
   build_config: ^1.1.1
   source_gen: ^1.2.7
@@ -80,6 +80,9 @@ dependencies:
   expansion_tile_card: ^3.0.0
   cherry_toast: ^1.2.1
   tflite_flutter: ^0.10.1
+  water_drop_nav_bar: ^2.2.0+5
+  anim_search_bar: ^2.0.3
+  firestore_search: ^0.2.0
   # video_thumbnail: ^0.5.3
    
   
