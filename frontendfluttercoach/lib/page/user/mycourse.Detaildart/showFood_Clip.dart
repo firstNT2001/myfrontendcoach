@@ -1,11 +1,15 @@
+import 'dart:convert';
 import 'dart:developer';
 
 import 'package:appinio_video_player/appinio_video_player.dart';
 import 'package:flutter/material.dart';
+import 'package:frontendfluttercoach/service/course.dart';
 import 'package:video_player/video_player.dart';
 import '../../../../model/response/clip_get_res.dart';
 import '../../../../service/clip.dart';
+import '../../../model/request/status_clip.dart';
 import '../../../model/response/food_get_res.dart';
+import '../../../model/response/md_Result.dart';
 import '../../../service/food.dart';
 import 'package:get/get.dart';
 import 'package:provider/provider.dart';
@@ -30,24 +34,35 @@ class _showFoodState extends State<showFood> {
   List<ModelClip> clips = [];
   late FoodServices foodService;
   late Future<void> loadDataMethod;
-  List<bool> isChecked = [];
+
   int did = 0;
   String namecourse = "";
+
   late String videoUrl = "";
-  late VideoPlayerController _videoPlayerController;
-  late CustomVideoPlayerController _customVideoPlayerController;
-  final CustomVideoPlayerSettings _customVideoPlayerSettings =
-      const CustomVideoPlayerSettings();
+  //updatestatus
+  late ModelResult moduleResult;
+  String status = "";
+  List<bool> isChecked = [];
+  late CourseService courseService;
+  var update;
+  //date
+  DateTime nows =  DateTime.now();
+ String datenow = "";
   void initState() {
     // TODO: implement initState
     super.initState();
     did = context.read<AppData>().did;
     namecourse = context.read<AppData>().namecourse;
     log("did" + did.toString());
+    courseService =
+        CourseService(Dio(), baseUrl: context.read<AppData>().baseurl);
     clipServices =
         ClipServices(Dio(), baseUrl: context.read<AppData>().baseurl);
     foodService = FoodServices(Dio(), baseUrl: context.read<AppData>().baseurl);
-    loadDataMethod = loadData();
+    loadDataMethod = loadData(); 
+    DateTime date =  DateTime(nows.day, nows.month,nows.year );
+    datenow = date.toString();
+    log("DATE555:"+datenow);
   }
 
   @override
@@ -171,17 +186,33 @@ class _showFoodState extends State<showFood> {
                               children: [
                                 Checkbox(
                                   value: isChecked[index],
-                                  onChanged: (bool? value) {                                
+                                  onChanged: (bool? value) async {
                                     setState(() {
                                       isChecked[index] = value!;
                                     });
+                                    log(listclip.cpId.toString());
+                                    String cpID = listclip.cpId.toString();
+                                    if (value == false) {
+                                      status = "0";
+                                      log("status false");
+                                    } else {
+                                      status = "1";
+                                      log("statustrue");
+                                    }
+                                    StatusClip updateStatusClip =
+                                        StatusClip(status: status);
+                                    log(jsonEncode(updateStatusClip));
+                                    update =
+                                        await courseService.updateStatusClip(
+                                            cpID, updateStatusClip);
+                                    moduleResult = update.data;
+                                    log(moduleResult.result);
                                   },
                                 ),
                                 Text(
                                   "ออกกำลังกายแล้ว",
                                   style: TextStyle(fontSize: 17.0),
                                 ),
-                                
                               ],
                             ),
                           ],
@@ -209,8 +240,8 @@ class _showFoodState extends State<showFood> {
                   final GlobalKey<ExpansionTileCardState> cardA =
                       new GlobalKey();
                   return ExpansionTileCard(
-                    baseColor: const Color.fromARGB(255, 212, 212, 212),
-                    expandedColor: const Color.fromARGB(255, 191, 191, 191),
+                    //baseColor: const Color.fromARGB(255, 212, 212, 212),
+                    //expandedColor: const Color.fromARGB(255, 191, 191, 191),
                     key: cardA,
                     leading: SizedBox(
                         height: 200,
