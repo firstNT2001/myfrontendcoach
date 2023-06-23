@@ -102,7 +102,8 @@ class _HomeFoodAndClipPageState extends State<HomeFoodAndClipPage> {
               IconButton(
                 onPressed: () {
                   Get.to(() => WidgetSearchFood(
-                        searchName: searchName, did: widget.did,
+                        searchName: searchName,
+                        did: widget.did,
                       ));
                 },
                 icon: const Icon(
@@ -134,7 +135,8 @@ class _HomeFoodAndClipPageState extends State<HomeFoodAndClipPage> {
                     child: GestureDetector(
                       onTap: () {
                         Get.to(() => WidgetSearchFood(
-                              searchName: searchName, did: widget.did,
+                              searchName: searchName,
+                              did: widget.did,
                             ));
                       },
                       child: Container(
@@ -155,7 +157,8 @@ class _HomeFoodAndClipPageState extends State<HomeFoodAndClipPage> {
                               TextButton.icon(
                                 onPressed: () {
                                   Get.to(() => WidgetSearchFood(
-                                        searchName: searchName, did: widget.did,
+                                        searchName: searchName,
+                                        did: widget.did,
                                       ));
                                 },
                                 icon: const Icon(
@@ -208,7 +211,8 @@ class _HomeFoodAndClipPageState extends State<HomeFoodAndClipPage> {
   Future<void> loadFoodData() async {
     try {
       // log(widget.did);
-      var datas = await _foodService.foods(fid: '', ifid: '', did: widget.did, name: '');
+      var datas = await _foodService.foods(
+          fid: '', ifid: '', did: widget.did, name: '');
       foods = datas.data;
       // log(foods.length.toString());
       // log(foods.length.toString());
@@ -247,7 +251,7 @@ class _HomeFoodAndClipPageState extends State<HomeFoodAndClipPage> {
             itemBuilder: (context, index) {
               final listfood = foods[index];
               return SizedBox(
-                height: MediaQuery.of(context).size.height * 0.4,
+                height: MediaQuery.of(context).size.height * 0.2,
                 child: Card(
                   //color: Colors.white,
                   elevation: 1000,
@@ -256,69 +260,73 @@ class _HomeFoodAndClipPageState extends State<HomeFoodAndClipPage> {
                       Get.to(() => EditFoodPage(
                             fid: listfood.fid.toString(),
                             did: widget.did,
-                            sequence: widget.sequence,
+                            sequence: context.read<AppData>().sequence,
                             coID: context.read<AppData>().coID.toString(),
                           ));
                     },
-                    child: Column(
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        if (listfood.listFood.image != null) ...{
-                          Padding(
-                            padding: const EdgeInsets.only(
-                                left: 8, right: 8, top: 5, bottom: 5),
-                            child: Container(
-                                width: MediaQuery.of(context).size.width * 0.3,
-                                height: MediaQuery.of(context).size.height,
-                                decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(26),
-                                    color: Colors.pink
-                                    // image: DecorationImage(
-                                    //   image:
-                                    //       NetworkImage(listfood.listFood.image),
-                                    // ),
-                                    )),
+                        if (listfood.listFood.image != '') ...{
+                          SizedBox(
+                            width: MediaQuery.of(context).size.width * 0.35,
+                            height: MediaQuery.of(context).size.height,
+                            child: Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: ClipRRect(
+                                borderRadius: BorderRadius.circular(8.0),
+                                child: Image.network(
+                                  listfood.listFood.image,
+                                  fit: BoxFit.fill,
+                                ),
+                              ),
+                            ),
                           ),
                         } else
                           Padding(
-                            padding: const EdgeInsets.only(
-                                left: 8, top: 5, bottom: 5),
+                            padding: const EdgeInsets.all(8.0),
                             child: Container(
                                 width: MediaQuery.of(context).size.width * 0.3,
                                 height: MediaQuery.of(context).size.height,
                                 decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(26),
-                                  image: DecorationImage(
-                                    image:
-                                        NetworkImage(listfood.listFood.image),
-                                  ),
-                                )),
+                                    borderRadius: BorderRadius.circular(8),
+                                    color: Colors.pink)),
                           ),
-                        Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            SizedBox(
-                              width: MediaQuery.of(context).size.width * 0.4,
-                              child: AutoSizeText(
-                                listfood.listFood.name,
-                                maxLines: 5,
-                                style: Theme.of(context).textTheme.titleMedium,
-                              ),
+                            Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                SizedBox(
+                                  width:
+                                      MediaQuery.of(context).size.width * 0.4,
+                                  child: AutoSizeText(
+                                    listfood.listFood.name,
+                                    maxLines: 5,
+                                    style:
+                                        Theme.of(context).textTheme.titleMedium,
+                                  ),
+                                ),
+                                Text(
+                                  listfood.time == '1'
+                                      ? 'มื้อเช้า'
+                                      : listfood.time == '2'
+                                          ? 'มื้อเที่ยง'
+                                          : listfood.time == '3'
+                                              ? 'มื้อเย็น'
+                                              : 'มื้อใดก็ได้',
+                                  style: Theme.of(context).textTheme.bodyMedium,
+                                ),
+                              ],
                             ),
-                            Text(
-                              listfood.time == '1'
-                                  ? 'มื้อเช้า'
-                                  : listfood.time == '2'
-                                      ? 'มื้อเที่ยง'
-                                      : listfood.time == '3'
-                                          ? 'มื้อเย็น'
-                                          : 'มื้อใดก็ได้',
-                              style: Theme.of(context).textTheme.bodyMedium,
+                            const SizedBox(
+                              width: 50,
                             ),
                           ],
-                        ),
-                        const SizedBox(
-                          width: 50,
                         ),
                       ],
                     ),
