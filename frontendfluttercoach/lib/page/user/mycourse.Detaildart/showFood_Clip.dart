@@ -1,11 +1,15 @@
+import 'dart:convert';
 import 'dart:developer';
 
 import 'package:appinio_video_player/appinio_video_player.dart';
 import 'package:flutter/material.dart';
+import 'package:frontendfluttercoach/service/course.dart';
 import 'package:video_player/video_player.dart';
 import '../../../../model/response/clip_get_res.dart';
 import '../../../../service/clip.dart';
+import '../../../model/request/status_clip.dart';
 import '../../../model/response/food_get_res.dart';
+import '../../../model/response/md_Result.dart';
 import '../../../service/food.dart';
 import 'package:get/get.dart';
 import 'package:provider/provider.dart';
@@ -33,21 +37,32 @@ class _showFoodState extends State<showFood> {
 
   int did = 0;
   String namecourse = "";
+
   late String videoUrl = "";
-  late VideoPlayerController _videoPlayerController;
-  late CustomVideoPlayerController _customVideoPlayerController;
-  final CustomVideoPlayerSettings _customVideoPlayerSettings =
-      const CustomVideoPlayerSettings();
+  //updatestatus
+  late ModelResult moduleResult;
+  String status = "";
+  List<bool> isChecked = [];
+  late CourseService courseService;
+  var update;
+  //date
+  DateTime nows =  DateTime.now();
+ String datenow = "";
   void initState() {
     // TODO: implement initState
     super.initState();
     did = context.read<AppData>().did;
     namecourse = context.read<AppData>().namecourse;
-    log("did"+did.toString());
+    log("did" + did.toString());
+    courseService =
+        CourseService(Dio(), baseUrl: context.read<AppData>().baseurl);
     clipServices =
         ClipServices(Dio(), baseUrl: context.read<AppData>().baseurl);
     foodService = FoodServices(Dio(), baseUrl: context.read<AppData>().baseurl);
-    loadDataMethod = loadData();
+    loadDataMethod = loadData(); 
+    DateTime date =  DateTime(nows.day, nows.month,nows.year );
+    datenow = date.toString();
+    log("DATE555:"+datenow);
   }
 
   @override
@@ -55,40 +70,43 @@ class _showFoodState extends State<showFood> {
     return DefaultTabController(
         length: 2,
         child: Scaffold(
-            appBar: AppBar(
-              automaticallyImplyLeading: false,
-          bottom: const TabBar(tabs: [
-            Tab(
-              icon: Icon(Icons.fastfood_outlined),
-              text: "เมนูอาหาร",
+          appBar: AppBar(
+            automaticallyImplyLeading: false,
+            bottom: const TabBar(tabs: [
+              Tab(
+                icon: Icon(Icons.fastfood_outlined),
+                text: "เมนูอาหาร",
+              ),
+              Tab(
+                icon: Icon(Icons.fitness_center_sharp),
+                text: "คลิปออกกำลังกาย",
+              ),
+            ]),
+            title: Center(
+              child: Text(namecourse),
             ),
-            Tab(
-              icon: Icon(Icons.fitness_center_sharp),
-              text: "คลิปออกกำลังกาย",
+          ),
+          body: TabBarView(children: [
+            Column(
+              children: [
+                Expanded(
+                    child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: loadfoods(),
+                )),
+              ],
+            ),
+            Column(
+              children: [
+                Expanded(
+                    child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: loadclips(),
+                )),
+              ],
             ),
           ]),
-          title: Center(child: Text(namecourse),
-          ),
-        ), body: TabBarView(children: [
-          Column(
-            children: [
-              Expanded(child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: loadfoods(),
-              )),
-            ],
-          ),
-          Column(
-            children: [
-              Expanded(child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: loadclips(),
-              )),
-            ],
-          ),
-          
-        ]),
-       ));
+        ));
     // Scaffold(
     //   body: Column(children: [Flexible(child: loadfoods()),
     //   Flexible(
@@ -118,6 +136,7 @@ class _showFoodState extends State<showFood> {
     //   ]),
     // );
   }
+
   Widget loadclips() {
     return FutureBuilder(
         future: loadDataMethod,
@@ -128,28 +147,76 @@ class _showFoodState extends State<showFood> {
             return ListView.builder(
                 shrinkWrap: true,
                 itemCount: clips.length,
-                itemBuilder: (context, index)  {
+                itemBuilder: (context, index) {
                   final listclip = clips[index];
                   videoUrl = listclip.listClip.video;
-                  // _videoPlayerController =
-                  //     VideoPlayerController.network(videoUrl)
-                  //       ..initialize().then((value) => setState(() {}));
-
-                  // _customVideoPlayerController = CustomVideoPlayerController(
-                  //   context: context,
-                  //   videoPlayerController: _videoPlayerController,
-                  // );
-                 // log(_videoPlayerController.dataSource);
-                  return Card(
-                    color: Colors.amber,
-                    child: Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Column(
-                        children: [
-                          Text(listclip.listClip.name),
-                          WidgetloadCilp(urlVideo: videoUrl, nameclip: listclip.listClip.name,),
-                          Text(listclip.listClip.details)
+                  return SizedBox(
+                    width: MediaQuery.of(context).size.width * 0.8,
+                    child: Card(
+                      elevation: 0,
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Center(
+                                  child: Text(listclip.listClip.name,
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .bodyLarge)),
+                            ),
+                            WidgetloadCilp(
+                              urlVideo: videoUrl,
+                              nameclip: listclip.listClip.name,
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.only(left: 8),
+                              child: Text(listclip.listClip.details,
+                                  style: Theme.of(context).textTheme.bodyLarge),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.only(left: 8),
+                              child: Text(listclip.listClip.amountPerSet,
+                                  style: Theme.of(context).textTheme.bodyLarge),
+                            ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.end,
+                              children: [
+                                Checkbox(
+                                  value: isChecked[index],
+                                  onChanged: (bool? value) async {
+                                    setState(() {
+                                      isChecked[index] = value!;
+                                    });
+                                    log(listclip.cpId.toString());
+                                    String cpID = listclip.cpId.toString();
+                                    if (value == false) {
+                                      status = "0";
+                                      log("status false");
+                                    } else {
+                                      status = "1";
+                                      log("statustrue");
+                                    }
+                                    StatusClip updateStatusClip =
+                                        StatusClip(status: status);
+                                    log(jsonEncode(updateStatusClip));
+                                    update =
+                                        await courseService.updateStatusClip(
+                                            cpID, updateStatusClip);
+                                    moduleResult = update.data;
+                                    log(moduleResult.result);
+                                  },
+                                ),
+                                Text(
+                                  "ออกกำลังกายแล้ว",
+                                  style: TextStyle(fontSize: 17.0),
+                                ),
+                              ],
+                            ),
                           ],
+                        ),
                       ),
                     ),
                   );
@@ -173,19 +240,19 @@ class _showFoodState extends State<showFood> {
                   final GlobalKey<ExpansionTileCardState> cardA =
                       new GlobalKey();
                   return ExpansionTileCard(
-                    baseColor: const Color.fromARGB(255, 212, 212, 212),
-                    expandedColor: const Color.fromARGB(255, 191, 191, 191),
+                    //baseColor: const Color.fromARGB(255, 212, 212, 212),
+                    //expandedColor: const Color.fromARGB(255, 191, 191, 191),
                     key: cardA,
-                   leading:SizedBox(
+                    leading: SizedBox(
                         height: 200,
                         width: 200,
                         child: Image.network(
                           listfood.listFood.image,
                         )),
-                  // Container(
-                  //   alignment: Alignment.topCenter,
-                  //   child: AspectRatio(aspectRatio: 16/9,child: Image.network(listfood.listFood.image, fit: BoxFit.cover)),                 
-                  // ),
+                    // Container(
+                    //   alignment: Alignment.topCenter,
+                    //   child: AspectRatio(aspectRatio: 16/9,child: Image.network(listfood.listFood.image, fit: BoxFit.cover)),
+                    // ),
                     // SizedBox(
                     //     height: 200,
                     //     width: 200,
@@ -254,6 +321,9 @@ class _showFoodState extends State<showFood> {
           await foodService.foods(fid: '', ifid: '', did: did.toString());
       foods = datafood.data;
       log('food leng: ${foods.length}');
+      for (var index in clips) {
+        isChecked.add(false);
+      }
     } catch (err) {
       log('Error: $err');
     }
