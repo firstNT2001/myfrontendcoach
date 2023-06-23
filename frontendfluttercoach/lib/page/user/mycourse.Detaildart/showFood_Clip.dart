@@ -134,17 +134,7 @@ class _showFoodState extends State<showFood> {
                 itemCount: clips.length,
                 itemBuilder: (context, index) {
                   final listclip = clips[index];
-                  final listcheac = isChecked[index];
                   videoUrl = listclip.listClip.video;
-                  // _videoPlayerController =
-                  //     VideoPlayerController.network(videoUrl)
-                  //       ..initialize().then((value) => setState(() {}));
-
-                  // _customVideoPlayerController = CustomVideoPlayerController(
-                  //   context: context,
-                  //   videoPlayerController: _videoPlayerController,
-                  // );
-                  // log(_videoPlayerController.dataSource);
                   return SizedBox(
                     width: MediaQuery.of(context).size.width * 0.8,
                     child: Card(
@@ -180,10 +170,10 @@ class _showFoodState extends State<showFood> {
                               mainAxisAlignment: MainAxisAlignment.end,
                               children: [
                                 Checkbox(
-                                  value: listcheac,
-                                  onChanged: (listcheac) {
+                                  value: isChecked[index],
+                                  onChanged: (bool? value) {                                
                                     setState(() {
-                                      listcheac = listcheac!;
+                                      isChecked[index] = value!;
                                     });
                                   },
                                 ),
@@ -191,6 +181,7 @@ class _showFoodState extends State<showFood> {
                                   "ออกกำลังกายแล้ว",
                                   style: TextStyle(fontSize: 17.0),
                                 ),
+                                
                               ],
                             ),
                           ],
