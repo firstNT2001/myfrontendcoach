@@ -53,15 +53,14 @@ class _DaysCoursePageState extends State<DaysCoursePage> {
     return Scaffold(
       resizeToAvoidBottomInset: false,
       appBar: AppBar(
+         
         leading: IconButton(
           icon: const Icon(
             FontAwesomeIcons.chevronLeft,
             color: Colors.white,
           ),
           onPressed: () {
-            Get.to(() => CourseEditPage(
-                  coID: widget.coID,
-                ));
+           Get.back();
           },
         ),
         actions: [

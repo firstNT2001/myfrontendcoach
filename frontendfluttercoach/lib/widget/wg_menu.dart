@@ -84,6 +84,21 @@ class _SideMenuState extends State<SideMenu> {
                   ),
                   ListTile(
                     onTap: () {
+                      Get.to(() => const FoodCoachPage());
+                    },
+                    leading: const SizedBox(
+                        height: 34,
+                        width: 34,
+                        child: Icon(
+                          FontAwesomeIcons.house,
+                        )),
+                    title: Text(
+                      "เมนูอาหาร",
+                      style: Theme.of(context).textTheme.titleLarge,
+                    ),
+                  ),
+                  ListTile(
+                    onTap: () {
                       Get.to(() =>  LoginPage());
                     },
                     leading: const SizedBox(

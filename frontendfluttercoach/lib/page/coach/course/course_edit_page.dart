@@ -302,7 +302,7 @@ class _CourseEditPageState extends State<CourseEditPage> {
                   
                   ),
                   onPressed: () {
-                    Get.to(() => const HomePageCoach());
+                    Get.back();
                   },
                 ),
               ),
