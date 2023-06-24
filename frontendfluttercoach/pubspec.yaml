@@ -83,6 +83,7 @@ dependencies:
   water_drop_nav_bar: ^2.2.0+5
   anim_search_bar: ^2.0.3
   firestore_search: ^0.2.0
+  flutter_speed_dial: ^7.0.0
   # video_thumbnail: ^0.5.3
    
   

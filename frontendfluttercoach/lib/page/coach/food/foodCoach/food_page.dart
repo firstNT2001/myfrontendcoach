@@ -4,6 +4,7 @@ import 'dart:developer';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:frontendfluttercoach/page/coach/food/foodCoach/food_edit_page.dart';
 
@@ -42,42 +43,88 @@ class _FoodCoachPageState extends State<FoodCoachPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      resizeToAvoidBottomInset: false,
-      appBar: AppBar(
-        backgroundColor: Theme.of(context).colorScheme.primary,
-        title: TextButton(
-            onPressed: () {},
-            child: Text(
-              'Food',
-              style: Theme.of(context).textTheme.headlineMedium,
-            )),
-        leading: IconButton(
-          icon: const Icon(
-            FontAwesomeIcons.chevronLeft,
-          ),
-          onPressed: () {
-            Get.back();
-          },
-        ),
-        actions: [
-          IconButton(
-            onPressed: () {},
-            icon: const Icon(
-              FontAwesomeIcons.magnifyingGlass,
-            ),
-          )
-        ],
-      ),
-      body: SafeArea(
-        child: Column(
+    return DefaultTabController(
+      length: 2,
+      child: Scaffold(
+        // floatingActionButton: AnimatedFloatingActionButton(
+        //     //Fab list
+        //     fabButtons: <Widget>[float1(), float2()],
+        //     key : key,
+        //     colorStartAnimation: Theme.of(context).colorScheme.primary,
+        //     colorEndAnimation: Colors.red,
+        //     animatedIconData: AnimatedIcons.menu_close),
+        floatingActionButton: SpeedDial(
+          animatedIcon: AnimatedIcons.menu_close,
+          overlayOpacity: 0.4,
           children: [
-            Expanded(
-              child: Padding(
-                padding:
-                    const EdgeInsets.only(left: 8, right: 8, top: 5, bottom: 5),
-                child: ShowFood(),
+            SpeedDialChild(
+                child: const Icon(FontAwesomeIcons.bowlFood),
+                label: 'เพิ่มเมนู',
+                onTap: (){
+                  Get.to(() => FoodNewCoachPage());
+                }),
+            SpeedDialChild(
+                child: const Icon(FontAwesomeIcons.dumbbell),
+                label: 'เพิ่มคลิป',
+                onTap: (){
+
+                }),
+          ],
+        ),
+        resizeToAvoidBottomInset: false,
+        appBar: AppBar(
+          backgroundColor: Theme.of(context).colorScheme.primary,
+          title: TextButton(
+              onPressed: () {},
+              child: Text(
+                'อาหารและคลิป',
+                style: Theme.of(context).textTheme.headlineSmall,
+              )),
+          leading: IconButton(
+            icon: const Icon(
+              FontAwesomeIcons.chevronLeft,
+            ),
+            onPressed: () {
+              Get.back();
+            },
+          ),
+          actions: [
+            IconButton(
+              onPressed: () {},
+              icon: const Icon(
+                FontAwesomeIcons.magnifyingGlass,
               ),
+            )
+          ],
+          bottom: const TabBar(tabs: [
+            Tab(
+              icon: Icon(
+                FontAwesomeIcons.bowlFood,
+              ),
+            ),
+            Tab(
+              icon: Icon(
+                FontAwesomeIcons.dumbbell,
+              ),
+            )
+          ]),
+          centerTitle: true,
+        ),
+        body: TabBarView(
+          children: [
+            Column(
+              children: [
+                Expanded(
+                  child: Padding(
+                    padding: const EdgeInsets.only(
+                        left: 8, right: 8, top: 5, bottom: 5),
+                    child: ShowFood(),
+                  ),
+                ),
+              ],
+            ),
+            Column(
+              children: [],
             ),
           ],
         ),
@@ -86,6 +133,9 @@ class _FoodCoachPageState extends State<FoodCoachPage> {
   }
 
   FutureBuilder<void> ShowFood() {
+    Size screenSize = MediaQuery.of(context).size;
+    double width = (screenSize.width > 550) ? 550 : screenSize.width;
+    double padding = 8;
     return FutureBuilder(
       future: loadDataMethod,
       builder: (context, snapshot) {
@@ -122,6 +172,7 @@ class _FoodCoachPageState extends State<FoodCoachPage> {
                           Image.network(
                             listfood.image,
                             fit: BoxFit.cover,
+                            height: double.infinity,
                           ),
                         } else
                           // Container(),
@@ -131,10 +182,25 @@ class _FoodCoachPageState extends State<FoodCoachPage> {
                               decoration: BoxDecoration(
                                   borderRadius: BorderRadius.circular(8),
                                   color: Colors.pink)),
-                        Positioned(
-                            top: 0,
-                            right: 0,
-                            child: AutoSizeText(maxLines: 5, listfood.name)),
+                        Positioned.fill(
+                            bottom: 5,
+                            //right: 0,
+                            child: Align(
+                              alignment: Alignment.centerRight,
+                              child: Container(
+                                  width: (width - 16 - (3 * padding)) / 2,
+                                  height:
+                                      MediaQuery.of(context).size.height * 0.18,
+                                  color: Color.fromARGB(100, 22, 44, 33),
+                                  //margin: EdgeInsets.all(20),
+                                  padding: EdgeInsets.all(40),
+                                  child: AutoSizeText(
+                                    maxLines: 2,
+                                    listfood.name,
+                                    style:
+                                        Theme.of(context).textTheme.bodyLarge,
+                                  )),
+                            )),
                         // Row(
                         //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         //   crossAxisAlignment: CrossAxisAlignment.start,
@@ -180,5 +246,27 @@ class _FoodCoachPageState extends State<FoodCoachPage> {
     } catch (err) {
       log('Error: $err');
     }
+  }
+
+  Widget float1() {
+    return Container(
+      child: FloatingActionButton(
+        onPressed: null,
+        heroTag: "btn1",
+        tooltip: 'First button',
+        child: Icon(Icons.add),
+      ),
+    );
+  }
+
+  Widget float2() {
+    return Container(
+      child: FloatingActionButton(
+        onPressed: null,
+        heroTag: "btn2",
+        tooltip: 'Second button',
+        child: Icon(Icons.add),
+      ),
+    );
   }
 }
