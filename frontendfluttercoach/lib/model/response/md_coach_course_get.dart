@@ -24,7 +24,7 @@ class Coachbycourse {
     int days;
     int price;
     String status;
-    DateTime expirationDate;
+    String expirationDate;
     Coach coach;
     ModelBuying buying;
     dynamic dayOfCouses;
@@ -59,7 +59,7 @@ class Coachbycourse {
         days: json["Days"],
         price: json["Price"],
         status: json["Status"],
-        expirationDate: DateTime.parse(json["ExpirationDate"]),
+        expirationDate:json["ExpirationDate"],
         coach: Coach.fromJson(json["Coach"]),
         buying: ModelBuying.fromJson(json["Buying"]),
         dayOfCouses: json["DayOfCouses"],
@@ -77,7 +77,7 @@ class Coachbycourse {
         "Days": days,
         "Price": price,
         "Status": status,
-        "ExpirationDate": expirationDate.toIso8601String(),
+        "ExpirationDate": expirationDate,
         "Coach": coach.toJson(),
         "Buying": buying.toJson(),
         "DayOfCouses": dayOfCouses,

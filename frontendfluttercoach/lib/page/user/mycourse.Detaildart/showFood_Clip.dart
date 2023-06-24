@@ -46,8 +46,7 @@ class _showFoodState extends State<showFood> {
   late CourseService courseService;
   var update;
   //date
-  DateTime nows =  DateTime.now();
- String datenow = "";
+  
   void initState() {
     // TODO: implement initState
     super.initState();
@@ -60,9 +59,7 @@ class _showFoodState extends State<showFood> {
         ClipServices(Dio(), baseUrl: context.read<AppData>().baseurl);
     foodService = FoodServices(Dio(), baseUrl: context.read<AppData>().baseurl);
     loadDataMethod = loadData(); 
-    DateTime date =  DateTime(nows.day, nows.month,nows.year );
-    datenow = date.toString();
-    log("DATE555:"+datenow);
+    
   }
 
   @override

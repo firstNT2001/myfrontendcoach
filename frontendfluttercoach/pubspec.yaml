@@ -83,6 +83,8 @@ dependencies:
   water_drop_nav_bar: ^2.2.0+5
   anim_search_bar: ^2.0.3
   firestore_search: ^0.2.0
+  buddhist_datetime_dateformat:
+    path: libraries/buddhist_datetime_dateformat_sns
   # video_thumbnail: ^0.5.3
    
   

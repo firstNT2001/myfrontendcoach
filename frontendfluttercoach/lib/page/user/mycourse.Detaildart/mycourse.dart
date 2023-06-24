@@ -122,7 +122,11 @@ class _MyCousesState extends State<MyCouses> {
                                       listcours.coach.fullName; 
                                       context.read<AppData>().detail =
                                       listcours.details; 
-                                        
+                                      context.read<AppData>().exdate =
+                                     listcours.expirationDate; 
+                                        log("showex"+listcours.expirationDate);
+                                        context.read<AppData>().day =
+                                     listcours.days;
             
                                   Get.to(() => const ShowDayMycourse());
                                 },
