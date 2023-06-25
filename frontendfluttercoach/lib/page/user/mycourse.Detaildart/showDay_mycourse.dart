@@ -166,8 +166,8 @@ class _ShowDayMycourseState extends State<ShowDayMycourse> {
                               } else {
                                 log("เริ่มแล้ว$widget.expirationDate");
                                 log(" DID:= ${listday.did}");
-                                context.read<AppData>().did = listday.did;
-                                Get.to(() => const showFood());
+
+                                Get.to(() =>  showFood(did: listday.did, expirationDate: dateEX, dayincourse: widget.dayincourse,));
                               }
                             },
                             child: Text("เริ่ม",
@@ -229,7 +229,7 @@ class _ShowDayMycourseState extends State<ShowDayMycourse> {
                       moduleResult = update.data;
                       log(moduleResult.result);
                       context.read<AppData>().did = days.first.did;
-                      Get.to(() => const showFood());
+                      Get.to(() => showFood(did: days.first.did, expirationDate: dateEX, dayincourse: widget.dayincourse,));
                     },
                     child: const Text('เริ่มเลย'),
                   ),
