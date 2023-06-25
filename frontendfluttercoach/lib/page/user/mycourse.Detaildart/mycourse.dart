@@ -6,7 +6,6 @@ import 'package:get/get.dart';
 import 'package:provider/provider.dart';
 import 'package:retrofit/dio.dart';
 
-
 import '../../../model/response/course_get_res.dart';
 import '../../../model/response/md_coach_course_get.dart';
 import '../../../service/course.dart';
@@ -23,7 +22,7 @@ class MyCouses extends StatefulWidget {
 
 class _MyCousesState extends State<MyCouses> {
   late CourseService courseService;
- // late HttpResponse<ModelCourse> courses;
+  // late HttpResponse<ModelCourse> courses;
   List<Coachbycourse> courses = [];
   late Future<void> loadDataMethod;
 
@@ -50,11 +49,12 @@ class _MyCousesState extends State<MyCouses> {
             ),
             Padding(
               padding: const EdgeInsets.only(left: 10),
-              child: Text("รายการซื้อของฉัน",style: Theme.of(context).textTheme.bodyLarge),
+              child: Text("รายการซื้อของฉัน",
+                  style: Theme.of(context).textTheme.bodyLarge),
             )
-          
           ],
-        ),Divider(),
+        ),
+        Divider(),
         Expanded(
             child: Padding(
           padding: const EdgeInsets.all(8.0),
@@ -79,18 +79,18 @@ class _MyCousesState extends State<MyCouses> {
     return FutureBuilder(
       future: loadDataMethod,
       builder: (context, snapshot) {
-         if (snapshot.connectionState != ConnectionState.done) {
+        if (snapshot.connectionState != ConnectionState.done) {
           return const Center(child: CircularProgressIndicator());
         } else {
           return Column(
             children: [
               Expanded(
-                child: ListView.builder(
+                  child: ListView.builder(
                 shrinkWrap: true,
                 itemCount: courses.length,
                 itemBuilder: (context, index) {
                   final listcours = courses[index];
-            
+
                   return Padding(
                     padding: const EdgeInsets.only(top: 8),
                     child: Card(
@@ -99,39 +99,32 @@ class _MyCousesState extends State<MyCouses> {
                         crossAxisAlignment: CrossAxisAlignment.end,
                         children: [
                           Image.network(listcours.image,
-                              width: 400,
-                              height: 150,
-                              fit: BoxFit.fill),
+                              width: 400, height: 150, fit: BoxFit.fill),
                           ListTile(
-                            title: Text(listcours.name,style: Theme.of(context).textTheme.bodyLarge),
-                            subtitle: Text(listcours.coach.fullName,style: Theme.of(context).textTheme.bodyMedium),
+                            title: Text(listcours.name,
+                                style: Theme.of(context).textTheme.bodyLarge),
+                            subtitle: Text(listcours.coach.fullName,
+                                style: Theme.of(context).textTheme.bodyMedium),
                           ),
                           Padding(
-                            padding: const EdgeInsets.only(right: 8,bottom: 8),
+                            padding: const EdgeInsets.only(right: 8, bottom: 8),
                             child: FilledButton(
                                 onPressed: () {
                                   log(listcours.coId.toString());
-                                  log(listcours.image);
-                                  context.read<AppData>().idcourse =
-                                      listcours.coId;
-                                  context.read<AppData>().img =
-                                      listcours.image; 
-                                      context.read<AppData>().namecourse =
-                                      listcours.name;
-                                      context.read<AppData>().namecoach =
-                                      listcours.coach.fullName; 
-                                      context.read<AppData>().detail =
-                                      listcours.details; 
-                                      context.read<AppData>().exdate =
-                                     listcours.expirationDate; 
-                                        log("showex"+listcours.expirationDate);
-                                        context.read<AppData>().day =
-                                     listcours.days;
-            
-                                  Get.to(() => const ShowDayMycourse());
+                                  log(listcours.image);                              
+                                  Get.to(() => ShowDayMycourse(
+                                      coID: listcours.coId,
+                                      img: listcours.image,
+                                      namecourse:  listcours.name,
+                                      namecoach: listcours.coach.fullName,
+                                      detail: listcours.details,
+                                      expirationDate:  listcours.expirationDate,
+                                      dayincourse: listcours.days));
                                 },
-                                child: Text(
-                                    "ดูรายละเอียดเพิ่มเติม",style: Theme.of(context).textTheme.bodyMedium)),
+                                child: Text("ดูรายละเอียดเพิ่มเติม",
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .bodyMedium)),
                           ),
                         ],
                       ),
@@ -142,6 +135,7 @@ class _MyCousesState extends State<MyCouses> {
             ],
           );
         }
-      },);
+      },
+    );
   }
 }

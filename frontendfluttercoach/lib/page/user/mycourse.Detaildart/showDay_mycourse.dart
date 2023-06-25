@@ -1,4 +1,3 @@
-
 import 'dart:convert';
 import 'dart:developer';
 
@@ -19,7 +18,22 @@ import '../../../service/day.dart';
 import '../../../service/provider/appdata.dart';
 
 class ShowDayMycourse extends StatefulWidget {
-  const ShowDayMycourse({super.key});
+  ShowDayMycourse(
+      {super.key,
+      required this.coID,
+      required this.img,
+      required this.namecourse,
+      required this.namecoach,
+      required this.detail,
+      required this.expirationDate,
+      required this.dayincourse});
+  late int coID;    
+  late String img;
+  late String namecourse;
+  late String namecoach;
+  late String detail;
+  late String expirationDate;
+  late int dayincourse;
 
   @override
   State<ShowDayMycourse> createState() => _ShowDayMycourseState();
@@ -32,33 +46,21 @@ class _ShowDayMycourseState extends State<ShowDayMycourse> {
   // late HttpResponse<ModelCourse> courses;
   List<DayDetail> days = [];
   late Future<void> loadDataMethod;
-  int coID = 0;
-  String img = "";
-  String namecourse = "";
-  String namecoach = "";
-  String detail = "";
-  String expirationDate = "";
+
   DateTime nows = DateTime.now();
   String dateEX = "";
   String dateStart = "";
-  int dayincourse = 0;
   var update;
   void initState() {
     // TODO: implement initState
     super.initState();
-    coID = context.read<AppData>().idcourse;
-    img = context.read<AppData>().img;
-    namecourse = context.read<AppData>().namecourse;
-    namecoach = context.read<AppData>().namecoach;
-    detail = context.read<AppData>().detail;
-    expirationDate = context.read<AppData>().exdate;
-    dayincourse = context.read<AppData>().day;
 
     dayService = DayService(Dio(), baseUrl: context.read<AppData>().baseurl);
-    courseService = CourseService(Dio(), baseUrl: context.read<AppData>().baseurl);
+    courseService =
+        CourseService(Dio(), baseUrl: context.read<AppData>().baseurl);
     loadDataMethod = loadData();
 
-    DateTime date = DateTime(nows.year, nows.month, nows.day + dayincourse);
+    DateTime date = DateTime(nows.year, nows.month, nows.day + widget.dayincourse);
 
     var formatter = DateFormat.yMMMd();
 
@@ -83,7 +85,7 @@ class _ShowDayMycourseState extends State<ShowDayMycourse> {
   Future<void> loadData() async {
     try {
       var dataday =
-          await dayService.day(did: '', coID: coID.toString(), sequence: '');
+          await dayService.day(did: '', coID: widget.coID.toString(), sequence: '');
       days = dataday.data;
       log('couse: ${days.length}');
     } catch (err) {
@@ -108,19 +110,19 @@ class _ShowDayMycourseState extends State<ShowDayMycourse> {
                     style: TextStyle(fontSize: 25),
                   )),
               Image.network(
-                img,
+                widget.img,
                 height: 200,
                 width: double.infinity,
                 fit: BoxFit.cover,
               ),
               Padding(
                 padding: const EdgeInsets.only(left: 15, top: 25),
-                child: Text(namecourse,
+                child: Text(widget.namecourse,
                     style: Theme.of(context).textTheme.bodyLarge),
               ),
               Padding(
                 padding: const EdgeInsets.only(left: 15, bottom: 8),
-                child: Text(namecoach,
+                child: Text(widget.namecoach,
                     style: Theme.of(context).textTheme.bodyLarge),
               ),
               Padding(
@@ -131,7 +133,7 @@ class _ShowDayMycourseState extends State<ShowDayMycourse> {
               Padding(
                 padding: const EdgeInsets.only(left: 17, bottom: 8, right: 8),
                 child:
-                    Text(detail, style: Theme.of(context).textTheme.bodyLarge),
+                    Text(widget.detail, style: Theme.of(context).textTheme.bodyLarge),
               ),
               Expanded(
                 child: ListView.builder(
@@ -157,13 +159,12 @@ class _ShowDayMycourseState extends State<ShowDayMycourse> {
                         ),
                         trailing: ElevatedButton(
                             onPressed: () {
-                              if (expirationDate == "0001-01-01T00:00:00Z") {
+                              if (widget.expirationDate == "0001-01-01T00:00:00Z") {
                                 //log(message);
                                 _bindPage(context);
-                                log("ยังไม่เริ่ม$expirationDate");
-                               
+                                log("ยังไม่เริ่ม$widget.expirationDate");
                               } else {
-                                log("เริ่มแล้ว$expirationDate");
+                                log("เริ่มแล้ว$widget.expirationDate");
                                 log(" DID:= ${listday.did}");
                                 context.read<AppData>().did = listday.did;
                                 Get.to(() => const showFood());
@@ -219,16 +220,15 @@ class _ShowDayMycourseState extends State<ShowDayMycourse> {
                   ),
                   FilledButton(
                     onPressed: () async {
-                       CourseExpiration courseExpiration =
-                                    CourseExpiration(days: dayincourse);
-                                
-                                log(jsonEncode(courseExpiration));
-                                update =
-                                    await courseService.updateCourseExpiration(
-                                        coID.toString(), courseExpiration);
-                                moduleResult = update.data;
-                                log(moduleResult.result);
-                                context.read<AppData>().did = days.first.did;
+                      CourseExpiration courseExpiration =
+                          CourseExpiration(days: widget.dayincourse);
+
+                      log(jsonEncode(courseExpiration));
+                      update = await courseService.updateCourseExpiration(
+                          widget.coID.toString(), courseExpiration);
+                      moduleResult = update.data;
+                      log(moduleResult.result);
+                      context.read<AppData>().did = days.first.did;
                       Get.to(() => const showFood());
                     },
                     child: const Text('เริ่มเลย'),
