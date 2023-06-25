@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:frontendfluttercoach/page/user/profileUser.dart';
+import 'package:water_drop_nav_bar/water_drop_nav_bar.dart';
 
 import 'chatOfCus.dart';
 import 'homepageUser.dart';
+import 'mycourse.Detaildart/mycourse.dart';
 
 class homeScreen extends StatefulWidget {
   const homeScreen({super.key});
@@ -13,46 +15,41 @@ class homeScreen extends StatefulWidget {
 }
 
 class _homeScreenState extends State<homeScreen> {
-  int _selectedIndex = 0;
-  PageController pageController = PageController();
 
-  void onTapped(int index){
-    setState(() {
-      _selectedIndex = index;
-    });
-    pageController.jumpToPage(index);
+  int selectedIndex =0;
+  late PageController pageController;
+  @override
+  void initState() {
+    super.initState();
+    pageController = PageController(initialPage: selectedIndex);
   }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: PageView(
-        controller: pageController,
-        children: [
-          const HomePageUser(),
-          const chatOfCustomer(),
-          const ProfileUser(),
-        ],
-      ),
-      bottomNavigationBar: BottomNavigationBar(items: const <BottomNavigationBarItem>[
-        BottomNavigationBarItem(
-            icon: Icon(FontAwesomeIcons.house),
-            label: 'หน้าหลัก',
-            backgroundColor: Color.fromARGB(255, 63, 63, 63),
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(FontAwesomeIcons.facebookMessenger),
-            label: 'ข้อความ',
-            
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(FontAwesomeIcons.solidUser),
-            label: 'ฉัน',
-          ),
-      ],
-      currentIndex: _selectedIndex,
-      selectedItemColor: Theme.of(context).colorScheme.onPrimary,
-      onTap: onTapped,),
-      
+          physics: const NeverScrollableScrollPhysics(),
+          controller: pageController,
+          children: <Widget>[
+            const HomePageUser(),           
+            const chatOfCustomer(),
+            const MyCouses(),
+            const ProfileUser()
+          ],
+        ),
+      bottomNavigationBar: WaterDropNavBar(barItems: [
+        BarItem(filledIcon: FontAwesomeIcons.house, outlinedIcon: FontAwesomeIcons.house),
+        BarItem(filledIcon: FontAwesomeIcons.facebookMessenger, outlinedIcon: FontAwesomeIcons.facebookMessenger),
+        BarItem(filledIcon: FontAwesomeIcons.solidBookmark, outlinedIcon: FontAwesomeIcons.solidBookmark),
+        BarItem(filledIcon: FontAwesomeIcons.solidUser, outlinedIcon: FontAwesomeIcons.solidUser),
+      ], selectedIndex: selectedIndex, onItemSelected: (index){
+        setState(() {
+          selectedIndex = index;
+        });
+         pageController.animateToPage(selectedIndex,
+                duration: const Duration(milliseconds: 400),
+                curve: Curves.easeOutQuad);
+      }),
+     
     );
   }
 }
