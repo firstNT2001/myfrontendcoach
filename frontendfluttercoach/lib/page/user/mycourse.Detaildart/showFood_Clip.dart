@@ -2,8 +2,10 @@ import 'dart:convert';
 import 'dart:developer';
 
 import 'package:appinio_video_player/appinio_video_player.dart';
+import 'package:buddhist_datetime_dateformat/buddhist_datetime_dateformat.dart';
 import 'package:flutter/material.dart';
 import 'package:frontendfluttercoach/service/course.dart';
+import 'package:intl/intl.dart';
 import 'package:video_player/video_player.dart';
 import '../../../../model/response/clip_get_res.dart';
 import '../../../../service/clip.dart';
@@ -22,7 +24,16 @@ import 'myClipinCourse/widget_loadcilcp.dart';
 import 'mycourse.dart';
 
 class showFood extends StatefulWidget {
-  const showFood({super.key});
+   showFood(
+      {super.key,
+      required this.did,
+      required this.expirationDate,
+      required this.dayincourse});
+  late int did;    
+  late String expirationDate;
+  late int dayincourse;
+  
+
 
   @override
   State<showFood> createState() => _showFoodState();
@@ -35,8 +46,6 @@ class _showFoodState extends State<showFood> {
   late FoodServices foodService;
   late Future<void> loadDataMethod;
 
-  int did = 0;
-  String namecourse = "";
 
   late String videoUrl = "";
   //updatestatus
@@ -46,19 +55,25 @@ class _showFoodState extends State<showFood> {
   late CourseService courseService;
   var update;
   //date
+  DateTime nows = DateTime.now();
+  int caldate =0;
   
   void initState() {
     // TODO: implement initState
     super.initState();
-    did = context.read<AppData>().did;
-    namecourse = context.read<AppData>().namecourse;
-    log("did" + did.toString());
+    log('expirationDateNEW: ${widget.expirationDate}');
     courseService =
         CourseService(Dio(), baseUrl: context.read<AppData>().baseurl);
     clipServices =
         ClipServices(Dio(), baseUrl: context.read<AppData>().baseurl);
     foodService = FoodServices(Dio(), baseUrl: context.read<AppData>().baseurl);
     loadDataMethod = loadData(); 
+    var formatter = DateFormat.yMMMd();
+    DateTime expiration = DateTime.parse(widget.expirationDate);
+    DateTime date = DateTime( nows.year, nows.month, nows.day-expiration.day);
+    
+    var onlyBuddhistYear = nows.yearInBuddhistCalendar;
+    log("DATENOW"+date.toString());
     
   }
 
@@ -79,9 +94,6 @@ class _showFoodState extends State<showFood> {
                 text: "คลิปออกกำลังกาย",
               ),
             ]),
-            title: Center(
-              child: Text(namecourse),
-            ),
           ),
           body: TabBarView(children: [
             Column(
@@ -104,34 +116,6 @@ class _showFoodState extends State<showFood> {
             ),
           ]),
         ));
-    // Scaffold(
-    //   body: Column(children: [Flexible(child: loadfoods()),
-    //   Flexible(
-    //       child: Align(
-    //         alignment: Alignment.bottomCenter,
-    //         child: Row(
-    //           mainAxisAlignment: MainAxisAlignment.spaceAround,
-    //           children: [
-    //             ElevatedButton(
-    //                 child: const Text('ถอยกลับ'),
-    //                 onPressed: () {
-    //                   Get.to(() => const MyCouses());
-    //                 },
-    //                 ),
-    //                 ElevatedButton(
-    //                 child: const Text('ถัดไป'),
-    //                 onPressed: () {
-    //                   log("Did := "+did.toString());
-    //                   context.read<AppData>().did = did;
-    //                   Get.to(() => const showCilp());
-    //                 },
-    //                ),
-    //           ],
-    //         ),
-    //       ),
-    //     )
-    //   ]),
-    // );
   }
 
   Widget loadclips() {
@@ -312,10 +296,10 @@ class _showFoodState extends State<showFood> {
   Future<void> loadData() async {
     try {
       var dataclip =
-          await clipServices.clips(cpID: '', icpID: '', did: did.toString());
+          await clipServices.clips(cpID: '', icpID: '', did: widget.did.toString());
       clips = dataclip.data;
       var datafood =
-          await foodService.foods(fid: '', ifid: '', did: did.toString(), name: '');
+          await foodService.foods(fid: '', ifid: '', did: widget.did.toString(), name: '');
       foods = datafood.data;
       log('food leng: ${foods.length}');
       for (var index in clips) {
