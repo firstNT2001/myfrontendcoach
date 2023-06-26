@@ -1,10 +1,16 @@
 import 'dart:convert';
 import 'dart:developer';
+import 'dart:io';
 
+import 'package:appinio_video_player/appinio_video_player.dart';
+import 'package:file_picker/file_picker.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:provider/provider.dart';
+import 'package:video_player/video_player.dart';
 
 import '../../../model/request/listClip_coachID_post.dart';
 import '../../../model/response/md_Result.dart';
@@ -21,7 +27,6 @@ class ClipNewCoachPage extends StatefulWidget {
 }
 
 class _ClipNewCoachPageState extends State<ClipNewCoachPage> {
-
   late ListClipServices _listClipServices;
   late ModelResult modelResult;
   String cid = '';
@@ -29,6 +34,13 @@ class _ClipNewCoachPageState extends State<ClipNewCoachPage> {
   final name = TextEditingController();
   final amountPerSet = TextEditingController();
   final details = TextEditingController();
+
+  //Vdieo
+  PlatformFile? pickedFile;
+  UploadTask? uploadTask;
+  late VideoPlayerController _controller;
+  late CustomVideoPlayerController _customVideoPlayerController;
+  String pathVdieo = '';
   @override
   void initState() {
     super.initState();
@@ -37,14 +49,65 @@ class _ClipNewCoachPageState extends State<ClipNewCoachPage> {
     amountPerSet.text = '5เซ็ท เซ็ทละ20ครั้ง';
     details.text =
         'ท่านี้ช่วยบริหารต้นขาด้านหน้า ก้น และกล้ามเนื้อแฮมสตริง ทำให้ขาและกันกระชับ กล้ามเนื้อขาเข็งแรง';
-    _listClipServices= context.read<AppData>().listClipServices;
-    
+    _listClipServices = context.read<AppData>().listClipServices;
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: ListView(
+      resizeToAvoidBottomInset: false,
+      appBar: AppBar(
+        backgroundColor: Theme.of(context).colorScheme.primary,
+        title: TextButton(
+            onPressed: () {},
+            child: Text(
+              'เพิ่มคลิป',
+              style: Theme.of(context).textTheme.headlineSmall,
+            )),
+        leading: IconButton(
+          icon: const Icon(
+            FontAwesomeIcons.chevronLeft,
+          ),
+          onPressed: () {
+            Get.back();
+          },
+        ),
+      ),
+      body: SafeArea(
+        child: Column(
+          children: [
+            if (pickedFile != null)
+              Expanded(
+                child: SafeArea(
+                  child: CustomVideoPlayer(
+                      customVideoPlayerController:
+                          _customVideoPlayerController),
+                ),
+              ),
+            const SizedBox(
+              height: 12,
+            ),
+            ElevatedButton(
+              child: const Text('Select File'),
+              onPressed: selectFile,
+            ),
+            const SizedBox(
+              height: 12,
+            ),
+
+            const SizedBox(
+              height: 20,
+            ),
+            inputClip(),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Expanded inputClip() {
+    return Expanded(
+      child: ListView(
         children: [
           WidgetTextFieldString(
             controller: name,
@@ -62,22 +125,62 @@ class _ClipNewCoachPageState extends State<ClipNewCoachPage> {
             padding: const EdgeInsets.all(8.0),
             child: ElevatedButton(
                 onPressed: () async {
+                  log(pathVdieo);
                   ListClipCoachIdPost listClipCoachIdPost = ListClipCoachIdPost(
                       name: name.text,
                       amountPerSet: amountPerSet.text,
-                      video: '',
+                      video: pathVdieo,
                       details: details.text);
-                  var insertClip = await _listClipServices.insertListClipByCoachID(cid, listClipCoachIdPost);
+                  var insertClip = await _listClipServices
+                      .insertListClipByCoachID(cid, listClipCoachIdPost);
                   modelResult = insertClip.data;
-                  log(jsonEncode(modelResult.code));
-                  if(modelResult.result == '1'){
-                    Get.to(() => const ClipCoachPage());
-                  }
+                  log(jsonEncode(modelResult.result));
+                 
                 },
                 child: const Text("บันทึก")),
           )
         ],
       ),
     );
+  }
+
+  //Video
+  Future selectFile() async {
+    final result = await FilePicker.platform.pickFiles();
+    if (result == null) return;
+
+    // setState(() {
+    pickedFile = result.files.first;
+    // });
+    uploadFile();
+  }
+
+  Future uploadFile() async {
+    final path = 'videos/${pickedFile!.name}';
+    final file = File(pickedFile!.path!);
+
+    final ref = FirebaseStorage.instance.ref().child(path);
+    uploadTask = ref.putFile(file);
+
+    final snapshot = await uploadTask!.whenComplete(() => {});
+
+    final urlDownload = await snapshot.ref.getDownloadURL();
+    pathVdieo = urlDownload;
+    print('Download Link: $urlDownload');
+    _controller = VideoPlayerController.network('$urlDownload')
+      ..initialize().then((_) {
+        // Ensure the first frame is shown after the video is initialized, even before the play button has been pressed.
+        setState(() {});
+        _customVideoPlayerController = CustomVideoPlayerController(
+          context: context,
+          videoPlayerController: _controller,
+        );
+      });
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    _customVideoPlayerController.dispose();
   }
 }

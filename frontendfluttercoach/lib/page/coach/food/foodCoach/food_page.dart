@@ -6,16 +6,17 @@ import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:frontendfluttercoach/page/coach/food/foodCoach/food_edit_page.dart';
 
 import 'package:get/get.dart';
 import 'package:provider/provider.dart';
 
+import '../../../../model/response/md_ClipList_get.dart';
 import '../../../../model/response/md_FoodList_get.dart';
+import '../../../../service/listClip.dart';
 import '../../../../service/listFood.dart';
 import '../../../../service/provider/appdata.dart';
-import '../../../../service/provider/coachData.dart';
 
+import '../../../clip/clipCoach/clip_new_page.dart';
 import 'food_new_page.dart';
 
 class FoodCoachPage extends StatefulWidget {
@@ -26,9 +27,15 @@ class FoodCoachPage extends StatefulWidget {
 }
 
 class _FoodCoachPageState extends State<FoodCoachPage> {
+  //Service ListFood
   late ListFoodServices _listfoodService;
-  late Future<void> loadDataMethod;
+  late Future<void> loadFoodDataMethod;
   late List<ModelFoodList> foods = [];
+
+  //Service ListClip
+  late ListClipServices _listClipService;
+  late Future<void> loadClipDataMethod;
+  late List<ModelClipList> clips = [];
 
   String cid = "";
   @override
@@ -36,9 +43,13 @@ class _FoodCoachPageState extends State<FoodCoachPage> {
     // TODO: implement initState
     super.initState();
     cid = context.read<AppData>().cid.toString();
+    //LoadFoodService
     _listfoodService = context.read<AppData>().listfoodServices;
+    loadFoodDataMethod = loadFoodData();
 
-    loadDataMethod = loadData();
+    //LoadClipService
+    _listClipService = context.read<AppData>().listClipServices;
+    loadClipDataMethod = loadClipData();
   }
 
   @override
@@ -46,13 +57,6 @@ class _FoodCoachPageState extends State<FoodCoachPage> {
     return DefaultTabController(
       length: 2,
       child: Scaffold(
-        // floatingActionButton: AnimatedFloatingActionButton(
-        //     //Fab list
-        //     fabButtons: <Widget>[float1(), float2()],
-        //     key : key,
-        //     colorStartAnimation: Theme.of(context).colorScheme.primary,
-        //     colorEndAnimation: Colors.red,
-        //     animatedIconData: AnimatedIcons.menu_close),
         floatingActionButton: SpeedDial(
           animatedIcon: AnimatedIcons.menu_close,
           overlayOpacity: 0.4,
@@ -60,14 +64,14 @@ class _FoodCoachPageState extends State<FoodCoachPage> {
             SpeedDialChild(
                 child: const Icon(FontAwesomeIcons.bowlFood),
                 label: 'เพิ่มเมนู',
-                onTap: (){
-                  Get.to(() => FoodNewCoachPage());
+                onTap: () {
+                  Get.to(() => const FoodNewCoachPage());
                 }),
             SpeedDialChild(
                 child: const Icon(FontAwesomeIcons.dumbbell),
                 label: 'เพิ่มคลิป',
-                onTap: (){
-
+                onTap: () {
+                  Get.to(() => const ClipNewCoachPage());
                 }),
           ],
         ),
@@ -118,13 +122,19 @@ class _FoodCoachPageState extends State<FoodCoachPage> {
                   child: Padding(
                     padding: const EdgeInsets.only(
                         left: 8, right: 8, top: 5, bottom: 5),
-                    child: ShowFood(),
+                    child: showFood(),
                   ),
                 ),
               ],
             ),
             Column(
-              children: [],
+              children: [Expanded(
+                  child: Padding(
+                    padding: const EdgeInsets.only(
+                        left: 8, right: 8, top: 5, bottom: 5),
+                    child: showClips(),
+                  ),
+                ),],
             ),
           ],
         ),
@@ -132,12 +142,13 @@ class _FoodCoachPageState extends State<FoodCoachPage> {
     );
   }
 
-  FutureBuilder<void> ShowFood() {
+  //Show
+  FutureBuilder<void> showFood() {
     Size screenSize = MediaQuery.of(context).size;
     double width = (screenSize.width > 550) ? 550 : screenSize.width;
     double padding = 8;
     return FutureBuilder(
-      future: loadDataMethod,
+      future: loadFoodDataMethod,
       builder: (context, snapshot) {
         if (snapshot.connectionState != ConnectionState.done) {
           return const Center(child: CircularProgressIndicator());
@@ -191,9 +202,9 @@ class _FoodCoachPageState extends State<FoodCoachPage> {
                                   width: (width - 16 - (3 * padding)) / 2,
                                   height:
                                       MediaQuery.of(context).size.height * 0.18,
-                                  color: Color.fromARGB(100, 22, 44, 33),
+                                  color: const Color.fromARGB(100, 22, 44, 33),
                                   //margin: EdgeInsets.all(20),
-                                  padding: EdgeInsets.all(40),
+                                  padding: const EdgeInsets.all(40),
                                   child: AutoSizeText(
                                     maxLines: 2,
                                     listfood.name,
@@ -201,28 +212,6 @@ class _FoodCoachPageState extends State<FoodCoachPage> {
                                         Theme.of(context).textTheme.bodyLarge,
                                   )),
                             )),
-                        // Row(
-                        //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        //   crossAxisAlignment: CrossAxisAlignment.start,
-                        //   children: [
-                        //     Column(
-                        //       mainAxisAlignment: MainAxisAlignment.center,
-                        //       crossAxisAlignment: CrossAxisAlignment.start,
-                        //       children: [
-                        //         SizedBox(
-                        //           width:
-                        //               MediaQuery.of(context).size.width * 0.4,
-                        //           child: AutoSizeText(
-                        //             listfood.name,
-                        //             maxLines: 5,
-                        //             style:
-                        //                 Theme.of(context).textTheme.titleMedium,
-                        //           ),
-                        //         ),
-                        //       ],
-                        //     ),
-                        //   ],
-                        // ),
                       ],
                     ),
                   ),
@@ -235,7 +224,80 @@ class _FoodCoachPageState extends State<FoodCoachPage> {
     );
   }
 
-  Future<void> loadData() async {
+  FutureBuilder<void> showClips() {
+    Size screenSize = MediaQuery.of(context).size;
+    double width = (screenSize.width > 550) ? 550 : screenSize.width;
+    double padding = 8;
+    return FutureBuilder(
+      future: loadClipDataMethod,
+      builder: (context, snapshot) {
+        if (snapshot.connectionState != ConnectionState.done) {
+          return const Center(child: CircularProgressIndicator());
+        } else {
+          return GridView.builder(
+            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: 2,
+            ),
+            shrinkWrap: true,
+            itemCount: clips.length,
+            itemBuilder: (context, index) {
+              final listClips = clips[index];
+              return SizedBox(
+                height: MediaQuery.of(context).size.height * 0.2,
+                child: Card(
+                  //color: Colors.white,
+                  elevation: 1000,
+                  child: InkWell(
+                    onTap: () {
+                      // Get.to(() => EditFoodPage(
+                      //       fid: listfood.fid.toString(),
+                      //       did: widget.did,
+                      //       sequence: context.read<AppData>().sequence,
+                      //       coID: context.read<AppData>().coID.toString(),
+                      //     ));
+                    },
+                    child: Stack(
+                      // mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      // crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Container(
+                            width: MediaQuery.of(context).size.width,
+                            height: MediaQuery.of(context).size.height,
+                            decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(8),
+                                color: Colors.pink)),
+                        Positioned.fill(
+                            bottom: 5,
+                            //right: 0,
+                            child: Align(
+                              alignment: Alignment.centerRight,
+                              child: Container(
+                                  width: (width - 16 - (3 * padding)) / 2,
+                                  height:
+                                      MediaQuery.of(context).size.height * 0.18,
+                                  color: const Color.fromARGB(100, 22, 44, 33),
+                                  //margin: EdgeInsets.all(20),
+                                  padding: const EdgeInsets.all(40),
+                                  child: AutoSizeText(
+                                    maxLines: 2,
+                                    listClips.name,
+                                    style:
+                                        Theme.of(context).textTheme.bodyLarge,
+                                  )),
+                            )),
+                      ],
+                    ),
+                  ),
+                ),
+              );
+            },
+          );
+        }
+      },
+    );
+  }
+
+  Future<void> loadFoodData() async {
     try {
       var datas = await _listfoodService.listFoods(
         ifid: '',
@@ -248,25 +310,13 @@ class _FoodCoachPageState extends State<FoodCoachPage> {
     }
   }
 
-  Widget float1() {
-    return Container(
-      child: FloatingActionButton(
-        onPressed: null,
-        heroTag: "btn1",
-        tooltip: 'First button',
-        child: Icon(Icons.add),
-      ),
-    );
-  }
-
-  Widget float2() {
-    return Container(
-      child: FloatingActionButton(
-        onPressed: null,
-        heroTag: "btn2",
-        tooltip: 'Second button',
-        child: Icon(Icons.add),
-      ),
-    );
+  Future<void> loadClipData() async {
+    try {
+      var datas =
+          await _listClipService.listClips(icpID: '', cid: cid, name: '');
+      clips = datas.data;
+    } catch (err) {
+      log('Error: $err');
+    }
   }
 }

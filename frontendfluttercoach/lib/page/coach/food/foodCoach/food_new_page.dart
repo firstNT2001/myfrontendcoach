@@ -84,13 +84,13 @@ class _FoodNewCoachPageState extends State<FoodNewCoachPage> {
       ),
       body: SafeArea(
         child: Column(
-          children: [inputImage(context), InputFood()],
+          children: [inputImage(context), inputFood()],
         ),
       ),
     );
   }
 
-  Expanded InputFood() {
+  Expanded inputFood() {
     return Expanded(
         child: ListView(
       children: [
