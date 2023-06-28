@@ -6,8 +6,9 @@ import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-
 import 'package:get/get.dart';
+import 'package:get/get_core/src/get_main.dart';
+
 import 'package:provider/provider.dart';
 
 import '../../../../model/response/md_ClipList_get.dart';
@@ -16,7 +17,9 @@ import '../../../../service/listClip.dart';
 import '../../../../service/listFood.dart';
 import '../../../../service/provider/appdata.dart';
 
+import '../../../clip/clipCoach/clip_edit_page.dart';
 import '../../../clip/clipCoach/clip_new_page.dart';
+import 'food_edit_page.dart';
 import 'food_new_page.dart';
 
 class FoodCoachPage extends StatefulWidget {
@@ -128,13 +131,15 @@ class _FoodCoachPageState extends State<FoodCoachPage> {
               ],
             ),
             Column(
-              children: [Expanded(
+              children: [
+                Expanded(
                   child: Padding(
                     padding: const EdgeInsets.only(
                         left: 8, right: 8, top: 5, bottom: 5),
                     child: showClips(),
                   ),
-                ),],
+                ),
+              ],
             ),
           ],
         ),
@@ -168,12 +173,7 @@ class _FoodCoachPageState extends State<FoodCoachPage> {
                   elevation: 1000,
                   child: InkWell(
                     onTap: () {
-                      // Get.to(() => EditFoodPage(
-                      //       fid: listfood.fid.toString(),
-                      //       did: widget.did,
-                      //       sequence: context.read<AppData>().sequence,
-                      //       coID: context.read<AppData>().coID.toString(),
-                      //     ));
+                      Get.to(() => FoodEditCoachPage(ifid: listfood.ifid));
                     },
                     child: Stack(
                       // mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -224,6 +224,7 @@ class _FoodCoachPageState extends State<FoodCoachPage> {
     );
   }
 
+  //Clips
   FutureBuilder<void> showClips() {
     Size screenSize = MediaQuery.of(context).size;
     double width = (screenSize.width > 550) ? 550 : screenSize.width;
@@ -249,12 +250,9 @@ class _FoodCoachPageState extends State<FoodCoachPage> {
                   elevation: 1000,
                   child: InkWell(
                     onTap: () {
-                      // Get.to(() => EditFoodPage(
-                      //       fid: listfood.fid.toString(),
-                      //       did: widget.did,
-                      //       sequence: context.read<AppData>().sequence,
-                      //       coID: context.read<AppData>().coID.toString(),
-                      //     ));
+                      Get.to(() => ClipEditCoachPage(
+                            icpId: listClips.icpId,
+                          ));
                     },
                     child: Stack(
                       // mainAxisAlignment: MainAxisAlignment.spaceBetween,

@@ -94,7 +94,6 @@ class _ClipNewCoachPageState extends State<ClipNewCoachPage> {
             const SizedBox(
               height: 12,
             ),
-
             const SizedBox(
               height: 20,
             ),
@@ -135,7 +134,6 @@ class _ClipNewCoachPageState extends State<ClipNewCoachPage> {
                       .insertListClipByCoachID(cid, listClipCoachIdPost);
                   modelResult = insertClip.data;
                   log(jsonEncode(modelResult.result));
-                 
                 },
                 child: const Text("บันทึก")),
           )
