@@ -22,7 +22,7 @@ abstract class CourseService {
       @Query("name") required String name});
 
   @GET("/course/sell/{coID}")
-  Future<HttpResponse<List<Coachbycourse>>> coursebyCoID(
+  Future<HttpResponse<Coachbycourse>> coursebyCoID(
        @Path("coID") String coID);
 
   @GET("/courses")

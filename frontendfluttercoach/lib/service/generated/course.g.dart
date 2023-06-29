@@ -53,13 +53,13 @@ class _CourseService implements CourseService {
   }
 
   @override
-  Future<HttpResponse<List<Coachbycourse>>> coursebyCoID(coID) async {
+  Future<HttpResponse<Coachbycourse>> coursebyCoID(coID) async {
     const _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{};
     final _data = <String, dynamic>{};
-    final _result = await _dio.fetch<List<dynamic>>(
-        _setStreamType<HttpResponse<List<Coachbycourse>>>(Options(
+    final _result = await _dio.fetch<Map<String, dynamic>>(
+        _setStreamType<HttpResponse<Coachbycourse>>(Options(
       method: 'GET',
       headers: _headers,
       extra: _extra,
@@ -71,9 +71,7 @@ class _CourseService implements CourseService {
               data: _data,
             )
             .copyWith(baseUrl: baseUrl ?? _dio.options.baseUrl)));
-    var value = _result.data!
-        .map((dynamic i) => Coachbycourse.fromJson(i as Map<String, dynamic>))
-        .toList();
+    final value = Coachbycourse.fromJson(_result.data!);
     final httpResponse = HttpResponse(value, _result);
     return httpResponse;
   }

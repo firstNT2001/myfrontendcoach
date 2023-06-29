@@ -25,7 +25,7 @@ import 'myClipinCourse/widget_loadcilcp.dart';
 import 'mycourse.dart';
 
 class showFood extends StatefulWidget {
-   const showFood({super.key});
+  const showFood({super.key});
   @override
   State<showFood> createState() => _showFoodState();
 }
@@ -36,8 +36,8 @@ class _showFoodState extends State<showFood> {
   List<ModelClip> clips = [];
   late FoodServices foodService;
   late Future<void> loadDataMethod;
-  int did =0;
-  int coID =0;
+  int did = 0;
+  int coID = 0;
 
   late String videoUrl = "";
   //updatestatus
@@ -45,14 +45,19 @@ class _showFoodState extends State<showFood> {
   String status = "";
   List<bool> isChecked = [];
   late CourseService courseService;
-  List<Coachbycourse> courses = [];
+  late Coachbycourse courses;
   var update;
   //date
-  String txtdate ="";
-  late DateTime ex_date;
+  int dayincourse = 0;
+  late DateTime exdate;
+  late DateTime dayex;
   DateTime nows = DateTime.now();
-  int caldate =0;
-  
+  late DateTime today;
+  List<DateTime> listindexday = [];
+  int indexex = 0;
+  int indextd = 0;
+   int caldate = -1 ;
+  late int ans;
   void initState() {
     // TODO: implement initState
     super.initState();
@@ -63,8 +68,8 @@ class _showFoodState extends State<showFood> {
     clipServices =
         ClipServices(Dio(), baseUrl: context.read<AppData>().baseurl);
     foodService = FoodServices(Dio(), baseUrl: context.read<AppData>().baseurl);
-    loadDataMethod = loadData(); 
-    
+    loadDataMethod = loadData();
+    today = DateTime(nows.year, nows.month, nows.day);
     
   }
 
@@ -100,16 +105,28 @@ class _showFoodState extends State<showFood> {
               children: [
                 Expanded(
                     child: Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: loadclips(),
-                )),
+                      padding: const EdgeInsets.all(8.0),
+                      child: loadclipscheck(),
+                    ),
+                  ),
+                // (caldate == 0)?Expanded(
+                //     child: Padding(
+                //   padding: const EdgeInsets.all(8.0),
+                //   child: loadclipscheck(),
+                // )) : (caldate > 0 )?Expanded(
+                //     child: Padding(
+                //   padding: const EdgeInsets.all(8.0),
+                //   child: loadclipscantcheck(),
+                // )) : const Center(child: CircularProgressIndicator())
+
+                
               ],
             ),
           ]),
         ));
   }
 
-  Widget loadclips() {
+  Widget loadclipscheck() {
     return FutureBuilder(
         future: loadDataMethod,
         builder: (context, snapshot) {
@@ -197,6 +214,73 @@ class _showFoodState extends State<showFood> {
         });
   }
 
+  Widget loadclipscantcheck() {
+    return FutureBuilder(
+        future: loadDataMethod,
+        builder: (context, snapshot) {
+          if (snapshot.connectionState != ConnectionState.done) {
+            return const Center(child: CircularProgressIndicator());
+          } else {
+            return ListView.builder(
+                shrinkWrap: true,
+                itemCount: clips.length,
+                itemBuilder: (context, index) {
+                  final listclip = clips[index];
+                  videoUrl = listclip.listClip.video;
+                  return SizedBox(
+                    width: MediaQuery.of(context).size.width * 0.8,
+                    child: Card(
+                      elevation: 0,
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Center(
+                                  child: Text(listclip.listClip.name,
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .bodyLarge)),
+                            ),
+                            WidgetloadCilp(
+                              urlVideo: videoUrl,
+                              nameclip: listclip.listClip.name,
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.only(left: 8),
+                              child: Text(listclip.listClip.details,
+                                  style: Theme.of(context).textTheme.bodyLarge),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.only(left: 8),
+                              child: Text(listclip.listClip.amountPerSet,
+                                  style: Theme.of(context).textTheme.bodyLarge),
+                            ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.end,
+                              children: [
+                                Checkbox(
+                                  value: isChecked[index],
+                                  onChanged: (bool? value) async {},
+                                ),
+                                const Text(
+                                  "ออกกำลังกายแล้ว",
+                                  style: TextStyle(fontSize: 17.0),
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  );
+                });
+          }
+        });
+  }
+
   Widget loadfoods() {
     return FutureBuilder(
         future: loadDataMethod,
@@ -255,30 +339,6 @@ class _showFoodState extends State<showFood> {
                       ),
                     ],
                   );
-                  // ExpansionTile(
-                  //   title: Row(
-                  //     children: [
-                  //       SizedBox(
-                  //         height: 150,width: 150,
-                  //         child: Image.network(listfood.listFood.image)),
-                  //       Column(
-                  //         children: [
-                  //           Text(listfood.listFood.name,
-                  //               style: Theme.of(context).textTheme.bodyLarge),
-
-                  //         ],
-                  //       ),
-                  //     ],
-                  //   ),
-                  //   subtitle: Text("${listfood.listFood.calories} แคลอรี่",
-                  //       style: Theme.of(context).textTheme.bodyLarge),
-                  //   children: <Widget>[
-                  //     ListTile(title: Text(listfood.listFood.details)),
-                  //   ],
-                  //   onExpansionChanged: (bool extended){
-                  //     setState(() => );
-                  //   },
-                  // );
                 });
           }
         });
@@ -289,18 +349,43 @@ class _showFoodState extends State<showFood> {
       var dataclip =
           await clipServices.clips(cpID: '', icpID: '', did: did.toString());
       clips = dataclip.data;
-      var datafood =
-          await foodService.foods(fid: '', ifid: '', did: did.toString(), name: '');
+      var datafood = await foodService.foods(
+          fid: '', ifid: '', did: did.toString(), name: '');
       foods = datafood.data;
-      
+
       log('food leng: ${foods.length}');
       for (var index in clips) {
         isChecked.add(false);
       }
-      
-      var datacourse = await courseService.course(coID: coID.toString(), cid: '', name: '');
+
+      var datacourse = await courseService.coursebyCoID(coID.toString());
       courses = datacourse.data;
-      log("EXDATE55"+courses.first.expirationDate);
+      dayincourse = courses.days;
+      exdate = DateTime.parse(courses.expirationDate);
+
+      var formatter = DateFormat.yMMMd();
+      //หาลิสของวันทั้งหมดที่มี แล้วเรียงวันใหม่
+      for (int i = 0; i < dayincourse; i++) {
+        dayex = DateTime(exdate.year, exdate.month, exdate.day - i);
+        listindexday.add(dayex);
+        listindexday.sort();
+      }
+      //ลิสที่หาได้มาเช็คว่า วันปัจจุบันและวันหมดอายุอยู่indexไหน
+      for (int i = 0; i < listindexday.length; i++) {
+        if (today.day == listindexday[i].day) {
+          indextd = i;
+        }
+        if(exdate.day == listindexday[i].day){
+          indexex = i;
+        } 
+        caldate = (dayincourse - (indexex-indextd))-1;
+
+        // if(caldate == listindexday[caldate]){
+        //   log("listindexday[i] "+listindexday[caldate].day.toString());
+        // }
+      }
+     
+      log("cal_date "+caldate.toString());
     } catch (err) {
       log('Error: $err');
     }
