@@ -51,10 +51,11 @@ class _ShowDayMycourseState extends State<ShowDayMycourse> {
   String dateEX = "";
   String dateStart = "";
   var update;
+  int coID = 0;
   void initState() {
     // TODO: implement initState
     super.initState();
-
+    coID = context.read<AppData>().idcourse;
     dayService = DayService(Dio(), baseUrl: context.read<AppData>().baseurl);
     courseService =
         CourseService(Dio(), baseUrl: context.read<AppData>().baseurl);
@@ -102,7 +103,7 @@ class _ShowDayMycourseState extends State<ShowDayMycourse> {
         } else {
           return ListView(
             children: [
-              SizedBox(
+              const SizedBox(
                   height: 35,
                   width: 390,
                   child: Text(
@@ -166,8 +167,10 @@ class _ShowDayMycourseState extends State<ShowDayMycourse> {
                               } else {
                                 log("เริ่มแล้ว$widget.expirationDate");
                                 log(" DID:= ${listday.did}");
+                                context.read<AppData>().did = listday.did;
+                                context.read<AppData>().idcourse = coID;
 
-                                Get.to(() =>  showFood(did: listday.did, expirationDate: dateEX, dayincourse: widget.dayincourse,));
+                                Get.to(() =>  const showFood());
                               }
                             },
                             child: Text("เริ่ม",
@@ -229,7 +232,9 @@ class _ShowDayMycourseState extends State<ShowDayMycourse> {
                       moduleResult = update.data;
                       log(moduleResult.result);
                       context.read<AppData>().did = days.first.did;
-                      Get.to(() => showFood(did: days.first.did, expirationDate: dateEX, dayincourse: widget.dayincourse,));
+                      context.read<AppData>().idcourse = coID;
+                      log(days.first.did.toString());
+                      Get.to(() => const showFood());
                     },
                     child: const Text('เริ่มเลย'),
                   ),

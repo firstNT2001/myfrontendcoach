@@ -111,7 +111,8 @@ class _MyCousesState extends State<MyCouses> {
                             child: FilledButton(
                                 onPressed: () {
                                   log(listcours.coId.toString());
-                                  log(listcours.image);                              
+                                  log(listcours.image);   
+                                  context.read<AppData>().idcourse = listcours.coId;                           
                                   Get.to(() => ShowDayMycourse(
                                       coID: listcours.coId,
                                       img: listcours.image,

@@ -12,6 +12,7 @@ import '../../../../service/clip.dart';
 import '../../../model/request/status_clip.dart';
 import '../../../model/response/food_get_res.dart';
 import '../../../model/response/md_Result.dart';
+import '../../../model/response/md_coach_course_get.dart';
 import '../../../service/food.dart';
 import 'package:get/get.dart';
 import 'package:provider/provider.dart';
@@ -24,17 +25,7 @@ import 'myClipinCourse/widget_loadcilcp.dart';
 import 'mycourse.dart';
 
 class showFood extends StatefulWidget {
-   showFood(
-      {super.key,
-      required this.did,
-      required this.expirationDate,
-      required this.dayincourse});
-  late int did;    
-  late String expirationDate;
-  late int dayincourse;
-  
-
-
+   const showFood({super.key});
   @override
   State<showFood> createState() => _showFoodState();
 }
@@ -45,7 +36,8 @@ class _showFoodState extends State<showFood> {
   List<ModelClip> clips = [];
   late FoodServices foodService;
   late Future<void> loadDataMethod;
-
+  int did =0;
+  int coID =0;
 
   late String videoUrl = "";
   //updatestatus
@@ -53,27 +45,26 @@ class _showFoodState extends State<showFood> {
   String status = "";
   List<bool> isChecked = [];
   late CourseService courseService;
+  List<Coachbycourse> courses = [];
   var update;
   //date
+  String txtdate ="";
+  late DateTime ex_date;
   DateTime nows = DateTime.now();
   int caldate =0;
   
   void initState() {
     // TODO: implement initState
     super.initState();
-    log('expirationDateNEW: ${widget.expirationDate}');
+    did = context.read<AppData>().did;
+    coID = context.read<AppData>().idcourse;
     courseService =
         CourseService(Dio(), baseUrl: context.read<AppData>().baseurl);
     clipServices =
         ClipServices(Dio(), baseUrl: context.read<AppData>().baseurl);
     foodService = FoodServices(Dio(), baseUrl: context.read<AppData>().baseurl);
     loadDataMethod = loadData(); 
-    var formatter = DateFormat.yMMMd();
-    DateTime expiration = DateTime.parse(widget.expirationDate);
-    DateTime date = DateTime( nows.year, nows.month, nows.day-expiration.day);
     
-    var onlyBuddhistYear = nows.yearInBuddhistCalendar;
-    log("DATENOW"+date.toString());
     
   }
 
@@ -296,15 +287,20 @@ class _showFoodState extends State<showFood> {
   Future<void> loadData() async {
     try {
       var dataclip =
-          await clipServices.clips(cpID: '', icpID: '', did: widget.did.toString());
+          await clipServices.clips(cpID: '', icpID: '', did: did.toString());
       clips = dataclip.data;
       var datafood =
-          await foodService.foods(fid: '', ifid: '', did: widget.did.toString(), name: '');
+          await foodService.foods(fid: '', ifid: '', did: did.toString(), name: '');
       foods = datafood.data;
+      
       log('food leng: ${foods.length}');
       for (var index in clips) {
         isChecked.add(false);
       }
+      
+      var datacourse = await courseService.course(coID: coID.toString(), cid: '', name: '');
+      courses = datacourse.data;
+      log("EXDATE55"+courses.first.expirationDate);
     } catch (err) {
       log('Error: $err');
     }
