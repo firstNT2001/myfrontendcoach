@@ -4,6 +4,7 @@ import 'dart:developer';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
@@ -13,6 +14,7 @@ import 'package:provider/provider.dart';
 
 import '../../../../model/response/md_ClipList_get.dart';
 import '../../../../model/response/md_FoodList_get.dart';
+import '../../../../model/response/md_Result.dart';
 import '../../../../service/listClip.dart';
 import '../../../../service/listFood.dart';
 import '../../../../service/provider/appdata.dart';
@@ -41,6 +43,8 @@ class _FoodCoachPageState extends State<FoodCoachPage> {
   late List<ModelClipList> clips = [];
 
   String cid = "";
+  late ModelResult modelResult;
+  bool isDelete = false;
   @override
   void initState() {
     // TODO: implement initState
@@ -212,6 +216,19 @@ class _FoodCoachPageState extends State<FoodCoachPage> {
                                         Theme.of(context).textTheme.bodyLarge,
                                   )),
                             )),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          children: [
+                            IconButton(
+                              onPressed: () {
+                                dialogDelete(context, listfood.ifid.toString());
+                              },
+                              icon: const Icon(
+                                FontAwesomeIcons.trash,
+                              ),
+                            ),
+                          ],
+                        )
                       ],
                     ),
                   ),
@@ -316,5 +333,59 @@ class _FoodCoachPageState extends State<FoodCoachPage> {
     } catch (err) {
       log('Error: $err');
     }
+  }
+
+  //Dialog Delete
+  void dialogDelete(BuildContext context, String ifid) {
+    //target widget
+    SmartDialog.show(builder: (_) {
+      return Container(
+        width: MediaQuery.of(context).size.width * 0.8,
+        height: MediaQuery.of(context).size.height * 0.3,
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(20),
+          color: Theme.of(context).colorScheme.primaryContainer,
+        ),
+        alignment: Alignment.center,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          //crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Padding(
+              padding: const EdgeInsets.only(
+                  left: 20, right: 20, top: 50, bottom: 16),
+              child: Text("คุณต้องการลบหรือไม",
+                  style: Theme.of(context).textTheme.headlineSmall),
+            ),
+            Padding(
+              padding: const EdgeInsets.only(top: 20),
+              child: Row(
+                //mainAxisSize: MainAxisSize.max,
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  FilledButton(
+                      onPressed: () {
+                        SmartDialog.dismiss();
+                      },
+                      child: Text("ยกเลิก")),
+                  FilledButton(
+                      onPressed: () async {
+                        var response =
+                            await _listfoodService.deleteListFood(ifid);
+                        modelResult = response.data;
+                        log(modelResult.result);
+                        setState(() {
+                          loadFoodDataMethod = loadFoodData();
+                        });
+                        SmartDialog.dismiss();
+                      },
+                      child: Text("ตกลง"))
+                ],
+              ),
+            ),
+          ],
+        ),
+      );
+    });
   }
 }

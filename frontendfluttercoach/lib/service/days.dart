@@ -20,4 +20,8 @@ abstract class DaysService {
   @PUT("/day/dayID/{did}")
   Future<HttpResponse<ModelResult>> updateDayByDayID(
       @Path() String did, @Body() DayDayIdPut dayDayIdPut);
+
+  @DELETE("/day/dayID/{did}")
+  Future<HttpResponse<ModelResult>> deleteDay(@Path() String did);
+
 }
