@@ -10,17 +10,17 @@ CourseExpiration courseExpirationFromJson(String str) => CourseExpiration.fromJs
 String courseExpirationToJson(CourseExpiration data) => json.encode(data.toJson());
 
 class CourseExpiration {
-    String status;
+    int days;
 
     CourseExpiration({
-        required this.status,
+        required this.days,
     });
 
     factory CourseExpiration.fromJson(Map<String, dynamic> json) => CourseExpiration(
-        status: json["Status"],
+        days: json["Days"],
     );
 
     Map<String, dynamic> toJson() => {
-        "Status": status,
+        "Days": days,
     };
 }

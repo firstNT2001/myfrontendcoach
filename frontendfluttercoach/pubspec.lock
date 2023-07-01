@@ -89,6 +89,13 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.1.1"
+  buddhist_datetime_dateformat:
+    dependency: "direct main"
+    description:
+      path: "libraries/buddhist_datetime_dateformat_sns"
+      relative: true
+    source: path
+    version: "1.0.6"
   build:
     dependency: transitive
     description:

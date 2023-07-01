@@ -3,6 +3,7 @@ import 'package:frontendfluttercoach/model/request/course_courseID_put.dart';
 import 'package:retrofit/retrofit.dart';
 import 'package:dio/dio.dart';
 
+import '../model/request/course_EX.dart';
 import '../model/request/status_clip.dart';
 import '../model/response/course_get_res.dart';
 import '../model/response/md_Result.dart';
@@ -20,6 +21,10 @@ abstract class CourseService {
       @Query("cid") required String cid,
       @Query("name") required String name});
 
+  @GET("/course/sell/{coID}")
+  Future<HttpResponse<Coachbycourse>> coursebyCoID(
+       @Path("coID") String coID);
+
   @GET("/courses")
   Future<HttpResponse<List<Coachbycourse>>> courseByUid({
     @Query("uid") required String uid,
@@ -35,6 +40,10 @@ abstract class CourseService {
   @PUT("/course/coachID/{cid}")
   Future<HttpResponse<ModelResult>> insetCourseByCoachID(
       @Path("cid") String cid, @Body() CourseCoachIdPost courseCoachIdPost);
+
+  @PUT("/course/expiration/{coID}")
+  Future<HttpResponse<ModelResult>> updateCourseExpiration(
+       @Path("coID") String coID, @Body() CourseExpiration courseExpiration);
 
   @DELETE("/course/courseID/{coID}")
   Future<HttpResponse<ModelResult>> deleteCourse(@Path() String coID);

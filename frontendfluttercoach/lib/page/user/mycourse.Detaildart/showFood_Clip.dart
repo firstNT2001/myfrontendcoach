@@ -2,14 +2,18 @@ import 'dart:convert';
 import 'dart:developer';
 
 import 'package:appinio_video_player/appinio_video_player.dart';
+import 'package:buddhist_datetime_dateformat/buddhist_datetime_dateformat.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
 import 'package:frontendfluttercoach/service/course.dart';
+import 'package:intl/intl.dart';
 import 'package:video_player/video_player.dart';
 import '../../../../model/response/clip_get_res.dart';
 import '../../../../service/clip.dart';
 import '../../../model/request/status_clip.dart';
 import '../../../model/response/food_get_res.dart';
 import '../../../model/response/md_Result.dart';
+import '../../../model/response/md_coach_course_get.dart';
 import '../../../service/food.dart';
 import 'package:get/get.dart';
 import 'package:provider/provider.dart';
@@ -22,8 +26,8 @@ import 'myClipinCourse/widget_loadcilcp.dart';
 import 'mycourse.dart';
 
 class showFood extends StatefulWidget {
-  const showFood({super.key});
-
+  showFood({super.key, required this.indexSeq});
+  late int indexSeq;
   @override
   State<showFood> createState() => _showFoodState();
 }
@@ -34,9 +38,8 @@ class _showFoodState extends State<showFood> {
   List<ModelClip> clips = [];
   late FoodServices foodService;
   late Future<void> loadDataMethod;
-
   int did = 0;
-  String namecourse = "";
+  int coID = 0;
 
   late String videoUrl = "";
   //updatestatus
@@ -44,25 +47,31 @@ class _showFoodState extends State<showFood> {
   String status = "";
   List<bool> isChecked = [];
   late CourseService courseService;
+  late Coachbycourse courses;
   var update;
   //date
-  DateTime nows =  DateTime.now();
- String datenow = "";
+  int dayincourse = 0;
+  late DateTime exdate;
+  late DateTime dayex;
+  DateTime nows = DateTime.now();
+  late DateTime today;
+  List<DateTime> listindexday = [];
+  //showclip
+  bool showtoday = false;
+  bool showyesterday = false;
+  bool showtomorrow = false;
   void initState() {
     // TODO: implement initState
     super.initState();
     did = context.read<AppData>().did;
-    namecourse = context.read<AppData>().namecourse;
-    log("did" + did.toString());
+    coID = context.read<AppData>().idcourse;
     courseService =
         CourseService(Dio(), baseUrl: context.read<AppData>().baseurl);
     clipServices =
         ClipServices(Dio(), baseUrl: context.read<AppData>().baseurl);
     foodService = FoodServices(Dio(), baseUrl: context.read<AppData>().baseurl);
-    loadDataMethod = loadData(); 
-    DateTime date =  DateTime(nows.day, nows.month,nows.year );
-    datenow = date.toString();
-    log("DATE555:"+datenow);
+    loadDataMethod = loadData();
+    today = DateTime(nows.year, nows.month, nows.day);
   }
 
   @override
@@ -82,9 +91,6 @@ class _showFoodState extends State<showFood> {
                 text: "คลิปออกกำลังกาย",
               ),
             ]),
-            title: Center(
-              child: Text(namecourse),
-            ),
           ),
           body: TabBarView(children: [
             Column(
@@ -98,46 +104,52 @@ class _showFoodState extends State<showFood> {
             ),
             Column(
               children: [
-                Expanded(
-                    child: Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: loadclips(),
-                )),
+                Visibility(
+                    visible: showtoday,
+                    child: Expanded(
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: loadclipschecktoday(),
+                      ),
+                    )),
+                Visibility(
+                    visible: showtomorrow,
+                    child: Expanded(
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: loadclipschecktomorrow(),
+                      ),
+                    )),
+                Visibility(
+                    visible: showyesterday,
+                    child: Expanded(
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: loadclipscheckyesterday(),
+                      ),
+                    )),
+                // Expanded(
+                //     child: Padding(
+                //       padding: const EdgeInsets.all(8.0),
+                //       child: loadclipschecktoday(),
+                //     ),
+                //   ),
+                // (caldate == 0)?Expanded(
+                //     child: Padding(
+                //   padding: const EdgeInsets.all(8.0),
+                //   child: loadclipscheck(),
+                // )) : (caldate > 0 )?Expanded(
+                //     child: Padding(
+                //   padding: const EdgeInsets.all(8.0),
+                //   child: loadclipscantcheck(),
+                // )) : const Center(child: CircularProgressIndicator())
               ],
             ),
           ]),
         ));
-    // Scaffold(
-    //   body: Column(children: [Flexible(child: loadfoods()),
-    //   Flexible(
-    //       child: Align(
-    //         alignment: Alignment.bottomCenter,
-    //         child: Row(
-    //           mainAxisAlignment: MainAxisAlignment.spaceAround,
-    //           children: [
-    //             ElevatedButton(
-    //                 child: const Text('ถอยกลับ'),
-    //                 onPressed: () {
-    //                   Get.to(() => const MyCouses());
-    //                 },
-    //                 ),
-    //                 ElevatedButton(
-    //                 child: const Text('ถัดไป'),
-    //                 onPressed: () {
-    //                   log("Did := "+did.toString());
-    //                   context.read<AppData>().did = did;
-    //                   Get.to(() => const showCilp());
-    //                 },
-    //                ),
-    //           ],
-    //         ),
-    //       ),
-    //     )
-    //   ]),
-    // );
   }
 
-  Widget loadclips() {
+  Widget loadclipschecktoday() {
     return FutureBuilder(
         future: loadDataMethod,
         builder: (context, snapshot) {
@@ -209,7 +221,155 @@ class _showFoodState extends State<showFood> {
                                     log(moduleResult.result);
                                   },
                                 ),
-                                Text(
+                                const Text(
+                                  "ออกกำลังกายแล้ว",
+                                  style: TextStyle(fontSize: 17.0),
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  );
+                });
+          }
+        });
+  }
+
+  Widget loadclipschecktomorrow() {
+    return FutureBuilder(
+        future: loadDataMethod,
+        builder: (context, snapshot) {
+          if (snapshot.connectionState != ConnectionState.done) {
+            return const Center(child: CircularProgressIndicator());
+          } else {
+            return ListView.builder(
+                shrinkWrap: true,
+                itemCount: clips.length,
+                itemBuilder: (context, index) {
+                  log("ldshowtomorrow" + showtomorrow.toString());
+
+                  final listclip = clips[index];
+                  videoUrl = listclip.listClip.video;
+                  return SizedBox(
+                    width: MediaQuery.of(context).size.width * 0.8,
+                    child: Card(
+                      elevation: 0,
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Center(
+                                  child: Text(listclip.listClip.name,
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .bodyLarge)),
+                            ),
+                            WidgetloadCilp(
+                              urlVideo: videoUrl,
+                              nameclip: listclip.listClip.name,
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.only(left: 8),
+                              child: Text(listclip.listClip.details,
+                                  style: Theme.of(context).textTheme.bodyLarge),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.only(left: 8),
+                              child: Text(listclip.listClip.amountPerSet,
+                                  style: Theme.of(context).textTheme.bodyLarge),
+                            ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.end,
+                              children: [
+                                Checkbox(
+                                  value: isChecked[index],
+                                  onChanged: (bool? value) async {},
+                                ),
+                                const Text(
+                                  "ออกกำลังกายแล้ว",
+                                  style: TextStyle(fontSize: 17.0),
+                                ),
+                              ],
+                            ),
+                            Center(
+                              child: FilledButton(
+                                  onPressed: () {},
+                                  child: const Text("คำร้องขอเปลี่ยนท่า")),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  );
+                });
+          }
+        });
+  }
+
+  Widget loadclipscheckyesterday() {
+    return FutureBuilder(
+        future: loadDataMethod,
+        builder: (context, snapshot) {
+          if (snapshot.connectionState != ConnectionState.done) {
+            return const Center(child: CircularProgressIndicator());
+          } else {
+            return ListView.builder(
+                shrinkWrap: true,
+                itemCount: clips.length,
+                itemBuilder: (context, index) {
+                  final listclip = clips[index];
+                  videoUrl = listclip.listClip.video;
+                  if (listclip.status == "1") {
+                    log("statusyes" + status);
+                    isChecked[index] = true;
+                  } else {
+                    isChecked[index] = false;
+                    log("statusyes" + status);
+                  }
+                  return SizedBox(
+                    width: MediaQuery.of(context).size.width * 0.8,
+                    child: Card(
+                      elevation: 0,
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Center(
+                                  child: Text(listclip.listClip.name,
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .bodyLarge)),
+                            ),
+                            WidgetloadCilp(
+                              urlVideo: videoUrl,
+                              nameclip: listclip.listClip.name,
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.only(left: 8),
+                              child: Text(listclip.listClip.details,
+                                  style: Theme.of(context).textTheme.bodyLarge),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.only(left: 8),
+                              child: Text(listclip.listClip.amountPerSet,
+                                  style: Theme.of(context).textTheme.bodyLarge),
+                            ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.end,
+                              children: [
+                                Checkbox(
+                                  value: isChecked[index],
+                                  onChanged: (bool? value) async {},
+                                ),
+                                const Text(
                                   "ออกกำลังกายแล้ว",
                                   style: TextStyle(fontSize: 17.0),
                                 ),
@@ -249,16 +409,6 @@ class _showFoodState extends State<showFood> {
                         child: Image.network(
                           listfood.listFood.image,
                         )),
-                    // Container(
-                    //   alignment: Alignment.topCenter,
-                    //   child: AspectRatio(aspectRatio: 16/9,child: Image.network(listfood.listFood.image, fit: BoxFit.cover)),
-                    // ),
-                    // SizedBox(
-                    //     height: 200,
-                    //     width: 200,
-                    //     child: Image.network(
-                    //       listfood.listFood.image,
-                    //     )),
                     title: Text(listfood.listFood.name),
                     subtitle: Text("${listfood.listFood.calories} แคลอรี่",
                         style: Theme.of(context).textTheme.bodyLarge),
@@ -283,33 +433,40 @@ class _showFoodState extends State<showFood> {
                       ),
                     ],
                   );
-                  // ExpansionTile(
-                  //   title: Row(
-                  //     children: [
-                  //       SizedBox(
-                  //         height: 150,width: 150,
-                  //         child: Image.network(listfood.listFood.image)),
-                  //       Column(
-                  //         children: [
-                  //           Text(listfood.listFood.name,
-                  //               style: Theme.of(context).textTheme.bodyLarge),
-
-                  //         ],
-                  //       ),
-                  //     ],
-                  //   ),
-                  //   subtitle: Text("${listfood.listFood.calories} แคลอรี่",
-                  //       style: Theme.of(context).textTheme.bodyLarge),
-                  //   children: <Widget>[
-                  //     ListTile(title: Text(listfood.listFood.details)),
-                  //   ],
-                  //   onExpansionChanged: (bool extended){
-                  //     setState(() => );
-                  //   },
-                  // );
                 });
           }
         });
+  }
+    void _bindPage(BuildContext ctx) {
+    //target widget
+    SmartDialog.show(builder: (_) {
+      return Container(
+        width: MediaQuery.of(context).size.width * 0.8,
+        height: MediaQuery.of(context).size.height * 0.24,
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(20),
+          color: Theme.of(context).colorScheme.primaryContainer,
+        ),
+        alignment: Alignment.center,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Padding(
+              padding: const EdgeInsets.only(bottom: 10),
+              child: Text("คุณต้องการร้องขอเปลี่ยนท่านี้ใช่หรือไม่",
+                  style: Theme.of(context).textTheme.bodyLarge),
+            ),
+            Padding(
+              padding: const EdgeInsets.only(bottom: 10,left: 10),
+              child: Text("สาเหต",
+                  style: Theme.of(context).textTheme.bodyLarge),
+            ),
+
+           
+          ],
+        ),
+      );
+    });
   }
 
   Future<void> loadData() async {
@@ -317,13 +474,53 @@ class _showFoodState extends State<showFood> {
       var dataclip =
           await clipServices.clips(cpID: '', icpID: '', did: did.toString());
       clips = dataclip.data;
-      var datafood =
-          await foodService.foods(fid: '', ifid: '', did: did.toString(), name: '');
+      var datafood = await foodService.foods(
+          fid: '', ifid: '', did: did.toString(), name: '');
       foods = datafood.data;
+
       log('food leng: ${foods.length}');
       for (var index in clips) {
         isChecked.add(false);
       }
+
+      var datacourse = await courseService.coursebyCoID(coID.toString());
+      courses = datacourse.data;
+      dayincourse = courses.days;
+      exdate = DateTime.parse(courses.expirationDate);
+
+      var formatter = DateFormat.yMMMd();
+      //หาลิสของวันทั้งหมดที่มี แล้วเรียงวันใหม่
+      for (int i = 0; i < dayincourse; i++) {
+        dayex = DateTime(exdate.year, exdate.month, exdate.day - i);
+        listindexday.add(dayex);
+        listindexday.sort();
+      }
+      //ลิสที่หาได้มาเช็คว่า วันปัจจุบันและวันหมดอายุอยู่indexไหน
+      for (int i = 0; i < listindexday.length; i++) {
+        if (today.day == listindexday[i].day) {
+          if (i == widget.indexSeq) {
+            setState(() {
+              showtoday = true;
+              log("วันนี้นะจ๊ะ");
+            });
+          } else if (i > widget.indexSeq) {
+            setState(() {
+              showyesterday = true;
+              log("วันนี้คือเมื่อวาน");
+            });
+          } else {
+            setState(() {
+              showtomorrow = true;
+              log("วันพรุ่งนี้นะจ๊ะ");
+            });
+          }
+        } else {
+          Container();
+        }
+      }
+      log("showtoday" + showtoday.toString());
+      log("showtomorrow" + showtomorrow.toString());
+      log("showyesterdayshowyesterday" + showyesterday.toString());
     } catch (err) {
       log('Error: $err');
     }
