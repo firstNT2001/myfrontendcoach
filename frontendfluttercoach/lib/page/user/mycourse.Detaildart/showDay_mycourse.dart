@@ -170,7 +170,7 @@ class _ShowDayMycourseState extends State<ShowDayMycourse> {
                                 context.read<AppData>().did = listday.did;
                                 context.read<AppData>().idcourse = coID;
 
-                                Get.to(() =>  const showFood());
+                                Get.to(() =>   showFood(indexSeq: index,));
                               }
                             },
                             child: Text("เริ่ม",
@@ -234,7 +234,7 @@ class _ShowDayMycourseState extends State<ShowDayMycourse> {
                       context.read<AppData>().did = days.first.did;
                       context.read<AppData>().idcourse = coID;
                       log(days.first.did.toString());
-                      Get.to(() => const showFood());
+                      Get.to(() => showFood(indexSeq: days.first.sequence-1));
                     },
                     child: const Text('เริ่มเลย'),
                   ),
