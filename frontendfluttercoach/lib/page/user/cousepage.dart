@@ -61,14 +61,12 @@ class _showCousePageState extends State<showCousePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          title: Text("show course"),
-        ),
         body: ListView(
           children: <Widget>[
             Expanded(
               child: Column(
                 children: [
+                  
                   Container(
                     child: Column(children: [loadCourse()]),
                   ),
@@ -104,6 +102,7 @@ class _showCousePageState extends State<showCousePage> {
                         size: 35,
                       ),
                     ),
+                    
                   ),
                 ],
               ),
@@ -197,13 +196,7 @@ class _showCousePageState extends State<showCousePage> {
             return Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                SizedBox(
-                    height: 35,
-                    width: 390,
-                    child: Text(
-                      "Daily workout",
-                      style: TextStyle(fontSize: 25),
-                    )),
+                
                 Image.network(
                   courses.first.image,
                   height: 200,
@@ -223,7 +216,7 @@ class _showCousePageState extends State<showCousePage> {
                       child: Icon(FontAwesomeIcons.calendar),
                     ),
                     Padding(
-                      padding: const EdgeInsets.only(right: 20),
+                      padding: const EdgeInsets.only(right: 32),
                       child: Text(courses.first.days.toString() + "วัน/คอร์ส"),
                     ),
                     Padding(
@@ -287,7 +280,7 @@ class _showCousePageState extends State<showCousePage> {
                         final review = reviews[index];
                         return Card(
                           child: ListTile(
-                            title: Text(review.uid.toString()),
+                            title: Text(review.customer.username),
                             subtitle: Text(review.details),
                           ),
                         );

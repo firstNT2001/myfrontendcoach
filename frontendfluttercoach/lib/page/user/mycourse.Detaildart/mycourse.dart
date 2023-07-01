@@ -40,6 +40,7 @@ class _MyCousesState extends State<MyCouses> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(),
       body: Column(children: [
         Row(
           children: [
