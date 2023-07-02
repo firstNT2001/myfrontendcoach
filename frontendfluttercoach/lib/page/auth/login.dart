@@ -266,7 +266,7 @@ class _LoginPageState extends State<LoginPage> {
                   ),
                   InkWell(
                     onTap: () {
-                      Get.to(() => const homeScreen());
+                      Get.to(() => const NavbarBottom());
                       context.read<AppData>().uid = uid;
                     },
                     child: Column(

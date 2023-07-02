@@ -85,6 +85,10 @@ dependencies:
   firestore_search: ^0.2.0
   buddhist_datetime_dateformat:
     path: libraries/buddhist_datetime_dateformat_sns
+  percent_indicator: ^4.2.3
+  flutter_rating_stars: ^1.0.3+4
+  flutter_rating_bar: ^4.0.1
+  
   # video_thumbnail: ^0.5.3
    
   

@@ -74,7 +74,7 @@ class _editProfileCusState extends State<editProfileCus> {
 
   //uploadfile
   Future uploadfile() async {
-    final path = 'files/${pickedImg!.name}';
+    final path = 'profileUser/${pickedImg!.name}';
     final file = File(pickedImg!.path!);
 
     final ref = FirebaseStorage.instance.ref().child(path);
