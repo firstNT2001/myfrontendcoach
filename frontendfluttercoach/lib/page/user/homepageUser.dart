@@ -40,7 +40,7 @@ class _HomePageUserState extends State<HomePageUser> {
   //late List<Coachbycourse> coachname=[];
   TextEditingController myController = TextEditingController();
 
-  int uid = 1;
+  int uid = 0;
   bool isVisible = false;
   bool isSuggestVisible = true;
   double bmi = 0;
@@ -48,6 +48,7 @@ class _HomePageUserState extends State<HomePageUser> {
   void initState() {
     // TODO: implement initState
     super.initState();
+    uid = context.read<AppData>().uid;
     coachService =
         CoachService(Dio(), baseUrl: context.read<AppData>().baseurl);
     courseService =
@@ -84,8 +85,8 @@ class _HomePageUserState extends State<HomePageUser> {
                     borderRadius: BorderRadius.circular(15)),
                 child: TextField(
                   controller: myController,
-                  onSubmitted: (value) {
-                    if (myController.text.isNotEmpty) {
+                  onChanged: (value) {
+                      if (myController.text.isNotEmpty) {
                       coachService
                           .coach(nameCoach: myController.text, cid: "")
                           .then((coachdata) {
@@ -124,6 +125,9 @@ class _HomePageUserState extends State<HomePageUser> {
                       });
                     }
                   },
+                  // onSubmitted: (value) {
+                  
+                  // },
                   decoration: const InputDecoration(
                       border: InputBorder.none,
                       enabledBorder: InputBorder.none,
@@ -192,17 +196,18 @@ class _HomePageUserState extends State<HomePageUser> {
 
   Future<void> loadData() async {
     try {
+      log("User ID"+uid.toString());
       customer = await customerService.customer(uid: uid.toString());
       var datacourse = await courseService.course(coID: '', cid: '', name: '');
 
       courses = datacourse.data;
-      log("list coachname =${courses.length}");
-      double h = ((customer.data.height) + .0) / 100;
-      double w = customer.data.weight + .0;
-      log('BMI=: $h');
-      log('BMI=: $w');
-      bmi = (w / (h * h));
-      log('BMI=: $bmi');
+      // log("list coachname =${courses.length}");
+      // double h = ((customer.data.height) + .0) / 100;
+      // double w = customer.data.weight + .0;
+      // log('BMI=: $h');
+      // log('BMI=: $w');
+      // bmi = (w / (h * h));
+      // log('BMI=: $bmi');
     } catch (err) {
       log('Error: $err');
     }
@@ -362,64 +367,64 @@ class _HomePageUserState extends State<HomePageUser> {
       },
     );
   }
+ //customer
+  // Widget loadcustomer() {
+  //   return FutureBuilder(
+  //     future: loadDataMethod,
+  //     builder: (context, snapshot) {
+  //       if (snapshot.connectionState != ConnectionState.done) {
+  //         return const Center(child: CircularProgressIndicator());
+  //       } else {
+  //         return Column(
+  //           children: [
+  //             Card(
+  //               child: ListTile(
+  //                 leading: (customer.data.gender == '2')
+  //                     ? const Icon(Icons.girl_outlined, size: 120)
+  //                     : (customer.data.gender == '1')
+  //                         ? const Icon(Icons.boy_outlined, size: 120)
+  //                         : const Icon(Icons.abc_outlined, size: 110),
 
-  Widget loadcustomer() {
-    return FutureBuilder(
-      future: loadDataMethod,
-      builder: (context, snapshot) {
-        if (snapshot.connectionState != ConnectionState.done) {
-          return const Center(child: CircularProgressIndicator());
-        } else {
-          return Column(
-            children: [
-              Card(
-                child: ListTile(
-                  leading: (customer.data.gender == '2')
-                      ? const Icon(Icons.girl_outlined, size: 120)
-                      : (customer.data.gender == '1')
-                          ? const Icon(Icons.boy_outlined, size: 120)
-                          : const Icon(Icons.abc_outlined, size: 110),
-
-                  title: Padding(
-                    padding: const EdgeInsets.all(15.0),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Text(customer.data.height.toString()),
-                            const Text("CM"),
-                          ],
-                        ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Text(customer.data.weight.toString()),
-                            const Text("KG"),
-                          ],
-                        ),
-                        const Divider(
-                          //color of divider
-                          height: 5, //height spacing of divider
-                          thickness: 2, //thickness of divier line
-                          indent: 50, //spacing at the start of divider
-                          endIndent: 50,
-                        ),
-                        const Text("BMI"),
-                        Text(bmi.toString()),
-                      ],
-                    ),
-                  ),
-                  //subtitle: Text(review.details),
-                ),
-              ),
-            ],
-          );
-        }
-      },
-    );
-  }
+  //                 title: Padding(
+  //                   padding: const EdgeInsets.all(15.0),
+  //                   child: Column(
+  //                     crossAxisAlignment: CrossAxisAlignment.center,
+  //                     children: [
+  //                       Row(
+  //                         mainAxisAlignment: MainAxisAlignment.center,
+  //                         children: [
+  //                           Text(customer.data.height.toString()),
+  //                           const Text("CM"),
+  //                         ],
+  //                       ),
+  //                       Row(
+  //                         mainAxisAlignment: MainAxisAlignment.center,
+  //                         children: [
+  //                           Text(customer.data.weight.toString()),
+  //                           const Text("KG"),
+  //                         ],
+  //                       ),
+  //                       const Divider(
+  //                         //color of divider
+  //                         height: 5, //height spacing of divider
+  //                         thickness: 2, //thickness of divier line
+  //                         indent: 50, //spacing at the start of divider
+  //                         endIndent: 50,
+  //                       ),
+  //                       const Text("BMI"),
+  //                       Text(bmi.toString()),
+  //                     ],
+  //                   ),
+  //                 ),
+  //                 //subtitle: Text(review.details),
+  //               ),
+  //             ),
+  //           ],
+  //         );
+  //       }
+  //     },
+  //   );
+  // }
 }
 // การทำมุมโค้งบางจุด
 //  ClipRRect(

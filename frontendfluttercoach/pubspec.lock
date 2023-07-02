@@ -482,6 +482,22 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.0.15"
+  flutter_rating_bar:
+    dependency: "direct main"
+    description:
+      name: flutter_rating_bar
+      sha256: d2af03469eac832c591a1eba47c91ecc871fe5708e69967073c043b2d775ed93
+      url: "https://pub.dev"
+    source: hosted
+    version: "4.0.1"
+  flutter_rating_stars:
+    dependency: "direct main"
+    description:
+      name: flutter_rating_stars
+      sha256: e03a85bd5c360fd27ef29faa931c98dc58e16387e328071c07bcf3a4c10000af
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.0.3+4"
   flutter_rounded_date_picker:
     dependency: "direct main"
     description:
@@ -844,6 +860,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.1.6"
+  percent_indicator:
+    dependency: "direct main"
+    description:
+      name: percent_indicator
+      sha256: c37099ad833a883c9d71782321cb65c3a848c21b6939b6185f0ff6640d05814c
+      url: "https://pub.dev"
+    source: hosted
+    version: "4.2.3"
   persistent_bottom_nav_bar_v2:
     dependency: "direct main"
     description:
