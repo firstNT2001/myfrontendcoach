@@ -221,7 +221,8 @@ class _FoodCoachPageState extends State<FoodCoachPage> {
                           children: [
                             IconButton(
                               onPressed: () {
-                                dialogDelete(context, listfood.ifid.toString());
+                                dialogDeleteFood(
+                                    context, listfood.ifid.toString());
                               },
                               icon: const Icon(
                                 FontAwesomeIcons.trash,
@@ -300,6 +301,20 @@ class _FoodCoachPageState extends State<FoodCoachPage> {
                                         Theme.of(context).textTheme.bodyLarge,
                                   )),
                             )),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          children: [
+                            IconButton(
+                              onPressed: () {
+                                dialogDeleteClip(
+                                    context, listClips.icpId.toString());
+                              },
+                              icon: const Icon(
+                                FontAwesomeIcons.trash,
+                              ),
+                            ),
+                          ],
+                        )
                       ],
                     ),
                   ),
@@ -336,7 +351,7 @@ class _FoodCoachPageState extends State<FoodCoachPage> {
   }
 
   //Dialog Delete
-  void dialogDelete(BuildContext context, String ifid) {
+  void dialogDeleteFood(BuildContext context, String ifid) {
     //target widget
     SmartDialog.show(builder: (_) {
       return Container(
@@ -376,6 +391,59 @@ class _FoodCoachPageState extends State<FoodCoachPage> {
                         log(modelResult.result);
                         setState(() {
                           loadFoodDataMethod = loadFoodData();
+                        });
+                        SmartDialog.dismiss();
+                      },
+                      child: Text("ตกลง"))
+                ],
+              ),
+            ),
+          ],
+        ),
+      );
+    });
+  }
+
+  void dialogDeleteClip(BuildContext context, String iCpid) {
+    //target widget
+    SmartDialog.show(builder: (_) {
+      return Container(
+        width: MediaQuery.of(context).size.width * 0.8,
+        height: MediaQuery.of(context).size.height * 0.3,
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(20),
+          color: Theme.of(context).colorScheme.primaryContainer,
+        ),
+        alignment: Alignment.center,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          //crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Padding(
+              padding: const EdgeInsets.only(
+                  left: 20, right: 20, top: 50, bottom: 16),
+              child: Text("คุณต้องการลบหรือไม",
+                  style: Theme.of(context).textTheme.headlineSmall),
+            ),
+            Padding(
+              padding: const EdgeInsets.only(top: 20),
+              child: Row(
+                //mainAxisSize: MainAxisSize.max,
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  FilledButton(
+                      onPressed: () {
+                        SmartDialog.dismiss();
+                      },
+                      child: Text("ยกเลิก")),
+                  FilledButton(
+                      onPressed: () async {
+                        var response =
+                            await _listClipService.deleteListClip(iCpid);
+                        modelResult = response.data;
+                        log(modelResult.result);
+                        setState(() {
+                          loadClipDataMethod = loadClipData();
                         });
                         SmartDialog.dismiss();
                       },

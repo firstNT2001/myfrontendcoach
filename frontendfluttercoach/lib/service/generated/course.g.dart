@@ -146,7 +146,7 @@ class _CourseService implements CourseService {
     _data.addAll(courseCoachIdPost.toJson());
     final _result = await _dio.fetch<Map<String, dynamic>>(
         _setStreamType<HttpResponse<ModelResult>>(Options(
-      method: 'PUT',
+      method: 'POST',
       headers: _headers,
       extra: _extra,
     )

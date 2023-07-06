@@ -53,7 +53,7 @@ class _CourseNewPageState extends State<CourseNewPage> {
   final selectedValue = TextEditingController();
 
   // ignore: prefer_typing_uninitialized_variables
-  var insertCourse;
+
 
   //selectimg
   PlatformFile? pickedImg;
@@ -190,12 +190,13 @@ class _CourseNewPageState extends State<CourseNewPage> {
         } else if (selectedValue.text == 'ปานกลาง') {
           lavel = 2;
         } else {
+
           lavel = 3;
         }
         log(selectedValue.text);
         if (pickedImg != null) await uploadfile();
         //if (pickedImg == null) profile = courses.first.image;
-        CourseCoachIdPost courseCoachIdPost = CourseCoachIdPost(
+        CourseCoachIdPost request = CourseCoachIdPost(
             bid: null,
             name: name.text,
             details: details.text,
@@ -206,10 +207,11 @@ class _CourseNewPageState extends State<CourseNewPage> {
             price: int.parse(price.text),
             status: status,
             expirationDate: null);
-        log(jsonEncode(courseCoachIdPost));
-        insertCourse = await courseService.insetCourseByCoachID(
-            cid.toString(), courseCoachIdPost);
-        moduleResult = insertCourse.data;
+        log(jsonEncode(request));
+        log(cid.toString());
+        var response = await courseService.insetCourseByCoachID(
+            cid.toString(), request);
+        moduleResult = response.data;
         log(moduleResult.result);
         // if (moduleResult.result == "1") {
         //   // ignore: use_build_context_synchronously

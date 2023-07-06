@@ -28,11 +28,12 @@ abstract class CourseService {
   @PUT("/course/courseID/{coID}")
   Future<HttpResponse<ModelResult>> updateCourseByCourseID(
       @Path("coID") String coID, @Body() CourseCourseIdPut courseCourseIdPut);
+
   @PUT("/courses/clip/{cpID}")
   Future<HttpResponse<ModelResult>> updateStatusClip(
       @Path("cpID") String cpID, @Body() StatusClip statusClip);
 
-  @PUT("/course/coachID/{cid}")
+  @POST("/course/coachID/{cid}")
   Future<HttpResponse<ModelResult>> insetCourseByCoachID(
       @Path("cid") String cid, @Body() CourseCoachIdPost courseCoachIdPost);
 
