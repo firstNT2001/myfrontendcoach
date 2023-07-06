@@ -7,6 +7,7 @@ import 'package:get/get.dart';
 import 'package:provider/provider.dart';
 import 'package:retrofit/dio.dart';
 
+import '../../../model/response/clip_get_res.dart';
 import '../../../model/response/course_get_res.dart';
 import '../../../model/response/md_coach_course_get.dart';
 import '../../../service/course.dart';
@@ -26,9 +27,12 @@ class _MyCousesState extends State<MyCouses> {
   late CourseService courseService;
   // late HttpResponse<ModelCourse> courses;
   List<Coachbycourse> courses = [];
+  List<ModelClip> clips=[];
   late Future<void> loadDataMethod;
 
   int uid = 0;
+  double percen = 0;
+  int coID=0;
   @override
   void initState() {
     // TODO: implement initState
@@ -72,7 +76,20 @@ class _MyCousesState extends State<MyCouses> {
       log("idcus" + uid.toString());
       var datacouse = await courseService.courseByUid(uid: uid.toString());
       courses = datacouse.data;
+      coID = courses.first.coId;
       log('couse: ${courses.length}');
+      var dataclips = await courseService.progess(coID.toString());
+      log(coID.toString());
+      clips = dataclips.data;
+      log("clips"+clips.length.toString());
+      late int status;
+      int sum = 0;
+      for(int i=0;i<clips.length-1;i++){
+        status = int.parse(clips[i].status);
+        sum += status;
+        
+      }
+      log("SUM"+sum.toString());
     } catch (err) {
       log('Error: $err');
     }
@@ -97,6 +114,7 @@ class _MyCousesState extends State<MyCouses> {
                     log(listcours.coId.toString());
                     log(listcours.image);
                     context.read<AppData>().idcourse = listcours.coId;
+                    context.read<AppData>().cid = listcours.coach.cid;
                     Get.to(() => ShowDayMycourse(
                         coID: listcours.coId,
                         img: listcours.image,
