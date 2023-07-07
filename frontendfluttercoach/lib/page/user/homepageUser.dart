@@ -1,8 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 
-import 'package:frontendfluttercoach/page/user/profileUser.dart';
-import 'package:frontendfluttercoach/page/user/profilecoach.dart';
+
 import 'package:get/get.dart';
 import 'package:provider/provider.dart';
 import 'package:retrofit/retrofit.dart';
@@ -10,7 +9,6 @@ import 'dart:developer';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 import '../../model/response/md_Coach_get.dart';
-import '../../model/response/course_get_res.dart';
 import '../../model/response/md_Customer_get.dart';
 import '../../model/response/md_coach_course_get.dart';
 import '../../service/coach.dart';
