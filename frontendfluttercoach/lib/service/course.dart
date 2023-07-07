@@ -3,8 +3,9 @@ import 'package:frontendfluttercoach/model/request/course_courseID_put.dart';
 import 'package:retrofit/retrofit.dart';
 import 'package:dio/dio.dart';
 
+import '../model/request/course_EX.dart';
 import '../model/request/status_clip.dart';
-import '../model/response/course_get_res.dart';
+
 import '../model/response/md_Result.dart';
 import '../model/response/md_coach_course_get.dart';
 
@@ -28,17 +29,10 @@ abstract class CourseService {
   Future<HttpResponse<List<Coachbycourse>>> courseByUid({
     @Query("uid") required String uid,
   });
-  Future<HttpResponse<List<Coachbycourse>>> courseByUid({
-    @Query("uid") required String uid,
-  });
 
   @PUT("/course/courseID/{coID}")
   Future<HttpResponse<ModelResult>> updateCourseByCourseID(
       @Path("coID") String coID, @Body() CourseCourseIdPut courseCourseIdPut);
-  @PUT("/courses/clip/{cpID}")
-  Future<HttpResponse<ModelResult>> updateStatusClip(
-      @Path("cpID") String cpID, @Body() StatusClip statusClip);
-
   @PUT("/courses/clip/{cpID}")
   Future<HttpResponse<ModelResult>> updateStatusClip(
       @Path("cpID") String cpID, @Body() StatusClip statusClip);

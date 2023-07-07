@@ -1,5 +1,4 @@
 
-import 'package:get/get_connect/http/src/request/request.dart';
 import 'package:retrofit/retrofit.dart';
 import 'package:dio/dio.dart';
 

@@ -4,13 +4,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
-import 'package:frontendfluttercoach/page/startApp.dart';
+
 import 'package:frontendfluttercoach/page/auth/login.dart';
 import 'package:frontendfluttercoach/service/provider/appdata.dart';
-import 'package:frontendfluttercoach/service/provider/coachData.dart';
-import 'package:frontendfluttercoach/service/provider/courseData.dart';
-import 'package:frontendfluttercoach/service/provider/dayOfCouseData.dart';
-import 'package:frontendfluttercoach/service/provider/listFood.dart';
+
 import 'package:frontendfluttercoach/theme/default.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';

@@ -19,7 +19,7 @@ import '../../../model/response/md_Result.dart';
 import '../../../service/course.dart';
 import '../../../service/provider/appdata.dart';
 import '../../../widget/wg_dropdown_notValue_string.dart';
-import '../../../widget/wg_dropdown_string.dart';
+
 import '../../../widget/wg_textField.dart';
 import '../../../widget/wg_textFieldLines.dart';
 import '../daysCourse/days_course_page.dart';

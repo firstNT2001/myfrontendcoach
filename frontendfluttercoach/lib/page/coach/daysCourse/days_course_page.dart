@@ -5,9 +5,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:frontendfluttercoach/model/request/day_dayID_put.dart';
-import 'package:frontendfluttercoach/model/response/course_get_res.dart';
+
 import 'package:frontendfluttercoach/model/response/md_Result.dart';
-import 'package:frontendfluttercoach/model/response/md_RowsAffected.dart';
+
 import 'package:frontendfluttercoach/model/response/md_days.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
@@ -19,7 +19,7 @@ import '../../../service/course.dart';
 import '../../../service/days.dart';
 import '../../../service/provider/appdata.dart';
 import '../../../widget/dialogs.dart';
-import '../course/course_edit_page.dart';
+
 import '../home_foodAndClip.dart';
 
 class DaysCoursePage extends StatefulWidget {
