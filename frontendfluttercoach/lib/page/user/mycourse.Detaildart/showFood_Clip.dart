@@ -11,6 +11,7 @@ import 'package:video_player/video_player.dart';
 import '../../../../model/response/clip_get_res.dart';
 import '../../../../service/clip.dart';
 import '../../../model/request/status_clip.dart';
+import '../../../model/request/userRequest.dart';
 import '../../../model/response/food_get_res.dart';
 import '../../../model/response/md_Result.dart';
 import '../../../model/response/md_coach_course_get.dart';
@@ -22,6 +23,7 @@ import 'package:dio/dio.dart';
 import '../../../service/provider/appdata.dart';
 import 'package:expansion_tile_card/expansion_tile_card.dart';
 
+import '../../../service/request.dart';
 import 'myClipinCourse/widget_loadcilcp.dart';
 import 'mycourse.dart';
 
@@ -40,7 +42,8 @@ class _showFoodState extends State<showFood> {
   late Future<void> loadDataMethod;
   int did = 0;
   int coID = 0;
-
+  int coachID = 0;
+  int uid = 0;
   late String videoUrl = "";
   //updatestatus
   late ModelResult moduleResult;
@@ -48,7 +51,9 @@ class _showFoodState extends State<showFood> {
   List<bool> isChecked = [];
   late CourseService courseService;
   late Coachbycourse courses;
+  late RequestService requestService;
   var update;
+  var insert;
   //date
   int dayincourse = 0;
   late DateTime exdate;
@@ -60,11 +65,18 @@ class _showFoodState extends State<showFood> {
   bool showtoday = false;
   bool showyesterday = false;
   bool showtomorrow = false;
+  //req
+  TextEditingController textRequest = TextEditingController();
   void initState() {
     // TODO: implement initState
     super.initState();
+    coachID = context.read<AppData>().cid;
+    uid = context.read<AppData>().uid;
+    log("uid" + uid.toString());
     did = context.read<AppData>().did;
     coID = context.read<AppData>().idcourse;
+    requestService =
+        RequestService(Dio(), baseUrl: context.read<AppData>().baseurl);
     courseService =
         CourseService(Dio(), baseUrl: context.read<AppData>().baseurl);
     clipServices =
@@ -298,7 +310,9 @@ class _showFoodState extends State<showFood> {
                             ),
                             Center(
                               child: FilledButton(
-                                  onPressed: () {},
+                                  onPressed: () {
+                                    _bindPage(context);
+                                  },
                                   child: const Text("คำร้องขอเปลี่ยนท่า")),
                             ),
                           ],
@@ -437,12 +451,13 @@ class _showFoodState extends State<showFood> {
           }
         });
   }
-    void _bindPage(BuildContext ctx) {
+
+  void _bindPage(BuildContext ctx) {
     //target widget
     SmartDialog.show(builder: (_) {
       return Container(
         width: MediaQuery.of(context).size.width * 0.8,
-        height: MediaQuery.of(context).size.height * 0.24,
+        height: MediaQuery.of(context).size.height * 0.38,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(20),
           color: Theme.of(context).colorScheme.primaryContainer,
@@ -457,12 +472,67 @@ class _showFoodState extends State<showFood> {
                   style: Theme.of(context).textTheme.bodyLarge),
             ),
             Padding(
-              padding: const EdgeInsets.only(bottom: 10,left: 10),
-              child: Text("สาเหต",
-                  style: Theme.of(context).textTheme.bodyLarge),
+              padding: const EdgeInsets.only(left: 10),
+              child:
+                  Text("สาเหตุ", style: Theme.of(context).textTheme.bodyLarge),
             ),
+            Padding(
+              padding: const EdgeInsets.all(12.0),
+              child: TextField(
+                controller: textRequest,                
+                keyboardType: TextInputType.multiline,
+                maxLines: 4,
+                decoration: InputDecoration(
+                  hintText: "กรุณาใส่ข้อความ",
+                  focusedBorder: OutlineInputBorder(
+                    borderSide: BorderSide(width: 2, color: Colors.redAccent),
+                    borderRadius: BorderRadius.circular(12.0),
+                  ),
+                  enabledBorder: OutlineInputBorder(
+                    borderSide: BorderSide(
+                        width: 2,
+                        color: Theme.of(context)
+                            .colorScheme
+                            .onPrimary), //<-- SEE HERE
+                    borderRadius: BorderRadius.circular(12.0),
+                  ),
+                ),
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.only(top: 15),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: [
+                  FilledButton(
+                    onPressed: () {
+                      SmartDialog.dismiss();
+                    },
+                    child: const Text('ยกเลิก'),
+                  ),
+                  FilledButton(
+                    onPressed: () async {
+                      UserRequest userRequest = UserRequest(
+                          coachId: coachID,
+                          clipId: clips.first.cpId,
+                          details: textRequest.text);
 
-           
+                      log(jsonEncode(userRequest));
+                      insert = await requestService.insertRequest(
+                          uid.toString(), userRequest);
+                      moduleResult = insert.data;
+                      log(moduleResult.result);
+                      // context.read<AppData>().did = days.first.did;
+                      // context.read<AppData>().idcourse = coID;
+                      // log(days.first.did.toString());
+                      Get.to(() => MyCouses());
+                    },
+                    //     widget.coID.toString()
+                    child: const Text('ยืนยัน'),
+                  ),
+                ],
+              ),
+            ),
           ],
         ),
       );
@@ -490,28 +560,45 @@ class _showFoodState extends State<showFood> {
 
       var formatter = DateFormat.yMMMd();
       //หาลิสของวันทั้งหมดที่มี แล้วเรียงวันใหม่
+      log("dayincourse= " + dayincourse.toString());
       for (int i = 0; i < dayincourse; i++) {
         dayex = DateTime(exdate.year, exdate.month, exdate.day - i);
         listindexday.add(dayex);
         listindexday.sort();
+        log("iร= " + listindexday[i].day.toString());
       }
+      log("iรf= " + listindexday.toString());
       //ลิสที่หาได้มาเช็คว่า วันปัจจุบันและวันหมดอายุอยู่indexไหน
       for (int i = 0; i < listindexday.length; i++) {
+        log("i= " + listindexday[i].day.toString());
         if (today.day == listindexday[i].day) {
+          log("today= " + today.toString());
           if (i == widget.indexSeq) {
             setState(() {
               showtoday = true;
               log("วันนี้นะจ๊ะ");
+              log("วันนี้นะจ๊ะi= " +
+                  i.toString() +
+                  "  widget.indexSeq " +
+                  widget.indexSeq.toString());
             });
           } else if (i > widget.indexSeq) {
             setState(() {
               showyesterday = true;
               log("วันนี้คือเมื่อวาน");
+              log("วันนี้คือเมื่อวานi= " +
+                  i.toString() +
+                  "  widget.indexSeq " +
+                  widget.indexSeq.toString());
             });
           } else {
             setState(() {
               showtomorrow = true;
               log("วันพรุ่งนี้นะจ๊ะ");
+              log("วันพรุ่งนี้นะจ๊ะi= " +
+                  i.toString() +
+                  "  widget.indexSeq " +
+                  widget.indexSeq.toString());
             });
           }
         } else {
