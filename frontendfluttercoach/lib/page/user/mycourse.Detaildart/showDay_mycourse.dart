@@ -120,15 +120,8 @@ class _ShowDayMycourseState extends State<ShowDayMycourse> {
               ),
               Padding(
                 padding: const EdgeInsets.only(left: 15, top: 25),
-                child: Row(
-                  children: [
-                    Text(widget.namecourse,
-                        style: Theme.of(context).textTheme.bodyLarge),
-                    FilledButton.icon(onPressed: (){
-                      Get.to(() => RoomPage(coursename: widget.namecourse, courseID: coID,));
-                    }, icon: Icon(FontAwesomeIcons.facebookMessenger,size: 16,), label: Text("คุยกับโค้ช"))
-                  ],
-                ),
+                child: Text(widget.namecourse,
+                    style: Theme.of(context).textTheme.bodyLarge),
               ),
               Padding(
                 padding: const EdgeInsets.only(left: 15, bottom: 8),

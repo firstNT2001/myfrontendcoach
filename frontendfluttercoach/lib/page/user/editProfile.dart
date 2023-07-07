@@ -14,14 +14,17 @@ import '../../model/request/updateCus.dart';
 
 import '../../model/response/md_Customer_get.dart';
 import '../../model/response/md_Result.dart';
+
 import '../../service/customer.dart';
 import '../../service/provider/appdata.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
 
 
+
+// ignore: camel_case_types
 class editProfileCus extends StatefulWidget {
   //สร้างตัวแปรรับconstructure
-   final int uid;
+ final int uid;
 
   const editProfileCus({super.key, required this.uid});
 
