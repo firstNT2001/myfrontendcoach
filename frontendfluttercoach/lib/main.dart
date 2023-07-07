@@ -102,7 +102,7 @@ Future<void> main() async {
                   supportedLocales: const [
                     Locale('th', 'TH'),
                   ],
-                  home: LoginPage())),
+                  home: const LoginPage())),
         ),
       ),),
   ));});
