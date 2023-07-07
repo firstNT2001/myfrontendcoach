@@ -63,7 +63,7 @@ class _ShowDayMycourseState extends State<ShowDayMycourse> {
         CourseService(Dio(), baseUrl: context.read<AppData>().baseurl);
     loadDataMethod = loadData();
 
-    DateTime date = DateTime(nows.year, nows.month, nows.day + widget.dayincourse);
+    DateTime date = DateTime(nows.year, nows.month, nows.day + widget.dayincourse-1);
 
     var formatter = DateFormat.yMMMd();
 
@@ -210,7 +210,7 @@ class _ShowDayMycourseState extends State<ShowDayMycourse> {
             ),
             Text("วันที่เริ่ม $dateStart",
                 style: Theme.of(context).textTheme.bodyLarge),
-            Text("วันที่เริ่ม $dateEX",
+            Text("วันที่สิ้นสุด $dateEX",
                 style: Theme.of(context).textTheme.bodyLarge),
             Padding(
               padding: const EdgeInsets.only(top: 15),
