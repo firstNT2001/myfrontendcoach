@@ -20,7 +20,7 @@ class AppData with ChangeNotifier {
   //Color
   //Color colorCard;
   Color colorSelect = Color(0xff872100);
-  Color colorNotSelect = Color(0xff3d2c2c);
+  Color colorNotSelect = Color.fromARGB(255, 255, 255, 255);
 
   Map<String, dynamic> userFacebook = {};
   int coID = 0;
