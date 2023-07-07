@@ -1,4 +1,3 @@
-  
 import 'dart:async';
 
 import 'package:flutter/material.dart';
@@ -25,8 +24,9 @@ Future<void> main() async {
   GetStorage gs = GetStorage();
   final DefaultTheme defaultTheme = DefaultTheme();
   WidgetsFlutterBinding.ensureInitialized();
-   // Screen size
-  Size screenSize = MediaQueryData.fromWindow(WidgetsBinding.instance.window).size;
+  // Screen size
+  Size screenSize =
+      MediaQueryData.fromWindow(WidgetsBinding.instance.window).size;
   // Setup Timeout
   final sessionConfig = SessionConfig(
     invalidateSessionForAppLostFocus: const Duration(minutes: 3),
@@ -44,6 +44,7 @@ Future<void> main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
+
   /// Lock orientation Only on Android Chrome
   /// Android chrome must unins tall app first
   SystemChrome.setPreferredOrientations([
@@ -62,50 +63,59 @@ Future<void> main() async {
         scale = 1.0;
       }
     }
-  runApp(MaterialApp(
-    home: MultiProvider(
+    runApp(MaterialApp(
+      home: MultiProvider(
         providers: [
           ChangeNotifierProvider(
             create: (context) => AppData(),
           ),
         ],
-       child: Center(
-        child: SizedBox(
-          width: (screenSize.width > 550) ? 550 : screenSize.width,
-          child: SessionTimeoutManager(
-              userActivityDebounceDuration: const Duration(seconds: 1),
-              sessionConfig: sessionConfig,
-              sessionStateStream: sessionStateStream.stream,
-              child: GetMaterialApp(
-                  title: 'Application Daily Workout Coaching',
-                  debugShowCheckedModeBanner: false,
-                  builder: FlutterSmartDialog.init(
-                    builder: (context, child) {
-                      return MediaQuery(
-                        data: MediaQuery.of(context).copyWith(textScaleFactor: scale),
-                        child: child!,
-                      );
-                    },
-                  ),
-                  themeMode: ThemeMode.dark,
-                  theme: defaultTheme.flexTheme.theme.copyWith(
-                      scaffoldBackgroundColor: Colors.white,
-                      inputDecorationTheme: defaultTheme.flexTheme.theme.inputDecorationTheme.copyWith(
-                        contentPadding: const EdgeInsets.fromLTRB(6, 10, 6, 3),
-                        isDense: true,
-                      )),
-                  darkTheme: defaultTheme.flexTheme.darkTheme.copyWith(
-                      inputDecorationTheme: defaultTheme.flexTheme.darkTheme.inputDecorationTheme.copyWith(
-                    contentPadding: const EdgeInsets.fromLTRB(6, 10, 6, 3),
-                    isDense: true,
-                  )),
-                  navigatorObservers: [FlutterSmartDialog.observer],
-                  localizationsDelegates: GlobalMaterialLocalizations.delegates,
-                  supportedLocales: const [
-                    Locale('th', 'TH'),
-                  ],
-                  home: LoginPage())),
+        child: Center(
+          child: SizedBox(
+            width: (screenSize.width > 550) ? 550 : screenSize.width,
+            child: SessionTimeoutManager(
+                userActivityDebounceDuration: const Duration(seconds: 1),
+                sessionConfig: sessionConfig,
+                sessionStateStream: sessionStateStream.stream,
+                child: GetMaterialApp(
+                    title: 'Application Daily Workout Coaching',
+                    debugShowCheckedModeBanner: false,
+                    builder: FlutterSmartDialog.init(
+                      builder: (context, child) {
+                        return MediaQuery(
+                          data: MediaQuery.of(context)
+                              .copyWith(textScaleFactor: scale),
+                          child: child!,
+                        );
+                      },
+                    ),
+                    themeMode: ThemeMode.dark,
+                    theme: defaultTheme.flexTheme.theme.copyWith(
+                        scaffoldBackgroundColor: Colors.white,
+                        inputDecorationTheme: defaultTheme
+                            .flexTheme.theme.inputDecorationTheme
+                            .copyWith(
+                          contentPadding:
+                              const EdgeInsets.fromLTRB(6, 10, 6, 3),
+                          isDense: true,
+                        )),
+                    darkTheme: defaultTheme.flexTheme.darkTheme.copyWith(
+                        inputDecorationTheme: defaultTheme
+                            .flexTheme.darkTheme.inputDecorationTheme
+                            .copyWith(
+                      contentPadding: const EdgeInsets.fromLTRB(6, 10, 6, 3),
+                      isDense: true,
+                    )),
+                    navigatorObservers: [FlutterSmartDialog.observer],
+                    localizationsDelegates:
+                        GlobalMaterialLocalizations.delegates,
+                    supportedLocales: const [
+                      Locale('th', 'TH'),
+                    ],
+                    home: LoginPage())),
+          ),
         ),
-      ),),
-  ));});
+      ),
+    ));
+  });
 }

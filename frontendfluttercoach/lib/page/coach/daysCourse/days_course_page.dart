@@ -114,6 +114,9 @@ class _DaysCoursePageState extends State<DaysCoursePage> {
                 return Column(
                   children: [
                     //edit Day
+                    ElevatedButton(onPressed: (){
+                      dialogInsertDay(context);
+                    }, child: const Text("เพิ่มวัน")),
                     if (offVisibles == true)
                       Expanded(
                         child: Visibility(
@@ -319,6 +322,82 @@ class _DaysCoursePageState extends State<DaysCoursePage> {
 
                         setState(() {
                           loadDaysDataMethod = loadDaysDataAsync();
+                        });
+                        stopLoading();
+                      },
+                      child: Text("ตกลง"))
+                ],
+              ),
+            ),
+          ],
+        ),
+      );
+    });
+  }
+
+  void dialogInsertDay(BuildContext context) {
+    //target widget
+    SmartDialog.show(builder: (_) {
+      return Container(
+        width: MediaQuery.of(context).size.width * 0.8,
+        height: MediaQuery.of(context).size.height * 0.3,
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(20),
+          color: Theme.of(context).colorScheme.primaryContainer,
+        ),
+        alignment: Alignment.center,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          //crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Padding(
+              padding: const EdgeInsets.only(
+                  left: 20, right: 20, top: 50, bottom: 16),
+              child: Text("คุณต้องการเพิ่มวันหรือไม",
+                  style: Theme.of(context).textTheme.headlineSmall),
+            ),
+            Padding(
+              padding: const EdgeInsets.only(top: 20),
+              child: Row(
+                //mainAxisSize: MainAxisSize.max,
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  FilledButton(
+                      onPressed: () {
+                        SmartDialog.dismiss();
+                      },
+                      child: const Text("ยกเลิก")),
+                  FilledButton(
+                      onPressed: () async {
+                        SmartDialog.dismiss();
+                        startLoading(context);
+                         sequence = days.length+1;
+                         log(sequence.toString());
+                         DayDayIdPut request = DayDayIdPut(sequence: sequence);
+                         log(jsonEncode(request));
+                          var response = await _daysService.insertDayByCourseID(
+                              widget.coID, request);
+
+                        modelResult = response.data;
+                        log("${modelResult.code} : ${modelResult.result}");
+
+                        CourseCourseIdPut requestCourse = CourseCourseIdPut(
+                            name: course.first.name,
+                            details: course.first.details,
+                            level: course.first.level,
+                            amount: course.first.amount,
+                            image: course.first.image,
+                            days: sequence,
+                            price: course.first.price,
+                            status: course.first.status);
+                        //log(jsonEncode(requestCourse));
+                        var respo = await _courseService.updateCourseByCourseID(
+                            widget.coID, requestCourse);
+                        modelResult = respo.data;
+
+                        setState(() {
+                          loadDaysDataMethod = loadDaysDataAsync();
+                          sequence = 0;
                         });
                         stopLoading();
                       },

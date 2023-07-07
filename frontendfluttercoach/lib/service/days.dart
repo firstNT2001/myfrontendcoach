@@ -17,6 +17,11 @@ abstract class DaysService {
       @Query("coID") required String coID,
       @Query("sequence") required String sequence});
 
+  @POST("/day/courseID/{coID}")
+  Future<HttpResponse<ModelResult>> insertDayByCourseID(
+      @Path() String coID,
+      @Body() DayDayIdPut dayDayIdPut);
+
   @PUT("/day/dayID/{did}")
   Future<HttpResponse<ModelResult>> updateDayByDayID(
       @Path() String did, @Body() DayDayIdPut dayDayIdPut);
