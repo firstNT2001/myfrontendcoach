@@ -77,9 +77,6 @@ class _HomeFoodAndClipPageState extends State<HomeFoodAndClipPage> {
           resizeToAvoidBottomInset: false,
           appBar: AppBar(
             backgroundColor: Theme.of(context).colorScheme.primary,
-            // iconTheme: const IconThemeData(
-            //   color: Colors.black, //change your color here
-            // ),
             title: TextButton(
                 onPressed: () {
                   _dialog(context);
@@ -93,9 +90,7 @@ class _HomeFoodAndClipPageState extends State<HomeFoodAndClipPage> {
                 FontAwesomeIcons.chevronLeft,
               ),
               onPressed: () {
-                Get.to(() => DaysCoursePage(
-                      coID: context.read<AppData>().coID.toString(),
-                    ));
+                Get.back();
               },
             ),
             actions: [
@@ -143,7 +138,7 @@ class _HomeFoodAndClipPageState extends State<HomeFoodAndClipPage> {
                           width: MediaQuery.of(context).size.width,
                           height: 45,
                           decoration: BoxDecoration(
-                              boxShadow: <BoxShadow>[
+                              boxShadow: const <BoxShadow>[
                                 BoxShadow(
                                     color: Colors.grey,
                                     blurRadius: 5.0,

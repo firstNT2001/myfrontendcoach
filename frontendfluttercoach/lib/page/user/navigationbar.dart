@@ -21,74 +21,30 @@ _controller = PersistentTabController(initialIndex: 0);
     List<Widget> _buildScreens() {
         return [
           const HomePageUser(),
-          const MyCouses(),
-          const addCoin(),
-          const ProfileUser()
-        ];
-    }
-    List<PersistentBottomNavBarItem> _navBarsItems() {
-        return [
-            PersistentBottomNavBarItem(
-                icon: const Icon(FontAwesomeIcons.house,size: 16,),
-                title: "หน้าหลัก",
-                activeColorPrimary:Theme.of(context).colorScheme.primary,
-                inactiveColorPrimary:  Color.fromARGB(255, 0, 0, 0),
-                // activeColorPrimary: Color.fromARGB(255, 101, 6, 255),
-                // inactiveColorPrimary:  const Color.fromARGB(255, 255, 255, 255),
-            ),
-            PersistentBottomNavBarItem(
-                icon: const Icon(FontAwesomeIcons.solidBookmark),
-                title: "รายการซื้อ",
-                activeColorPrimary:Theme.of(context).colorScheme.primary,
-                inactiveColorPrimary:  Color.fromARGB(255, 0, 0, 0),
-                // activeColorPrimary: CupertinoColors.activeBlue,
-                // inactiveColorPrimary: CupertinoColors.systemGrey,
-            ),
-            PersistentBottomNavBarItem(
-                icon: const Icon(FontAwesomeIcons.wallet),
-                title: "เติมเงิน",
-                activeColorPrimary: Theme.of(context).colorScheme.primary,
-                inactiveColorPrimary:  Color.fromARGB(255, 0, 0, 0),
-                // activeColorPrimary: CupertinoColors.activeBlue,
-                // inactiveColorPrimary: CupertinoColors.systemGrey,
-            ),
-            PersistentBottomNavBarItem(
-                icon: const Icon(FontAwesomeIcons.solidUser),
-                title: "โปรไฟล์",
-                activeColorPrimary: Theme.of(context).colorScheme.primary,
-                inactiveColorPrimary: Color.fromARGB(255, 0, 0, 0),
-                // activeColorPrimary: CupertinoColors.activeBlue,
-                // inactiveColorPrimary: CupertinoColors.systemGrey,
-            ),
-        ];
-    }
-    return PersistentTabView(
-        context,
-        controller: _controller,
-        screens: _buildScreens(),
-        items: _navBarsItems(),
-        confineInSafeArea: true,
-        backgroundColor: Color.fromARGB(255, 255, 255, 255), // Default is Colors.white.
-        handleAndroidBackButtonPress: true, // Default is true.
-        resizeToAvoidBottomInset: true, // This needs to be true if you want to move up the screen when keyboard appears. Default is true.
-        stateManagement: true, // Default is true.
-        hideNavigationBarWhenKeyboardShows: true, // Recommended to set 'resizeToAvoidBottomInset' as true while using this argument. Default is true.
-        decoration: NavBarDecoration(
-          //borderRadius: BorderRadius.circular(10.0),
-          colorBehindNavBar: Colors.white,
-        ),
-        popAllScreensOnTapOfSelectedTab: true,
-        popActionScreens: PopActionScreensType.all,
-        itemAnimationProperties: ItemAnimationProperties( // Navigation Bar's items animation properties.
-          duration: Duration(milliseconds: 200),
-          curve: Curves.ease,
-        ),
-        screenTransitionAnimation: ScreenTransitionAnimation( // Screen transition animation on change of selected tab.
-          animateTabTransition: true,
-          curve: Curves.ease,
-          duration: Duration(milliseconds: 200),
-        ),
-        navBarStyle: NavBarStyle.style1, // Choose the nav bar style with this property.
+          const chatOfCustomer(),
+          const ProfileUser(),
+        ],
+      ),
+      bottomNavigationBar: BottomNavigationBar(items: const <BottomNavigationBarItem>[
+        BottomNavigationBarItem(
+            icon: Icon(FontAwesomeIcons.house),
+            label: 'หน้าหลัก',
+            backgroundColor: Color.fromARGB(255, 63, 63, 63),
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(FontAwesomeIcons.facebookMessenger),
+            label: 'ข้อความ',
+            
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(FontAwesomeIcons.solidUser),
+            label: 'ฉัน',
+          ),
+      ],
+      currentIndex: _selectedIndex,
+      selectedItemColor: Colors.amber[800],
+      onTap: onTapped,),
+      
     );
   }
 

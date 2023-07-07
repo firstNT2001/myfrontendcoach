@@ -75,68 +75,92 @@ class _HomePageUserState extends State<HomePageUser> {
             child: Text("COACHING",
                 style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold)),
           ),
-          Center(
-            child: Padding(
-              padding: const EdgeInsets.only(top: 15),
-              child: Container(
-                width: MediaQuery.of(context).size.width * 0.9,
-                decoration: BoxDecoration(
-                    color: const Color.fromARGB(255, 243, 243, 244),
-                    borderRadius: BorderRadius.circular(15)),
-                child: TextField(
-                  controller: myController,
-                  onChanged: (value) {
-                      if (myController.text.isNotEmpty) {
-                      coachService
-                          .coach(nameCoach: myController.text, cid: "")
-                          .then((coachdata) {
-                        var datacoach = coachdata.data;
-                        //var checkcoaches = coaches.length;
-                        coaches = datacoach;
-                        if (coaches.isNotEmpty) {
-                          //log("message"+coaches.first);
-                          setState(() {
-                            isVisible = true;
-                            isSuggestVisible = false;
-                          });
+          Padding(
+            padding: const EdgeInsets.only(top: 10, left: 15),
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                SizedBox(
+                  width: 310,
+                  child: TextField(
+                    controller: myController,
+                    decoration: const InputDecoration(
+                        contentPadding: EdgeInsets.symmetric(vertical: 10),
+                        hintText: '   ค้นหา',
+                        border: InputBorder.none),
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(left: 10),
+                  child: FilledButton(
+                      onPressed: () {
+                        if (myController.text.isNotEmpty) {
+                          coachService
+                              .coach(nameCoach: myController.text, cid: "")
+                              .then((coachdata) {
+                            var datacoach = coachdata.data;
+                            //var checkcoaches = coaches.length;
+                            coaches = datacoach;
+                            if (coaches.isNotEmpty) {
+                              //log("message"+coaches.first);
+                              setState(() {
+                                isVisible = true;
+                                isSuggestVisible = false;
+                              });
 
-                          log(coaches.length.toString());
+                              log(coaches.length.toString());
+                            } else {
+                              setState(() {
+                                isVisible = false;
+                                isSuggestVisible = true;
+                              });
+                            }
+                          });
+                          courseService
+                              .course(
+                                  cid: '', coID: '', name: myController.text)
+                              .then((coursedata) {
+                            var datacourse = coursedata.data;
+                            courses = datacourse;
+                            if (courses.isNotEmpty) {
+                              setState(() {});
+                              log(courses.length.toString());
+                            }
+                          });
                         } else {
                           setState(() {
                             isVisible = false;
                             isSuggestVisible = true;
                           });
                         }
-                      });
-                      courseService
-                          .course(cid: '', coID: '', name: myController.text)
-                          .then((coursedata) {
-                        var datacourse = coursedata.data;
-                        courses = datacourse;
-                        if (courses.isNotEmpty) {
-                          setState(() {});
-                          log(courses.length.toString());
-                        }
-                      });
-                    } else {
-                      setState(() {
-                        isVisible = false;
-                        isSuggestVisible = true;
-                      });
-                    }
-                  },
-                  // onSubmitted: (value) {
-                  
-                  // },
-                  decoration: const InputDecoration(
-                      border: InputBorder.none,
-                      enabledBorder: InputBorder.none,
-                      focusedBorder: InputBorder.none,
-                      prefixIcon: Icon(FontAwesomeIcons.search),
-                      hintText: "ค้นหา",
-                      hintStyle: TextStyle(color: Colors.grey)),
+                      },
+                      // style: ElevatedButton.styleFrom(
+                      //     primary: Color.fromARGB(230, 18, 17, 17)),
+                      child:  Text("ค้นหา",style: Theme.of(context).textTheme.bodyLarge)),
                 ),
-              ),
+              ],
+            ),
+          ),
+          //BMI
+          // Padding(
+          //   padding:
+          //       const EdgeInsets.only(left: 20, right: 20, top: 10, bottom: 12),
+          //   child: loadcustomer(),
+          // ),
+
+          Padding(
+            padding: const EdgeInsets.only(left: 10),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                 Text("คอร์สแนะนำ",
+                    style:
+                        Theme.of(context).textTheme.bodyLarge),
+                const Icon(
+                  FontAwesomeIcons.fire,
+                  color: Color.fromARGB(255, 192, 0, 0),
+                )
+              ],
             ),
           ),
           Visibility(
@@ -167,10 +191,8 @@ class _HomePageUserState extends State<HomePageUser> {
                               radius: 50,
                               backgroundImage: NetworkImage(coach.image),
                             ),
-                            title: Text(coach.username.toString(),
-                                style: Theme.of(context).textTheme.bodyLarge),
-                            subtitle: Text(coach.fullName,
-                                style: Theme.of(context).textTheme.bodyLarge),
+                            title: Text(coach.username.toString(),style: Theme.of(context).textTheme.bodyLarge),
+                            subtitle: Text(coach.fullName,style: Theme.of(context).textTheme.bodyLarge),
                             trailing: const Icon(Icons.arrow_forward),
                           ),
                         );
@@ -185,7 +207,31 @@ class _HomePageUserState extends State<HomePageUser> {
             child: Expanded(
               child: Padding(
                 padding: const EdgeInsets.all(20.0),
-                child: loadcourse(),
+                child: ListView.builder(
+                    shrinkWrap: true,
+                    itemCount: courses.length,
+                    itemBuilder: (context, index) {
+                      final course = courses[index];
+                      return Card(
+
+                        child: ListTile(
+                          leading: CircleAvatar(
+                            radius: 30,
+                            backgroundImage: NetworkImage(course.image),
+                          ),
+                          title: Text(course.name,style: Theme.of(context).textTheme.bodyLarge),
+                          subtitle: Text(course.details,style: Theme.of(context).textTheme.bodyLarge),
+                          trailing: const Icon(Icons.arrow_forward),
+                          onTap: () {
+                            log(course.coId.toString());
+                            log(customer.data.price.toString());
+                            context.read<AppData>().idcourse = course.coId;
+                            context.read<AppData>().money = customer.data.price;
+                            Get.to(() => const showCousePage());
+                          },
+                        ),
+                      );
+                    }),
               ),
             ),
           ),
@@ -224,139 +270,103 @@ class _HomePageUserState extends State<HomePageUser> {
             shrinkWrap: true,
             itemCount: courses.length,
             itemBuilder: (context, index) {
-              final listcours = courses[index];
-              return Padding(
-                padding: const EdgeInsets.only(left: 10, right: 10, bottom: 20),
-                child: InkWell(
-                  onTap: () {
-                    log(listcours.coId.toString());
-                    log(customer.data.price.toString());
-                    context.read<AppData>().idcourse = listcours.coId;
-                    context.read<AppData>().money = customer.data.price;
-                    Get.to(() => const showCousePage());
-                  },
-                  child: Container(
-                    alignment: Alignment.center,
-                    width: double.infinity,
-                    child: AspectRatio(
-                      aspectRatio: 16 / 9,
-                      child: Stack(
-                        children: <Widget>[
-                          Container(
-                            alignment: Alignment.topCenter,
-                            child: AspectRatio(
-                                aspectRatio: 16 / 9,
-                                child: Container(
-                                  decoration: BoxDecoration(
-                                    color: const Color(0xff7c94b6),
-                                    image: DecorationImage(
-                                        image: NetworkImage(listcours.image),
-                                        fit: BoxFit.cover),
-                                    borderRadius: BorderRadius.circular(20),
-                                  ),
-                                )),
-                            //color: Colors.white,
-                          ),
-                          Container(
-                            padding: const EdgeInsets.all(5.0),
-                            alignment: Alignment.bottomCenter,
-                            decoration: BoxDecoration(
-                              gradient: LinearGradient(
-                                begin: Alignment.topCenter,
-                                end: Alignment.bottomCenter,
-                                colors: <Color>[
-                                  const Color.fromARGB(255, 0, 0, 0)
-                                      .withAlpha(0),
-                                  const Color.fromARGB(49, 0, 0, 0),
-                                  const Color.fromARGB(127, 0, 0, 0)
-                                  // const Color.fromARGB(255, 255, 255, 255)
-                                  //     .withAlpha(0),
-                                  // Color.fromARGB(39, 255, 255, 255),
-                                  // Color.fromARGB(121, 255, 255, 255)
-                                ],
-                              ),
-                              borderRadius: BorderRadius.circular(20),
-                            ),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              mainAxisAlignment: MainAxisAlignment.end,
-                              children: [
-                                Text(listcours.name,
-                                    style:
-                                        Theme.of(context).textTheme.titleLarge),
-                                Row(
-                                  children: [
-                                    const Padding(
-                                      padding: EdgeInsets.only(right: 8),
-                                      child: Icon(
-                                        FontAwesomeIcons.solidUser,
-                                        size: 16.0,
-                                      ),
-                                    ),
-                                    Text(listcours.coach.fullName,
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .bodyLarge),
-                                  ],
-                                ),
-                                (listcours.level == '1')
-                                    ? Row(
-                                        children: [
-                                          Icon(FontAwesomeIcons.bolt,
-                                              size: 16,
-                                              color: Theme.of(context)
-                                                  .colorScheme
-                                                  .tertiaryContainer),
-                                          const Icon(FontAwesomeIcons.bolt,
-                                              size: 16),
-                                          const Icon(FontAwesomeIcons.bolt,
-                                              size: 16),
-                                        ],
-                                      )
-                                    : (listcours.level == '2')
-                                        ? Row(
-                                            children: [
-                                              Icon(FontAwesomeIcons.bolt,
-                                                  size: 16,
-                                                  color: Theme.of(context)
-                                                      .colorScheme
-                                                      .tertiaryContainer),
-                                              Icon(FontAwesomeIcons.bolt,
-                                                  size: 16,
-                                                  color: Theme.of(context)
-                                                      .colorScheme
-                                                      .tertiaryContainer),
-                                              const Icon(FontAwesomeIcons.bolt,
-                                                  size: 16),
-                                            ],
-                                          )
-                                        : Row(
-                                            children: [
-                                              Icon(FontAwesomeIcons.bolt,
-                                                  size: 16,
-                                                  color: Theme.of(context)
-                                                      .colorScheme
-                                                      .tertiaryContainer),
-                                              Icon(FontAwesomeIcons.bolt,
-                                                  size: 16,
-                                                  color: Theme.of(context)
-                                                      .colorScheme
-                                                      .tertiaryContainer),
-                                              Icon(FontAwesomeIcons.bolt,
-                                                  size: 16,
-                                                  color: Theme.of(context)
-                                                      .colorScheme
-                                                      .tertiaryContainer),
-                                            ],
-                                          )
-                              ],
-                            ),
-                          )
-                        ],
-                      ),
+          final listcours = courses[index];
+          
+          return Card(
+            elevation: 0,
+            color: Theme.of(context).colorScheme.outlineVariant,
+            child: Container(
+              height: 300,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.end,
+                children: [
+                  Container(
+                    alignment: Alignment.topCenter,
+                    child: AspectRatio(aspectRatio: 16/9,child: Image.network(listcours.image, fit: BoxFit.cover)),                 
+                  ),
+                  ListTile(
+                    title: Text(listcours.name,style: Theme.of(context).textTheme.bodyLarge),
+                    subtitle: Row(
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.only(right: 8),
+                          child: const Icon(FontAwesomeIcons.solidUser,size: 16.0,),
+                        ),
+                        Text(listcours.coach.fullName,style: Theme.of(context).textTheme.bodyMedium),
+                      ],
+                    ),
+                     trailing: FilledButton(
+                        onPressed: () {
+                          log(listcours.coId.toString());
+                          context.read<AppData>().idcourse = listcours.coId;
+                          log(" uid : ${customer.data.uid}");
+                          log(" money : ${customer.data.price}");
+                          context.read<AppData>().uid = customer.data.uid;
+                          context.read<AppData>().money = customer.data.price;
+                          Get.to(() => const showCousePage());
+                        },                       
+                        child: const Text("ดูรายละเอียดเพิ่มเติม")),
+                        contentPadding: EdgeInsets.symmetric(
+                        vertical: 0.0, horizontal: 8.0),
+                  ),
+                  
+                ],
+              ),
+            ),
+          );
+            },
+          );
+        }
+      },
+    );
+  }
+
+  Widget loadcustomer() {
+    return FutureBuilder(
+      future: loadDataMethod,
+      builder: (context, snapshot) {
+        if (snapshot.connectionState != ConnectionState.done) {
+          return const Center(child: CircularProgressIndicator());
+        } else {
+          return Column(
+            children: [
+              Card(             
+                child: ListTile(
+                  leading: (customer.data.gender == '2')
+                      ? const Icon(Icons.girl_outlined, size: 120)
+                      : (customer.data.gender == '1')
+                          ? const Icon(Icons.boy_outlined, size: 120)
+                          : const Icon(Icons.abc_outlined, size: 110),
+
+                  title: Padding(
+                    padding: const EdgeInsets.all(15.0),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text(customer.data.height.toString()),
+                            const Text("CM"),
+                          ],
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text(customer.data.weight.toString()),
+                            const Text("KG"),
+                          ],
+                        ),
+                        const Divider(
+                          //color of divider
+                          height: 5, //height spacing of divider
+                          thickness: 2, //thickness of divier line
+                          indent: 50, //spacing at the start of divider
+                          endIndent: 50,
+                        ),
+                        const Text("BMI"),
+                        Text(bmi.toString()),
+                      ],
                     ),
                   ),
                 ),

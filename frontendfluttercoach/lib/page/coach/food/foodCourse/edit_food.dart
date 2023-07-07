@@ -90,20 +90,16 @@ class _EditFoodPageState extends State<EditFoodPage> {
         leading: IconButton(
           icon: const Icon(
             FontAwesomeIcons.chevronLeft,
-            color: Colors.black,
+            color: Colors.white,
           ),
           onPressed: () {
-            Get.to(() => HomeFoodAndClipPage(
-                  did: widget.did,
-                  sequence: widget.sequence,
-                ));
+            Get.back();
           },
         ),
         actions: [
           IconButton(
             icon: const Icon(
               FontAwesomeIcons.trash,
-              color: Colors.black,
             ),
             onPressed: () async {
               var response = await _foodCourseService.deleteFood(widget.fid);
@@ -162,8 +158,8 @@ class _EditFoodPageState extends State<EditFoodPage> {
   Future<void> loadFoodData() async {
     try {
       //foodCourse
-      var foodCoursedatas =
-          await _foodCourseService.foods(fid: widget.fid, ifid: '', did: '', name: '');
+      var foodCoursedatas = await _foodCourseService.foods(
+          fid: widget.fid, ifid: '', did: '', name: '');
       foodCourses = foodCoursedatas.data;
       if (foodCourses.first.time == '1') {
         selectedValuehand.text = 'มื้อเช้า';

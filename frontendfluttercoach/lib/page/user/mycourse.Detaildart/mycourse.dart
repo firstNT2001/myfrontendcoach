@@ -42,7 +42,9 @@ class _MyCousesState extends State<MyCouses> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(),
+      appBar: AppBar(
+        title: Text("รายการซื้อของฉัน"),
+      ),
       body: Column(children: [
         Row(
           children: [
@@ -52,8 +54,7 @@ class _MyCousesState extends State<MyCouses> {
             ),
             Padding(
               padding: const EdgeInsets.only(left: 10),
-              child: Text("รายการซื้อของฉัน",
-                  style: Theme.of(context).textTheme.bodyLarge),
+              child: Text("รายการซื้อของฉัน"),
             )
           ],
         ),
@@ -85,108 +86,52 @@ class _MyCousesState extends State<MyCouses> {
         if (snapshot.connectionState != ConnectionState.done) {
           return const Center(child: CircularProgressIndicator());
         } else {
-          return ListView.builder(
-            shrinkWrap: true,
-            itemCount: courses.length,
-            itemBuilder: (context, index) {
-              final listcours = courses[index];
-              return Padding(
-                padding: const EdgeInsets.only(left: 10, right: 10, bottom: 20),
-                child: InkWell(
-                  onTap: () {
-                    log(listcours.coId.toString());
-                    log(listcours.image);
-                    context.read<AppData>().idcourse = listcours.coId;
-                    Get.to(() => ShowDayMycourse(
-                        coID: listcours.coId,
-                        img: listcours.image,
-                        namecourse: listcours.name,
-                        namecoach: listcours.coach.fullName,
-                        detail: listcours.details,
-                        expirationDate: listcours.expirationDate,
-                        dayincourse: listcours.days));
-                  },
-                  child: Container(
-                    alignment: Alignment.center,
-                    width: double.infinity,
-                    child: AspectRatio(
-                      aspectRatio: 16 / 9,
-                      child: Stack(
-                        children: <Widget>[
-                          Container(
-                            alignment: Alignment.topCenter,
-                            child: AspectRatio(
-                                aspectRatio: 16 / 9,
-                                child: Container(
-                                  decoration: BoxDecoration(
-                                    color: const Color(0xff7c94b6),
-                                    image: DecorationImage(
-                                        image: NetworkImage(listcours.image),
-                                        fit: BoxFit.cover),
-                                    borderRadius: BorderRadius.circular(20),
-                                  ),
-                                )),
-                            //color: Colors.white,
-                          ),
-                          Container(
-                            padding: const EdgeInsets.all(5.0),
-                            alignment: Alignment.bottomCenter,
-                            decoration: BoxDecoration(
-                              gradient: LinearGradient(
-                                begin: Alignment.topCenter,
-                                end: Alignment.bottomCenter,
-                                colors: <Color>[
-                                  const Color.fromARGB(255, 0, 0, 0)
-                                      .withAlpha(0),
-                                  const Color.fromARGB(49, 0, 0, 0),
-                                  const Color.fromARGB(127, 0, 0, 0)
-                                  // const Color.fromARGB(255, 255, 255, 255)
-                                  //     .withAlpha(0),
-                                  // Color.fromARGB(39, 255, 255, 255),
-                                  // Color.fromARGB(121, 255, 255, 255)
-                                ],
-                              ),
-                              borderRadius: BorderRadius.circular(20),
-                            ),
+          return Column(
+            children: [
+              Expanded(
+                child: ListView.builder(
+                shrinkWrap: true,
+                itemCount: courses.length,
+                itemBuilder: (context, index) {
+                  final listcours = courses[index];
+            
+                  return Padding(
+                    padding: const EdgeInsets.only(top: 8),
+                    child: Card(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.end,
+                        children: [
+                          Image.network(listcours.image,
+                              width: 400,
+                              height: 150,
+                              fit: BoxFit.fill),
+                          ListTile(
+                            title: Text(listcours.name),
+                            subtitle: Text(listcours.coach.fullName),
                           ),
                           Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              mainAxisAlignment: MainAxisAlignment.end,
-                              children: [
-                                Text(listcours.name,
-                                    style:
-                                        Theme.of(context).textTheme.titleLarge),
-                                Row(
-                                  children: [
-                                    const Padding(
-                                      padding: EdgeInsets.only(right: 8),
-                                      child: Icon(
-                                        FontAwesomeIcons.solidUser,
-                                        size: 16.0,
-                                      ),
-                                    ),
-                                    Text(listcours.coach.fullName,
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .bodyLarge),
-                                  ],
-                                ),
-                                Padding(
-                                  padding: const EdgeInsets.only(bottom: 4.0,top: 4.0),
-                                  child: LinearPercentIndicator(
-                                    width: 280.0,
-                                    lineHeight: 8.0,
-                                    percent: 0.1,
-                                    backgroundColor:
-                                        Color.fromRGBO(255, 249, 249, 1),
-                                    progressColor: Colors.greenAccent,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          )
+                            padding: const EdgeInsets.only(right: 8,bottom: 8),
+                            child: ElevatedButton(
+                                onPressed: () {
+                                  log(listcours.coId.toString());
+                                  log(listcours.image);
+                                  context.read<AppData>().idcourse =
+                                      listcours.coId;
+                                  context.read<AppData>().img =
+                                      listcours.image; 
+                                      context.read<AppData>().namecourse =
+                                      listcours.name;
+                                      context.read<AppData>().namecoach =
+                                      listcours.coach.fullName; 
+                                      context.read<AppData>().detail =
+                                      listcours.details; 
+                                        
+            
+                                  Get.to(() => const ShowDayMycourse());
+                                },
+                                child: const Text(
+                                    "ดูรายละเอียดเพิ่มเติม")),
+                          ),
                         ],
                       ),
                     ),
