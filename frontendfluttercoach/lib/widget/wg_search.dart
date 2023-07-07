@@ -14,9 +14,9 @@ import '../service/food.dart';
 import '../service/provider/appdata.dart';
 
 class WidgetSearchFood extends StatefulWidget {
-  WidgetSearchFood({super.key, required this.searchName, required this.did});
-  TextEditingController searchName;
-  String did;
+  const WidgetSearchFood({super.key, required this.searchName, required this.did});
+  final TextEditingController searchName;
+  final String did;
   @override
   State<WidgetSearchFood> createState() => _WidgetSearchFoodState();
 }

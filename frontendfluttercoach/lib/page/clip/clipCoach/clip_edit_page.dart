@@ -21,8 +21,8 @@ import '../../../service/provider/appdata.dart';
 import '../../../widget/wg_textField.dart';
 
 class ClipEditCoachPage extends StatefulWidget {
-  late int icpId;
-  ClipEditCoachPage({super.key, required this.icpId});
+  final int icpId;
+  const ClipEditCoachPage({super.key, required this.icpId});
 
   @override
   State<ClipEditCoachPage> createState() => _ClipEditCoachPageState();

@@ -1,6 +1,5 @@
 import 'dart:developer';
 
-import 'package:anim_search_bar/anim_search_bar.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
@@ -8,7 +7,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:frontendfluttercoach/model/response/food_get_res.dart';
-import 'package:frontendfluttercoach/model/response/md_FoodList_get.dart';
 import 'package:frontendfluttercoach/page/coach/food/foodCourse/edit_food.dart';
 import 'package:frontendfluttercoach/page/coach/food/foodCourse/insertFood/food_new_page.dart';
 import 'package:frontendfluttercoach/service/clip.dart';
@@ -21,13 +19,12 @@ import '../../service/provider/appdata.dart';
 
 import '../../widget/wg_search.dart';
 import '../clip/clipCourse/insertClip/clip_select_page.dart';
-import 'daysCourse/days_course_page.dart';
 
 class HomeFoodAndClipPage extends StatefulWidget {
-  HomeFoodAndClipPage({super.key, required this.did, required this.sequence});
+  const HomeFoodAndClipPage({super.key, required this.did, required this.sequence});
 
-  late String did;
-  late String sequence;
+  final String did;
+  final String sequence;
 
   @override
   State<HomeFoodAndClipPage> createState() => _HomeFoodAndClipPageState();

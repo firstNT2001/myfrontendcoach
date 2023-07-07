@@ -2,7 +2,6 @@
 //
 //     final modelRequest = modelRequestFromJson(jsonString);
 
-import 'package:meta/meta.dart';
 import 'dart:convert';
 
 List<ModelRequest> modelRequestFromJson(String str) => List<ModelRequest>.from(json.decode(str).map((x) => ModelRequest.fromJson(x)));

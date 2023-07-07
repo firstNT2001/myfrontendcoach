@@ -2,7 +2,6 @@
 //
 //     final authLoginRes = authLoginResFromJson(jsonString);
 
-import 'package:meta/meta.dart';
 import 'dart:convert';
 
 AuthLoginRes authLoginResFromJson(String str) => AuthLoginRes.fromJson(json.decode(str));

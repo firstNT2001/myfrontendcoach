@@ -2,7 +2,6 @@
 //
 //     final modelBuying = modelBuyingFromJson(jsonString);
 
-import 'package:meta/meta.dart';
 import 'dart:convert';
 
 ModelBuying modelBuyingFromJson(String str) => ModelBuying.fromJson(json.decode(str));

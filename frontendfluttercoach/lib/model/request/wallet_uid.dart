@@ -2,7 +2,6 @@
 //
 //     final walletUser = walletUserFromJson(jsonString);
 
-import 'package:meta/meta.dart';
 import 'dart:convert';
 
 WalletUser walletUserFromJson(String str) => WalletUser.fromJson(json.decode(str));

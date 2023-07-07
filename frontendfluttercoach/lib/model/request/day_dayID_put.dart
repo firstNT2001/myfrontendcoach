@@ -2,7 +2,6 @@
 //
 //     final dayDayIdPut = dayDayIdPutFromJson(jsonString);
 
-import 'package:meta/meta.dart';
 import 'dart:convert';
 
 DayDayIdPut dayDayIdPutFromJson(String str) => DayDayIdPut.fromJson(json.decode(str));

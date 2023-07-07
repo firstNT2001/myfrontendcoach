@@ -2,7 +2,7 @@
 //
 //     final buyCoursecoIdPost = buyCoursecoIdPostFromJson(jsonString);
 
-import 'package:meta/meta.dart';
+
 import 'dart:convert';
 
 BuyCoursecoIdPost buyCoursecoIdPostFromJson(String str) => BuyCoursecoIdPost.fromJson(json.decode(str));

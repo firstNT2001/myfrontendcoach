@@ -2,7 +2,6 @@
 //
 //     final courseCoachIdPost = courseCoachIdPostFromJson(jsonString);
 
-import 'package:meta/meta.dart';
 import 'dart:convert';
 
 CourseCoachIdPost courseCoachIdPostFromJson(String str) => CourseCoachIdPost.fromJson(json.decode(str));

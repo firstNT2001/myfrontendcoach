@@ -2,7 +2,6 @@
 //
 //     final modelClipList = modelClipListFromJson(jsonString);
 
-import 'package:meta/meta.dart';
 import 'dart:convert';
 
 List<ModelClipList> modelClipListFromJson(String str) => List<ModelClipList>.from(json.decode(str).map((x) => ModelClipList.fromJson(x)));

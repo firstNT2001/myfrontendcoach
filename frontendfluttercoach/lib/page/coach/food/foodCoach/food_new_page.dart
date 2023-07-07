@@ -6,7 +6,6 @@ import 'package:file_picker/file_picker.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:frontendfluttercoach/page/coach/food/foodCourse/food_page.dart';
 import 'package:frontendfluttercoach/page/showDialogWidget.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
@@ -18,7 +17,6 @@ import '../../../../model/request/listFood_coachID_post.dart';
 import '../../../../model/response/md_Result.dart';
 import '../../../../service/listFood.dart';
 import '../../../../service/provider/appdata.dart';
-import '../../../../service/provider/coachData.dart';
 import 'food_page.dart';
 
 class FoodNewCoachPage extends StatefulWidget {

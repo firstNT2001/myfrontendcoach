@@ -6,7 +6,6 @@ import 'package:dio/dio.dart';
 import '../model/request/course_EX.dart';
 import '../model/request/status_clip.dart';
 import '../model/response/clip_get_res.dart';
-import '../model/response/course_get_res.dart';
 import '../model/response/md_Result.dart';
 import '../model/response/md_coach_course_get.dart';
 

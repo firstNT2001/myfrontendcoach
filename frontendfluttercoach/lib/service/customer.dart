@@ -4,7 +4,6 @@ import 'package:dio/dio.dart';
 import '../model/request/updateCus.dart';
 import '../model/response/md_Customer_get.dart';
 import '../model/response/md_Result.dart';
-import '../model/response/md_RowsAffected.dart';
 
 part 'generated/customer.g.dart';
 

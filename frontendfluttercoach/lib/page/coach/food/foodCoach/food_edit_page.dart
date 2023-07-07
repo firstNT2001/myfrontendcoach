@@ -20,8 +20,8 @@ import '../../../../widget/wg_textField.dart';
 import 'food_page.dart';
 
 class FoodEditCoachPage extends StatefulWidget {
-  late int ifid;
-  FoodEditCoachPage({super.key, required this.ifid});
+  final int ifid;
+  const FoodEditCoachPage({super.key, required this.ifid});
 
   @override
   State<FoodEditCoachPage> createState() => _FoodEditCoachPageState();

@@ -2,7 +2,6 @@
 //
 //     final listClipCoachIdPost = listClipCoachIdPostFromJson(jsonString);
 
-import 'package:meta/meta.dart';
 import 'dart:convert';
 
 ListClipCoachIdPost listClipCoachIdPostFromJson(String str) => ListClipCoachIdPost.fromJson(json.decode(str));

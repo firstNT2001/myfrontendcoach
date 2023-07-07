@@ -2,7 +2,6 @@
 //
 //     final restGbprime = restGbprimeFromJson(jsonString);
 
-import 'package:meta/meta.dart';
 import 'dart:convert';
 
 RestGbprime restGbprimeFromJson(String str) => RestGbprime.fromJson(json.decode(str));

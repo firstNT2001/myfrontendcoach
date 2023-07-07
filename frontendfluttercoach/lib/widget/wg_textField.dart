@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 
 class WidgetTextFieldString extends StatefulWidget {
-  late TextEditingController controller;
-  late String labelText;
-  WidgetTextFieldString(
+  final TextEditingController controller;
+  final String labelText;
+  const WidgetTextFieldString(
       {super.key, required this.controller, required this.labelText});
 
   @override

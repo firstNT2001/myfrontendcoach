@@ -20,8 +20,8 @@ import '../../../home_foodAndClip.dart';
 import 'food_select_time_page.dart';
 
 class FoodNewCoursePage extends StatefulWidget {
-  FoodNewCoursePage({super.key, required this.did});
-  late String did;
+  const FoodNewCoursePage({super.key, required this.did});
+  final String did;
 
   @override
   State<FoodNewCoursePage> createState() => _FoodNewCoursePageState();
@@ -143,6 +143,7 @@ class _FoodNewCoursePageState extends State<FoodNewCoursePage> {
       listFoods = datas.data;
       // ignore: unused_local_variable
       for (var index in listFoods) {
+        // ignore: use_build_context_synchronously
         colorFood.add(context.read<AppData>().colorNotSelect);
       }
       log("image${listFoods[2].image}");

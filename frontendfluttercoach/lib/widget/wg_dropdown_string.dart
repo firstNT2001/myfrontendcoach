@@ -1,13 +1,13 @@
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
-import 'package:flutter/src/widgets/placeholder.dart';
+
 
 class WidgetDropdownString extends StatefulWidget {
-   WidgetDropdownString({super.key, required this.title, required this.selectedValue, required this.ListItems});
-  late String title;
-  late TextEditingController  selectedValue;
-  late List<String> ListItems; 
+   const WidgetDropdownString({super.key, required this.title, required this.selectedValue, required this.ListItems});
+  final String title;
+  final TextEditingController  selectedValue;
+  final List<String> ListItems; 
   @override
   State<WidgetDropdownString> createState() => _WidgetDropdownStringState();
 }

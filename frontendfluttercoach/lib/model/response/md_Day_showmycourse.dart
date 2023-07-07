@@ -2,11 +2,9 @@
 //
 //     final dayDetail = dayDetailFromJson(jsonString);
 
-import 'package:meta/meta.dart';
 import 'dart:convert';
 
 import 'food_get_res.dart';
-import 'md_FoodList_get.dart';
 
 List<DayDetail> dayDetailFromJson(String str) => List<DayDetail>.from(json.decode(str).map((x) => DayDetail.fromJson(x)));
 

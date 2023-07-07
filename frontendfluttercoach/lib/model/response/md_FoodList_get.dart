@@ -2,7 +2,6 @@
 //
 //     final modelFoodList = modelFoodListFromJson(jsonString);
 
-import 'package:meta/meta.dart';
 import 'dart:convert';
 
 ModelFoodList modelFoodListFromJson(String str) => ModelFoodList.fromJson(json.decode(str));

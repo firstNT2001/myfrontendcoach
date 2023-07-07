@@ -2,7 +2,6 @@
 //
 //     final loginFbDto = loginFbDtoFromJson(jsonString);
 
-import 'package:meta/meta.dart';
 import 'dart:convert';
 
 LoginFbDto? loginFbDtoFromJson(String str) => LoginFbDto.fromJson(json.decode(str));

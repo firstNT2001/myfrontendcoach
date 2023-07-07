@@ -2,7 +2,6 @@
 //
 //     final coachbycourse = coachbycourseFromJson(jsonString);
 
-import 'package:meta/meta.dart';
 import 'dart:convert';
 
 import 'md_Buying_get.dart';

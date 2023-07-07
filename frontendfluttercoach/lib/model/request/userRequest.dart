@@ -2,7 +2,6 @@
 //
 //     final userRequest = userRequestFromJson(jsonString);
 
-import 'package:meta/meta.dart';
 import 'dart:convert';
 
 UserRequest userRequestFromJson(String str) => UserRequest.fromJson(json.decode(str));

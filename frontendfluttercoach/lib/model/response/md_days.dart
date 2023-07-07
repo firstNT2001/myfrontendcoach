@@ -2,7 +2,6 @@
 //
 //     final modelDay = modelDayFromJson(jsonString);
 
-import 'package:meta/meta.dart';
 import 'dart:convert';
 
 List<ModelDay> modelDayFromJson(String str) => List<ModelDay>.from(json.decode(str).map((x) => ModelDay.fromJson(x)));

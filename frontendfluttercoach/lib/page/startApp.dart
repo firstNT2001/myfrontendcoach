@@ -3,8 +3,6 @@ import 'package:frontendfluttercoach/page/user/homepageUser.dart';
 import 'package:frontendfluttercoach/page/auth/login.dart';
 import 'package:get/get.dart';
 
-import 'coach/home_coach_page.dart';
-
 
 class StartApp extends StatelessWidget {
   const StartApp({super.key});
@@ -21,15 +19,15 @@ class StartApp extends StatelessWidget {
                 height: 150,
                 width: 300,
                 child: Container(
-                  margin: EdgeInsets.only(left: 20, right: 20, top: 20),
-                  padding: EdgeInsets.only(left: 20, right: 20),
+                  margin: const EdgeInsets.only(left: 20, right: 20, top: 20),
+                  padding: const EdgeInsets.only(left: 20, right: 20),
                   child: ElevatedButton(
                       onPressed: () {
                         Navigator.push(context, MaterialPageRoute(builder: (context) {
-                          return  LoginPage();
+                          return const LoginPage();
                         }));
                       },
-                      child: Text('หน้าโค้ช')),
+                      child: const Text('หน้าโค้ช')),
                 ),
               ),
             ),
@@ -39,16 +37,16 @@ class StartApp extends StatelessWidget {
               height: 150,
                 width: 300,
               child: Container(
-                margin: EdgeInsets.only(left: 20, right: 20, top: 20),
-                padding: EdgeInsets.only(left: 20, right: 20),
+                margin: const EdgeInsets.only(left: 20, right: 20, top: 20),
+                padding: const EdgeInsets.only(left: 20, right: 20),
                 child: ElevatedButton(
                     onPressed: () {
-                      Get.to(()=>HomePageUser());
+                      Get.to(()=> const HomePageUser());
                       // Navigator.push(context, MaterialPageRoute(builder: (context) {
                       //   return HomePageUser();
                       // }));
                     },
-                    child: Text('หน้าสมาชิก')),
+                    child: const Text('หน้าสมาชิก')),
               ),
             ),
           ),

@@ -74,6 +74,7 @@ class _RequestPageState extends State<RequestPage> {
             return Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
+                // ignore: unnecessary_null_comparison
                 if (requests != null)
                   Expanded(
                     child: ListView.builder(

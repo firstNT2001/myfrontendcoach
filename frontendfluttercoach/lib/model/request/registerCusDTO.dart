@@ -2,7 +2,6 @@
 //
 //     final registerCusDto = registerCusDtoFromJson(jsonString);
 
-import 'package:meta/meta.dart';
 import 'dart:convert';
 
 RegisterCusDto? registerCusDtoFromJson(String str) => RegisterCusDto.fromJson(json.decode(str));

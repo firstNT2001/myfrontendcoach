@@ -1,13 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
-import 'package:flutter/src/widgets/placeholder.dart';
 
 class WidgetTextFieldLines extends StatelessWidget {
-   WidgetTextFieldLines(
+   const WidgetTextFieldLines(
       {super.key, required this.controller, required this.labelText});
 
-  late TextEditingController controller;
-  late String labelText;
+  final TextEditingController controller;
+  final String labelText;
 
   @override
   Widget build(BuildContext context) {

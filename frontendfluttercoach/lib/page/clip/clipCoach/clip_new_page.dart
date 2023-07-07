@@ -19,7 +19,7 @@ import '../../../model/response/md_Result.dart';
 import '../../../service/listClip.dart';
 import '../../../service/provider/appdata.dart';
 import '../../../widget/wg_textField.dart';
-import 'clip_page.dart';
+
 
 class ClipNewCoachPage extends StatefulWidget {
   const ClipNewCoachPage({super.key});

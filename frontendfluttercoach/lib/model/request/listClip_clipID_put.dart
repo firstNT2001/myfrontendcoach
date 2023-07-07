@@ -2,7 +2,6 @@
 //
 //     final listClipClipIdPut = listClipClipIdPutFromJson(jsonString);
 
-import 'package:meta/meta.dart';
 import 'dart:convert';
 
 ListClipClipIdPut listClipClipIdPutFromJson(String str) => ListClipClipIdPut.fromJson(json.decode(str));

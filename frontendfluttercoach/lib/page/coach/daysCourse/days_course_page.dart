@@ -23,8 +23,8 @@ import '../../../widget/dialogs.dart';
 import '../home_foodAndClip.dart';
 
 class DaysCoursePage extends StatefulWidget {
-  DaysCoursePage({super.key, required this.coID});
-  late String coID;
+  const DaysCoursePage({super.key, required this.coID});
+  final String coID;
   @override
   State<DaysCoursePage> createState() => _DaysCoursePageState();
 }
