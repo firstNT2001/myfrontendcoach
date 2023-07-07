@@ -2,7 +2,6 @@
 //
 //     final listFoodFoodIdPut = listFoodFoodIdPutFromJson(jsonString);
 
-import 'package:meta/meta.dart';
 import 'dart:convert';
 
 ListFoodFoodIdPut listFoodFoodIdPutFromJson(String str) => ListFoodFoodIdPut.fromJson(json.decode(str));

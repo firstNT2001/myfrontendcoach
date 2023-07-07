@@ -3,7 +3,6 @@ import 'dart:developer';
 import 'dart:io';
 //import 'dart:io';
 
-import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
@@ -12,7 +11,7 @@ import 'package:get/get.dart';
 import 'package:provider/provider.dart';
 
 import '../../../model/request/course_courseID_put.dart';
-import '../../../model/response/course_get_res.dart';
+
 import '../../../model/response/md_Result.dart';
 import '../../../model/response/md_coach_course_get.dart';
 import '../../../service/course.dart';
@@ -20,16 +19,15 @@ import '../../../service/course.dart';
 import '../../../service/provider/appdata.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
-import '../../../service/provider/dayOfCouseData.dart';
 import '../../../widget/wg_dropdown_string.dart';
 import '../../../widget/wg_textField.dart';
 import '../../../widget/wg_textFieldLines.dart';
 import '../daysCourse/days_course_page.dart';
-import '../home_coach_page.dart';
+
 
 class CourseEditPage extends StatefulWidget {
-  late String coID;
-  CourseEditPage({super.key, required this.coID});
+  final String coID;
+  const CourseEditPage({super.key, required this.coID});
 
   @override
   State<CourseEditPage> createState() => _CourseEditPageState();
@@ -302,7 +300,7 @@ class _CourseEditPageState extends State<CourseEditPage> {
                   
                   ),
                   onPressed: () {
-                    Get.to(() => const HomePageCoach());
+                    Get.back();
                   },
                 ),
               ),

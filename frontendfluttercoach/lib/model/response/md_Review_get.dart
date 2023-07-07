@@ -2,11 +2,9 @@
 //
 //     final modelReview = modelReviewFromJson(jsonString);
 
-import 'package:meta/meta.dart';
 import 'dart:convert';
 
 import 'course_get_res.dart';
-import 'md_Coach_get.dart';
 import 'md_Customer_get.dart';
 
 List<ModelReview> modelReviewFromJson(String str) => List<ModelReview>.from(json.decode(str).map((x) => ModelReview.fromJson(x)));

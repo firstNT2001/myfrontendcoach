@@ -2,7 +2,6 @@
 //
 //     final foodDayIdPost = foodDayIdPostFromJson(jsonString);
 
-import 'package:meta/meta.dart';
 import 'dart:convert';
 
 FoodDayIdPost foodDayIdPostFromJson(String str) => FoodDayIdPost.fromJson(json.decode(str));

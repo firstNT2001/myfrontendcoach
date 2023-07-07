@@ -22,9 +22,9 @@ import '../user/navigationbar.dart';
 import '../waitingForEdit/register.dart';
 
 class LoginPage extends StatefulWidget {
-  StreamController<SessionState>? sessionStateStream;
+ final StreamController<SessionState>? sessionStateStream;
 
-  LoginPage({Key? key, this.sessionStateStream}) : super(key: key);
+  const LoginPage({Key? key, this.sessionStateStream}) : super(key: key);
 
   @override
   State<LoginPage> createState() => _LoginPageState();

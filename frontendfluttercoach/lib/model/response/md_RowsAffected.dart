@@ -2,7 +2,6 @@
 //
 //     final modelRowsAffected = modelRowsAffectedFromJson(jsonString);
 
-import 'package:meta/meta.dart';
 import 'dart:convert';
 
 ModelRowsAffected modelRowsAffectedFromJson(String str) => ModelRowsAffected.fromJson(json.decode(str));

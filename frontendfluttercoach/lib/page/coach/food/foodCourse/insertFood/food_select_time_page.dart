@@ -16,16 +16,16 @@ import '../../../../../service/provider/appdata.dart';
 import '../../../home_foodAndClip.dart';
 
 class FoodSelectTimePage extends StatefulWidget {
-  FoodSelectTimePage(
+  const FoodSelectTimePage(
       {super.key,
       required this.did,
       required this.modelFoodList,
       required this.increaseFood});
   //id Day
-  late String did;
+  final String did;
   //Food
-  late List<ModelFoodList> modelFoodList;
-  late List<FoodDayIdPost> increaseFood;
+  final List<ModelFoodList> modelFoodList;
+  final List<FoodDayIdPost> increaseFood;
 
   @override
   State<FoodSelectTimePage> createState() => _FoodSelectTimePageState();

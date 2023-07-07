@@ -2,7 +2,6 @@
 //
 //     final courseCourseIdPut = courseCourseIdPutFromJson(jsonString);
 
-import 'package:meta/meta.dart';
 import 'dart:convert';
 
 CourseCourseIdPut courseCourseIdPutFromJson(String str) => CourseCourseIdPut.fromJson(json.decode(str));

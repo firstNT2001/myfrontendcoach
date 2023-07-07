@@ -2,7 +2,6 @@
 //
 //     final clipDayIdPost = clipDayIdPostFromJson(jsonString);
 
-import 'package:meta/meta.dart';
 import 'dart:convert';
 
 ClipDayIdPost clipDayIdPostFromJson(String str) => ClipDayIdPost.fromJson(json.decode(str));

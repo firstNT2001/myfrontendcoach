@@ -3,7 +3,6 @@
 //     final modelCourse = modelCourseFromJson(jsonString);
 
 import 'package:frontendfluttercoach/model/response/md_Buying_get.dart';
-import 'package:meta/meta.dart';
 import 'dart:convert';
 
 

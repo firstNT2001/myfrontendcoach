@@ -90,12 +90,13 @@ dependencies:
   water_drop_nav_bar: ^2.2.0+5
   anim_search_bar: ^2.0.3
   firestore_search: ^0.2.0
-  buddhist_datetime_dateformat:
-    path: libraries/buddhist_datetime_dateformat_sns
+  flutter_speed_dial: ^7.0.0
+  loading_indicator: ^3.1.1
   percent_indicator: ^4.2.3
   flutter_rating_stars: ^1.0.3+4
   flutter_rating_bar: ^4.0.1
-  
+  buddhist_datetime_dateformat:
+    path: libraries/buddhist_datetime_dateformat_sns
   # video_thumbnail: ^0.5.3
    
   

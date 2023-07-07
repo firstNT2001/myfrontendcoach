@@ -6,7 +6,7 @@ import 'package:cherry_toast/cherry_toast.dart';
 import 'package:cherry_toast/resources/arrays.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
-import 'package:flutter/src/widgets/placeholder.dart';
+
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:provider/provider.dart';
@@ -19,12 +19,12 @@ import '../../../../service/provider/appdata.dart';
 import '../../../coach/home_foodAndClip.dart';
 
 class ClipInsertPage extends StatefulWidget {
-   ClipInsertPage({super.key, required this.did, required this.modelClipList, required this.increaseClip});
+   const ClipInsertPage({super.key, required this.did, required this.modelClipList, required this.increaseClip});
   //id Day
-  late String did;
+  final  String did;
   //Food
-  late List<ModelClipList> modelClipList;
-  late List<ClipDayIdPost> increaseClip;
+  final  List<ModelClipList> modelClipList;
+  final  List<ClipDayIdPost> increaseClip;
 
   @override
   State<ClipInsertPage> createState() => _ClipInsertPageState();

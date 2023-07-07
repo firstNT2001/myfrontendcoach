@@ -1,7 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
-import 'package:flutter/src/widgets/placeholder.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:frontendfluttercoach/page/auth/login.dart';
 import 'package:frontendfluttercoach/widget/wg_infoCard.dart';
@@ -79,6 +78,21 @@ class _SideMenuState extends State<SideMenu> {
                         )),
                     title: Text(
                       "สร้างคอร์ส",
+                      style: Theme.of(context).textTheme.titleLarge,
+                    ),
+                  ),
+                  ListTile(
+                    onTap: () {
+                      Get.to(() => const FoodCoachPage());
+                    },
+                    leading: const SizedBox(
+                        height: 34,
+                        width: 34,
+                        child: Icon(
+                          FontAwesomeIcons.house,
+                        )),
+                    title: Text(
+                      "เมนูอาหาร",
                       style: Theme.of(context).textTheme.titleLarge,
                     ),
                   ),

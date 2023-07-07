@@ -6,7 +6,6 @@ import 'package:dio/dio.dart';
 import '../model/request/course_EX.dart';
 import '../model/request/status_clip.dart';
 import '../model/response/clip_get_res.dart';
-import '../model/response/course_get_res.dart';
 import '../model/response/md_Result.dart';
 import '../model/response/md_coach_course_get.dart';
 
@@ -42,7 +41,7 @@ abstract class CourseService {
   Future<HttpResponse<ModelResult>> updateStatusClip(
       @Path("cpID") String cpID, @Body() StatusClip statusClip);
 
-  @PUT("/course/coachID/{cid}")
+  @POST("/course/coachID/{cid}")
   Future<HttpResponse<ModelResult>> insetCourseByCoachID(
       @Path("cid") String cid, @Body() CourseCoachIdPost courseCoachIdPost);
 

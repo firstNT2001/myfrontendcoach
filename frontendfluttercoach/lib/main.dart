@@ -1,17 +1,13 @@
-
 import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
-import 'package:frontendfluttercoach/page/startApp.dart';
+
 import 'package:frontendfluttercoach/page/auth/login.dart';
 import 'package:frontendfluttercoach/service/provider/appdata.dart';
-import 'package:frontendfluttercoach/service/provider/coachData.dart';
-import 'package:frontendfluttercoach/service/provider/courseData.dart';
-import 'package:frontendfluttercoach/service/provider/dayOfCouseData.dart';
-import 'package:frontendfluttercoach/service/provider/listFood.dart';
+
 import 'package:frontendfluttercoach/theme/default.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
@@ -25,8 +21,9 @@ Future<void> main() async {
   GetStorage gs = GetStorage();
   final DefaultTheme defaultTheme = DefaultTheme();
   WidgetsFlutterBinding.ensureInitialized();
-   // Screen size
-  Size screenSize = MediaQueryData.fromWindow(WidgetsBinding.instance.window).size;
+  // Screen size
+  Size screenSize =
+      MediaQueryData.fromWindow(WidgetsBinding.instance.window).size;
   // Setup Timeout
   final sessionConfig = SessionConfig(
     invalidateSessionForAppLostFocus: const Duration(minutes: 3),
@@ -44,6 +41,7 @@ Future<void> main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
+
   /// Lock orientation Only on Android Chrome
   /// Android chrome must unins tall app first
   SystemChrome.setPreferredOrientations([
@@ -62,8 +60,8 @@ Future<void> main() async {
         scale = 1.0;
       }
     }
-  runApp(MaterialApp(
-    home: MultiProvider(
+    runApp(MaterialApp(
+      home: MultiProvider(
         providers: [
           ChangeNotifierProvider(
             create: (context) => AppData(),
@@ -87,7 +85,7 @@ Future<void> main() async {
                       );
                     },
                   ),
-                  themeMode: ThemeMode.dark,
+                  themeMode: ThemeMode.system,
                   theme: defaultTheme.flexTheme.theme.copyWith(
                       scaffoldBackgroundColor: Colors.white,
                       inputDecorationTheme: defaultTheme.flexTheme.theme.inputDecorationTheme.copyWith(
@@ -104,7 +102,7 @@ Future<void> main() async {
                   supportedLocales: const [
                     Locale('th', 'TH'),
                   ],
-                  home: LoginPage())),
+                  home: const LoginPage())),
         ),
       ),),
   ));});

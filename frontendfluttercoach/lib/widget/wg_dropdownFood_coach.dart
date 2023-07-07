@@ -1,16 +1,14 @@
-import 'dart:developer';
 
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
-import 'package:flutter/src/widgets/placeholder.dart';
-import 'package:frontendfluttercoach/model/response/md_FoodList_get.dart';
+
 
 class WidgetDropdownFoodInCoach extends StatefulWidget {
-   WidgetDropdownFoodInCoach({super.key, required this.selectedValue, required this.ModelfoodCoachs, required this.numberFoods});
-  late TextEditingController selectedValue;
-  late int numberFoods;
-  late List<String> ModelfoodCoachs;
+   const WidgetDropdownFoodInCoach({super.key, required this.selectedValue, required this.ModelfoodCoachs, required this.numberFoods});
+  final TextEditingController selectedValue;
+  final int numberFoods;
+  final List<String> ModelfoodCoachs;
   @override
   State<WidgetDropdownFoodInCoach> createState() => _WidgetDropdownFoodInCoachState();
 }

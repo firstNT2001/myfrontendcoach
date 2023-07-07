@@ -2,7 +2,6 @@
 //
 //     final statusClip = statusClipFromJson(jsonString);
 
-import 'package:meta/meta.dart';
 import 'dart:convert';
 
 StatusClip statusClipFromJson(String str) => StatusClip.fromJson(json.decode(str));

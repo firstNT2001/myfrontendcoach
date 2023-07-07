@@ -3,10 +3,8 @@ import 'dart:developer';
 
 import 'package:cherry_toast/cherry_toast.dart';
 import 'package:cherry_toast/resources/arrays.dart';
-import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
-import 'package:flutter/src/widgets/placeholder.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:frontendfluttercoach/model/request/food_foodID_put.dart';
 import 'package:frontendfluttercoach/model/response/md_FoodList_get.dart';
@@ -24,16 +22,16 @@ import '../../../../widget/wg_dropdown_string.dart';
 import '../../home_foodAndClip.dart';
 
 class EditFoodPage extends StatefulWidget {
-  EditFoodPage(
+  const EditFoodPage(
       {super.key,
       required this.fid,
       required this.did,
       required this.sequence,
       required this.coID});
-  late String fid;
-  late String did;
-  late String sequence;
-  late String coID;
+  final String fid;
+  final String did;
+  final String sequence;
+  final String coID;
 
   @override
   State<EditFoodPage> createState() => _EditFoodPageState();
@@ -90,20 +88,16 @@ class _EditFoodPageState extends State<EditFoodPage> {
         leading: IconButton(
           icon: const Icon(
             FontAwesomeIcons.chevronLeft,
-            color: Colors.black,
+            color: Colors.white,
           ),
           onPressed: () {
-            Get.to(() => HomeFoodAndClipPage(
-                  did: widget.did,
-                  sequence: widget.sequence,
-                ));
+            Get.back();
           },
         ),
         actions: [
           IconButton(
             icon: const Icon(
               FontAwesomeIcons.trash,
-              color: Colors.black,
             ),
             onPressed: () async {
               var response = await _foodCourseService.deleteFood(widget.fid);
@@ -162,8 +156,8 @@ class _EditFoodPageState extends State<EditFoodPage> {
   Future<void> loadFoodData() async {
     try {
       //foodCourse
-      var foodCoursedatas =
-          await _foodCourseService.foods(fid: widget.fid, ifid: '', did: '', name: '');
+      var foodCoursedatas = await _foodCourseService.foods(
+          fid: widget.fid, ifid: '', did: '', name: '');
       foodCourses = foodCoursedatas.data;
       if (foodCourses.first.time == '1') {
         selectedValuehand.text = 'มื้อเช้า';

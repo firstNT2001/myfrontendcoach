@@ -2,7 +2,6 @@
 //
 //     final listFoodCoachIdPost = listFoodCoachIdPostFromJson(jsonString);
 
-import 'package:meta/meta.dart';
 import 'dart:convert';
 
 ListFoodCoachIdPost listFoodCoachIdPostFromJson(String str) => ListFoodCoachIdPost.fromJson(json.decode(str));

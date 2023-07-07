@@ -7,9 +7,9 @@ import 'package:frontendfluttercoach/service/food.dart';
 import 'package:frontendfluttercoach/service/listClip.dart';
 
 import '../auth.dart';
-import '../clip.dart';
+
 import '../days.dart';
-import '../food.dart';
+
 import '../listFood.dart';
 import '../request.dart';
 

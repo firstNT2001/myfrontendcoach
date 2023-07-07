@@ -2,7 +2,6 @@
 //
 //     final registerCoachDto = registerCoachDtoFromJson(jsonString);
 
-import 'package:meta/meta.dart';
 import 'dart:convert';
 
 RegisterCoachDto? registerCoachDtoFromJson(String str) => RegisterCoachDto.fromJson(json.decode(str));

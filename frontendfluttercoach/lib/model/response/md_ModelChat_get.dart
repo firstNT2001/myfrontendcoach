@@ -2,7 +2,6 @@
 //
 //     final modelChat = modelChatFromJson(jsonString);
 
-import 'package:meta/meta.dart';
 import 'dart:convert';
 
 ModelChat modelChatFromJson(String str) => ModelChat.fromJson(json.decode(str));

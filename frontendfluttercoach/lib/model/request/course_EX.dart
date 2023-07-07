@@ -2,7 +2,6 @@
 //
 //     final courseExpiration = courseExpirationFromJson(jsonString);
 
-import 'package:meta/meta.dart';
 import 'dart:convert';
 
 CourseExpiration courseExpirationFromJson(String str) => CourseExpiration.fromJson(json.decode(str));

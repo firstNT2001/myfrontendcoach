@@ -1,6 +1,5 @@
 // ignore_for_file: deprecated_member_use
 
-import 'dart:convert';
 import 'dart:developer';
 import 'dart:typed_data';
 import 'package:auto_size_text/auto_size_text.dart';
@@ -14,7 +13,6 @@ import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../../model/response/course_get_res.dart';
 import '../../model/response/md_Coach_get.dart';
 import '../../model/response/md_coach_course_get.dart';
 import '../../model/response/md_request.dart';

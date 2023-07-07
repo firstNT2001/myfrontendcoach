@@ -1,11 +1,11 @@
 import 'dart:convert';
 import 'dart:developer';
-import 'dart:io';
-import 'dart:typed_data';
+
+
 
 import 'package:flutter/services.dart';
 import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
-import 'package:path_provider/path_provider.dart';
+
 
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:badges/badges.dart';
@@ -27,8 +27,8 @@ import '../../../user/mycourse.Detaildart/myClipinCourse/widget_loadcilcp.dart';
 import 'clip_insert_page.dart';
 
 class ClipSelectPage extends StatefulWidget {
-  ClipSelectPage({super.key, required this.did});
-  late String did;
+  const ClipSelectPage({super.key, required this.did});
+  final  String did;
 
   @override
   State<ClipSelectPage> createState() => _ClipSelectPageState();
@@ -48,10 +48,10 @@ class _ClipSelectPageState extends State<ClipSelectPage> {
   List<ClipDayIdPost> increaseClipDays = [];
 
   //image vdieo
-  String? _thumbnailFile;
-  String? _thumbnailUrl;
+  // String? _thumbnailFile;
+  // String? _thumbnailUrl;
 
-  Uint8List? _thumbnailData;
+  // Uint8List? _thumbnailData;
 
   List<String> imageURL = [];
   @override
