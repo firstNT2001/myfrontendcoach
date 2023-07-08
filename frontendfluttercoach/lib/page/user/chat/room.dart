@@ -16,6 +16,7 @@ class _RoomPageState extends State<RoomPage> {
   TextEditingController roomCtl = TextEditingController();
   TextEditingController userIdCtl = TextEditingController();
   TextEditingController firstNameCtl = TextEditingController();
+  TextEditingController roomNameCtl = TextEditingController();
 
   // Initial Firebase App connection => this will load config from
   // google-services.json
@@ -26,6 +27,7 @@ class _RoomPageState extends State<RoomPage> {
     super.initState();
     
     roomCtl.text = "301";
+    roomNameCtl.text = "เผา";
     userIdCtl.text = "111";
     firstNameCtl.text = "pond";
   }
@@ -73,6 +75,10 @@ class _RoomPageState extends State<RoomPage> {
                             controller: firstNameCtl,
                             textAlign: TextAlign.center,
                           ),
+                           TextField(
+                            controller: roomNameCtl,
+                            textAlign: TextAlign.center,
+                          ),
                           ElevatedButton(
                               onPressed: () async {
                                 if (roomCtl.text.isNotEmpty &&
@@ -84,7 +90,7 @@ class _RoomPageState extends State<RoomPage> {
                                         builder: (context) => ChatPage(
                                           roomID: roomCtl.text,
                                           userID: userIdCtl.text,
-                                          firstName: firstNameCtl.text,
+                                          firstName: firstNameCtl.text, roomName: roomNameCtl.text,
                                         ),
                                       ));
                                 }

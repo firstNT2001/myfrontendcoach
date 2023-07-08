@@ -129,7 +129,7 @@ class _ShowDayMycourseState extends State<ShowDayMycourse> {
                         style: Theme.of(context).textTheme.bodyLarge),
                     FilledButton.icon(onPressed: (){
                       //roomchat= widget.namecourse+coID.toString();
-                      Get.to(() => ChatPage(roomID: coID.toString(), userID: coID.toString(), firstName: widget.namecourse));
+                      Get.to(() => ChatPage(roomID: coID.toString(), userID: coID.toString(), firstName: widget.namecourse, roomName: "เผาา",));
                     }, icon: Icon(FontAwesomeIcons.facebookMessenger,size: 16,), label: Text("คุยกับโค้ช"))
                   ],
                 ),

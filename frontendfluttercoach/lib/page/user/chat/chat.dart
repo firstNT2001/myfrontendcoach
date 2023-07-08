@@ -15,10 +15,11 @@ import 'package:firebase_storage/firebase_storage.dart';
 
 class ChatPage extends StatefulWidget {
   final String roomID;
+  final String roomName;
   final String userID;
   final String firstName;
 
-  const ChatPage({Key? key, required this.roomID, required this.userID, required this.firstName}) : super(key: key);
+  const ChatPage({Key? key, required this.roomID, required this.roomName, required this.userID, required this.firstName}) : super(key: key);
 
   @override
   _ChatPageState createState() => _ChatPageState();
@@ -239,7 +240,7 @@ class _ChatPageState extends State<ChatPage> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: Text('Chatroom no: ${widget.firstName}'),
+          title: Text('Chatroom no: ${widget.roomName}'),
         ),
         body: StreamBuilder(
           // Start stream check
