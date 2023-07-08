@@ -175,9 +175,9 @@ class _FoodCoachPageState extends State<FoodCoachPage> {
 
   //Show
   FutureBuilder<void> showFood() {
-    Size screenSize = MediaQuery.of(context).size;
-    double width = (screenSize.width > 550) ? 550 : screenSize.width;
-    double padding = 8;
+    // Size screenSize = MediaQuery.of(context).size;
+    // double width = (screenSize.width > 550) ? 550 : screenSize.width;
+    // double padding = 8;
     return FutureBuilder(
       future: loadFoodDataMethod,
       builder: (context, snapshot) {
@@ -187,6 +187,7 @@ class _FoodCoachPageState extends State<FoodCoachPage> {
           return GridView.builder(
             gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
               crossAxisCount: 2,
+              mainAxisExtent: 300
             ),
             shrinkWrap: true,
             itemCount: foods.length,
@@ -196,11 +197,12 @@ class _FoodCoachPageState extends State<FoodCoachPage> {
                 padding: const EdgeInsets.all(8.0),
                 child: SizedBox(
                   height: MediaQuery.of(context).size.height * 0.4,
+                 
                   child: InkWell(
                     onTap: () {
                       Get.to(() => FoodEditCoachPage(ifid: listfood.ifid));
                     },
-                    child: Stack(
+                    child: Column(
                       children: [
                         if (listfood.image != '') ...{
                           AspectRatio(
@@ -216,35 +218,31 @@ class _FoodCoachPageState extends State<FoodCoachPage> {
                               )),
                           //color: Colors.white,
                         } else
-                          // Container(),
-                          Container(
-                              width: MediaQuery.of(context).size.width,
-                              height: MediaQuery.of(context).size.height,
-                              decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(8),
-                                  color: Colors.pink)),
-                        Positioned.fill(
-                            bottom: 5,
-                            //right: 0,
-                            child: Align(
-                              alignment: Alignment.centerRight,
+                            AspectRatio(
+                              aspectRatio: 16 / 13,
                               child: Container(
-                                  width: (width - 16 - (3 * padding)) / 2,
-                                  height:
-                                      MediaQuery.of(context).size.height * 0.18,
-                                  color: Color.fromARGB(96, 255, 255, 255),
-                                  //margin: EdgeInsets.all(20),
-                                  padding: const EdgeInsets.all(40),
-                                  child: AutoSizeText(
-                                    maxLines: 2,
-                                    listfood.name,
-                                    style:
-                                        Theme.of(context).textTheme.headlineSmall,
-                                  )),
-                            )),
+                                decoration: BoxDecoration(
+                                  color: const Color(0xff7c94b6),
+                                 
+                                  borderRadius: BorderRadius.circular(20),
+                                ),
+                              )),
+                          
+                      
                         Row(
-                          mainAxisAlignment: MainAxisAlignment.end,
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
+                           Padding(
+                             padding: const EdgeInsets.only(left: 16,top: 8),
+                             child: SizedBox(
+                                width: MediaQuery.of(context).size.width * 0.3,
+                                child: AutoSizeText(
+                                  listfood.name,
+                                  maxLines: 5,
+                                  style: Theme.of(context).textTheme.titleMedium,
+                                ),
+                              ),
+                           ),
                             IconButton(
                               onPressed: () {
                                 dialogDeleteFood(
