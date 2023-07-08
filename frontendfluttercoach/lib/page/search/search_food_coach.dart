@@ -146,7 +146,8 @@ class _SearchFoodCoachPageState extends State<SearchFoodCoachPage> {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          if (listfood.image != '') ...{
+                          if (listfood.image != '' ) ...{
+                            
                             SizedBox(
                               width: MediaQuery.of(context).size.width * 0.35,
                               height: MediaQuery.of(context).size.height,
