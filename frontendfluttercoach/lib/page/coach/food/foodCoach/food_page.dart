@@ -19,6 +19,7 @@ import '../../../../service/provider/appdata.dart';
 
 import '../../../clip/clipCoach/clip_edit_page.dart';
 import '../../../clip/clipCoach/clip_new_page.dart';
+import '../../../search/search_food_coach.dart';
 import 'food_edit_page.dart';
 import 'food_new_page.dart';
 
@@ -82,6 +83,7 @@ class _FoodCoachPageState extends State<FoodCoachPage> {
         ),
         resizeToAvoidBottomInset: false,
         appBar: AppBar(
+          automaticallyImplyLeading: false,
           backgroundColor: Theme.of(context).colorScheme.primary,
           title: TextButton(
               onPressed: () {},
@@ -89,22 +91,6 @@ class _FoodCoachPageState extends State<FoodCoachPage> {
                 'อาหารและคลิป',
                 style: Theme.of(context).textTheme.headlineSmall,
               )),
-          leading: IconButton(
-            icon: const Icon(
-              FontAwesomeIcons.chevronLeft,
-            ),
-            onPressed: () {
-              Get.back();
-            },
-          ),
-          actions: [
-            IconButton(
-              onPressed: () {},
-              icon: const Icon(
-                FontAwesomeIcons.magnifyingGlass,
-              ),
-            )
-          ],
           bottom: const TabBar(tabs: [
             Tab(
               icon: Icon(
@@ -123,6 +109,44 @@ class _FoodCoachPageState extends State<FoodCoachPage> {
           children: [
             Column(
               children: [
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: GestureDetector(
+                    onTap: () {
+                      Get.to(() => SearchFoodCoachPage());
+                    },
+                    child: Container(
+                        width: MediaQuery.of(context).size.width,
+                        height: 45,
+                        decoration: BoxDecoration(
+                            boxShadow: const <BoxShadow>[
+                              BoxShadow(
+                                  color: Colors.grey,
+                                  blurRadius: 5.0,
+                                  offset: Offset(0.0, 0.75))
+                            ],
+                            color: const Color.fromRGBO(244, 243, 243, 1),
+                            borderRadius: BorderRadius.circular(30)),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: [
+                            TextButton.icon(
+                              onPressed: () {
+                                Get.to(() => SearchFoodCoachPage());
+                              },
+                              icon: const Icon(
+                                FontAwesomeIcons.magnifyingGlass,
+                                color: Colors.black,
+                              ),
+                              label: const Text(
+                                "ค้นหารายการอาหาร...",
+                                style: TextStyle(color: Colors.grey),
+                              ),
+                            ),
+                          ],
+                        )),
+                  ),
+                ),
                 Expanded(
                   child: Padding(
                     padding: const EdgeInsets.only(
@@ -168,25 +192,29 @@ class _FoodCoachPageState extends State<FoodCoachPage> {
             itemCount: foods.length,
             itemBuilder: (context, index) {
               final listfood = foods[index];
-              return SizedBox(
-                height: MediaQuery.of(context).size.height * 0.2,
-                child: Card(
-                  //color: Colors.white,
-                  elevation: 1000,
+              return Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: SizedBox(
+                  height: MediaQuery.of(context).size.height * 0.4,
                   child: InkWell(
                     onTap: () {
                       Get.to(() => FoodEditCoachPage(ifid: listfood.ifid));
                     },
                     child: Stack(
-                      // mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      // crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         if (listfood.image != '') ...{
-                          Image.network(
-                            listfood.image,
-                            fit: BoxFit.cover,
-                            height: double.infinity,
-                          ),
+                          AspectRatio(
+                              aspectRatio: 16 / 13,
+                              child: Container(
+                                decoration: BoxDecoration(
+                                  color: const Color(0xff7c94b6),
+                                  image: DecorationImage(
+                                      image: NetworkImage(listfood.image),
+                                      fit: BoxFit.cover),
+                                  borderRadius: BorderRadius.circular(20),
+                                ),
+                              )),
+                          //color: Colors.white,
                         } else
                           // Container(),
                           Container(
@@ -204,14 +232,14 @@ class _FoodCoachPageState extends State<FoodCoachPage> {
                                   width: (width - 16 - (3 * padding)) / 2,
                                   height:
                                       MediaQuery.of(context).size.height * 0.18,
-                                  color: const Color.fromARGB(100, 22, 44, 33),
+                                  color: Color.fromARGB(96, 255, 255, 255),
                                   //margin: EdgeInsets.all(20),
                                   padding: const EdgeInsets.all(40),
                                   child: AutoSizeText(
                                     maxLines: 2,
                                     listfood.name,
                                     style:
-                                        Theme.of(context).textTheme.bodyLarge,
+                                        Theme.of(context).textTheme.headlineSmall,
                                   )),
                             )),
                         Row(

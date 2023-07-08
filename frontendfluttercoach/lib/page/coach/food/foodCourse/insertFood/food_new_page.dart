@@ -103,6 +103,7 @@ class _FoodNewCoursePageState extends State<FoodNewCoursePage> {
                           modelFoodList: increaseFood,
                           increaseFood: increaseFoodDay,
                         ));
+                    log(increaseFoodDay.length.toString());
                   }
                 },
               ),
@@ -188,10 +189,16 @@ class _FoodNewCoursePageState extends State<FoodNewCoursePage> {
                         setState(() {
                           //กลับเป็นสีเดิมเมือเลือกเมนูอาหารซํ้า
                           colorFood[index] = context.read<AppData>().colorNotSelect;
+                          
                           //เอาเมนูอาหารที่เลือกออกจาก list model
+                          increaseFoodDay.removeWhere(
+                              (item) => item.listFoodId == listFood.ifid);
+
                           increaseFood.removeWhere(
                               (item) => item.ifid == listFood.ifid);
+                         
                         });
+                        
                       }
                     },
                     child: Row(

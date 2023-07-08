@@ -191,6 +191,7 @@ class _ClipSelectPageState extends State<ClipSelectPage> {
       listClips = datas.data;
       // ignore: unused_local_variable
       for (var index in listClips) {
+        // ignore: use_build_context_synchronously
         colorClips.add(context.read<AppData>().colorNotSelect);
         //generateThumbnail(index.video.toString());
       }
@@ -243,6 +244,8 @@ class _ClipSelectPageState extends State<ClipSelectPage> {
                           //เอาเมนูอาหารที่เลือกออกจาก list model
                           increaseClips.removeWhere(
                               (item) => item.icpId == listClip.icpId);
+                          increaseClipDays.removeWhere(
+                              (item) => item.listClipId == listClip.icpId);
                         });
                       }
                     },
