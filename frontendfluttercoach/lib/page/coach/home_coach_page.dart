@@ -22,6 +22,7 @@ import '../../service/provider/appdata.dart';
 
 import '../../widget/wg_menu.dart';
 import '../Request/request_page.dart';
+import '../user/chat/room.dart';
 import 'course/course_edit_page.dart';
 
 class HomePageCoach extends StatefulWidget {
@@ -119,6 +120,10 @@ class _HomePageCoachState extends State<HomePageCoach> {
         child: Column(
           // crossAxisAlignment: CrossAxisAlignment.center,
           children: [
+             FilledButton.icon(onPressed: (){
+                      //roomchat= widget.namecourse+coID.toString();
+                      Get.to(() => RoomPage());
+                    }, icon: Icon(FontAwesomeIcons.facebookMessenger,size: 16,), label: Text("คุยกับโค้ช")),
             Container(
                 width: screenSize.height,
                 decoration: BoxDecoration(
