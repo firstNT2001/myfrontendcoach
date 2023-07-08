@@ -6,6 +6,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:frontendfluttercoach/page/user/chat/chat.dart';
 import 'package:frontendfluttercoach/page/user/mycourse.Detaildart/showFood_Clip.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
@@ -17,6 +18,7 @@ import '../../../model/response/md_Result.dart';
 import '../../../service/course.dart';
 import '../../../service/day.dart';
 import '../../../service/provider/appdata.dart';
+import '../../waitingForEdit/chat.dart';
 import '../chat/room.dart';
 
 class ShowDayMycourse extends StatefulWidget {
@@ -52,6 +54,7 @@ class _ShowDayMycourseState extends State<ShowDayMycourse> {
   DateTime nows = DateTime.now();
   String dateEX = "";
   String dateStart = "";
+  late String roomchat ;
   var update;
   int coID = 0;
   void initState() {
@@ -120,8 +123,16 @@ class _ShowDayMycourseState extends State<ShowDayMycourse> {
               ),
               Padding(
                 padding: const EdgeInsets.only(left: 15, top: 25),
-                child: Text(widget.namecourse,
-                    style: Theme.of(context).textTheme.bodyLarge),
+                child: Row(
+                  children: [
+                    Text(widget.namecourse,
+                        style: Theme.of(context).textTheme.bodyLarge),
+                    FilledButton.icon(onPressed: (){
+                      //roomchat= widget.namecourse+coID.toString();
+                      Get.to(() => ChatPage(roomID: coID.toString(), userID: coID.toString(), firstName: widget.namecourse));
+                    }, icon: Icon(FontAwesomeIcons.facebookMessenger,size: 16,), label: Text("คุยกับโค้ช"))
+                  ],
+                ),
               ),
               Padding(
                 padding: const EdgeInsets.only(left: 15, bottom: 8),

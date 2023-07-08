@@ -7,10 +7,7 @@ import 'package:frontendfluttercoach/page/user/chat/chat.dart';
 import '../../waitingForEdit/chat.dart';
 
 class RoomPage extends StatefulWidget {
-  RoomPage({super.key, required this.coursename,required this.courseID});
-  late String coursename;
-  late int courseID;
-
+  const RoomPage({super.key});
   @override
   _RoomPageState createState() => _RoomPageState();
 }
@@ -27,10 +24,10 @@ class _RoomPageState extends State<RoomPage> {
   @override
   void initState() {
     super.initState();
-    log(widget.coursename);
-    roomCtl.text = widget.coursename;
-    userIdCtl.text = widget.courseID.toString();
-    firstNameCtl.text = widget.coursename;
+    
+    roomCtl.text = "301";
+    userIdCtl.text = "111";
+    firstNameCtl.text = "pond";
   }
 
   @override
