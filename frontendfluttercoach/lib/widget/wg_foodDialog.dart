@@ -1,31 +1,33 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
-import 'package:frontendfluttercoach/widget/wg_dropdown_string.dart';
+import 'package:get/get.dart';
+import 'package:get/get_core/src/get_main.dart';
+
+import '../page/coach/food/foodCourse/editFood/food_edit_select.dart';
 
 //มืออาหาร
-  final selectedValuehand = TextEditingController();
-  final List<String> listhand = ['มื้อเช้า', 'มื้อเที่ยง', 'มื้อเย็น'];
+final selectedValuehand = TextEditingController();
+final List<String> listhand = ['มื้อเช้า', 'มื้อเที่ยง', 'มื้อเย็น'];
 
-void foodDialog(BuildContext context, String image, String name, String meal) {
-  
-   if (meal == '1') {
-        selectedValuehand.text = 'มื้อเช้า';
-      } else if (meal == '2') {
-        selectedValuehand.text = 'มื้อเที่ยง';
-      } else if (meal == '3') {
-        selectedValuehand.text = 'มื้อเย็น';
-      }
+void foodDialog(BuildContext context, String image, String name, String meal, String fid, String did, String sequence) {
+  if (meal == '1') {
+    selectedValuehand.text = 'มื้อเช้า';
+  } else if (meal == '2') {
+    selectedValuehand.text = 'มื้อเที่ยง';
+  } else if (meal == '3') {
+    selectedValuehand.text = 'มื้อเย็น';
+  }
 
   SmartDialog.show(builder: (_) {
     return Container(
       width: MediaQuery.of(context).size.width * 0.8,
-      height: MediaQuery.of(context).size.height * 0.6,
+      height: MediaQuery.of(context).size.height * 0.58,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(20),
-        color: Theme.of(context).colorScheme.primaryContainer,
+        color: Colors.white,
       ),
-      alignment: Alignment.center,
+      //lignment: Alignment.center,
       child: Column(
         mainAxisAlignment: MainAxisAlignment.start,
         //crossAxisAlignment: CrossAxisAlignment.center,
@@ -44,40 +46,44 @@ void foodDialog(BuildContext context, String image, String name, String meal) {
                   ),
                 )),
           ),
-          Text(name,style: Theme.of(context).textTheme.bodyMedium,),
-          const SizedBox(height: 16,),
+          Padding(
+            padding: const EdgeInsets.only(left: 20, right: 20),
+            child: Text(
+              name,
+              style: Theme.of(context).textTheme.titleLarge,
+            ),
+          ),
+          const SizedBox(
+            height: 16,
+          ),
           Row(
-            mainAxisAlignment: MainAxisAlignment.end,
-            
+            mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Padding(
-                padding: const EdgeInsets.only(right: 20,bottom: 10),
-                child: SizedBox(
-                  width: 150,
-                  //height: 200,
-                  child: WidgetDropdownString(
-                      title: 'เลือกมืออาหาร',
-                      selectedValue: selectedValuehand,
-                      ListItems: listhand,
-                    ),
-                ),
+              Text("มื้ออาหาร", style: Theme.of(context).textTheme.bodyLarge),
+              const SizedBox(
+                width: 10,
               ),
+              Text(selectedValuehand.text,
+                  style: Theme.of(context).textTheme.bodyLarge),
             ],
+          ),
+          const Divider(
+            indent: 20,
+            endIndent: 20,
           ),
           Row(
             //mainAxisSize: MainAxisSize.max,
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            mainAxisAlignment: MainAxisAlignment.end,
             children: [
-              FilledButton(
-                  onPressed: () {
-                    SmartDialog.dismiss();
-                  },
-                  child: Text("เปลี่ยนเมนู")),
-              FilledButton(
-                  onPressed: () {
-                    SmartDialog.dismiss();
-                  },
-                  child: Text("ตกลง"))
+              Padding(
+                padding: const EdgeInsets.only(right: 20.0),
+                child: FilledButton(
+                    onPressed: () {
+                      Get.to(() =>  FoodEditSelectPage(fid: fid, did: did, sequence: sequence, time: meal));
+                      SmartDialog.dismiss();
+                    },
+                    child: const Text("เปลี่ยนเมนู")),
+              ),
             ],
           ),
         ],

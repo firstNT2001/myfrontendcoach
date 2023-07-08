@@ -222,7 +222,7 @@ class _FoodCoachPageState extends State<FoodCoachPage> {
         } else {
           return GridView.builder(
             gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 2, mainAxisExtent: 300),
+                crossAxisCount: 2, mainAxisExtent: 250),
             shrinkWrap: true,
             itemCount: foods.length,
             itemBuilder: (context, index) {
@@ -265,7 +265,7 @@ class _FoodCoachPageState extends State<FoodCoachPage> {
                             Padding(
                               padding: const EdgeInsets.only(left: 16, top: 8),
                               child: SizedBox(
-                                width: MediaQuery.of(context).size.width * 0.3,
+                                width: MediaQuery.of(context).size.width * 0.25,
                                 child: AutoSizeText(
                                   listfood.name,
                                   maxLines: 5,
@@ -307,7 +307,7 @@ class _FoodCoachPageState extends State<FoodCoachPage> {
         } else {
           return GridView.builder(
             gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: 2,mainAxisExtent: 300,
+              crossAxisCount: 2,mainAxisExtent: 250,
             ),
             shrinkWrap: true,
             itemCount: clips.length,
@@ -337,7 +337,7 @@ class _FoodCoachPageState extends State<FoodCoachPage> {
                             Padding(
                               padding: const EdgeInsets.only(left: 16, top: 8),
                               child: SizedBox(
-                                width: MediaQuery.of(context).size.width * 0.3,
+                                width: MediaQuery.of(context).size.width * 0.25,
                                 child: AutoSizeText(
                                   listClips.name,
                                   maxLines: 5,

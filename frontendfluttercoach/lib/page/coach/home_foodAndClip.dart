@@ -16,7 +16,6 @@ import '../../model/response/clip_get_res.dart';
 import '../../service/food.dart';
 import '../../service/provider/appdata.dart';
 
-
 import '../../widget/wg_foodDialog.dart';
 import '../../widget/wg_search.dart';
 import '../clip/clipCourse/insertClip/clip_select_page.dart';
@@ -267,13 +266,14 @@ class _HomeFoodAndClipPageState extends State<HomeFoodAndClipPage> {
                   color: Colors.white,
                   child: InkWell(
                     onTap: () {
-                      foodDialog(context, listfood.listFood.image, listfood.listFood.name, "1");
-                      // Get.to(() => EditFoodPage(
-                      //       fid: listfood.fid.toString(),
-                      //       did: widget.did,
-                      //       sequence: widget.sequence,
-                      //       coID: context.read<AppData>().coID.toString(),
-                      //     ));
+                      foodDialog(
+                          context,
+                          listfood.listFood.image,
+                          listfood.listFood.name,
+                          "1",
+                          listfood.fid.toString(),
+                          listfood.dayOfCouseId.toString(),
+                          widget.sequence);
                     },
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,

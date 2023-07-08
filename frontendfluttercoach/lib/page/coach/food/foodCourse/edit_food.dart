@@ -103,18 +103,6 @@ class _EditFoodPageState extends State<EditFoodPage> {
               var response = await _foodCourseService.deleteFood(widget.fid);
               modelResult = response.data;
               if (modelResult.result == '1') {
-                // ignore: use_build_context_synchronously
-                // CherryToast.success(
-                //   title: const Text('ลบสำเร็จ'),
-                //   displayTitle: false,
-                //   description: const Text('ลบสำเร็จ'),
-                //   toastPosition: Position.bottom,
-                //   animationDuration: const Duration(milliseconds: 1000),
-                //   autoDismiss: true,
-                //   actionHandler: () {},
-                // ).show(context);
-                // Get.back();
-
                 Get.to(() => HomeFoodAndClipPage(
                       did: widget.did,
                       sequence: widget.sequence,

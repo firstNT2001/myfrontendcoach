@@ -138,6 +138,7 @@ class _SearchFoodCoachPageState extends State<SearchFoodCoachPage> {
                 children: [
                   SizedBox(
                     height: MediaQuery.of(context).size.height * 0.2,
+                    width: MediaQuery.of(context).size.width,
                     child: InkWell(
                       onTap: () {
                        Get.to(() => FoodEditCoachPage(ifid: listfood.ifid));
@@ -147,12 +148,11 @@ class _SearchFoodCoachPageState extends State<SearchFoodCoachPage> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           if (listfood.image != '' ) ...{
-                            
                             SizedBox(
                               width: MediaQuery.of(context).size.width * 0.35,
                               height: MediaQuery.of(context).size.height,
                               child: Padding(
-                                padding: const EdgeInsets.all(8.0),
+                                padding: const EdgeInsets.all(10.0),
                                 child: ClipRRect(
                                   borderRadius: BorderRadius.circular(8.0),
                                   child: Image.network(
@@ -164,7 +164,7 @@ class _SearchFoodCoachPageState extends State<SearchFoodCoachPage> {
                             ),
                           } else
                             Padding(
-                              padding: const EdgeInsets.all(8.0),
+                              padding: const EdgeInsets.all(10.0),
                               child: Container(
                                   width:
                                       MediaQuery.of(context).size.width * 0.3,
@@ -173,47 +173,35 @@ class _SearchFoodCoachPageState extends State<SearchFoodCoachPage> {
                                       borderRadius: BorderRadius.circular(8),
                                       color: Colors.pink)),
                             ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            crossAxisAlignment: CrossAxisAlignment.start,
+                          Center(
+                            child: SizedBox(
+                              width:
+                                  MediaQuery.of(context).size.width * 0.4,
+                              child: AutoSizeText(
+                                listfood.name,
+                                maxLines: 5,
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .titleMedium,
+                              ),
+                            ),
+                          ),
+                          const SizedBox(height: 20),
+                          Column(
+                            mainAxisAlignment: MainAxisAlignment.end,
+                            crossAxisAlignment: CrossAxisAlignment.end,
                             children: [
-                              Column(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  SizedBox(
-                                    width:
-                                        MediaQuery.of(context).size.width * 0.4,
-                                    child: AutoSizeText(
-                                      listfood.name,
-                                      maxLines: 5,
-                                      style: Theme.of(context)
-                                          .textTheme
-                                          .titleMedium,
-                                    ),
-                                  ),
-                                  const SizedBox(height: 20),
-                                ],
-                              ),
-                              Column(
-                                mainAxisAlignment: MainAxisAlignment.end,
-                                crossAxisAlignment: CrossAxisAlignment.end,
-                                children: [
-                                  IconButton(
-                                    onPressed: () {
-                                      dialogDeleteFood(context, listfood.ifid.toString());
-                                    },
-                                    icon: const Icon(
-                                      FontAwesomeIcons.trash,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                              const SizedBox(
-                                width: 50,
+                              IconButton(
+                                onPressed: () {
+                                  dialogDeleteFood(context, listfood.ifid.toString());
+                                },
+                                icon: const Icon(
+                                  FontAwesomeIcons.trash,
+                                ),
                               ),
                             ],
                           ),
+                        
                         ],
                       ),
                     ),
