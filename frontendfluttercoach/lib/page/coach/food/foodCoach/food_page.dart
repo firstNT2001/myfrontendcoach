@@ -19,6 +19,7 @@ import '../../../../service/provider/appdata.dart';
 
 import '../../../clip/clipCoach/clip_edit_page.dart';
 import '../../../clip/clipCoach/clip_new_page.dart';
+import '../../../search/search_clip_coach.dart';
 import '../../../search/search_food_coach.dart';
 import 'food_edit_page.dart';
 import 'food_new_page.dart';
@@ -113,7 +114,7 @@ class _FoodCoachPageState extends State<FoodCoachPage> {
                   padding: const EdgeInsets.all(8.0),
                   child: GestureDetector(
                     onTap: () {
-                      Get.to(() => SearchFoodCoachPage());
+                      Get.to(() => const SearchFoodCoachPage());
                     },
                     child: Container(
                         width: MediaQuery.of(context).size.width,
@@ -132,7 +133,7 @@ class _FoodCoachPageState extends State<FoodCoachPage> {
                           children: [
                             TextButton.icon(
                               onPressed: () {
-                                Get.to(() => SearchFoodCoachPage());
+                                Get.to(() => const SearchFoodCoachPage());
                               },
                               icon: const Icon(
                                 FontAwesomeIcons.magnifyingGlass,
@@ -158,6 +159,44 @@ class _FoodCoachPageState extends State<FoodCoachPage> {
             ),
             Column(
               children: [
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: GestureDetector(
+                    onTap: () {
+                      Get.to(() => const SearchClipCoachPage());
+                    },
+                    child: Container(
+                        width: MediaQuery.of(context).size.width,
+                        height: 45,
+                        decoration: BoxDecoration(
+                            boxShadow: const <BoxShadow>[
+                              BoxShadow(
+                                  color: Colors.grey,
+                                  blurRadius: 5.0,
+                                  offset: Offset(0.0, 0.75))
+                            ],
+                            color: const Color.fromRGBO(244, 243, 243, 1),
+                            borderRadius: BorderRadius.circular(30)),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: [
+                            TextButton.icon(
+                              onPressed: () {
+                                Get.to(() => const SearchFoodCoachPage());
+                              },
+                              icon: const Icon(
+                                FontAwesomeIcons.magnifyingGlass,
+                                color: Colors.black,
+                              ),
+                              label: const Text(
+                                "ค้นหารายการคลิปท่าออกกำลังกาย...",
+                                style: TextStyle(color: Colors.grey),
+                              ),
+                            ),
+                          ],
+                        )),
+                  ),
+                ),
                 Expanded(
                   child: Padding(
                     padding: const EdgeInsets.only(
@@ -175,9 +214,6 @@ class _FoodCoachPageState extends State<FoodCoachPage> {
 
   //Show
   FutureBuilder<void> showFood() {
-    // Size screenSize = MediaQuery.of(context).size;
-    // double width = (screenSize.width > 550) ? 550 : screenSize.width;
-    // double padding = 8;
     return FutureBuilder(
       future: loadFoodDataMethod,
       builder: (context, snapshot) {
@@ -186,9 +222,7 @@ class _FoodCoachPageState extends State<FoodCoachPage> {
         } else {
           return GridView.builder(
             gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: 2,
-              mainAxisExtent: 300
-            ),
+                crossAxisCount: 2, mainAxisExtent: 300),
             shrinkWrap: true,
             itemCount: foods.length,
             itemBuilder: (context, index) {
@@ -197,7 +231,6 @@ class _FoodCoachPageState extends State<FoodCoachPage> {
                 padding: const EdgeInsets.all(8.0),
                 child: SizedBox(
                   height: MediaQuery.of(context).size.height * 0.4,
-                 
                   child: InkWell(
                     onTap: () {
                       Get.to(() => FoodEditCoachPage(ifid: listfood.ifid));
@@ -218,31 +251,29 @@ class _FoodCoachPageState extends State<FoodCoachPage> {
                               )),
                           //color: Colors.white,
                         } else
-                            AspectRatio(
+                          AspectRatio(
                               aspectRatio: 16 / 13,
                               child: Container(
                                 decoration: BoxDecoration(
                                   color: const Color(0xff7c94b6),
-                                 
                                   borderRadius: BorderRadius.circular(20),
                                 ),
                               )),
-                          
-                      
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                           Padding(
-                             padding: const EdgeInsets.only(left: 16,top: 8),
-                             child: SizedBox(
+                            Padding(
+                              padding: const EdgeInsets.only(left: 16, top: 8),
+                              child: SizedBox(
                                 width: MediaQuery.of(context).size.width * 0.3,
                                 child: AutoSizeText(
                                   listfood.name,
                                   maxLines: 5,
-                                  style: Theme.of(context).textTheme.titleMedium,
+                                  style:
+                                      Theme.of(context).textTheme.titleMedium,
                                 ),
                               ),
-                           ),
+                            ),
                             IconButton(
                               onPressed: () {
                                 dialogDeleteFood(
@@ -268,9 +299,6 @@ class _FoodCoachPageState extends State<FoodCoachPage> {
 
   //Clips
   FutureBuilder<void> showClips() {
-    Size screenSize = MediaQuery.of(context).size;
-    double width = (screenSize.width > 550) ? 550 : screenSize.width;
-    double padding = 8;
     return FutureBuilder(
       future: loadClipDataMethod,
       builder: (context, snapshot) {
@@ -279,55 +307,45 @@ class _FoodCoachPageState extends State<FoodCoachPage> {
         } else {
           return GridView.builder(
             gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: 2,
+              crossAxisCount: 2,mainAxisExtent: 300,
             ),
             shrinkWrap: true,
             itemCount: clips.length,
             itemBuilder: (context, index) {
               final listClips = clips[index];
-              return SizedBox(
-                height: MediaQuery.of(context).size.height * 0.2,
-                child: Card(
-                  //color: Colors.white,
-                  elevation: 1000,
+              return Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: SizedBox(
+                  height: MediaQuery.of(context).size.height * 0.4,
                   child: InkWell(
                     onTap: () {
-                      Get.to(() => ClipEditCoachPage(
-                            icpId: listClips.icpId,
-                          ));
+                      Get.to(() => ClipEditCoachPage(icpId: listClips.icpId));
                     },
-                    child: Stack(
-                      // mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      // crossAxisAlignment: CrossAxisAlignment.start,
+                    child: Column(
                       children: [
-                        Container(
-                            width: MediaQuery.of(context).size.width,
-                            height: MediaQuery.of(context).size.height,
-                            decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(8),
-                                color: Colors.pink)),
-                        Positioned.fill(
-                            bottom: 5,
-                            //right: 0,
-                            child: Align(
-                              alignment: Alignment.centerRight,
-                              child: Container(
-                                  width: (width - 16 - (3 * padding)) / 2,
-                                  height:
-                                      MediaQuery.of(context).size.height * 0.18,
-                                  color: const Color.fromARGB(100, 22, 44, 33),
-                                  //margin: EdgeInsets.all(20),
-                                  padding: const EdgeInsets.all(40),
-                                  child: AutoSizeText(
-                                    maxLines: 2,
-                                    listClips.name,
-                                    style:
-                                        Theme.of(context).textTheme.bodyLarge,
-                                  )),
+                        AspectRatio(
+                            aspectRatio: 16 / 13,
+                            child: Container(
+                              decoration: BoxDecoration(
+                                color: const Color(0xff7c94b6),
+                                borderRadius: BorderRadius.circular(20),
+                              ),
                             )),
                         Row(
-                          mainAxisAlignment: MainAxisAlignment.end,
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
+                            Padding(
+                              padding: const EdgeInsets.only(left: 16, top: 8),
+                              child: SizedBox(
+                                width: MediaQuery.of(context).size.width * 0.3,
+                                child: AutoSizeText(
+                                  listClips.name,
+                                  maxLines: 5,
+                                  style:
+                                      Theme.of(context).textTheme.titleMedium,
+                                ),
+                              ),
+                            ),
                             IconButton(
                               onPressed: () {
                                 dialogDeleteClip(
@@ -418,7 +436,7 @@ class _FoodCoachPageState extends State<FoodCoachPage> {
                         });
                         SmartDialog.dismiss();
                       },
-                      child: Text("ตกลง"))
+                      child: const Text("ตกลง"))
                 ],
               ),
             ),

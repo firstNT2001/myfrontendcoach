@@ -43,7 +43,7 @@ class _FoodNewCoachPageState extends State<FoodNewCoachPage> {
   //selectimg
   PlatformFile? pickedImg;
   UploadTask? uploadTask;
-  String profile = " ";
+  String profile = "";
 
   @override
   void initState() {
