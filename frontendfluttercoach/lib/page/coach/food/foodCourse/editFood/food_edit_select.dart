@@ -261,9 +261,9 @@ class _FoodEditSelectPageState extends State<FoodEditSelectPage> {
                           } else {
                             // ignore: use_build_context_synchronously
                             CherryToast.warning(
-                              title: const Text('บันทึกไม่สำเร็จ'),
+                              title:  Text('มีเมนู $name ในวันนี้แล้ว'),
                               displayTitle: false,
-                              description: const Text('บันทึกไม่สำเร็จ'),
+                              description: Text('มีเมนู $name ในวันนี้แล้ว'),
                               toastPosition: Position.bottom,
                               animationDuration:
                                   const Duration(milliseconds: 1000),
