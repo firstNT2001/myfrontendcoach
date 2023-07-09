@@ -27,12 +27,15 @@ class _MyCousesState extends State<MyCouses> {
   late CourseService courseService;
   // late HttpResponse<ModelCourse> courses;
   List<Coachbycourse> courses = [];
-  List<ModelClip> clips=[];
+  List<ModelClip> clips = [];
   late Future<void> loadDataMethod;
 
   int uid = 0;
   double percen = 0;
-  int coID=0;
+  int coID = 0;
+  //show day not ex
+  DateTime nows = DateTime.now();
+  late DateTime today;
   @override
   void initState() {
     // TODO: implement initState
@@ -41,33 +44,50 @@ class _MyCousesState extends State<MyCouses> {
     courseService =
         CourseService(Dio(), baseUrl: context.read<AppData>().baseurl);
     loadDataMethod = loadData();
+    today = DateTime(nows.year, nows.month, nows.day);
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(),
-      body: Column(children: [
-        Row(
-          children: [
+      body: SafeArea(
+        child: Column(children: [
+          Align(
+            alignment: Alignment.topRight,
+            child: IconButton(
+                    icon: Icon(
+                      Icons.history_rounded,
+                      size: 40,
+                    ),
+                    onPressed: () {}),
+          ),
+          Padding(
+            padding: const EdgeInsets.only(bottom: 15),
+            child: Row(
+                  children: [
             Icon(
               Icons.shopping_basket,
-              size: 40.0,
+              size: 28.0,
             ),
             Padding(
               padding: const EdgeInsets.only(left: 10),
               child: Text("รายการซื้อของฉัน",
                   style: Theme.of(context).textTheme.bodyLarge),
-            )
-          ],
-        ),
-        Divider(),
-        Expanded(
-            child: Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: loadcourse(),
-        )),
-      ]),
+            ),
+            
+              
+            
+                  ],
+            ),
+          ),
+         
+          Expanded(
+          child: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: loadcourse(),
+          )),
+        ]),
+      ),
     );
   }
 
@@ -81,15 +101,16 @@ class _MyCousesState extends State<MyCouses> {
       var dataclips = await courseService.progess(coID.toString());
       log(coID.toString());
       clips = dataclips.data;
-      log("clips"+clips.length.toString());
+      log("clips" + clips.length.toString());
       late int status;
       int sum = 0;
-      for(int i=0;i<clips.length-1;i++){
+      for (int i = 0; i < clips.length - 1; i++) {
         status = int.parse(clips[i].status);
         sum += status;
-        
       }
-      log("SUM"+sum.toString());
+      log("SUM" + sum.toString());
+      //showdaynotEx
+      
     } catch (err) {
       log('Error: $err');
     }
@@ -192,7 +213,8 @@ class _MyCousesState extends State<MyCouses> {
                                   ],
                                 ),
                                 Padding(
-                                  padding: const EdgeInsets.only(bottom: 4.0,top: 4.0),
+                                  padding: const EdgeInsets.only(
+                                      bottom: 4.0, top: 4.0),
                                   child: LinearPercentIndicator(
                                     width: 280.0,
                                     lineHeight: 8.0,
