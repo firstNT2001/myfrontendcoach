@@ -1,20 +1,17 @@
 import 'dart:convert';
 import 'dart:developer';
-import 'dart:typed_data';
-
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:retrofit/dio.dart';
 import '../../../model/response/md_Result.dart';
-import '../../../model/response/md_res_gbprime.dart';
+
 import '../../../service/wallet.dart';
 import '../profileUser.dart';
 
 class getQrcode extends StatefulWidget {
-  getQrcode({super.key, required this.money, required this.refNo});
-  late double money;
-  late String refNo;
+  const getQrcode({super.key, required this.money, required this.refNo});
+  final double money;
+  final String refNo;
 
   @override
   State<getQrcode> createState() => _getQrcodeState();
@@ -113,9 +110,9 @@ class _getQrcodeState extends State<getQrcode> {
           String _imagetype = 'data:image/png;base64,' + base64string;
           //log("_imagetype : "+_imagetype.toString());
           //3. convert
-          final List<int> codeUnits = _imagetype.codeUnits;
+          //final List<int> codeUnits = _imagetype.codeUnits;
           //log("codeUnits : "+codeUnits.toString());
-          final Uint8List unit8List = Uint8List.fromList(codeUnits);
+          //final Uint8List unit8List = Uint8List.fromList(codeUnits);
 
           UriData imgQr = Uri.parse(_imagetype).data!;
           //log("unit8List"+unit8List.toString());

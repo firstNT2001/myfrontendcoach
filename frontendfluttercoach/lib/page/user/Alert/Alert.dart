@@ -59,7 +59,7 @@ class _AlertPageState extends State<AlertPage> {
   
   Future<void> loadData() async {
     try {
-      var datarequest = await requestService.request(rqID: '', uid: uid.toString(), cid:'')
+      var datarequest = await requestService.request(rqID: '', uid: uid.toString(), cid:'');
       requests = datarequest.data;
       for(int i=0;i<requests.length-1;i++){
         if(requests[i].status == "1"){
