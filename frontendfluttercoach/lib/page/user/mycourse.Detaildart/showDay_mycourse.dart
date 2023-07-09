@@ -68,7 +68,7 @@ class _ShowDayMycourseState extends State<ShowDayMycourse> {
         CourseService(Dio(), baseUrl: context.read<AppData>().baseurl);
     loadDataMethod = loadData();
 
-    today = DateTime(nows.year, nows.month, 14);
+    today = DateTime(nows.year, nows.month, nows.day);
     expirationDate = DateTime(nows.year, nows.month, nows.day + widget.dayincourse-1);
     var formatter = DateFormat.yMMMd();
 
