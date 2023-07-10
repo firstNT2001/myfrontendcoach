@@ -36,7 +36,7 @@ class _HomePageCoachState extends State<HomePageCoach> {
   // Courses
   late Future<void> loadCourseDataMethod;
   late CourseService _courseService;
-  List<Coachbycourse> courses = [];
+  List<Course> courses = [];
   TextEditingController search = TextEditingController();
   String statusName = "";
   String statusID = "";

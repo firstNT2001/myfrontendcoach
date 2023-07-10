@@ -21,7 +21,7 @@ class _ProfileCoachPageState extends State<ProfileCoachPage> {
   late CourseService courseService;
   late CoachService coachService;
   late Future<void> loadDataMethod;
-  late List<Coachbycourse> courses = [];
+  late List<Course> courses = [];
   late List<Coach> coach = [];
   int cidCoach = 0;
   int selectedIndex = 0;

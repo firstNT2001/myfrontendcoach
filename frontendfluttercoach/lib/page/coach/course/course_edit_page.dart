@@ -36,7 +36,7 @@ class CourseEditPage extends StatefulWidget {
 class _CourseEditPageState extends State<CourseEditPage> {
   late CourseService _courseService;
   late Future<void> loadDataMethod;
-  List<Coachbycourse> courses = [];
+  List<Course> courses = [];
 
   late ModelResult moduleResult;
 

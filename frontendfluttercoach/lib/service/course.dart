@@ -21,13 +21,13 @@ abstract class CourseService {
       @Path("coID") String coID);
 
   @GET("/course")
-  Future<HttpResponse<List<Coachbycourse>>> course(
+  Future<HttpResponse<List<Course>>> course(
       {@Query("coID") required String coID,
       @Query("cid") required String cid,
       @Query("name") required String name});
 
   @GET("/course/sell/{coID}")
-  Future<HttpResponse<Coachbycourse>> coursebyCoID(
+  Future<HttpResponse<Course>> coursebyCoID(
        @Path("coID") String coID);
 
   @GET("/courses")

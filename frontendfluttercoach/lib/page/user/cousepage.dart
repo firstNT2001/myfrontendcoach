@@ -31,7 +31,7 @@ class _showCousePageState extends State<showCousePage> {
   late CourseService courseService;
   late Future<void> loadDataMethod;
   late ReviewService reviewService;
-  List<Coachbycourse> courses = [];
+  List<Course> courses = [];
   late ModelResult moduleResult;
   int courseId = 0;
   int cusID = 0;

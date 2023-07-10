@@ -40,7 +40,7 @@ class _DaysCoursePageState extends State<DaysCoursePage> {
   //CourseService / ไว้แก้ไข้วันที่มือเพิ่มหรือลบวัน
   late CourseService _courseService;
   late Future<void> loadCourseDataMethod;
-  List<Coachbycourse> course = [];
+  List<Course> course = [];
   //
   bool onVisibles = true;
   bool offVisibles = false;
