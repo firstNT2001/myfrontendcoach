@@ -1,14 +1,14 @@
 // To parse this JSON data, do
 //
-//     final courseGetCus = courseGetCusFromJson(jsonString);
+//     final modelCourseBuy = modelCourseBuyFromJson(jsonString);
 
 import 'dart:convert';
 
-List<CourseGetCus> courseGetCusFromJson(String str) => List<CourseGetCus>.from(json.decode(str).map((x) => CourseGetCus.fromJson(x)));
+List<ModelCourseBuy> modelCourseBuyFromJson(String str) => List<ModelCourseBuy>.from(json.decode(str).map((x) => ModelCourseBuy.fromJson(x)));
 
-String courseGetCusToJson(List<CourseGetCus> data) => json.encode(List<dynamic>.from(data.map((x) => x.toJson())));
+String modelCourseBuyToJson(List<ModelCourseBuy> data) => json.encode(List<dynamic>.from(data.map((x) => x.toJson())));
 
-class CourseGetCus {
+class ModelCourseBuy {
     int coId;
     int coachId;
     int buyingId;
@@ -20,12 +20,12 @@ class CourseGetCus {
     int days;
     int price;
     String status;
-    DateTime expirationDate;
+    String expirationDate;
     Coach coach;
     Buying buying;
     dynamic dayOfCouses;
 
-    CourseGetCus({
+    ModelCourseBuy({
         required this.coId,
         required this.coachId,
         required this.buyingId,
@@ -43,7 +43,7 @@ class CourseGetCus {
         required this.dayOfCouses,
     });
 
-    factory CourseGetCus.fromJson(Map<String, dynamic> json) => CourseGetCus(
+    factory ModelCourseBuy.fromJson(Map<String, dynamic> json) => ModelCourseBuy(
         coId: json["CoID"],
         coachId: json["CoachID"],
         buyingId: json["BuyingID"],
@@ -55,7 +55,7 @@ class CourseGetCus {
         days: json["Days"],
         price: json["Price"],
         status: json["Status"],
-        expirationDate: DateTime.parse(json["ExpirationDate"]),
+        expirationDate: json["ExpirationDate"],
         coach: Coach.fromJson(json["Coach"]),
         buying: Buying.fromJson(json["Buying"]),
         dayOfCouses: json["DayOfCouses"],
@@ -73,7 +73,7 @@ class CourseGetCus {
         "Days": days,
         "Price": price,
         "Status": status,
-        "ExpirationDate": expirationDate.toIso8601String(),
+        "ExpirationDate": expirationDate,
         "Coach": coach.toJson(),
         "Buying": buying.toJson(),
         "DayOfCouses": dayOfCouses,
@@ -83,32 +83,32 @@ class CourseGetCus {
 class Buying {
     int bid;
     int customerId;
-    DateTime buyDateTime;
-    String image;
+    String buyDateTime;
     Customer customer;
+    dynamic courses;
 
     Buying({
         required this.bid,
         required this.customerId,
         required this.buyDateTime,
-        required this.image,
         required this.customer,
+        required this.courses,
     });
 
     factory Buying.fromJson(Map<String, dynamic> json) => Buying(
         bid: json["Bid"],
         customerId: json["CustomerID"],
-        buyDateTime: DateTime.parse(json["BuyDateTime"]),
-        image: json["Image"],
+        buyDateTime: json["BuyDateTime"],
         customer: Customer.fromJson(json["Customer"]),
+        courses: json["Courses"],
     );
 
     Map<String, dynamic> toJson() => {
         "Bid": bid,
         "CustomerID": customerId,
-        "BuyDateTime": buyDateTime.toIso8601String(),
-        "Image": image,
+        "BuyDateTime": buyDateTime,
         "Customer": customer.toJson(),
+        "Courses": courses,
     };
 }
 
@@ -118,7 +118,7 @@ class Customer {
     String password;
     String email;
     String fullName;
-    DateTime birthday;
+    String birthday;
     String gender;
     String phone;
     String image;
@@ -153,7 +153,7 @@ class Customer {
         password: json["Password"],
         email: json["Email"],
         fullName: json["FullName"],
-        birthday: DateTime.parse(json["Birthday"]),
+        birthday: json["Birthday"],
         gender: json["Gender"],
         phone: json["Phone"],
         image: json["Image"],
@@ -171,7 +171,7 @@ class Customer {
         "Password": password,
         "Email": email,
         "FullName": fullName,
-        "Birthday": birthday.toIso8601String(),
+        "Birthday": birthday,
         "Gender": gender,
         "Phone": phone,
         "Image": image,
@@ -190,7 +190,7 @@ class Coach {
     String password;
     String email;
     String fullName;
-    DateTime birthday;
+    String birthday;
     String gender;
     String phone;
     String image;
@@ -225,7 +225,7 @@ class Coach {
         password: json["Password"],
         email: json["Email"],
         fullName: json["FullName"],
-        birthday: DateTime.parse(json["Birthday"]),
+        birthday: json["Birthday"],
         gender: json["Gender"],
         phone: json["Phone"],
         image: json["Image"],
@@ -243,7 +243,7 @@ class Coach {
         "Password": password,
         "Email": email,
         "FullName": fullName,
-        "Birthday": birthday.toIso8601String(),
+        "Birthday": birthday,
         "Gender": gender,
         "Phone": phone,
         "Image": image,

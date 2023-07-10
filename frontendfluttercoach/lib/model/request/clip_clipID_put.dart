@@ -9,21 +9,21 @@ ClipClipIdPut clipClipIdPutFromJson(String str) => ClipClipIdPut.fromJson(json.d
 String clipClipIdPutToJson(ClipClipIdPut data) => json.encode(data.toJson());
 
 class ClipClipIdPut {
+    int dayOfCouseId;
     int listClipId;
-    int status;
 
     ClipClipIdPut({
+        required this.dayOfCouseId,
         required this.listClipId,
-        required this.status,
     });
 
     factory ClipClipIdPut.fromJson(Map<String, dynamic> json) => ClipClipIdPut(
+        dayOfCouseId: json["DayOfCouseID"],
         listClipId: json["ListClipID"],
-        status: json["Status"],
     );
 
     Map<String, dynamic> toJson() => {
+        "DayOfCouseID": dayOfCouseId,
         "ListClipID": listClipId,
-        "Status": status,
     };
 }

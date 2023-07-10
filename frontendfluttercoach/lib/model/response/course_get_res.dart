@@ -24,7 +24,7 @@ class ModelCourse {
     int price;
     String status;
     DateTime expirationDate;
-    ModelBuying buying;
+    Buying buying;
     dynamic dayOfCouses;
 
     ModelCourse({
@@ -57,7 +57,7 @@ class ModelCourse {
         price: json["Price"],
         status: json["Status"],
         expirationDate: DateTime.parse(json["ExpirationDate"]),
-        buying: ModelBuying.fromJson(json["Buying"]),
+        buying: Buying.fromJson(json["Buying"]),
         dayOfCouses: json["DayOfCouses"],
     );
 

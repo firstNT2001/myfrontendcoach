@@ -6,6 +6,7 @@ import 'package:dio/dio.dart';
 import '../model/request/course_EX.dart';
 import '../model/request/status_clip.dart';
 import '../model/response/clip_get_res.dart';
+import '../model/response/md_Course_get.dart';
 import '../model/response/md_Result.dart';
 import '../model/response/md_coach_course_get.dart';
 import '../model/response/md_course_buy.dart';
@@ -17,18 +18,19 @@ abstract class CourseService {
   factory CourseService(Dio dio, {String baseUrl}) = _CourseService;
 
   @GET("/course/progess/{coID}")
-  Future<HttpResponse<List<ModelClip>>> progess(
-      @Path("coID") String coID);
+  Future<HttpResponse<List<ModelClip>>> progess(@Path("coID") String coID);
+
+  @GET("/course/user")
+  Future<HttpResponse<List<ModelCourseBuy>>> courseUser(@Query("cid") String cid);
 
   @GET("/course")
-  Future<HttpResponse<List<Coachbycourse>>> course(
+  Future<HttpResponse<List<Course>>> course(
       {@Query("coID") required String coID,
       @Query("cid") required String cid,
       @Query("name") required String name});
 
   @GET("/course/sell/{coID}")
-  Future<HttpResponse<Coachbycourse>> coursebyCoID(
-       @Path("coID") String coID);
+  Future<HttpResponse<Course>> coursebyCoID(@Path("coID") String coID);
 
   @GET("/courses")
   Future<HttpResponse<List<CourseGetCus>>> showcourseNotEx({
@@ -53,7 +55,7 @@ abstract class CourseService {
 
   @PUT("/course/expiration/{coID}")
   Future<HttpResponse<ModelResult>> updateCourseExpiration(
-       @Path("coID") String coID, @Body() CourseExpiration courseExpiration);
+      @Path("coID") String coID, @Body() CourseExpiration courseExpiration);
 
   @DELETE("/course/courseID/{coID}")
   Future<HttpResponse<ModelResult>> deleteCourse(@Path() String coID);

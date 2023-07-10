@@ -50,7 +50,7 @@ class _showFoodState extends State<showFood> {
   String status = "";
   List<bool> isChecked = [];
   late CourseService courseService;
-  late Coachbycourse courses;
+  late Course courses;
   late RequestService requestService;
   var update;
   var insert;

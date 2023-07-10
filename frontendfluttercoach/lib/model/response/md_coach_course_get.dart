@@ -7,11 +7,12 @@ import 'dart:convert';
 import 'md_Buying_get.dart';
 import 'md_Coach_get.dart';
 
-List<Coachbycourse> coachbycourseFromJson(String str) => List<Coachbycourse>.from(json.decode(str).map((x) => Coachbycourse.fromJson(x)));
 
-String coachbycourseToJson(List<Coachbycourse> data) => json.encode(List<dynamic>.from(data.map((x) => x.toJson())));
+List<Course> coachbycourseFromJson(String str) => List<Course>.from(json.decode(str).map((x) => Course.fromJson(x)));
 
-class Coachbycourse {
+String coachbycourseToJson(List<Course> data) => json.encode(List<dynamic>.from(data.map((x) => x.toJson())));
+
+class Course {
     int coId;
     int coachId;
     int buyingId;
@@ -25,10 +26,10 @@ class Coachbycourse {
     String status;
     String expirationDate;
     Coach coach;
-    ModelBuying buying;
+    Buying buying;
     dynamic dayOfCouses;
 
-    Coachbycourse({
+    Course({
         required this.coId,
         required this.coachId,
         required this.buyingId,
@@ -46,7 +47,7 @@ class Coachbycourse {
         required this.dayOfCouses,
     });
 
-    factory Coachbycourse.fromJson(Map<String, dynamic> json) => Coachbycourse(
+    factory Course.fromJson(Map<String, dynamic> json) => Course(
         coId: json["CoID"],
         coachId: json["CoachID"],
         buyingId: json["BuyingID"],
@@ -60,7 +61,7 @@ class Coachbycourse {
         status: json["Status"],
         expirationDate:json["ExpirationDate"],
         coach: Coach.fromJson(json["Coach"]),
-        buying: ModelBuying.fromJson(json["Buying"]),
+        buying: Buying.fromJson(json["Buying"]),
         dayOfCouses: json["DayOfCouses"],
     );
 

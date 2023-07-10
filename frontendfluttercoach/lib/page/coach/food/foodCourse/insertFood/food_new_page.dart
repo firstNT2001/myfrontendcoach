@@ -103,6 +103,7 @@ class _FoodNewCoursePageState extends State<FoodNewCoursePage> {
                           modelFoodList: increaseFood,
                           increaseFood: increaseFoodDay,
                         ));
+                    log(increaseFoodDay.length.toString());
                   }
                 },
               ),
@@ -170,7 +171,8 @@ class _FoodNewCoursePageState extends State<FoodNewCoursePage> {
                   color: colorFood[index],
                   child: InkWell(
                     onTap: () {
-                      if (colorFood[index] != context.read<AppData>().colorSelect) {
+                      if (colorFood[index] !=
+                          context.read<AppData>().colorSelect) {
                         setState(() {
                           // เพิ่มเมนูอาหารนั้นเมือกกดเลือก
                           ModelFoodList request = ModelFoodList(
@@ -187,8 +189,13 @@ class _FoodNewCoursePageState extends State<FoodNewCoursePage> {
                       } else {
                         setState(() {
                           //กลับเป็นสีเดิมเมือเลือกเมนูอาหารซํ้า
-                          colorFood[index] = context.read<AppData>().colorNotSelect;
+                          colorFood[index] =
+                              context.read<AppData>().colorNotSelect;
+
                           //เอาเมนูอาหารที่เลือกออกจาก list model
+                          increaseFoodDay.removeWhere(
+                              (item) => item.listFoodId == listFood.ifid);
+
                           increaseFood.removeWhere(
                               (item) => item.ifid == listFood.ifid);
                         });
@@ -198,29 +205,29 @@ class _FoodNewCoursePageState extends State<FoodNewCoursePage> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         if (listFood.image != '') ...{
-                          Padding(
-                            padding: const EdgeInsets.only(
-                                left: 8, top: 5, bottom: 5),
-                            child: Container(
-                                width: MediaQuery.of(context).size.width * 0.3,
-                                height: MediaQuery.of(context).size.height,
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(26),
-                                  image: DecorationImage(
-                                    image: NetworkImage(listFood.image),
-                                  ),
-                                )),
+                          SizedBox(
+                            width: MediaQuery.of(context).size.width * 0.35,
+                            height: MediaQuery.of(context).size.height,
+                            child: Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: ClipRRect(
+                                borderRadius: BorderRadius.circular(8.0),
+                                child: Image.network(
+                                  listFood.image,
+                                  fit: BoxFit.fill,
+                                ),
+                              ),
+                            ),
                           ),
                         } else
                           Padding(
-                            padding: const EdgeInsets.only(
-                                left: 8, top: 5, bottom: 5),
+                            padding: const EdgeInsets.all(8.0),
                             child: Container(
                                 width: MediaQuery.of(context).size.width * 0.3,
                                 height: MediaQuery.of(context).size.height,
                                 decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(26),
-                                    color: Colors.black26)),
+                                    borderRadius: BorderRadius.circular(8),
+                                    color: Colors.pink)),
                           ),
                         Column(
                           mainAxisAlignment: MainAxisAlignment.center,
@@ -368,7 +375,8 @@ class _FoodNewCoursePageState extends State<FoodNewCoursePage> {
                           log(jsonEncode(requestFoodPost));
                           selectedValuehand.text = 'มื้อเช้า';
                           //เปลี่ยนสีเมือเลือกเมนู฿อาหาร
-                          colorList[index] = context.read<AppData>().colorSelect;
+                          colorList[index] =
+                              context.read<AppData>().colorSelect;
                         });
 
                         SmartDialog.dismiss();
