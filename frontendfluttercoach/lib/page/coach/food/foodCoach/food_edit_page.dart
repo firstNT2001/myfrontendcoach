@@ -142,7 +142,7 @@ class _FoodEditCoachPageState extends State<FoodEditCoachPage> {
   Future<void> loadDataAsync() async {
     try {
       var res = await _listfoodService.listFoods(
-          ifid: widget.ifid.toString(), cid: '', name: '');
+          ifid: widget.ifid.toString(), cid: context.read<AppData>().cid.toString(), name: '');
       foods = res.data;
       name.text = foods.first.name;
       details.text = foods.first.details;

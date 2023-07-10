@@ -31,7 +31,7 @@ class _HomePageUserState extends State<HomePageUser> {
   late HttpResponse<Customer> customer;
 
   List<Coach> coaches = [];
-  List<Coachbycourse> courses = [];
+  List<Course> courses = [];
   //List<ModelCourse> coursesAll = [];
 
   //late List<Coachbycourse> coachname=[];

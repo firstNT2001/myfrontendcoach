@@ -2,15 +2,12 @@ import 'dart:developer';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:frontendfluttercoach/page/user/cousepage.dart';
-import '../../model/response/course_get_res.dart';
 import '../../model/response/md_Coach_get.dart';
 import '../../model/response/md_coach_course_get.dart';
 import '../../service/coach.dart';
 import '../../service/course.dart';
 import 'package:get/get.dart';
 import 'package:provider/provider.dart';
-
-import '../../service/course.dart';
 import '../../service/provider/appdata.dart';
 
 class ProfileCoachPage extends StatefulWidget {
@@ -24,14 +21,14 @@ class _ProfileCoachPageState extends State<ProfileCoachPage> {
   late CourseService courseService;
   late CoachService coachService;
   late Future<void> loadDataMethod;
-  late List<Coachbycourse> courses = [];
+  late List<Course> courses = [];
   late List<Coach> coach = [];
   int cidCoach = 0;
-  int _selectedIndex = 0;
+  int selectedIndex = 0;
   PageController pageController = PageController();
   void onTapped(int index){
     setState(() {
-      _selectedIndex = index;
+      selectedIndex = index;
     });
     pageController.jumpToPage(index);
   }
@@ -83,7 +80,6 @@ class _ProfileCoachPageState extends State<ProfileCoachPage> {
           if (snapshot.connectionState == ConnectionState.done) {
             return Column(
               children: [
-                if (courses != null)
                   Expanded(
                     child: ListView.builder(
                       itemCount: courses.length,
@@ -102,8 +98,6 @@ class _ProfileCoachPageState extends State<ProfileCoachPage> {
                       },
                     ),
                   )
-                else
-                  Container(),
               ],
             );
           } else {
@@ -118,8 +112,7 @@ class _ProfileCoachPageState extends State<ProfileCoachPage> {
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.done) {
             return Column(
-              children: [
-                if (coach != null)               
+              children: [             
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -162,8 +155,6 @@ class _ProfileCoachPageState extends State<ProfileCoachPage> {
                       ),
                     ],
                   )
-                else
-                  Container(),
               ],
             );
           } else {

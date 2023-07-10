@@ -12,6 +12,7 @@ import '../days.dart';
 
 import '../listFood.dart';
 import '../request.dart';
+import '../review.dart';
 
 class AppData with ChangeNotifier {
   //Api baseurl
@@ -20,7 +21,7 @@ class AppData with ChangeNotifier {
   //Color
   //Color colorCard;
   Color colorSelect = Color(0xff872100);
-  Color colorNotSelect = Color(0xff3d2c2c);
+  Color colorNotSelect = Color.fromARGB(255, 255, 255, 255);
 
   Map<String, dynamic> userFacebook = {};
   int coID = 0;
@@ -61,4 +62,5 @@ class AppData with ChangeNotifier {
   CoachService get couchService => CoachService(Dio(), baseUrl: baseurl);
   RequestService get requestService => RequestService(Dio(), baseUrl: baseurl);
   DaysService get daysService => DaysService(Dio(), baseUrl: baseurl);
+  ReviewService get reviewService => ReviewService(Dio(), baseUrl: baseurl);
 }

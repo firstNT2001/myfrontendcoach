@@ -52,8 +52,10 @@ class _ShowDayMycourseState extends State<ShowDayMycourse> {
   late Future<void> loadDataMethod;
 
   DateTime nows = DateTime.now();
-  String dateEX = "";
-  String dateStart = "";
+  late DateTime today;
+  late DateTime expirationDate;
+  String txtdateEX = "";
+  String txtdateStart = "";
   late String roomchat ;
   var update;
   int coID = 0;
@@ -66,13 +68,13 @@ class _ShowDayMycourseState extends State<ShowDayMycourse> {
         CourseService(Dio(), baseUrl: context.read<AppData>().baseurl);
     loadDataMethod = loadData();
 
-    DateTime date = DateTime(nows.year, nows.month, nows.day + widget.dayincourse);
-
+    today = DateTime(nows.year, nows.month, nows.day);
+    expirationDate = DateTime(nows.year, nows.month, nows.day + widget.dayincourse-1);
     var formatter = DateFormat.yMMMd();
 
     var onlyBuddhistYear = nows.yearInBuddhistCalendar;
-    dateEX = formatter.formatInBuddhistCalendarThai(date);
-    dateStart = formatter.formatInBuddhistCalendarThai(nows);
+    txtdateEX = formatter.formatInBuddhistCalendarThai(expirationDate);
+    txtdateStart = formatter.formatInBuddhistCalendarThai(nows);
   }
 
   @override
@@ -177,7 +179,11 @@ class _ShowDayMycourseState extends State<ShowDayMycourse> {
                                 //log(message);
                                 _bindPage(context);
                                 log("ยังไม่เริ่ม$widget.expirationDate");
-                              } else {
+                              } else if( today.day > expirationDate.day){
+
+                                  log("IUIUIU "+today.day.toString());
+                                  log("IUIUIU "+expirationDate.day.toString());
+                              }else {
                                 log("เริ่มแล้ว$widget.expirationDate");
                                 log(" DID:= ${listday.did}");
                                 context.read<AppData>().did = listday.did;
@@ -219,9 +225,9 @@ class _ShowDayMycourseState extends State<ShowDayMycourse> {
               child: Text("คุณต้องการที่จะเริ่มออกกำลังกายหรือไม่",
                   style: Theme.of(context).textTheme.bodyLarge),
             ),
-            Text("วันที่เริ่ม $dateStart",
+            Text("วันที่เริ่ม $txtdateStart",
                 style: Theme.of(context).textTheme.bodyLarge),
-            Text("วันที่เริ่ม $dateEX",
+            Text("วันที่สิ้นสุด $txtdateEX",
                 style: Theme.of(context).textTheme.bodyLarge),
             Padding(
               padding: const EdgeInsets.only(top: 15),
@@ -259,4 +265,65 @@ class _ShowDayMycourseState extends State<ShowDayMycourse> {
       );
     });
   }
+<<<<<<< HEAD
+=======
+    void _bindtoReviewPage(BuildContext ctx) {
+    //target widget
+    SmartDialog.show(builder: (_) {
+      return Container(
+        width: MediaQuery.of(context).size.width * 0.8,
+        height: MediaQuery.of(context).size.height * 0.24,
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(20),
+          color: Theme.of(context).colorScheme.primaryContainer,
+        ),
+        alignment: Alignment.center,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Padding(
+              padding: const EdgeInsets.only(bottom: 10),
+              child: Text("คอร์ส${widget.namecourse}ของคุณได้หมดอายุการใช้งานแล้ว",
+                  style: Theme.of(context).textTheme.bodyLarge),
+            ),
+            
+            Text("กรุณากดปุ่มตกลงเพื่อให้คะแนนตอร์สหลังออกกำลังกายจบคอร์ส",
+                style: Theme.of(context).textTheme.bodyLarge),
+            Padding(
+              padding: const EdgeInsets.only(top: 15),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: [
+                  FilledButton(
+                    onPressed: () {
+                      SmartDialog.dismiss();
+                    },
+                    child: const Text('ยกเลิก'),
+                  ),
+                  FilledButton(
+                    onPressed: () async {
+                      CourseExpiration courseExpiration =
+                          CourseExpiration(days: widget.dayincourse);
+
+                      log(jsonEncode(courseExpiration));
+                      update = await courseService.updateCourseExpiration(
+                          widget.coID.toString(), courseExpiration);
+                      moduleResult = update.data;
+                      log(moduleResult.result);
+                      context.read<AppData>().did = days.first.did;
+                      context.read<AppData>().idcourse = coID;
+                      log(days.first.did.toString());
+                      Get.to(() => showFood(indexSeq: days.first.sequence-1));
+                    },
+                    child: const Text('เริ่มเลย'),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+      );
+    });
+  }
+>>>>>>> feature/070723-week9_Pond
 }

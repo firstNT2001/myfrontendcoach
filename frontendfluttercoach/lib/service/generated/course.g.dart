@@ -71,7 +71,7 @@ class _CourseService implements CourseService {
   }
 
   @override
-  Future<HttpResponse<List<Coachbycourse>>> course({
+  Future<HttpResponse<List<Course>>> course({
     required coID,
     required cid,
     required name,
@@ -85,7 +85,7 @@ class _CourseService implements CourseService {
     final _headers = <String, dynamic>{};
     final _data = <String, dynamic>{};
     final _result = await _dio.fetch<List<dynamic>>(
-        _setStreamType<HttpResponse<List<Coachbycourse>>>(Options(
+        _setStreamType<HttpResponse<List<Course>>>(Options(
       method: 'GET',
       headers: _headers,
       extra: _extra,
@@ -98,20 +98,20 @@ class _CourseService implements CourseService {
             )
             .copyWith(baseUrl: baseUrl ?? _dio.options.baseUrl)));
     var value = _result.data!
-        .map((dynamic i) => Coachbycourse.fromJson(i as Map<String, dynamic>))
+        .map((dynamic i) => Course.fromJson(i as Map<String, dynamic>))
         .toList();
     final httpResponse = HttpResponse(value, _result);
     return httpResponse;
   }
 
   @override
-  Future<HttpResponse<Coachbycourse>> coursebyCoID(coID) async {
+  Future<HttpResponse<Course>> coursebyCoID(coID) async {
     const _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{};
     final _data = <String, dynamic>{};
     final _result = await _dio.fetch<Map<String, dynamic>>(
-        _setStreamType<HttpResponse<Coachbycourse>>(Options(
+        _setStreamType<HttpResponse<Course>>(Options(
       method: 'GET',
       headers: _headers,
       extra: _extra,
@@ -123,19 +123,19 @@ class _CourseService implements CourseService {
               data: _data,
             )
             .copyWith(baseUrl: baseUrl ?? _dio.options.baseUrl)));
-    final value = Coachbycourse.fromJson(_result.data!);
+    final value = Course.fromJson(_result.data!);
     final httpResponse = HttpResponse(value, _result);
     return httpResponse;
   }
 
   @override
-  Future<HttpResponse<List<Coachbycourse>>> courseByUid({required uid}) async {
+  Future<HttpResponse<List<CourseGetCus>>> courseByUid({required uid}) async {
     const _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{r'uid': uid};
     final _headers = <String, dynamic>{};
     final _data = <String, dynamic>{};
     final _result = await _dio.fetch<List<dynamic>>(
-        _setStreamType<HttpResponse<List<Coachbycourse>>>(Options(
+        _setStreamType<HttpResponse<List<CourseGetCus>>>(Options(
       method: 'GET',
       headers: _headers,
       extra: _extra,
@@ -148,7 +148,7 @@ class _CourseService implements CourseService {
             )
             .copyWith(baseUrl: baseUrl ?? _dio.options.baseUrl)));
     var value = _result.data!
-        .map((dynamic i) => Coachbycourse.fromJson(i as Map<String, dynamic>))
+        .map((dynamic i) => CourseGetCus.fromJson(i as Map<String, dynamic>))
         .toList();
     final httpResponse = HttpResponse(value, _result);
     return httpResponse;

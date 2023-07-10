@@ -4,19 +4,19 @@ import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:frontendfluttercoach/model/response/food_get_res.dart';
-import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
+import 'package:frontendfluttercoach/widget/wg_editFood_Dialog.dart';
+
 
 import 'package:provider/provider.dart';
 
-import '../page/coach/food/foodCourse/edit_food.dart';
 import '../service/food.dart';
 import '../service/provider/appdata.dart';
 
 class WidgetSearchFood extends StatefulWidget {
-  const WidgetSearchFood({super.key, required this.searchName, required this.did});
+  const WidgetSearchFood({super.key, required this.searchName, required this.did, required this.sequence});
   final TextEditingController searchName;
   final String did;
+  final String sequence;
   @override
   State<WidgetSearchFood> createState() => _WidgetSearchFoodState();
 }
@@ -134,12 +134,14 @@ class _WidgetSearchFoodState extends State<WidgetSearchFood> {
                   elevation: 1000,
                   child: InkWell(
                     onTap: () {
-                      Get.to(() => EditFoodPage(
-                            fid: listfood.fid.toString(),
-                            did: widget.did,
-                            sequence: context.read<AppData>().sequence,
-                            coID: context.read<AppData>().coID.toString(),
-                          ));
+                     dialogFoodEditInCourse(
+                          context,
+                          listfood.listFood.image,
+                          listfood.listFood.name,
+                          listfood.time,
+                          listfood.fid.toString(),
+                          listfood.dayOfCouseId.toString(),
+                          widget.sequence);
                     },
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,

@@ -40,7 +40,7 @@ class _DaysCoursePageState extends State<DaysCoursePage> {
   //CourseService / ไว้แก้ไข้วันที่มือเพิ่มหรือลบวัน
   late CourseService _courseService;
   late Future<void> loadCourseDataMethod;
-  List<Coachbycourse> course = [];
+  List<Course> course = [];
   //
   bool onVisibles = true;
   bool offVisibles = false;
@@ -113,11 +113,21 @@ class _DaysCoursePageState extends State<DaysCoursePage> {
               if (snapshot.connectionState == ConnectionState.done) {
                 return Column(
                   children: [
-                    //edit Day
-                    ElevatedButton(onPressed: (){
-                      dialogInsertDay(context);
-                    }, child: const Text("เพิ่มวัน")),
-                    if (offVisibles == true)
+                    if (offVisibles == true) ...{
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: [
+                          //edit Day
+                      Padding(
+                        padding: const EdgeInsets.only(right:16.0,top: 10),
+                        child: ElevatedButton(
+                            onPressed: () {
+                              dialogInsertDay(context);
+                            },
+                            child: const Text("เพิ่มวัน")),
+                      ),
+                      ],),
+                    
                       Expanded(
                         child: Visibility(
                           visible: offVisibles,
@@ -134,8 +144,10 @@ class _DaysCoursePageState extends State<DaysCoursePage> {
                                   key: ValueKey(listday),
                                   child: ListTile(
                                     key: ValueKey(listday),
-                                    title: Text(listday.sequence.toString()),
-                                    subtitle: Text(listday.did.toString()),
+                                    title: Text(
+                                        'วันที่ ${listday.sequence.toString()}'),
+                                    subtitle: Text(
+                                        'จำนวนเมนู ${listday.foods.length.toString()} จำนวนคลิป ${listday.clips.length.toString()} '),
                                     trailing: IconButton(
                                         onPressed: () {
                                           dialogDeleteDay(context, listday.did);
@@ -151,7 +163,8 @@ class _DaysCoursePageState extends State<DaysCoursePage> {
                                 updateDays(oldIndex, newIndex)),
                           ),
                         ),
-                      ),
+                      )
+                    },
                     //Not Edit Day
                     if (onVisibles == true)
                       Expanded(
@@ -170,9 +183,10 @@ class _DaysCoursePageState extends State<DaysCoursePage> {
                                     child: Card(
                                       elevation: 1000,
                                       child: ListTile(
-                                        title:
-                                            Text(listdays.sequence.toString()),
-                                        subtitle: Text(listdays.did.toString()),
+                                        title: Text(
+                                            'วันที่ ${listdays.sequence.toString()}'),
+                                        subtitle: Text(
+                                            'จำนวนเมนู ${listdays.foods.length.toString()} จำนวนคลิป ${listdays.clips.length.toString()} '),
                                         trailing: const Icon(Icons.more_vert),
                                         onTap: () {
                                           Get.to(() => HomeFoodAndClipPage(
@@ -371,12 +385,12 @@ class _DaysCoursePageState extends State<DaysCoursePage> {
                       onPressed: () async {
                         SmartDialog.dismiss();
                         startLoading(context);
-                         sequence = days.length+1;
-                         log(sequence.toString());
-                         DayDayIdPut request = DayDayIdPut(sequence: sequence);
-                         log(jsonEncode(request));
-                          var response = await _daysService.insertDayByCourseID(
-                              widget.coID, request);
+                        sequence = days.length + 1;
+                        log(sequence.toString());
+                        DayDayIdPut request = DayDayIdPut(sequence: sequence);
+                        log(jsonEncode(request));
+                        var response = await _daysService.insertDayByCourseID(
+                            widget.coID, request);
 
                         modelResult = response.data;
                         log("${modelResult.code} : ${modelResult.result}");

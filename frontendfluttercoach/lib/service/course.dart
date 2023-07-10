@@ -9,6 +9,7 @@ import '../model/response/clip_get_res.dart';
 import '../model/response/md_Course_get.dart';
 import '../model/response/md_Result.dart';
 import '../model/response/md_coach_course_get.dart';
+import '../model/response/md_course_buy.dart';
 
 part 'generated/course.g.dart';
 
@@ -23,16 +24,17 @@ abstract class CourseService {
   Future<HttpResponse<List<ModelCourseBuy>>> courseUser(@Query("cid") String cid);
 
   @GET("/course")
-  Future<HttpResponse<List<Coachbycourse>>> course(
+  Future<HttpResponse<List<Course>>> course(
       {@Query("coID") required String coID,
       @Query("cid") required String cid,
       @Query("name") required String name});
 
   @GET("/course/sell/{coID}")
-  Future<HttpResponse<Coachbycourse>> coursebyCoID(@Path("coID") String coID);
+  Future<HttpResponse<Course>> coursebyCoID(
+       @Path("coID") String coID);
 
   @GET("/courses")
-  Future<HttpResponse<List<Coachbycourse>>> courseByUid({
+  Future<HttpResponse<List<CourseGetCus>>> courseByUid({
     @Query("uid") required String uid,
   });
 

@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:developer';
 
 import 'package:auto_size_text/auto_size_text.dart';
@@ -109,8 +110,10 @@ class _FoodSelectTimePageState extends State<FoodSelectTimePage> {
                             width: MediaQuery.of(context).size.width,
                             child: ElevatedButton(
                                 onPressed: () async {
+                                  
                                   for (var index in widget.increaseFood) {
                                     log('id :${index.listFoodId}');
+                                    log(jsonEncode(index));
                                     var response = await _foodCourseService
                                         .insertFoodByDayID(widget.did, index);
                                     modelResult = response.data;

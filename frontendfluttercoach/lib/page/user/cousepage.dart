@@ -3,7 +3,6 @@ import 'dart:developer';
 
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
@@ -11,18 +10,13 @@ import 'package:frontendfluttercoach/service/review.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
-import 'package:retrofit/retrofit.dart';
-import 'package:retrofit/dio.dart';
-
 import '../../model/request/buycourse_coID_post.dart';
-import '../../model/response/course_get_res.dart';
 import '../../model/response/md_Result.dart';
 import '../../model/response/md_Review_get.dart';
 import '../../model/response/md_coach_course_get.dart';
 import '../../service/buy.dart';
 import '../../service/course.dart';
 import '../../service/provider/appdata.dart';
-import 'homepageUser.dart';
 import 'mycourse.Detaildart/mycourse.dart';
 
 class showCousePage extends StatefulWidget {
@@ -37,7 +31,7 @@ class _showCousePageState extends State<showCousePage> {
   late CourseService courseService;
   late Future<void> loadDataMethod;
   late ReviewService reviewService;
-  List<Coachbycourse> courses = [];
+  List<Course> courses = [];
   late ModelResult moduleResult;
   int courseId = 0;
   int cusID = 0;
