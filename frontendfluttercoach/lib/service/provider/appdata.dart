@@ -12,6 +12,7 @@ import '../days.dart';
 
 import '../listFood.dart';
 import '../request.dart';
+import '../review.dart';
 
 class AppData with ChangeNotifier {
   //Api baseurl
@@ -61,4 +62,5 @@ class AppData with ChangeNotifier {
   CoachService get couchService => CoachService(Dio(), baseUrl: baseurl);
   RequestService get requestService => RequestService(Dio(), baseUrl: baseurl);
   DaysService get daysService => DaysService(Dio(), baseUrl: baseurl);
+  ReviewService get reviewService => ReviewService(Dio(), baseUrl: baseurl);
 }

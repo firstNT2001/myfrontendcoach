@@ -4,14 +4,17 @@ import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
+import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:retrofit/dio.dart';
 
 import '../../../model/response/clip_get_res.dart';
 import '../../../model/response/course_get_res.dart';
 import '../../../model/response/md_coach_course_get.dart';
+import '../../../model/response/md_course_buy.dart';
 import '../../../service/course.dart';
 import '../../../service/provider/appdata.dart';
+import '../Review/review.dart';
 import '../cousepage.dart';
 import 'showDay_mycourse.dart';
 import 'package:percent_indicator/percent_indicator.dart';
@@ -26,13 +29,16 @@ class MyCouses extends StatefulWidget {
 class _MyCousesState extends State<MyCouses> {
   late CourseService courseService;
   // late HttpResponse<ModelCourse> courses;
-  List<Coachbycourse> courses = [];
-  List<ModelClip> clips=[];
+  List<CourseGetCus> courses = [];
+  List<ModelClip> clips = [];
   late Future<void> loadDataMethod;
 
-  int uid = 0;
+  late int uid;
   double percen = 0;
-  int coID=0;
+  late int coID;
+  //show day not ex
+  DateTime nows = DateTime.now();
+  late DateTime today;
   @override
   void initState() {
     // TODO: implement initState
@@ -41,33 +47,50 @@ class _MyCousesState extends State<MyCouses> {
     courseService =
         CourseService(Dio(), baseUrl: context.read<AppData>().baseurl);
     loadDataMethod = loadData();
+    today = DateTime(nows.year, nows.month, nows.day);
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(),
-      body: Column(children: [
-        Row(
-          children: [
+      body: SafeArea(
+        child: Column(children: [
+          Align(
+            alignment: Alignment.topRight,
+            child: IconButton(
+                    icon: Icon(
+                      Icons.history_rounded,
+                      size: 40,
+                    ),
+                    onPressed: () {}),
+          ),
+          Padding(
+            padding: const EdgeInsets.only(bottom: 15),
+            child: Row(
+                  children: [
             Icon(
               Icons.shopping_basket,
-              size: 40.0,
+              size: 28.0,
             ),
             Padding(
               padding: const EdgeInsets.only(left: 10),
               child: Text("รายการซื้อของฉัน",
                   style: Theme.of(context).textTheme.bodyLarge),
-            )
-          ],
-        ),
-        Divider(),
-        Expanded(
-            child: Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: loadcourse(),
-        )),
-      ]),
+            ),
+                  ],
+            ),
+          ),
+         
+          Expanded(
+          child: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: loadcourse(),
+          )),
+           FilledButton(onPressed: (){
+                 Get.to(() => ReviewPage());
+            }, child: Text("Review"))
+        ]),
+      ),
     );
   }
 
@@ -76,21 +99,38 @@ class _MyCousesState extends State<MyCouses> {
       log("idcus" + uid.toString());
       var datacouse = await courseService.courseByUid(uid: uid.toString());
       courses = datacouse.data;
-      coID = courses.first.coId;
-      log('couse: ${courses.length}');
-      var dataclips = await courseService.progess(coID.toString());
-      log(coID.toString());
-      clips = dataclips.data;
-      log("clips"+clips.length.toString());
-      late int status;
-      int sum = 0;
-      for(int i=0;i<clips.length-1;i++){
-        status = int.parse(clips[i].status);
-        sum += status;
-        
-      }
-      log("SUM"+sum.toString());
+      // coID = courses.first.coId;
+      // log('couse: ${courses.length}');
+      // var dataclips = await courseService.progess(coID.toString());
+      // log(coID.toString());
+      // clips = dataclips.data;
+      // log("clips" + clips.length.toString());
+      // late int status;
+      // int sum = 0;
+      // for (int i = 0; i < clips.length - 1; i++) {
+      //   status = int.parse(clips[i].status);
+      //   sum += status;
+      // }
+      // log("SUM" + sum.toString());
+      //showdaynotEx
+      // log("A");
+      
+      // for(int i=0;i<courses.length-1;i++){
+      //  int bb = int.parse(courses[i].expirationDate as String);
+      //   log("B"+bb.toString());
+      //   if((today.year & today.month & today.day) < (courses[i].expirationDate.year&courses[i].expirationDate.month&courses[i].expirationDate.day) ){
+      //     for(int i = 0; i< courses.length-1;i++){
+      //       courses = courses;
+      //       log(courses[i].coId.toString());
+      //     }
+      //   }
+      //   else{
+      //     log("XXXXYYU");
+      //   }
+      // }
+      
     } catch (err) {
+       log("B2");
       log('Error: $err');
     }
   }
@@ -113,15 +153,17 @@ class _MyCousesState extends State<MyCouses> {
                   onTap: () {
                     log(listcours.coId.toString());
                     log(listcours.image);
+                    DateFormat dateFormat = DateFormat("yyyy-MM-dd");
+                    String stExpirationDay = dateFormat.format(listcours.expirationDate);
                     context.read<AppData>().idcourse = listcours.coId;
-                    context.read<AppData>().cid = listcours.coach.cid;
+                    //context.read<AppData>().cid = listcours.coach.cid;
                     Get.to(() => ShowDayMycourse(
                         coID: listcours.coId,
                         img: listcours.image,
                         namecourse: listcours.name,
                         namecoach: listcours.coach.fullName,
                         detail: listcours.details,
-                        expirationDate: listcours.expirationDate,
+                        expirationDate: stExpirationDay,
                         dayincourse: listcours.days));
                   },
                   child: Container(
@@ -192,7 +234,8 @@ class _MyCousesState extends State<MyCouses> {
                                   ],
                                 ),
                                 Padding(
-                                  padding: const EdgeInsets.only(bottom: 4.0,top: 4.0),
+                                  padding: const EdgeInsets.only(
+                                      bottom: 4.0, top: 4.0),
                                   child: LinearPercentIndicator(
                                     width: 280.0,
                                     lineHeight: 8.0,

@@ -7,10 +7,7 @@ import 'package:frontendfluttercoach/page/user/chat/chat.dart';
 import '../../waitingForEdit/chat.dart';
 
 class RoomPage extends StatefulWidget {
-  RoomPage({super.key, required this.coursename,required this.courseID});
-  late String coursename;
-  late int courseID;
-
+  const RoomPage({super.key});
   @override
   _RoomPageState createState() => _RoomPageState();
 }
@@ -19,6 +16,7 @@ class _RoomPageState extends State<RoomPage> {
   TextEditingController roomCtl = TextEditingController();
   TextEditingController userIdCtl = TextEditingController();
   TextEditingController firstNameCtl = TextEditingController();
+  TextEditingController roomNameCtl = TextEditingController();
 
   // Initial Firebase App connection => this will load config from
   // google-services.json
@@ -27,10 +25,11 @@ class _RoomPageState extends State<RoomPage> {
   @override
   void initState() {
     super.initState();
-    log(widget.coursename);
-    roomCtl.text = widget.coursename;
-    userIdCtl.text = widget.courseID.toString();
-    firstNameCtl.text = widget.coursename;
+    
+    roomCtl.text = "301";
+    roomNameCtl.text = "เผา";
+    userIdCtl.text = "111";
+    firstNameCtl.text = "pond";
   }
 
   @override
@@ -76,6 +75,10 @@ class _RoomPageState extends State<RoomPage> {
                             controller: firstNameCtl,
                             textAlign: TextAlign.center,
                           ),
+                           TextField(
+                            controller: roomNameCtl,
+                            textAlign: TextAlign.center,
+                          ),
                           ElevatedButton(
                               onPressed: () async {
                                 if (roomCtl.text.isNotEmpty &&
@@ -87,7 +90,7 @@ class _RoomPageState extends State<RoomPage> {
                                         builder: (context) => ChatPage(
                                           roomID: roomCtl.text,
                                           userID: userIdCtl.text,
-                                          firstName: firstNameCtl.text,
+                                          firstName: firstNameCtl.text, roomName: roomNameCtl.text,
                                         ),
                                       ));
                                 }

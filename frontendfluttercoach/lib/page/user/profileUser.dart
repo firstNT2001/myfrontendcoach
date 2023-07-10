@@ -63,6 +63,7 @@ class _ProfileUserState extends State<ProfileUser> {
             return Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
+                // ignore: unnecessary_null_comparison
                 if (customer.data.uid != null)
                   Padding(
                     padding: const EdgeInsets.only(left: 25, top: 30),
