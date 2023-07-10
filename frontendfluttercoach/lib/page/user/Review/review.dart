@@ -36,8 +36,9 @@ class _ReviewPageState extends State<ReviewPage> {
     // TODO: implement initState
     super.initState();
     cid = context.read<AppData>().cid;
+    log(context.read<AppData>().baseurl);
     reviewService =
-        ReviewService(Dio(), baseUrl: context.read<AppData>().baseurl);
+       context.read<AppData>().reviewService;
   }
 
   @override
@@ -103,17 +104,19 @@ class _ReviewPageState extends State<ReviewPage> {
                   ),
                 ),
                 const Text("คะแนนความพึงพอใจ"),
-                Padding(
-                  padding: const EdgeInsets.only(bottom: 12, top: 25),
-                  child: const Text("เพิ่มความคิดเห็น"),
+                const Padding(
+                  padding: EdgeInsets.only(bottom: 12, top: 25),
+                  child: Text("เพิ่มความคิดเห็น"),
                 ),
                 SizedBox(
                     width: MediaQuery.of(context).size.width * 0.85,
-                    child: TextField(
+                    child:  TextField(
+                      controller: detail,
                         keyboardType: TextInputType.multiline, maxLines: 4)),
                 FilledButton(
                     onPressed: () async {
                       print(value.toInt());
+                      print(cid);
                      // log("A" + value.toString());
                       //log("B"+rating.toString());
                       InsertReview insertReview = InsertReview(
@@ -128,7 +131,7 @@ class _ReviewPageState extends State<ReviewPage> {
                       log(moduleResult.result);
                       // Get.to(() => MyCouses());
                     },
-                    child: Text("ยืนยัน"))
+                    child: const Text("ยืนยัน"))
               ],
             ),
           ),
