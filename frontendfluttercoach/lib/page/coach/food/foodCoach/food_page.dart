@@ -307,7 +307,8 @@ class _FoodCoachPageState extends State<FoodCoachPage> {
         } else {
           return GridView.builder(
             gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: 2,mainAxisExtent: 250,
+              crossAxisCount: 2,
+              mainAxisExtent: 250,
             ),
             shrinkWrap: true,
             itemCount: clips.length,
@@ -424,7 +425,7 @@ class _FoodCoachPageState extends State<FoodCoachPage> {
                       onPressed: () {
                         SmartDialog.dismiss();
                       },
-                      child: Text("ยกเลิก")),
+                      child: const Text("ยกเลิก")),
                   FilledButton(
                       onPressed: () async {
                         var response =
@@ -454,7 +455,7 @@ class _FoodCoachPageState extends State<FoodCoachPage> {
         height: MediaQuery.of(context).size.height * 0.3,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(20),
-          color: Theme.of(context).colorScheme.primaryContainer,
+          color: Colors.white,
         ),
         alignment: Alignment.center,
         child: Column(
@@ -477,7 +478,7 @@ class _FoodCoachPageState extends State<FoodCoachPage> {
                       onPressed: () {
                         SmartDialog.dismiss();
                       },
-                      child: Text("ยกเลิก")),
+                      child: const Text("ยกเลิก")),
                   FilledButton(
                       onPressed: () async {
                         var response =
@@ -489,7 +490,7 @@ class _FoodCoachPageState extends State<FoodCoachPage> {
                         });
                         SmartDialog.dismiss();
                       },
-                      child: Text("ตกลง"))
+                      child: const Text("ตกลง"))
                 ],
               ),
             ),

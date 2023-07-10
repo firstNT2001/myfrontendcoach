@@ -351,6 +351,9 @@ class _ClipSelectPageState extends State<ClipSelectPage> {
                 height: 8,
               ),
             },
+             const SizedBox(
+                height: 16,
+              ),
             Padding(
               padding: const EdgeInsets.only(bottom: 8),
               child: SizedBox(

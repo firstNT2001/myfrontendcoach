@@ -18,12 +18,14 @@ import 'package:provider/provider.dart';
 
 import '../../model/request/food_foodID_put.dart';
 import '../../model/response/clip_get_res.dart';
+import '../../model/response/md_ClipList_get.dart';
 import '../../model/response/md_Result.dart';
 import '../../service/food.dart';
 import '../../service/provider/appdata.dart';
 
 import '../../widget/wg_dropdown_string.dart';
-import '../../widget/wg_foodDialog.dart';
+import '../../widget/wg_editClip_Dialog.dart';
+import '../../widget/wg_editFood_Dialog.dart';
 import '../../widget/wg_search.dart';
 import '../clip/clipCourse/insertClip/clip_select_page.dart';
 import 'food/foodCourse/insertFood/food_new_page.dart';
@@ -125,6 +127,7 @@ class _HomeFoodAndClipPageState extends State<HomeFoodAndClipPage> {
                   Get.to(() => WidgetSearchFood(
                         searchName: searchName,
                         did: widget.did,
+                        sequence: widget.sequence,
                       ));
                 },
                 icon: const Icon(
@@ -158,6 +161,7 @@ class _HomeFoodAndClipPageState extends State<HomeFoodAndClipPage> {
                         Get.to(() => WidgetSearchFood(
                               searchName: searchName,
                               did: widget.did,
+                              sequence: widget.sequence,
                             ));
                       },
                       child: Container(
@@ -180,6 +184,7 @@ class _HomeFoodAndClipPageState extends State<HomeFoodAndClipPage> {
                                   Get.to(() => WidgetSearchFood(
                                         searchName: searchName,
                                         did: widget.did,
+                                        sequence: widget.sequence,
                                       ));
                                 },
                                 icon: const Icon(
@@ -274,11 +279,11 @@ class _HomeFoodAndClipPageState extends State<HomeFoodAndClipPage> {
                   color: Colors.white,
                   child: InkWell(
                     onTap: () {
-                      foodDialog(
+                      dialogFoodEditInCourse(
                           context,
                           listfood.listFood.image,
                           listfood.listFood.name,
-                          "1",
+                          listfood.time,
                           listfood.fid.toString(),
                           listfood.dayOfCouseId.toString(),
                           widget.sequence);
@@ -333,46 +338,61 @@ class _HomeFoodAndClipPageState extends State<HomeFoodAndClipPage> {
                               ),
                             ),
                             const SizedBox(height: 10),
-                            Container(
-                              width: MediaQuery.of(context).size.width * 0.4,
-                              height: 40,
-                              decoration: BoxDecoration(
-                                  boxShadow: const <BoxShadow>[
-                                    BoxShadow(
-                                        color: Colors.grey,
-                                        blurRadius: 5.0,
-                                        offset: Offset(0.0, 0.75))
-                                  ],
-                                  color: const Color.fromRGBO(244, 243, 243, 1),
-                                  borderRadius: BorderRadius.circular(30)),
-                              child: TextButton(
-                                onPressed: () {
-                                  dialog(
-                                      context,
-                                      listfood.listFood.ifid,
-                                      listfood.listFood.name,
-                                      listfood.listFood.image,
-                                      listfood.listFood.calories,
-                                      listfood.time,
-                                      listfood.fid.toString());
-                                },
-                                child: Text(
-                                  listfood.time == '1'
-                                      ? 'มื้อเช้า'
-                                      : listfood.time == '2'
-                                          ? 'มื้อเที่ยง'
-                                          : listfood.time == '3'
-                                              ? 'มื้อเย็น'
-                                              : 'มื้อใดก็ได้',
-                                  style: Theme.of(context).textTheme.bodyMedium,
+                            Row(
+                              children: [
+                                Container(
+                                  width:
+                                      MediaQuery.of(context).size.width * 0.4,
+                                  height: 40,
+                                  decoration: BoxDecoration(
+                                      boxShadow: const <BoxShadow>[
+                                        BoxShadow(
+                                            color: Colors.grey,
+                                            blurRadius: 5.0,
+                                            offset: Offset(0.0, 0.75))
+                                      ],
+                                      color: const Color.fromRGBO(
+                                          244, 243, 243, 1),
+                                      borderRadius: BorderRadius.circular(30)),
+                                  child: TextButton(
+                                    onPressed: () {
+                                      dialogFoodEditMealInCourse(
+                                          context,
+                                          listfood.listFood.ifid,
+                                          listfood.listFood.name,
+                                          listfood.listFood.image,
+                                          listfood.listFood.calories,
+                                          listfood.time,
+                                          listfood.fid.toString());
+                                    },
+                                    child: Text(
+                                      listfood.time == '1'
+                                          ? 'มื้อเช้า'
+                                          : listfood.time == '2'
+                                              ? 'มื้อเที่ยง'
+                                              : listfood.time == '3'
+                                                  ? 'มื้อเย็น'
+                                                  : 'มื้อใดก็ได้',
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .bodyMedium,
+                                    ),
+                                  ),
                                 ),
-                              ),
+                                const SizedBox(width: 20),
+                                IconButton(
+                                  onPressed: () {
+                                    dialogDeleteFood(
+                                        context, listfood.fid.toString());
+                                  },
+                                  icon: const Icon(
+                                    FontAwesomeIcons.trash,
+                                  ),
+                                ),
+                              ],
                             ),
                           ],
                         ),
-                        const SizedBox(
-                          width: 50,
-                        ),
                       ],
                     ),
                   ),
@@ -385,67 +405,8 @@ class _HomeFoodAndClipPageState extends State<HomeFoodAndClipPage> {
     );
   }
 
-  Widget showClip() {
-    return FutureBuilder(
-      future: loadClipDataMethod,
-      builder: (context, snapshot) {
-        if (snapshot.connectionState != ConnectionState.done) {
-          return const Center(child: CircularProgressIndicator());
-        } else {
-          return ListView.builder(
-            shrinkWrap: true,
-            itemCount: clips.length,
-            itemBuilder: (context, index) {
-              final listClip = clips[index];
-              return SizedBox(
-                height: MediaQuery.of(context).size.height * 0.2,
-                child: Card(
-                  color: Colors.white,
-                  child: InkWell(
-                    onTap: () {
-                      // Get.to(() => EditFoodPage(fid: listfood.fid.toString()));
-                    },
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.only(
-                              left: 8, right: 8, top: 5, bottom: 5),
-                          child: Container(
-                              width: MediaQuery.of(context).size.width * 0.3,
-                              height: MediaQuery.of(context).size.height,
-                              decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(26),
-                                  color: Colors.pink)),
-                        ),
-                        Center(
-                          child: SizedBox(
-                            width: MediaQuery.of(context).size.width * 0.4,
-                            child: AutoSizeText(
-                              listClip.listClip.name,
-                              maxLines: 5,
-                              style: Theme.of(context).textTheme.titleMedium,
-                            ),
-                          ),
-                        ),
-                        const SizedBox(
-                          width: 50,
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-              );
-            },
-          );
-        }
-      },
-    );
-  }
-
-  void dialog(BuildContext context, int ifid, String name, String img, int cal,
-      String meal, String fid) {
+  void dialogFoodEditMealInCourse(BuildContext context, int ifid, String name,
+      String img, int cal, String meal, String fid) {
     if (meal == '1') {
       selectedValuehand.text = 'มื้อเช้า';
     } else if (meal == '2') {
@@ -530,6 +491,7 @@ class _HomeFoodAndClipPageState extends State<HomeFoodAndClipPage> {
                                     : selectedValuehand.text == 'มื้อเย็น'
                                         ? '3'
                                         : '',
+                            dayOfCouseId: int.parse(widget.did),
                           );
                           log(jsonEncode(foodFoodIdPut));
                           var response = await _foodService.updateFoodByFoodID(
@@ -537,11 +499,10 @@ class _HomeFoodAndClipPageState extends State<HomeFoodAndClipPage> {
                           modelResult = response.data;
                           log(modelResult.result);
                           if (modelResult.result == '1') {
-                             SmartDialog.dismiss();
-                             setState(() {
-                               loadFoodDataMethod = loadFoodData();
-                             });
-                            
+                            SmartDialog.dismiss();
+                            setState(() {
+                              loadFoodDataMethod = loadFoodData();
+                            });
                           } else {
                             // ignore: use_build_context_synchronously
                             CherryToast.warning(
@@ -556,7 +517,6 @@ class _HomeFoodAndClipPageState extends State<HomeFoodAndClipPage> {
                               autoDismiss: true,
                             ).show(context);
                           }
-                         
                         },
                         child: const Text("บันทึก")),
                   ),
@@ -565,6 +525,133 @@ class _HomeFoodAndClipPageState extends State<HomeFoodAndClipPage> {
             ],
           ),
         );
+      },
+    );
+  }
+
+  //Dialog Delete
+  void dialogDeleteFood(BuildContext context, String fid) {
+    //target widget
+    SmartDialog.show(builder: (_) {
+      return Container(
+        width: MediaQuery.of(context).size.width * 0.8,
+        height: MediaQuery.of(context).size.height * 0.3,
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(20),
+          color: Colors.white,
+        ),
+        alignment: Alignment.center,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          //crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Padding(
+              padding: const EdgeInsets.only(
+                  left: 20, right: 20, top: 50, bottom: 16),
+              child: Text("คุณต้องการลบหรือไม",
+                  style: Theme.of(context).textTheme.headlineSmall),
+            ),
+            Padding(
+              padding: const EdgeInsets.only(top: 20),
+              child: Row(
+                //mainAxisSize: MainAxisSize.max,
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  FilledButton(
+                      onPressed: () {
+                        SmartDialog.dismiss();
+                      },
+                      child: const Text("ยกเลิก")),
+                  FilledButton(
+                      onPressed: () async {
+                        var response = await _foodService.deleteFood(fid);
+                        modelResult = response.data;
+                        log(modelResult.result);
+                        setState(() {
+                          loadFoodDataMethod = loadFoodData();
+                        });
+                        SmartDialog.dismiss();
+                      },
+                      child: const Text("ตกลง"))
+                ],
+              ),
+            ),
+          ],
+        ),
+      );
+    });
+  }
+
+  //Clip
+  Widget showClip() {
+    return FutureBuilder(
+      future: loadClipDataMethod,
+      builder: (context, snapshot) {
+        if (snapshot.connectionState != ConnectionState.done) {
+          return const Center(child: CircularProgressIndicator());
+        } else {
+          return ListView.builder(
+            shrinkWrap: true,
+            itemCount: clips.length,
+            itemBuilder: (context, index) {
+              final listClip = clips[index];
+              return SizedBox(
+                height: MediaQuery.of(context).size.height * 0.2,
+                child: Card(
+                  color: Colors.white,
+                  child: InkWell(
+                    onTap: () {
+                      ModelClipList request = ModelClipList(
+                          icpId: listClip.listClip.icpId,
+                          coachId: listClip.listClip.coachId,
+                          name: listClip.listClip.name,
+                          video: listClip.listClip.video,
+                          details: listClip.listClip.details,
+                          amountPerSet: listClip.listClip.amountPerSet);
+                      log(listClip.cpId.toString());
+                      dialogClipEditInCourse(
+                          context,
+                          request,
+                          listClip.cpId.toString(),
+                          listClip.dayOfCouseId.toString(),
+                          widget.sequence,
+                          int.parse(listClip.status));
+                    },
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.only(
+                              left: 8, right: 8, top: 5, bottom: 5),
+                          child: Container(
+                              width: MediaQuery.of(context).size.width * 0.3,
+                              height: MediaQuery.of(context).size.height,
+                              decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(26),
+                                  color: Colors.pink)),
+                        ),
+                        Center(
+                          child: SizedBox(
+                            width: MediaQuery.of(context).size.width * 0.4,
+                            child: AutoSizeText(
+                              listClip.listClip.name,
+                              maxLines: 5,
+                              style: Theme.of(context).textTheme.titleMedium,
+                            ),
+                          ),
+                        ),
+                        const SizedBox(
+                          width: 50,
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              );
+            },
+          );
+        }
       },
     );
   }

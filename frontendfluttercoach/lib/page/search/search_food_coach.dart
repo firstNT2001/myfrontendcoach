@@ -148,20 +148,22 @@ class _SearchFoodCoachPageState extends State<SearchFoodCoachPage> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           if (listfood.image != '' ) ...{
-                            SizedBox(
-                              width: MediaQuery.of(context).size.width * 0.35,
-                              height: MediaQuery.of(context).size.height,
-                              child: Padding(
-                                padding: const EdgeInsets.all(10.0),
+                           Padding(
+                              padding: const EdgeInsets.only(
+                                  left: 8, right: 8, top: 5, bottom: 5),
+                              child: Center(
                                 child: ClipRRect(
-                                  borderRadius: BorderRadius.circular(8.0),
-                                  child: Image.network(
-                                    listfood.image,
-                                    fit: BoxFit.fill,
+                                  borderRadius:
+                                      BorderRadius.circular(20), // Image border
+                                  child: SizedBox.fromSize(
+                                    size: const Size.fromRadius(
+                                        55), // Image radius
+                                    child: Image.network(
+                                        listfood.image,
+                                        fit: BoxFit.cover),
                                   ),
                                 ),
-                              ),
-                            ),
+                              )),
                           } else
                             Padding(
                               padding: const EdgeInsets.all(10.0),

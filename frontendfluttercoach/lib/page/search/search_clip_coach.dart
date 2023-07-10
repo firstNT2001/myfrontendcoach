@@ -167,7 +167,7 @@ class _SearchClipCoachPageState extends State<SearchClipCoachPage> {
     try {
       // log(widget.did);
       var datas =
-          await _listClipService.listClips(icpID: '', cid: '', name: searchName.text);
+          await _listClipService.listClips(icpID: '', cid: context.read<AppData>().cid.toString(), name: searchName.text);
       clips = datas.data;
       // log(foods.length.toString());
     } catch (err) {

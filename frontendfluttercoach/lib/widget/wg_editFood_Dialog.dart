@@ -10,7 +10,7 @@ import '../page/coach/food/foodCourse/editFood/food_edit_select.dart';
 final selectedValuehand = TextEditingController();
 final List<String> listhand = ['มื้อเช้า', 'มื้อเที่ยง', 'มื้อเย็น'];
 
-void foodDialog(BuildContext context, String image, String name, String meal, String fid, String did, String sequence) {
+void dialogFoodEditInCourse(BuildContext context, String image, String name, String meal, String fid, String did, String sequence) {
   if (meal == '1') {
     selectedValuehand.text = 'มื้อเช้า';
   } else if (meal == '2') {
