@@ -4,50 +4,54 @@
 
 import 'dart:convert';
 
+import 'package:flutter/material.dart';
+
 import 'md_Buying_get.dart';
 import 'md_Coach_get.dart';
 
+List<Course> coachbycourseFromJson(String str) =>
+    List<Course>.from(
+        json.decode(str).map((x) => Course.fromJson(x)));
 
-List<Course> coachbycourseFromJson(String str) => List<Course>.from(json.decode(str).map((x) => Course.fromJson(x)));
-
-String coachbycourseToJson(List<Course> data) => json.encode(List<dynamic>.from(data.map((x) => x.toJson())));
+String coachbycourseToJson(List<Course> data) =>
+    json.encode(List<dynamic>.from(data.map((x) => x.toJson())));
 
 class Course {
-    int coId;
-    int coachId;
-    int buyingId;
-    String name;
-    String details;
-    String level;
-    int amount;
-    String image;
-    int days;
-    int price;
-    String status;
-    String expirationDate;
-    Coach coach;
-    Buying buying;
-    dynamic dayOfCouses;
+  int coId;
+  int coachId;
+  int buyingId;
+  String name;
+  String details;
+  String level;
+  int amount;
+  String image;
+  int days;
+  int price;
+  String status;
+  String expirationDate;
+  Coach coach;
+  Buying? buying;
 
-    Course({
-        required this.coId,
-        required this.coachId,
-        required this.buyingId,
-        required this.name,
-        required this.details,
-        required this.level,
-        required this.amount,
-        required this.image,
-        required this.days,
-        required this.price,
-        required this.status,
-        required this.expirationDate,
-        required this.coach,
-        required this.buying,
-        required this.dayOfCouses,
-    });
+  Course({
+    required this.coId,
+    required this.coachId,
+    required this.buyingId,
+    required this.name,
+    required this.details,
+    required this.level,
+    required this.amount,
+    required this.image,
+    required this.days,
+    required this.price,
+    required this.status,
+    required this.expirationDate,
+    required this.coach,
+    required this.buying,
+  });
 
-    factory Course.fromJson(Map<String, dynamic> json) => Course(
+  factory Course.fromJson(Map<String, dynamic> json) {
+    debugPrint(json.toString());
+    return Course(
         coId: json["CoID"],
         coachId: json["CoachID"],
         buyingId: json["BuyingID"],
@@ -59,13 +63,13 @@ class Course {
         days: json["Days"],
         price: json["Price"],
         status: json["Status"],
-        expirationDate:json["ExpirationDate"],
+        expirationDate: json["ExpirationDate"],
         coach: Coach.fromJson(json["Coach"]),
         buying: Buying.fromJson(json["Buying"]),
-        dayOfCouses: json["DayOfCouses"],
-    );
+      );
+  }
 
-    Map<String, dynamic> toJson() => {
+  Map<String, dynamic> toJson() => {
         "CoID": coId,
         "CoachID": coachId,
         "BuyingID": buyingId,
@@ -79,12 +83,6 @@ class Course {
         "Status": status,
         "ExpirationDate": expirationDate,
         "Coach": coach.toJson(),
-        "Buying": buying.toJson(),
-        "DayOfCouses": dayOfCouses,
-    };
+        "Buying": buying?.toJson(),
+      };
 }
-
-
-
-
-

@@ -129,8 +129,7 @@ class _CourseService implements CourseService {
   }
 
   @override
-  Future<HttpResponse<List<CourseGetCus>>> showcourseNotEx(
-      {required uid}) async {
+  Future<HttpResponse<List<CourseGetCus>>> courseByUid({required uid}) async {
     const _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{r'uid': uid};
     final _headers = <String, dynamic>{};
@@ -144,32 +143,6 @@ class _CourseService implements CourseService {
             .compose(
               _dio.options,
               '/courses',
-              queryParameters: queryParameters,
-              data: _data,
-            )
-            .copyWith(baseUrl: baseUrl ?? _dio.options.baseUrl)));
-    var value = _result.data!
-        .map((dynamic i) => CourseGetCus.fromJson(i as Map<String, dynamic>))
-        .toList();
-    final httpResponse = HttpResponse(value, _result);
-    return httpResponse;
-  }
-
-  @override
-  Future<HttpResponse<List<CourseGetCus>>> showcourseEx({required uid}) async {
-    const _extra = <String, dynamic>{};
-    final queryParameters = <String, dynamic>{r'uid': uid};
-    final _headers = <String, dynamic>{};
-    final _data = <String, dynamic>{};
-    final _result = await _dio.fetch<List<dynamic>>(
-        _setStreamType<HttpResponse<List<CourseGetCus>>>(Options(
-      method: 'GET',
-      headers: _headers,
-      extra: _extra,
-    )
-            .compose(
-              _dio.options,
-              '/courses/EX',
               queryParameters: queryParameters,
               data: _data,
             )
