@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
 
+import '../../../model/response/md_coach_course_get.dart';
 import '../../../model/response/md_course_buy.dart';
 import '../../../service/course.dart';
 import '../../../service/provider/appdata.dart';
@@ -18,7 +19,7 @@ class HistoryPage extends StatefulWidget {
 
 class _HistoryPageState extends State<HistoryPage> {
   late CourseService courseService;
-  List<CourseGetCus> courses = [];
+  List<Course> courses = [];
   late Future<void> loadDataMethod;
 
   late int uid;

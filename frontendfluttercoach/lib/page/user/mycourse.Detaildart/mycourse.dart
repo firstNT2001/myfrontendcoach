@@ -16,6 +16,7 @@ import '../../../service/course.dart';
 import '../../../service/provider/appdata.dart';
 import '../Review/review.dart';
 import '../cousepage.dart';
+import 'history.dart';
 import 'showDay_mycourse.dart';
 import 'package:percent_indicator/percent_indicator.dart';
 
@@ -29,8 +30,8 @@ class MyCouses extends StatefulWidget {
 class _MyCousesState extends State<MyCouses> {
   late CourseService courseService;
   // late HttpResponse<ModelCourse> courses;
-  List<CourseGetCus> courses = [];
-  List<ModelClip> clips = [];
+  List<Course> courses = [];
+  List<ModelClip> clips=[];
   late Future<void> loadDataMethod;
 
   late int uid;
@@ -53,21 +54,10 @@ class _MyCousesState extends State<MyCouses> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: SafeArea(
-        child: Column(children: [
-          Align(
-            alignment: Alignment.topRight,
-            child: IconButton(
-                    icon: Icon(
-                      Icons.history_rounded,
-                      size: 40,
-                    ),
-                    onPressed: () {}),
-          ),
-          Padding(
-            padding: const EdgeInsets.only(bottom: 15),
-            child: Row(
-                  children: [
+      appBar: AppBar(),
+      body: Column(children: [
+        Row(
+          children: [
             Icon(
               Icons.shopping_basket,
               size: 28.0,
@@ -79,7 +69,7 @@ class _MyCousesState extends State<MyCouses> {
             ),
                   ],
             ),
-          ),
+          
          
           Expanded(
           child: Padding(
@@ -90,7 +80,7 @@ class _MyCousesState extends State<MyCouses> {
                  Get.to(() => ReviewPage());
             }, child: Text("Review"))
         ]),
-      ),
+    
     );
   }
 
@@ -153,10 +143,10 @@ class _MyCousesState extends State<MyCouses> {
                   onTap: () {
                     log(listcours.coId.toString());
                     log(listcours.image);
-                    DateFormat dateFormat = DateFormat("yyyy-MM-dd");
-                    String stExpirationDay = dateFormat.format(listcours.expirationDate);
                     context.read<AppData>().idcourse = listcours.coId;
                     //context.read<AppData>().cid = listcours.coach.cid;
+                    DateFormat dateFormat = DateFormat("yyyy-MM-dd");
+                    String stExpirationDay = listcours.expirationDate;
                     Get.to(() => ShowDayMycourse(
                         coID: listcours.coId,
                         img: listcours.image,
