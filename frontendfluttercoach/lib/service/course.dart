@@ -9,7 +9,6 @@ import '../model/response/clip_get_res.dart';
 import '../model/response/md_Course_get.dart';
 import '../model/response/md_Result.dart';
 import '../model/response/md_coach_course_get.dart';
-import '../model/response/md_course_buy.dart';
 
 part 'generated/course.g.dart';
 

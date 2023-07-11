@@ -31,7 +31,7 @@ class _MyCousesState extends State<MyCouses> {
   late CourseService courseService;
   // late HttpResponse<ModelCourse> courses;
   List<Course> courses = [];
-  List<ModelClip> clips = [];
+  List<ModelClip> clips=[];
   late Future<void> loadDataMethod;
 
   late int uid;
@@ -69,7 +69,7 @@ class _MyCousesState extends State<MyCouses> {
             ),
                   ],
             ),
-          ),
+          
          
           Expanded(
           child: Padding(
@@ -80,7 +80,7 @@ class _MyCousesState extends State<MyCouses> {
                  Get.to(() => ReviewPage());
             }, child: Text("Review"))
         ]),
-      ),
+    
     );
   }
 
@@ -143,9 +143,10 @@ class _MyCousesState extends State<MyCouses> {
                   onTap: () {
                     log(listcours.coId.toString());
                     log(listcours.image);
-                    String stExpirationDay = listcours.expirationDate;
                     context.read<AppData>().idcourse = listcours.coId;
                     //context.read<AppData>().cid = listcours.coach.cid;
+                    DateFormat dateFormat = DateFormat("yyyy-MM-dd");
+                    String stExpirationDay = listcours.expirationDate;
                     Get.to(() => ShowDayMycourse(
                         coID: listcours.coId,
                         img: listcours.image,
