@@ -4,18 +4,12 @@ import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
-import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
-import 'package:retrofit/dio.dart';
 
 import '../../../model/response/clip_get_res.dart';
-import '../../../model/response/course_get_res.dart';
 import '../../../model/response/md_coach_course_get.dart';
-import '../../../model/response/md_course_buy.dart';
 import '../../../service/course.dart';
 import '../../../service/provider/appdata.dart';
-import '../Review/review.dart';
-import '../cousepage.dart';
 import 'history.dart';
 import 'showDay_mycourse.dart';
 import 'package:percent_indicator/percent_indicator.dart';
@@ -31,7 +25,7 @@ class _MyCousesState extends State<MyCouses> {
   late CourseService courseService;
   // late HttpResponse<ModelCourse> courses;
   List<Course> courses = [];
-  List<ModelClip> clips=[];
+  List<ModelClip> clips = [];
   late Future<void> loadDataMethod;
 
   late int uid;
@@ -54,10 +48,23 @@ class _MyCousesState extends State<MyCouses> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(),
-      body: Column(children: [
-        Row(
-          children: [
+      body: SafeArea(
+        child: Column(children: [
+          Align(
+            alignment: Alignment.topRight,
+            child: IconButton(
+                    icon: Icon(
+                      Icons.history_rounded,
+                      size: 40,
+                    ),
+                    onPressed: () {
+                      Get.to(() => HistoryPage());
+                    }),
+          ),
+          Padding(
+            padding: const EdgeInsets.only(bottom: 15),
+            child: Row(
+                  children: [
             Icon(
               Icons.shopping_basket,
               size: 28.0,
@@ -69,18 +76,16 @@ class _MyCousesState extends State<MyCouses> {
             ),
                   ],
             ),
-          
+          ),
          
           Expanded(
           child: Padding(
         padding: const EdgeInsets.all(8.0),
         child: loadcourse(),
           )),
-           FilledButton(onPressed: (){
-                 Get.to(() => ReviewPage());
-            }, child: Text("Review"))
+          
         ]),
-    
+      ),
     );
   }
 
@@ -143,10 +148,9 @@ class _MyCousesState extends State<MyCouses> {
                   onTap: () {
                     log(listcours.coId.toString());
                     log(listcours.image);
+                    String stExpirationDay = listcours.expirationDate;
                     context.read<AppData>().idcourse = listcours.coId;
                     //context.read<AppData>().cid = listcours.coach.cid;
-                    DateFormat dateFormat = DateFormat("yyyy-MM-dd");
-                    String stExpirationDay = listcours.expirationDate;
                     Get.to(() => ShowDayMycourse(
                         coID: listcours.coId,
                         img: listcours.image,
@@ -186,14 +190,14 @@ class _MyCousesState extends State<MyCouses> {
                                 begin: Alignment.topCenter,
                                 end: Alignment.bottomCenter,
                                 colors: <Color>[
-                                  const Color.fromARGB(255, 0, 0, 0)
-                                      .withAlpha(0),
-                                  const Color.fromARGB(49, 0, 0, 0),
-                                  const Color.fromARGB(127, 0, 0, 0)
-                                  // const Color.fromARGB(255, 255, 255, 255)
+                                  // const Color.fromARGB(255, 0, 0, 0)
                                   //     .withAlpha(0),
-                                  // Color.fromARGB(39, 255, 255, 255),
-                                  // Color.fromARGB(121, 255, 255, 255)
+                                  // const Color.fromARGB(49, 0, 0, 0),
+                                  // const Color.fromARGB(127, 0, 0, 0)
+                                  const Color.fromARGB(255, 255, 255, 255)
+                                      .withAlpha(0),
+                                  Color.fromARGB(39, 255, 255, 255),
+                                  Color.fromARGB(107, 255, 255, 255)
                                 ],
                               ),
                               borderRadius: BorderRadius.circular(20),
@@ -207,7 +211,7 @@ class _MyCousesState extends State<MyCouses> {
                               children: [
                                 Text(listcours.name,
                                     style:
-                                        Theme.of(context).textTheme.titleLarge),
+                                        Theme.of(context).textTheme.titleLarge,),
                                 Row(
                                   children: [
                                     const Padding(

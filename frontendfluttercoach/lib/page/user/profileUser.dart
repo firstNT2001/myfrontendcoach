@@ -27,12 +27,14 @@ class _ProfileUserState extends State<ProfileUser> {
   late CustomerService customerService;
   late Future<void> loadDataMethod;
   late HttpResponse<Customer> customer;
-  int uid = 1;
+  late int uid;
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
+    uid = context.read<AppData>().uid;
+    log("userID"+uid.toString());
     customerService =
         CustomerService(Dio(), baseUrl: context.read<AppData>().baseurl);
     loadDataMethod = loadData();
