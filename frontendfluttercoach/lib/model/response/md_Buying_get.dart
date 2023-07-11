@@ -41,3 +41,4 @@ class Buying {
         "Customer": customer.toJson(),
     };
 }
+

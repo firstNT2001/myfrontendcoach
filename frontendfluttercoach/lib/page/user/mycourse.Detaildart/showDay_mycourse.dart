@@ -227,7 +227,7 @@ class _ShowDayMycourseState extends State<ShowDayMycourse> {
             ),
             Text("วันที่เริ่ม $txtdateStart",
                 style: Theme.of(context).textTheme.bodyLarge),
-            Text("วันที่สิ้นสุด $txtdateEX",
+            Text("วันที่เริ่ม $txtdateEX",
                 style: Theme.of(context).textTheme.bodyLarge),
             Padding(
               padding: const EdgeInsets.only(top: 15),

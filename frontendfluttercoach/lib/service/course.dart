@@ -34,7 +34,12 @@ abstract class CourseService {
        @Path("coID") String coID);
 
   @GET("/courses")
-  Future<HttpResponse<List<CourseGetCus>>> courseByUid({
+  Future<HttpResponse<List<Course>>> showcourseNotEx({
+    @Query("uid") required String uid,
+  });
+
+  @GET("/courses/EX")
+  Future<HttpResponse<List<Course>>> showcourseEx({
     @Query("uid") required String uid,
   });
 

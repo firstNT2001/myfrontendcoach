@@ -16,6 +16,7 @@ import '../../../service/course.dart';
 import '../../../service/provider/appdata.dart';
 import '../Review/review.dart';
 import '../cousepage.dart';
+import 'history.dart';
 import 'showDay_mycourse.dart';
 import 'package:percent_indicator/percent_indicator.dart';
 
@@ -29,7 +30,7 @@ class MyCouses extends StatefulWidget {
 class _MyCousesState extends State<MyCouses> {
   late CourseService courseService;
   // late HttpResponse<ModelCourse> courses;
-  List<CourseGetCus> courses = [];
+  List<Course> courses = [];
   List<ModelClip> clips = [];
   late Future<void> loadDataMethod;
 
@@ -53,21 +54,10 @@ class _MyCousesState extends State<MyCouses> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: SafeArea(
-        child: Column(children: [
-          Align(
-            alignment: Alignment.topRight,
-            child: IconButton(
-                    icon: Icon(
-                      Icons.history_rounded,
-                      size: 40,
-                    ),
-                    onPressed: () {}),
-          ),
-          Padding(
-            padding: const EdgeInsets.only(bottom: 15),
-            child: Row(
-                  children: [
+      appBar: AppBar(),
+      body: Column(children: [
+        Row(
+          children: [
             Icon(
               Icons.shopping_basket,
               size: 28.0,
@@ -97,7 +87,7 @@ class _MyCousesState extends State<MyCouses> {
   Future<void> loadData() async {
     try {
       log("idcus" + uid.toString());
-      var datacouse = await courseService.courseByUid(uid: uid.toString());
+      var datacouse = await courseService.showcourseNotEx(uid: uid.toString());
       courses = datacouse.data;
       // coID = courses.first.coId;
       // log('couse: ${courses.length}');
@@ -153,8 +143,7 @@ class _MyCousesState extends State<MyCouses> {
                   onTap: () {
                     log(listcours.coId.toString());
                     log(listcours.image);
-                    DateFormat dateFormat = DateFormat("yyyy-MM-dd");
-                    String stExpirationDay = dateFormat.format(listcours.expirationDate);
+                    String stExpirationDay = listcours.expirationDate;
                     context.read<AppData>().idcourse = listcours.coId;
                     //context.read<AppData>().cid = listcours.coach.cid;
                     Get.to(() => ShowDayMycourse(
