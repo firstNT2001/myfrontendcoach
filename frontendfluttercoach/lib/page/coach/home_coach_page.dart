@@ -22,7 +22,7 @@ import '../../service/provider/appdata.dart';
 
 import '../../widget/wg_menu.dart';
 import '../Request/request_page.dart';
-import '../user/chat/room.dart';
+// import '../user/chat/room.dart';
 import 'course/course_edit_page.dart';
 import 'course_user_page.dart';
 
@@ -124,7 +124,7 @@ class _HomePageCoachState extends State<HomePageCoach> {
              FilledButton.icon(onPressed: (){
                       //roomchat= widget.namecourse+coID.toString();
                       Get.to(() => const CourseUserPage());
-                    }, icon: Icon(FontAwesomeIcons.facebookMessenger,size: 16,), label: Text("คุยกับโค้ช")),
+                    }, icon: const Icon(FontAwesomeIcons.facebookMessenger,size: 16,), label: const Text("คุยกับโค้ช")),
             Container(
                 width: screenSize.height,
                 decoration: BoxDecoration(
