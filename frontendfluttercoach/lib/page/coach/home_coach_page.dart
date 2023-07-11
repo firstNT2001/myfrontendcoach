@@ -22,6 +22,7 @@ import '../../service/provider/appdata.dart';
 
 import '../../widget/wg_menu.dart';
 import '../Request/request_page.dart';
+import '../user/chat/room.dart';
 import 'course/course_edit_page.dart';
 import 'course_user_page.dart';
 

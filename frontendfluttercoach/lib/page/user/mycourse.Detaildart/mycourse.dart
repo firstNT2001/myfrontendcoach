@@ -97,7 +97,7 @@ class _MyCousesState extends State<MyCouses> {
   Future<void> loadData() async {
     try {
       log("idcus" + uid.toString());
-      var datacouse = await courseService.courseByUid(uid: uid.toString());
+      var datacouse = await courseService.showcourseNotEx(uid: uid.toString());
       courses = datacouse.data;
       // coID = courses.first.coId;
       // log('couse: ${courses.length}');

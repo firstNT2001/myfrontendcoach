@@ -4,9 +4,9 @@
 
 import 'dart:convert';
 
-List<Coach> coachFromJson(String str) => List<Coach>.from(json.decode(str).map((x) => Coach.fromJson(x)));
+Coach coachFromJson(String str) => Coach.fromJson(json.decode(str));
 
-String coachToJson(List<Coach> data) => json.encode(List<dynamic>.from(data.map((x) => x.toJson())));
+String coachToJson(Coach data) => json.encode(data.toJson());
 
 class Coach {
     int cid;

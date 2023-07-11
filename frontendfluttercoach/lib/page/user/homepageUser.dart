@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 
@@ -193,6 +195,8 @@ class _HomePageUserState extends State<HomePageUser> {
 
   Future<void> loadData() async {
     try {
+      // Coachbycourse course = Coachbycourse();
+      // log(jsonEncode(course));
       log("User ID"+uid.toString());
       customer = await customerService.customer(uid: uid.toString());
       var datacourse = await courseService.course(coID: '', cid: '', name: '');
