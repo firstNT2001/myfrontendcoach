@@ -16,6 +16,7 @@ import '../../../service/course.dart';
 import '../../../service/provider/appdata.dart';
 import '../Review/review.dart';
 import '../cousepage.dart';
+import 'history.dart';
 import 'showDay_mycourse.dart';
 import 'package:percent_indicator/percent_indicator.dart';
 
@@ -29,7 +30,7 @@ class MyCouses extends StatefulWidget {
 class _MyCousesState extends State<MyCouses> {
   late CourseService courseService;
   // late HttpResponse<ModelCourse> courses;
-  List<CourseGetCus> courses = [];
+  List<Course> courses = [];
   List<ModelClip> clips = [];
   late Future<void> loadDataMethod;
 
@@ -62,7 +63,9 @@ class _MyCousesState extends State<MyCouses> {
                       Icons.history_rounded,
                       size: 40,
                     ),
-                    onPressed: () {}),
+                    onPressed: () {
+                      Get.to(() => HistoryPage());
+                    }),
           ),
           Padding(
             padding: const EdgeInsets.only(bottom: 15),
@@ -153,8 +156,7 @@ class _MyCousesState extends State<MyCouses> {
                   onTap: () {
                     log(listcours.coId.toString());
                     log(listcours.image);
-                    DateFormat dateFormat = DateFormat("yyyy-MM-dd");
-                    String stExpirationDay = dateFormat.format(listcours.expirationDate);
+                    String stExpirationDay = listcours.expirationDate;
                     context.read<AppData>().idcourse = listcours.coId;
                     //context.read<AppData>().cid = listcours.coach.cid;
                     Get.to(() => ShowDayMycourse(
