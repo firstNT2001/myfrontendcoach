@@ -24,7 +24,7 @@ import '../../../service/provider/appdata.dart';
 import 'package:expansion_tile_card/expansion_tile_card.dart';
 
 import '../../../service/request.dart';
-import 'myClipinCourse/widget_loadcilcp.dart';
+import 'Widget/widget_loadcilcp.dart';
 import 'mycourse.dart';
 
 class showFood extends StatefulWidget {

@@ -3,7 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class WidgetloadCilp extends StatefulWidget {
-  WidgetloadCilp({super.key,required this.urlVideo,required this.nameclip});
+  WidgetloadCilp({super.key, required this.urlVideo, required this.nameclip});
   late String urlVideo;
   late String nameclip;
   @override
@@ -11,10 +11,10 @@ class WidgetloadCilp extends StatefulWidget {
 }
 
 class _WidgetloadCilpState extends State<WidgetloadCilp> {
-   late String videoUrl = widget.urlVideo;
-   late VideoPlayerController _videoPlayerController;
+  late String videoUrl = widget.urlVideo;
+  late VideoPlayerController _videoPlayerController;
   late CustomVideoPlayerController _customVideoPlayerController;
-    @override
+  @override
   void initState() {
     super.initState();
     _videoPlayerController = VideoPlayerController.network(videoUrl)
@@ -24,14 +24,13 @@ class _WidgetloadCilpState extends State<WidgetloadCilp> {
       videoPlayerController: _videoPlayerController,
     );
   }
+
   @override
   Widget build(BuildContext context) {
     return CupertinoPageScaffold(
-      
       child: SafeArea(
         child: CustomVideoPlayer(
-          customVideoPlayerController: _customVideoPlayerController
-        ),
+            customVideoPlayerController: _customVideoPlayerController),
       ),
     );
   }

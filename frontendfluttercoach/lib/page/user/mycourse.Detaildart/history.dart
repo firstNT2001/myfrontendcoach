@@ -3,12 +3,14 @@ import 'dart:developer';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:get/get.dart';
 import 'package:provider/provider.dart';
 
 import '../../../model/response/md_coach_course_get.dart';
 import '../../../model/response/md_course_buy.dart';
 import '../../../service/course.dart';
 import '../../../service/provider/appdata.dart';
+import '../Review/review.dart';
 
 class HistoryPage extends StatefulWidget {
   const HistoryPage({super.key});
@@ -32,16 +34,17 @@ class _HistoryPageState extends State<HistoryPage> {
         CourseService(Dio(), baseUrl: context.read<AppData>().baseurl);
     loadDataMethod = loadData();
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: SafeArea(child: Column(
-        children: [
-          loadcourse()
-        ],
+      body: SafeArea(
+          child: Column(
+        children: [loadcourse()],
       )),
     );
   }
+
   Widget loadcourse() {
     return FutureBuilder(
       future: loadDataMethod,
@@ -86,14 +89,13 @@ class _HistoryPageState extends State<HistoryPage> {
                               begin: Alignment.topCenter,
                               end: Alignment.bottomCenter,
                               colors: <Color>[
-                                const Color.fromARGB(255, 0, 0, 0)
+                                // const Color.fromARGB(255, 0, 0, 0).withAlpha(0),
+                                // const Color.fromARGB(49, 0, 0, 0),
+                                // const Color.fromARGB(127, 0, 0, 0)
+                                const Color.fromARGB(255, 255, 255, 255)
                                     .withAlpha(0),
-                                const Color.fromARGB(49, 0, 0, 0),
-                                const Color.fromARGB(127, 0, 0, 0)
-                                // const Color.fromARGB(255, 255, 255, 255)
-                                //     .withAlpha(0),
-                                // Color.fromARGB(39, 255, 255, 255),
-                                // Color.fromARGB(121, 255, 255, 255)
+                                Color.fromARGB(39, 255, 255, 255),
+                                Color.fromARGB(121, 255, 255, 255)
                               ],
                             ),
                             borderRadius: BorderRadius.circular(20),
@@ -125,7 +127,15 @@ class _HistoryPageState extends State<HistoryPage> {
                               ),
                             ],
                           ),
-                        )
+                        ),
+                        Positioned(
+                                right: 8,
+                                bottom: 8,
+                                  child: FilledButton(
+                                      onPressed: () {
+                                        Get.to(() => const ReviewPage());
+                                      },
+                                      child: Text("ให้คะแนน")))
                       ],
                     ),
                   ),
@@ -137,13 +147,12 @@ class _HistoryPageState extends State<HistoryPage> {
       },
     );
   }
-    Future<void> loadData() async {
+
+  Future<void> loadData() async {
     try {
       log("idcus" + uid.toString());
       var datacouse = await courseService.showcourseEx(uid: uid.toString());
       courses = datacouse.data;
-      
-      
     } catch (err) {
       log('Error: $err');
     }
