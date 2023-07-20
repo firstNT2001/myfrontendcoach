@@ -4,8 +4,6 @@
 
 import 'dart:convert';
 
-import 'package:flutter/material.dart';
-
 import 'md_Buying_get.dart';
 import 'md_Coach_get.dart';
 
@@ -50,7 +48,6 @@ class Course {
   });
 
   factory Course.fromJson(Map<String, dynamic> json) {
-    debugPrint(json.toString());
     return Course(
         coId: json["CoID"],
         coachId: json["CoachID"],
