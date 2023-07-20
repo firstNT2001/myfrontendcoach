@@ -110,44 +110,7 @@ class _FoodCoachPageState extends State<FoodCoachPage> {
           children: [
             Column(
               children: [
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: GestureDetector(
-                    onTap: () {
-                      Get.to(() => const SearchFoodCoachPage());
-                    },
-                    child: Container(
-                        width: MediaQuery.of(context).size.width,
-                        height: 45,
-                        decoration: BoxDecoration(
-                            boxShadow: const <BoxShadow>[
-                              BoxShadow(
-                                  color: Colors.grey,
-                                  blurRadius: 5.0,
-                                  offset: Offset(0.0, 0.75))
-                            ],
-                            color: const Color.fromRGBO(244, 243, 243, 1),
-                            borderRadius: BorderRadius.circular(30)),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          children: [
-                            TextButton.icon(
-                              onPressed: () {
-                                Get.to(() => const SearchFoodCoachPage());
-                              },
-                              icon: const Icon(
-                                FontAwesomeIcons.magnifyingGlass,
-                                color: Colors.black,
-                              ),
-                              label: const Text(
-                                "ค้นหารายการอาหาร...",
-                                style: TextStyle(color: Colors.grey),
-                              ),
-                            ),
-                          ],
-                        )),
-                  ),
-                ),
+                searchFood(context),
                 Expanded(
                   child: Padding(
                     padding: const EdgeInsets.only(
@@ -159,44 +122,7 @@ class _FoodCoachPageState extends State<FoodCoachPage> {
             ),
             Column(
               children: [
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: GestureDetector(
-                    onTap: () {
-                      Get.to(() => const SearchClipCoachPage());
-                    },
-                    child: Container(
-                        width: MediaQuery.of(context).size.width,
-                        height: 45,
-                        decoration: BoxDecoration(
-                            boxShadow: const <BoxShadow>[
-                              BoxShadow(
-                                  color: Colors.grey,
-                                  blurRadius: 5.0,
-                                  offset: Offset(0.0, 0.75))
-                            ],
-                            color: const Color.fromRGBO(244, 243, 243, 1),
-                            borderRadius: BorderRadius.circular(30)),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          children: [
-                            TextButton.icon(
-                              onPressed: () {
-                                Get.to(() => const SearchFoodCoachPage());
-                              },
-                              icon: const Icon(
-                                FontAwesomeIcons.magnifyingGlass,
-                                color: Colors.black,
-                              ),
-                              label: const Text(
-                                "ค้นหารายการคลิปท่าออกกำลังกาย...",
-                                style: TextStyle(color: Colors.grey),
-                              ),
-                            ),
-                          ],
-                        )),
-                  ),
-                ),
+                searchClip(context),
                 Expanded(
                   child: Padding(
                     padding: const EdgeInsets.only(
@@ -208,6 +134,88 @@ class _FoodCoachPageState extends State<FoodCoachPage> {
             ),
           ],
         ),
+      ),
+    );
+  }
+
+  Padding searchClip(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: GestureDetector(
+        onTap: () {
+          Get.to(() => const SearchClipCoachPage());
+        },
+        child: Container(
+            width: MediaQuery.of(context).size.width,
+            height: 45,
+            decoration: BoxDecoration(
+                boxShadow: const <BoxShadow>[
+                  BoxShadow(
+                      color: Colors.grey,
+                      blurRadius: 5.0,
+                      offset: Offset(0.0, 0.75))
+                ],
+                color: const Color.fromRGBO(244, 243, 243, 1),
+                borderRadius: BorderRadius.circular(30)),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                TextButton.icon(
+                  onPressed: () {
+                    Get.to(() => const SearchFoodCoachPage());
+                  },
+                  icon: const Icon(
+                    FontAwesomeIcons.magnifyingGlass,
+                    color: Colors.black,
+                  ),
+                  label: const Text(
+                    "ค้นหารายการคลิปท่าออกกำลังกาย...",
+                    style: TextStyle(color: Colors.grey),
+                  ),
+                ),
+              ],
+            )),
+      ),
+    );
+  }
+
+  Padding searchFood(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: GestureDetector(
+        onTap: () {
+          Get.to(() => const SearchFoodCoachPage());
+        },
+        child: Container(
+            width: MediaQuery.of(context).size.width,
+            height: 45,
+            decoration: BoxDecoration(
+                boxShadow: const <BoxShadow>[
+                  BoxShadow(
+                      color: Colors.grey,
+                      blurRadius: 5.0,
+                      offset: Offset(0.0, 0.75))
+                ],
+                color: const Color.fromRGBO(244, 243, 243, 1),
+                borderRadius: BorderRadius.circular(30)),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                TextButton.icon(
+                  onPressed: () {
+                    Get.to(() => const SearchFoodCoachPage());
+                  },
+                  icon: const Icon(
+                    FontAwesomeIcons.magnifyingGlass,
+                    color: Colors.black,
+                  ),
+                  label: const Text(
+                    "ค้นหารายการอาหาร...",
+                    style: TextStyle(color: Colors.grey),
+                  ),
+                ),
+              ],
+            )),
       ),
     );
   }
