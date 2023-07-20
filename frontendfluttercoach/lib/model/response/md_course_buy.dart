@@ -1,8 +1,6 @@
 // To parse this JSON data, do
 //
 //     final courseGetCus = courseGetCusFromJson(jsonString);
-
-import 'package:meta/meta.dart';
 import 'dart:convert';
 
 List<CourseGetCus> courseGetCusFromJson(String str) => List<CourseGetCus>.from(json.decode(str).map((x) => CourseGetCus.fromJson(x)));

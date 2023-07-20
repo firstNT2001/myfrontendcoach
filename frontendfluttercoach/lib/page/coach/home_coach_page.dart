@@ -7,6 +7,7 @@ import 'package:badges/badges.dart' as badges;
 import 'package:badges/badges.dart';
 
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:frontendfluttercoach/page/coach/usersBuyCourses/show_user_page.dart';
 import 'package:frontendfluttercoach/service/request.dart';
 import 'package:get/get.dart';
 
@@ -22,9 +23,7 @@ import '../../service/provider/appdata.dart';
 
 import '../../widget/wg_menu.dart';
 import '../Request/request_page.dart';
-import '../user/chat/room.dart';
 import 'course/course_edit_page.dart';
-import 'course_user_page.dart';
 
 class HomePageCoach extends StatefulWidget {
   const HomePageCoach({super.key});
@@ -123,8 +122,8 @@ class _HomePageCoachState extends State<HomePageCoach> {
           children: [
              FilledButton.icon(onPressed: (){
                       //roomchat= widget.namecourse+coID.toString();
-                      Get.to(() => const CourseUserPage());
-                    }, icon: Icon(FontAwesomeIcons.facebookMessenger,size: 16,), label: Text("คุยกับโค้ช")),
+                      Get.to(() => const ShowUserByCoursePage());
+                    }, icon: const Icon(FontAwesomeIcons.facebookMessenger,size: 16,), label: Text("คุยกับโค้ช")),
             Container(
                 width: screenSize.height,
                 decoration: BoxDecoration(
@@ -386,7 +385,7 @@ class _HomePageCoachState extends State<HomePageCoach> {
                   ),
                   badgeContent: Row(
                     children: [
-                      if (requests.length > 0)
+                      if (requests.isNotEmpty)
                         Text(
                           requests.length.toString(),
                           style: const TextStyle(color: Colors.white),
