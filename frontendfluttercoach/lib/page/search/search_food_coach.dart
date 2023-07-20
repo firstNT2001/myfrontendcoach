@@ -13,7 +13,7 @@ import 'package:get/get_core/src/get_main.dart';
 import 'package:provider/provider.dart';
 
 import '../../service/provider/appdata.dart';
-import '../coach/food/foodCoach/food_edit_page.dart';
+import '../coach/FoodAndClip/foodCoach/food_edit_page.dart';
 
 class SearchFoodCoachPage extends StatefulWidget {
   const SearchFoodCoachPage({super.key});

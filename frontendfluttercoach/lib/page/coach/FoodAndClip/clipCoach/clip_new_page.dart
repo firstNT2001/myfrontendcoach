@@ -14,11 +14,11 @@ import 'package:loading_indicator/loading_indicator.dart';
 import 'package:provider/provider.dart';
 import 'package:video_player/video_player.dart';
 
-import '../../../model/request/listClip_coachID_post.dart';
-import '../../../model/response/md_Result.dart';
-import '../../../service/listClip.dart';
-import '../../../service/provider/appdata.dart';
-import '../../../widget/wg_textField.dart';
+import '../../../../model/request/listClip_coachID_post.dart';
+import '../../../../model/response/md_Result.dart';
+import '../../../../service/listClip.dart';
+import '../../../../service/provider/appdata.dart';
+import '../../../../widget/wg_textField.dart';
 
 
 class ClipNewCoachPage extends StatefulWidget {

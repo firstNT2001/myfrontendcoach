@@ -16,19 +16,19 @@ import 'package:frontendfluttercoach/service/clip.dart';
 import 'package:get/get.dart';
 import 'package:provider/provider.dart';
 
-import '../../model/request/food_foodID_put.dart';
-import '../../model/response/clip_get_res.dart';
-import '../../model/response/md_ClipList_get.dart';
-import '../../model/response/md_Result.dart';
-import '../../service/food.dart';
-import '../../service/provider/appdata.dart';
+import '../../../../model/request/food_foodID_put.dart';
+import '../../../../model/response/clip_get_res.dart';
+import '../../../../model/response/md_ClipList_get.dart';
+import '../../../../model/response/md_Result.dart';
+import '../../../../service/food.dart';
+import '../../../../service/provider/appdata.dart';
 
-import '../../widget/wg_dropdown_string.dart';
-import '../../widget/wg_editClip_Dialog.dart';
-import '../../widget/wg_editFood_Dialog.dart';
-import '../../widget/wg_search.dart';
-import '../clip/clipCourse/insertClip/clip_select_page.dart';
-import 'food/foodCourse/insertFood/food_new_page.dart';
+import '../../../../widget/wg_dropdown_string.dart';
+import '../../../../widget/wg_editClip_Dialog.dart';
+import '../../../../widget/wg_editFood_Dialog.dart';
+import '../../../../widget/wg_search.dart';
+import 'clipCourse/insertClip/clip_select_page.dart';
+import 'foodCourse/insertFood/food_new_page.dart';
 
 class HomeFoodAndClipPage extends StatefulWidget {
   const HomeFoodAndClipPage(

@@ -6,7 +6,7 @@ import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 
 import '../model/response/md_ClipList_get.dart';
-import '../page/clip/clipCourse/editClip/clip_edit_select.dart';
+import '../page/coach/course/FoodAndClip/clipCourse/editClip/clip_edit_select.dart';
 
 void dialogClipEditInCourse(BuildContext context, ModelClipList listClip, String cpID, String did, String sequence, int status) {
     //target widget

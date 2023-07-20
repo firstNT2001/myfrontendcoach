@@ -10,19 +10,19 @@ import 'package:get/get_core/src/get_main.dart';
 
 import 'package:provider/provider.dart';
 
-import '../../../../model/response/md_ClipList_get.dart';
-import '../../../../model/response/md_FoodList_get.dart';
-import '../../../../model/response/md_Result.dart';
-import '../../../../service/listClip.dart';
-import '../../../../service/listFood.dart';
-import '../../../../service/provider/appdata.dart';
+import '../../../model/response/md_ClipList_get.dart';
+import '../../../model/response/md_FoodList_get.dart';
+import '../../../model/response/md_Result.dart';
+import '../../../service/listClip.dart';
+import '../../../service/listFood.dart';
+import '../../../service/provider/appdata.dart';
 
-import '../../../clip/clipCoach/clip_edit_page.dart';
-import '../../../clip/clipCoach/clip_new_page.dart';
-import '../../../search/search_clip_coach.dart';
-import '../../../search/search_food_coach.dart';
-import 'food_edit_page.dart';
-import 'food_new_page.dart';
+import 'clipCoach/clip_edit_page.dart';
+import 'clipCoach/clip_new_page.dart';
+import '../../search/search_clip_coach.dart';
+import '../../search/search_food_coach.dart';
+import 'foodCoach/food_edit_page.dart';
+import 'foodCoach/food_new_page.dart';
 
 class FoodCoachPage extends StatefulWidget {
   const FoodCoachPage({super.key});
