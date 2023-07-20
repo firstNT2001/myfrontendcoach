@@ -26,7 +26,7 @@ import '../../../../service/provider/appdata.dart';
 import '../../../../widget/wg_dropdown_string.dart';
 import '../../../../widget/wg_editClip_Dialog.dart';
 import '../../../../widget/wg_editFood_Dialog.dart';
-import '../../../../widget/wg_search.dart';
+import '../../../../widget/wg_search_food.dart';
 import 'clipCourse/insertClip/clip_select_page.dart';
 import 'foodCourse/insertFood/food_new_page.dart';
 
@@ -154,52 +154,7 @@ class _HomeFoodAndClipPageState extends State<HomeFoodAndClipPage> {
               //Food
               Column(
                 children: [
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: GestureDetector(
-                      onTap: () {
-                        Get.to(() => WidgetSearchFood(
-                              searchName: searchName,
-                              did: widget.did,
-                              sequence: widget.sequence,
-                            ));
-                      },
-                      child: Container(
-                          width: MediaQuery.of(context).size.width,
-                          height: 45,
-                          decoration: BoxDecoration(
-                              boxShadow: const <BoxShadow>[
-                                BoxShadow(
-                                    color: Colors.grey,
-                                    blurRadius: 5.0,
-                                    offset: Offset(0.0, 0.75))
-                              ],
-                              color: const Color.fromRGBO(244, 243, 243, 1),
-                              borderRadius: BorderRadius.circular(30)),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            children: [
-                              TextButton.icon(
-                                onPressed: () {
-                                  Get.to(() => WidgetSearchFood(
-                                        searchName: searchName,
-                                        did: widget.did,
-                                        sequence: widget.sequence,
-                                      ));
-                                },
-                                icon: const Icon(
-                                  FontAwesomeIcons.magnifyingGlass,
-                                  color: Colors.black,
-                                ),
-                                label: const Text(
-                                  "ค้นหารายการอาหาร...",
-                                  style: TextStyle(color: Colors.grey),
-                                ),
-                              ),
-                            ],
-                          )),
-                    ),
-                  ),
+                  searchButter(context),
                   const SizedBox(
                     height: 10,
                   ),
@@ -230,6 +185,55 @@ class _HomeFoodAndClipPageState extends State<HomeFoodAndClipPage> {
               ),
             ],
           )),
+    );
+  }
+
+  Padding searchButter(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: GestureDetector(
+        onTap: () {
+          Get.to(() => WidgetSearchFood(
+                searchName: searchName,
+                did: widget.did,
+                sequence: widget.sequence,
+              ));
+        },
+        child: Container(
+            width: MediaQuery.of(context).size.width,
+            height: 45,
+            decoration: BoxDecoration(
+                boxShadow: const <BoxShadow>[
+                  BoxShadow(
+                      color: Colors.grey,
+                      blurRadius: 5.0,
+                      offset: Offset(0.0, 0.75))
+                ],
+                color: const Color.fromRGBO(244, 243, 243, 1),
+                borderRadius: BorderRadius.circular(30)),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                TextButton.icon(
+                  onPressed: () {
+                    Get.to(() => WidgetSearchFood(
+                          searchName: searchName,
+                          did: widget.did,
+                          sequence: widget.sequence,
+                        ));
+                  },
+                  icon: const Icon(
+                    FontAwesomeIcons.magnifyingGlass,
+                    color: Colors.black,
+                  ),
+                  label: const Text(
+                    "ค้นหารายการอาหาร...",
+                    style: TextStyle(color: Colors.grey),
+                  ),
+                ),
+              ],
+            )),
+      ),
     );
   }
 
@@ -421,7 +425,8 @@ class _HomeFoodAndClipPageState extends State<HomeFoodAndClipPage> {
           width: MediaQuery.of(context).size.width,
           height: MediaQuery.of(context).size.height * 0.43,
           decoration: const BoxDecoration(
-            borderRadius: BorderRadius.only(topLeft: Radius.circular(20), topRight: Radius.circular(20)),
+            borderRadius: BorderRadius.only(
+                topLeft: Radius.circular(20), topRight: Radius.circular(20)),
             color: Colors.white,
           ),
           child: Column(

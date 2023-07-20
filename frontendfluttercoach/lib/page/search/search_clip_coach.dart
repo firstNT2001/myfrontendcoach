@@ -79,7 +79,7 @@ class _SearchClipCoachPageState extends State<SearchClipCoachPage> {
               onChanged: (value) {
                 setState(() {
                   //isVisibles = true;
-                  _listClipService.listClips(icpID: '', cid: '', name: searchName.text)
+                  _listClipService.listClips(icpID: '', cid: context.read<AppData>().cid.toString(), name: searchName.text)
                       .then((fooddata) {
                     var datafoods = fooddata.data;
                     clips = datafoods;

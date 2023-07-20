@@ -80,7 +80,7 @@ class _SearchFoodCoachPageState extends State<SearchFoodCoachPage> {
                 setState(() {
                   //isVisibles = true;
                   _foodService
-                      .listFoods(ifid: '', cid: '', name: searchName.text)
+                      .listFoods(ifid: '', cid: context.read<AppData>().cid.toString(), name: searchName.text)
                       .then((fooddata) {
                     var datafoods = fooddata.data;
                     foods = datafoods;
@@ -114,7 +114,7 @@ class _SearchFoodCoachPageState extends State<SearchFoodCoachPage> {
     try {
       // log(widget.did);
       var datas = await _foodService.listFoods(
-          ifid: '', cid: '', name: searchName.text);
+          ifid: '', cid: context.read<AppData>().cid.toString(), name: searchName.text);
       foods = datas.data;
       // log(foods.length.toString());
     } catch (err) {
