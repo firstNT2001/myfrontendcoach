@@ -105,7 +105,7 @@ class _CourseService implements CourseService {
   }
 
   @override
-  Future<HttpResponse<List<Course>>> courseUser({required cid}) async {
+  Future<HttpResponse<List<Course>>> courseUsers({required cid}) async {
     const _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{r'cid': cid};
     final _headers = <String, dynamic>{};

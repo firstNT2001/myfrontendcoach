@@ -20,7 +20,8 @@ abstract class CourseService {
   Future<HttpResponse<List<ModelClip>>> progess(@Path("coID") String coID);
 
   @GET("/course/user")
-  Future<HttpResponse<List<ModelCourseBuy>>> courseUser(@Query("cid") String cid);
+  Future<HttpResponse<List<ModelCourseBuy>>> courseUser(
+      @Query("cid") String cid);
 
   @GET("/course")
   Future<HttpResponse<List<Course>>> course(
@@ -29,12 +30,11 @@ abstract class CourseService {
       @Query("name") required String name});
 
   @GET("/course/user")
-  Future<HttpResponse<List<Course>>> courseUser(
+  Future<HttpResponse<List<Course>>> courseUsers(
       {@Query("cid") required String cid});
 
   @GET("/course/sell/{coID}")
-  Future<HttpResponse<Course>> coursebyCoID(
-       @Path("coID") String coID);
+  Future<HttpResponse<Course>> coursebyCoID(@Path("coID") String coID);
 
   @GET("/courses")
   Future<HttpResponse<List<Course>>> showcourseNotEx({

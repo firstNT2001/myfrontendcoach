@@ -69,7 +69,7 @@ class _CourseUserPageState extends State<CourseUserPage> {
   Future<void> loadCourseData() async {
     try {
       //Courses
-      var datas = await _courseService.courseUser(
+      var datas = await _courseService.courseUsers(
           cid: context.read<AppData>().cid.toString());
       courses = datas.data;
       for (var inder in courses) {
