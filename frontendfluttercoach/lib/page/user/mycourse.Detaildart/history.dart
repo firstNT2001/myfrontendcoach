@@ -7,7 +7,6 @@ import 'package:get/get.dart';
 import 'package:provider/provider.dart';
 
 import '../../../model/response/md_coach_course_get.dart';
-import '../../../model/response/md_course_buy.dart';
 import '../../../service/course.dart';
 import '../../../service/provider/appdata.dart';
 import '../Review/review.dart';
@@ -129,13 +128,15 @@ class _HistoryPageState extends State<HistoryPage> {
                           ),
                         ),
                         Positioned(
-                                right: 8,
-                                bottom: 8,
-                                  child: FilledButton(
-                                      onPressed: () {
-                                        Get.to(() => const ReviewPage());
-                                      },
-                                      child: Text("ให้คะแนน")))
+                            right: 8,
+                            bottom: 8,
+                            child: FilledButton(
+                                onPressed: () {
+                                  context.read<AppData>().idcourse =
+                                      listcours.coId;
+                                  Get.to(() => const ReviewPage());
+                                },
+                                child: Text("ให้คะแนน")))
                       ],
                     ),
                   ),

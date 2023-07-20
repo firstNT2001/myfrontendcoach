@@ -3,6 +3,7 @@ import 'dart:developer';
 
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_rating_native/flutter_rating_native.dart';
 import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
@@ -36,11 +37,13 @@ class _showCousePageState extends State<showCousePage> {
   int courseId = 0;
   int cusID = 0;
   int moneycus = 0;
-  double calRating = 0.0;
-  int sumscore = 0;
+  late double calRating;
+  late int sumscore;
   List<ModelReview> reviews = [];
   var buycourse;
   final now = DateTime.now();
+
+  double value = 0.0;
   @override
   void initState() {
     // TODO: implement initState
@@ -72,13 +75,29 @@ class _showCousePageState extends State<showCousePage> {
           endIndent: 8,
           thickness: 3,
         ),
-        const Center(
-            child:Text(
-              "คะแนนจากผู้ซื้อ",
-              style:
-                  TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-            ),
-            ),
+        Center(
+          child: Column(
+            children: [
+              Text(
+                "คะแนนจากผู้ซื้อ",
+                style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+              ),
+              Text(
+                calRating.toStringAsFixed(1),
+                style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+              ),
+              FlutterRating(
+                size: 20,
+                starCount: 5,
+                rating: calRating,
+                allowHalfRating: true,
+                color: Colors.amber,
+                borderColor: Colors.grey,
+                mainAxisAlignment: MainAxisAlignment.center,
+              )
+            ],
+          ),
+        ),
         Expanded(child: loadReview()),
         SizedBox(
           width: 65,
@@ -103,6 +122,7 @@ class _showCousePageState extends State<showCousePage> {
       ],
     ));
   }
+
   Future<void> loadData() async {
     try {
       var datacouse = await courseService.course(
@@ -110,12 +130,19 @@ class _showCousePageState extends State<showCousePage> {
       var datareview = await reviewService.review(coID: courseId.toString());
       courses = datacouse.data;
       reviews = datareview.data;
+      calRating = 0.0;
+      sumscore = 0;
       for (int i = 0; i < reviews.length; i++) {
         sumscore += reviews[i].score;
         log("reviews[i].score" + reviews[i].score.toString());
       }
+      log("COID" + courseId.toString());
       log("sumscore" + sumscore.toString());
-      calRating = sumscore / reviews.length;
+      if (sumscore > 0) {
+        calRating = sumscore / reviews.length;
+      } else {
+        calRating = 0.00;
+      }
       log("calRating" + calRating.toString());
     } catch (err) {
       log('Error: $err');
@@ -139,8 +166,8 @@ class _showCousePageState extends State<showCousePage> {
                 Padding(
                   padding: const EdgeInsets.only(left: 15, top: 25),
                   child: Text(courses.first.name,
-                      style:
-                          const TextStyle(fontSize: 22, fontWeight: FontWeight.bold)),
+                      style: const TextStyle(
+                          fontSize: 22, fontWeight: FontWeight.bold)),
                 ),
                 Padding(
                   padding: const EdgeInsets.only(left: 15, bottom: 20),
@@ -229,55 +256,15 @@ class _showCousePageState extends State<showCousePage> {
                       children: [
                         Text(review.customer.username,
                             style: Theme.of(context).textTheme.bodyLarge),
-                        if (review.score == 5)
-                          Row(
-                            children: [
-                              for (int i = 1; i <= 5; i++)
-                                const Icon(
-                                  FontAwesomeIcons.solidStar,
-                                  color: Colors.yellow,
-                                  size: 18,
-                                ),
-                            ],
-                          )
-                        else if (review.score == 4)
-                          Row(
-                            children: [
-                              for (int i = 1; i <= 4; i++)
-                                const Icon(
-                                  FontAwesomeIcons.solidStar,
-                                  color: Colors.yellow,
-                                  size: 18,
-                                ),
-                            ],
-                          )
-                        else if (review.score == 3)
-                          Row(
-                            children: [
-                              for (int i = 1; i <= 3; i++)
-                                const Icon(
-                                  FontAwesomeIcons.solidStar,
-                                  color: Colors.yellow,
-                                  size: 18,
-                                ),
-                            ],
-                          )
-                        else if (review.score == 2)
-                          Row(
-                            children: [
-                              for (int i = 1; i <= 2; i++)
-                                const Icon(
-                                  FontAwesomeIcons.solidStar,
-                                  color: Colors.yellow,
-                                  size: 18,
-                                ),
-                            ],
-                          )
-                        else
-                          const Icon(
-                            FontAwesomeIcons.solidStar,
-                            color: Colors.yellow,
-                          ),
+                        FlutterRating(
+                          size: 20,
+                          starCount: 5,
+                          rating: review.score.toDouble(),
+                          allowHalfRating: true,
+                          color: Colors.amber,
+                          borderColor: Colors.grey,
+                          mainAxisAlignment: MainAxisAlignment.start,
+                        )
                       ],
                     ),
                     subtitle: Text(review.details,
@@ -291,7 +278,8 @@ class _showCousePageState extends State<showCousePage> {
       },
     );
   }
-    void _buycouse(BuildContext ctx) {
+
+  void _buycouse(BuildContext ctx) {
     //target widget
     SmartDialog.show(builder: (_) {
       return Container(
@@ -305,76 +293,87 @@ class _showCousePageState extends State<showCousePage> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-             //Text("กรุณาชำระเงิน",style: Theme.of(context).textTheme.bodyLarge),
-             Padding(
-               padding: const EdgeInsets.all(10.0),
-               child: Text("คอร์สที่ซื้อ",style: Theme.of(context).textTheme.bodyLarge),
-             ),
+            //Text("กรุณาชำระเงิน",style: Theme.of(context).textTheme.bodyLarge),
+            Padding(
+              padding: const EdgeInsets.all(10.0),
+              child: Text("คอร์สที่ซื้อ",
+                  style: Theme.of(context).textTheme.bodyLarge),
+            ),
             Padding(
               padding: const EdgeInsets.only(top: 15),
-              child: Row( 
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    children: [
-                      Text(courses.first.name,style: Theme.of(context).textTheme.bodyLarge),
-                      Text(courses.first.price.toString(),style: Theme.of(context).textTheme.bodyLarge),
-                    ],
-                  ),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: [
+                  Text(courses.first.name,
+                      style: Theme.of(context).textTheme.bodyLarge),
+                  Text(courses.first.price.toString(),
+                      style: Theme.of(context).textTheme.bodyLarge),
+                ],
+              ),
             ),
             const Padding(
-                  padding: EdgeInsets.only(top: 10, bottom: 10),
-                  child: Divider(
-                    color: Colors.black,
-                    indent: 8,
-                    endIndent: 8,
-                  ),
+              padding: EdgeInsets.only(top: 10, bottom: 10),
+              child: Divider(
+                color: Colors.black,
+                indent: 8,
+                endIndent: 8,
+              ),
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: [
+                Text("ยอดคงเหลือ",
+                    style: Theme.of(context).textTheme.bodyLarge),
+                Text(moneycus.toString(),
+                    style: Theme.of(context).textTheme.bodyLarge),
+              ],
+            ),
+            Padding(
+              padding: const EdgeInsets.only(top: 15, bottom: 20),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: [
+                  Text("ยอดสุทธิ",
+                      style: Theme.of(context).textTheme.bodyLarge),
+                  Text(courses.first.price.toString(),
+                      style: Theme.of(context).textTheme.bodyLarge),
+                ],
+              ),
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: [
+                FilledButton(
+                  onPressed: () {
+                    SmartDialog.dismiss();
+                  },
+                  child: Text('ยกเลิก',
+                      style: Theme.of(context).textTheme.bodyLarge),
                 ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  children: [
-                     Text("ยอดคงเหลือ",style: Theme.of(context).textTheme.bodyLarge),
-                    Text(moneycus.toString(),style: Theme.of(context).textTheme.bodyLarge),
-                  ],
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(top: 15,bottom: 20),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    children: [
-                       Text("ยอดสุทธิ",style: Theme.of(context).textTheme.bodyLarge),
-                      Text(courses.first.price.toString(),style: Theme.of(context).textTheme.bodyLarge),
-                    ],
-                  ),
-                ),
-                Row(
-                   mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  children: [
-                    FilledButton(
+                FilledButton(
                     onPressed: () {
-                      SmartDialog.dismiss();
-                    },
-                    child:  Text('ยกเลิก',style: Theme.of(context).textTheme.bodyLarge),
-                  ),
-                    FilledButton(onPressed: (){
                       log("Date time = " + now.toString());
-                        String cdate2 =
-                            DateFormat("yyyy-dd-MM").format(DateTime.now());
-                        log("Date time2 = " + cdate2);
+                      String cdate2 =
+                          DateFormat("yyyy-dd-MM").format(DateTime.now());
+                      log("Date time2 = " + cdate2);
 
-                        var proposedDate = "${cdate2}T00:00:00.000Z";
-                        log("Date time3 = $proposedDate");
-                        //log("Date time3 = $proposedDate");
-                        BuyCoursecoIdPost buyCoursecoIdPost = BuyCoursecoIdPost(
-                            customerId: cusID,
-                            buyDateTime: proposedDate,
-                            image: "-");
-                        log(jsonEncode(buyCoursecoIdPost));
-                        log(cusID.toString());
-                        buycourse = buyCourseService.buyCourse(
-                            courseId.toString(), buyCoursecoIdPost);
-                        Get.to(() => const MyCouses());
-                    }, child:  Text("ชำระเงิน",style: Theme.of(context).textTheme.bodyLarge)),
-                  ],
-                )  
+                      var proposedDate = "${cdate2}T00:00:00.000Z";
+                      log("Date time3 = $proposedDate");
+                      //log("Date time3 = $proposedDate");
+                      BuyCoursecoIdPost buyCoursecoIdPost = BuyCoursecoIdPost(
+                          customerId: cusID,
+                          buyDateTime: proposedDate,
+                          image: "-");
+                      log(jsonEncode(buyCoursecoIdPost));
+                      log(cusID.toString());
+                      buycourse = buyCourseService.buyCourse(
+                          courseId.toString(), buyCoursecoIdPost);
+                      Get.to(() => const MyCouses());
+                    },
+                    child: Text("ชำระเงิน",
+                        style: Theme.of(context).textTheme.bodyLarge)),
+              ],
+            )
           ],
         ),
       );
