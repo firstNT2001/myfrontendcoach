@@ -19,7 +19,7 @@ class _RequestService implements RequestService {
   String? baseUrl;
 
   @override
-  Future<HttpResponse<List<ModelRequest>>> request({
+  Future<HttpResponse<List<Request>>> request({
     required rqID,
     required uid,
     required cid,
@@ -33,7 +33,7 @@ class _RequestService implements RequestService {
     final _headers = <String, dynamic>{};
     final _data = <String, dynamic>{};
     final _result = await _dio.fetch<List<dynamic>>(
-        _setStreamType<HttpResponse<List<ModelRequest>>>(Options(
+        _setStreamType<HttpResponse<List<Request>>>(Options(
       method: 'GET',
       headers: _headers,
       extra: _extra,
@@ -46,7 +46,7 @@ class _RequestService implements RequestService {
             )
             .copyWith(baseUrl: baseUrl ?? _dio.options.baseUrl)));
     var value = _result.data!
-        .map((dynamic i) => ModelRequest.fromJson(i as Map<String, dynamic>))
+        .map((dynamic i) => Request.fromJson(i as Map<String, dynamic>))
         .toList();
     final httpResponse = HttpResponse(value, _result);
     return httpResponse;

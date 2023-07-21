@@ -1,17 +1,17 @@
 // To parse this JSON data, do
 //
-//     final modelRequest = modelRequestFromJson(jsonString);
+//     final request = requestFromJson(jsonString);
 
 import 'dart:convert';
 
 import 'md_Clip_get.dart';
 import 'md_Customer_get.dart';
 
-List<ModelRequest> modelRequestFromJson(String str) => List<ModelRequest>.from(json.decode(str).map((x) => ModelRequest.fromJson(x)));
+List<Request> requestFromJson(String str) => List<Request>.from(json.decode(str).map((x) => Request.fromJson(x)));
 
-String modelRequestToJson(List<ModelRequest> data) => json.encode(List<dynamic>.from(data.map((x) => x.toJson())));
+String requestToJson(List<Request> data) => json.encode(List<dynamic>.from(data.map((x) => x.toJson())));
 
-class ModelRequest {
+class Request {
     int rpId;
     int coachId;
     int customerId;
@@ -19,9 +19,9 @@ class ModelRequest {
     String status;
     String details;
     Customer customer;
-    ModelClip clip;
+    Clip clip;
 
-    ModelRequest({
+    Request({
         required this.rpId,
         required this.coachId,
         required this.customerId,
@@ -32,7 +32,7 @@ class ModelRequest {
         required this.clip,
     });
 
-    factory ModelRequest.fromJson(Map<String, dynamic> json) => ModelRequest(
+    factory Request.fromJson(Map<String, dynamic> json) => Request(
         rpId: json["RpID"],
         coachId: json["CoachID"],
         customerId: json["CustomerID"],
@@ -40,7 +40,7 @@ class ModelRequest {
         status: json["Status"],
         details: json["Details"],
         customer: Customer.fromJson(json["Customer"]),
-        clip: ModelClip.fromJson(json["Clip"]),
+        clip: Clip.fromJson(json["Clip"]),
     );
 
     Map<String, dynamic> toJson() => {
@@ -54,3 +54,4 @@ class ModelRequest {
         "Clip": clip.toJson(),
     };
 }
+

@@ -12,7 +12,7 @@ abstract class RequestService {
   factory RequestService(Dio dio, {String baseUrl}) = _RequestService;
 
   @GET("/request")
-  Future<HttpResponse<List<ModelRequest>>> request(
+  Future<HttpResponse<List<Request>>> request(
       {@Query("rqID") required String rqID,
       @Query("uid") required String uid,
       @Query("cid") required String cid});

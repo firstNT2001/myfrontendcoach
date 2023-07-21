@@ -4,18 +4,18 @@
 
 import 'dart:convert';
 
-List<ModelClip> modelClipFromJson(String str) => List<ModelClip>.from(json.decode(str).map((x) => ModelClip.fromJson(x)));
+List<Clip> modelClipFromJson(String str) => List<Clip>.from(json.decode(str).map((x) => Clip.fromJson(x)));
 
-String modelClipToJson(List<ModelClip> data) => json.encode(List<dynamic>.from(data.map((x) => x.toJson())));
+String modelClipToJson(List<Clip> data) => json.encode(List<dynamic>.from(data.map((x) => x.toJson())));
 
-class ModelClip {
+class Clip {
     int cpId;
     int listClipId;
     int dayOfCouseId;
     int status;
     ListClip listClip;
 
-    ModelClip({
+    Clip({
         required this.cpId,
         required this.listClipId,
         required this.dayOfCouseId,
@@ -23,7 +23,7 @@ class ModelClip {
         required this.listClip,
     });
 
-    factory ModelClip.fromJson(Map<String, dynamic> json) => ModelClip(
+    factory Clip.fromJson(Map<String, dynamic> json) => Clip(
         cpId: json["CpID"],
         listClipId: json["ListClipID"],
         dayOfCouseId: json["DayOfCouseID"],
