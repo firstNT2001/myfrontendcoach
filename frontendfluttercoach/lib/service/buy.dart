@@ -17,4 +17,11 @@ abstract class BuyCourseService {
       
   @GET("/buy/user/{cid}")
   Future<HttpResponse<List<Buying>>> courseUsers({@Path() required String cid});
+
+   @GET("/buy")
+  Future<HttpResponse<List<Buying>>> buying(
+      {@Query("uid") required String uid,
+      @Query("coID") required String coID,
+      @Query("cid") required String cid});
+
 }
