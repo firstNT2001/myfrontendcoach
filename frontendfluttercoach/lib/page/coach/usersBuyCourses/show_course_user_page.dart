@@ -2,65 +2,64 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:frontendfluttercoach/model/response/md_Buying_get.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:provider/provider.dart';
 
+import '../../../model/response/md_coach_course_get.dart';
 import '../../../service/course.dart';
 import '../../../service/provider/appdata.dart';
 
 class ShowCourseUserPage extends StatefulWidget {
   const ShowCourseUserPage({super.key, required this.uid});
-   final String uid;
+  final String uid;
   @override
   State<ShowCourseUserPage> createState() => _ShowCourseUserPageState();
 }
 
 class _ShowCourseUserPageState extends State<ShowCourseUserPage> {
-    // Courses
+  // Courses
   late Future<void> loadCourseDataMethod;
   late CourseService _courseService;
-  List<Buying> courses = [];
+  List<Course> courses = [];
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-     _courseService = context.read<AppData>().courseService;
+    _courseService = context.read<AppData>().courseService;
     loadCourseDataMethod = loadUserData();
     log(widget.uid);
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      resizeToAvoidBottomInset: false,
-      appBar: AppBar(
-        //backgroundColor: Theme.of(context).colorScheme.primary,
-        title: Text(
-          "",
-          style: Theme.of(context).textTheme.headlineMedium,
-        ),
-        leading: IconButton(
-          icon: const Icon(
-            FontAwesomeIcons.chevronLeft,
+        resizeToAvoidBottomInset: false,
+        appBar: AppBar(
+          //backgroundColor: Theme.of(context).colorScheme.primary,
+          title: Text(
+            "",
+            style: Theme.of(context).textTheme.headlineMedium,
           ),
-          onPressed: () {
-            Get.back();
-          },
+          leading: IconButton(
+            icon: const Icon(
+              FontAwesomeIcons.chevronLeft,
+            ),
+            onPressed: () {
+              Get.back();
+            },
+          ),
         ),
-      ),
-      body: Column(
-        children: [
-          loadcourse(),
-        ],
-      )
-    );
+        body: Column(
+          children: [
+            loadcourse(),
+          ],
+        ));
   }
 
   //LoadData
   Future<void> loadUserData() async {
-     try {
-      
+    try {
       var datacouse = await _courseService.showcourseEx(uid: widget.uid);
       courses = datacouse.data;
     } catch (err) {
@@ -97,7 +96,7 @@ class _ShowCourseUserPageState extends State<ShowCourseUserPage> {
                                 decoration: BoxDecoration(
                                   color: const Color(0xff7c94b6),
                                   image: DecorationImage(
-                                      image: NetworkImage(listcours.course.image),
+                                      image: NetworkImage(listcours.image),
                                       fit: BoxFit.cover),
                                   borderRadius: BorderRadius.circular(20),
                                 ),
@@ -117,8 +116,8 @@ class _ShowCourseUserPageState extends State<ShowCourseUserPage> {
                                 // const Color.fromARGB(127, 0, 0, 0)
                                 const Color.fromARGB(255, 255, 255, 255)
                                     .withAlpha(0),
-                                const Color.fromARGB(39, 255, 255, 255),
-                                const Color.fromARGB(121, 255, 255, 255)
+                                Color.fromARGB(39, 255, 255, 255),
+                                Color.fromARGB(121, 255, 255, 255)
                               ],
                             ),
                             borderRadius: BorderRadius.circular(20),
@@ -130,7 +129,7 @@ class _ShowCourseUserPageState extends State<ShowCourseUserPage> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             mainAxisAlignment: MainAxisAlignment.end,
                             children: [
-                              Text(listcours.course.name,
+                              Text(listcours.name,
                                   style:
                                       Theme.of(context).textTheme.titleLarge),
                               Row(
@@ -142,7 +141,7 @@ class _ShowCourseUserPageState extends State<ShowCourseUserPage> {
                                       size: 16.0,
                                     ),
                                   ),
-                                  Text(listcours.customer.fullName,
+                                  Text(listcours.coach.fullName,
                                       style: Theme.of(context)
                                           .textTheme
                                           .bodyLarge),

@@ -72,7 +72,8 @@ class _HistoryPageState extends State<HistoryPage> {
                                 decoration: BoxDecoration(
                                   color: const Color(0xff7c94b6),
                                   image: DecorationImage(
-                                      image: NetworkImage(listcours.course.image),
+                                      image:
+                                          NetworkImage(listcours.course.image),
                                       fit: BoxFit.cover),
                                   borderRadius: BorderRadius.circular(20),
                                 ),
@@ -127,13 +128,13 @@ class _HistoryPageState extends State<HistoryPage> {
                           ),
                         ),
                         Positioned(
-                                right: 8,
-                                bottom: 8,
-                                  child: FilledButton(
-                                      onPressed: () {
-                                        Get.to(() => const ReviewPage());
-                                      },
-                                      child: const Text("ให้คะแนน")))
+                            right: 8,
+                            bottom: 8,
+                            child: FilledButton(
+                                onPressed: () {
+                                  Get.to(() => const ReviewPage());
+                                },
+                                child: const Text("ให้คะแนน")))
                       ],
                     ),
                   ),

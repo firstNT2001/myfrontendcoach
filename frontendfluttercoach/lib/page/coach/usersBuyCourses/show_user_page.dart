@@ -1,86 +1,73 @@
 import 'dart:developer';
 
-import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:frontendfluttercoach/model/response/md_Buying_get.dart';
 import 'package:get/get.dart';
+import 'package:get/get_core/src/get_main.dart';
 import 'package:provider/provider.dart';
 
-import '../../../model/response/md_Buying_get.dart';
-import '../../../service/buy.dart';
+import '../../../service/course.dart';
 import '../../../service/provider/appdata.dart';
 
-class ShowUserByCoursePage extends StatefulWidget {
-  const ShowUserByCoursePage({super.key});
-
+class ShowCourseUserPage extends StatefulWidget {
+  const ShowCourseUserPage({super.key, required this.uid});
+  final String uid;
   @override
-  State<ShowUserByCoursePage> createState() => _ShowUserByCoursePageState();
+  State<ShowCourseUserPage> createState() => _ShowCourseUserPageState();
 }
 
-class _ShowUserByCoursePageState extends State<ShowUserByCoursePage> {
+class _ShowCourseUserPageState extends State<ShowCourseUserPage> {
   // Courses
   late Future<void> loadCourseDataMethod;
-  late BuyCourseService _BuyingService;
+  late CourseService _courseService;
   List<Buying> courses = [];
-
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-    _BuyingService = context.read<AppData>().buyCourseService;
+    _courseService = context.read<AppData>().courseService;
     loadCourseDataMethod = loadUserData();
+    log(widget.uid);
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      resizeToAvoidBottomInset: false,
-      appBar: AppBar(
-        //backgroundColor: Theme.of(context).colorScheme.primary,
-        title: Text(
-          "",
-          style: Theme.of(context).textTheme.headlineMedium,
-        ),
-        leading: IconButton(
-          icon: const Icon(
-            FontAwesomeIcons.chevronLeft,
+        resizeToAvoidBottomInset: false,
+        appBar: AppBar(
+          //backgroundColor: Theme.of(context).colorScheme.primary,
+          title: Text(
+            "",
+            style: Theme.of(context).textTheme.headlineMedium,
           ),
-          onPressed: () {
-            Get.back();
-          },
-        ),
-      ),
-      body: Column(
-        children: [
-          Expanded(
-            child: Padding(
-              padding:
-                  const EdgeInsets.only(left: 8, right: 8, top: 5, bottom: 5),
-              child: showUser(),
+          leading: IconButton(
+            icon: const Icon(
+              FontAwesomeIcons.chevronLeft,
             ),
+            onPressed: () {
+              Get.back();
+            },
           ),
-        ],
-      ),
-    );
+        ),
+        body: Column(
+          children: [
+            loadcourse(),
+          ],
+        ));
   }
 
   //LoadData
   Future<void> loadUserData() async {
     try {
-      //Courses
-      var datas = await _BuyingService.courseUsers(
-          cid: context.read<AppData>().cid.toString());
-      courses = datas.data;
-      // for (var inder in courses) {
-      //   log(inder.buying!.customer.image);
-      // }
+      var datacouse = await _courseService.showcourseEx(uid: widget.uid);
+      courses = datacouse.data;
     } catch (err) {
       log('Error: $err');
     }
   }
 
-  //Show Data
-  Widget showUser() {
+  Widget loadcourse() {
     return FutureBuilder(
       future: loadCourseDataMethod,
       builder: (context, snapshot) {
@@ -91,44 +78,81 @@ class _ShowUserByCoursePageState extends State<ShowUserByCoursePage> {
             shrinkWrap: true,
             itemCount: courses.length,
             itemBuilder: (context, index) {
-              final course = courses[index];
-              return SizedBox(
-                height: MediaQuery.of(context).size.height * 0.15,
-                child: InkWell(
-                  onTap: () {
-                    //Get.to(() => ShowCourseUserPage(uid: course.buying!.customer.uid.toString()));
-                  },
-                  child: Column(
-                    // mainAxisAlignment: MainAxisAlignment.start,
-                    // crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      const SizedBox(height: 10),
-                      Row(
-                        children: [
-                          // ignore: unnecessary_null_comparison
-                          if (course.customer.image != '-') ...{
-                            CircleAvatar(
-                              backgroundImage:
-                                  NetworkImage(course.customer.image),
-                              radius: 35,
-                            )
-                          } else
-                            const CircleAvatar(
-                              backgroundImage: NetworkImage(
-                                  'https://i.pinimg.com/564x/a8/0e/36/a80e3690318c08114011145fdcfa3ddb.jpg'),
-                              radius: 35,
+              final listcours = courses[index];
+              return Padding(
+                padding: const EdgeInsets.only(left: 10, right: 10, bottom: 20),
+                child: Container(
+                  alignment: Alignment.center,
+                  width: double.infinity,
+                  child: AspectRatio(
+                    aspectRatio: 16 / 9,
+                    child: Stack(
+                      children: <Widget>[
+                        Container(
+                          alignment: Alignment.topCenter,
+                          child: AspectRatio(
+                              aspectRatio: 16 / 9,
+                              child: Container(
+                                decoration: BoxDecoration(
+                                  color: const Color(0xff7c94b6),
+                                  image: DecorationImage(
+                                      image:
+                                          NetworkImage(listcours.course.image),
+                                      fit: BoxFit.cover),
+                                  borderRadius: BorderRadius.circular(20),
+                                ),
+                              )),
+                          //color: Colors.white,
+                        ),
+                        Container(
+                          padding: const EdgeInsets.all(5.0),
+                          alignment: Alignment.bottomCenter,
+                          decoration: BoxDecoration(
+                            gradient: LinearGradient(
+                              begin: Alignment.topCenter,
+                              end: Alignment.bottomCenter,
+                              colors: <Color>[
+                                // const Color.fromARGB(255, 0, 0, 0).withAlpha(0),
+                                // const Color.fromARGB(49, 0, 0, 0),
+                                // const Color.fromARGB(127, 0, 0, 0)
+                                const Color.fromARGB(255, 255, 255, 255)
+                                    .withAlpha(0),
+                                const Color.fromARGB(39, 255, 255, 255),
+                                const Color.fromARGB(121, 255, 255, 255)
+                              ],
                             ),
-                          const SizedBox(width: 20),
-                          AutoSizeText(
-                            course.customer.fullName,
-                            maxLines: 5,
-                            style: Theme.of(context).textTheme.titleMedium,
+                            borderRadius: BorderRadius.circular(20),
                           ),
-                        ],
-                      ),
-                      const SizedBox(height: 10),
-                      const Divider(endIndent: 20, indent: 20)
-                    ],
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            mainAxisAlignment: MainAxisAlignment.end,
+                            children: [
+                              Text(listcours.course.name,
+                                  style:
+                                      Theme.of(context).textTheme.titleLarge),
+                              Row(
+                                children: [
+                                  const Padding(
+                                    padding: EdgeInsets.only(right: 8),
+                                    child: Icon(
+                                      FontAwesomeIcons.solidUser,
+                                      size: 16.0,
+                                    ),
+                                  ),
+                                  Text(listcours.customer.fullName,
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .bodyLarge),
+                                ],
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
                 ),
               );
