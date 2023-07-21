@@ -5,10 +5,11 @@
 import 'dart:convert';
 
 import 'md_Customer_get.dart';
+import 'md_coach_course_get.dart';
 
-Buying buyingFromJson(String str) => Buying.fromJson(json.decode(str));
+List<Buying> buyingFromJson(String str) => List<Buying>.from(json.decode(str).map((x) => Buying.fromJson(x)));
 
-String buyingToJson(Buying data) => json.encode(data.toJson());
+String buyingToJson(List<Buying> data) => json.encode(List<dynamic>.from(data.map((x) => x.toJson())));
 
 class Buying {
     int bid;
@@ -16,6 +17,7 @@ class Buying {
     String buyDateTime;
     int courseId;
     Customer customer;
+    Course course;
 
     Buying({
         required this.bid,
@@ -23,6 +25,7 @@ class Buying {
         required this.buyDateTime,
         required this.courseId,
         required this.customer,
+        required this.course,
     });
 
     factory Buying.fromJson(Map<String, dynamic> json) => Buying(
@@ -31,6 +34,7 @@ class Buying {
         buyDateTime: json["BuyDateTime"],
         courseId: json["CourseID"],
         customer: Customer.fromJson(json["Customer"]),
+        course: Course.fromJson(json["Course"]),
     );
 
     Map<String, dynamic> toJson() => {
@@ -39,6 +43,6 @@ class Buying {
         "BuyDateTime": buyDateTime,
         "CourseID": courseId,
         "Customer": customer.toJson(),
+        "Course": course.toJson(),
     };
 }
-
