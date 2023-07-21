@@ -60,8 +60,8 @@ class _ShowCourseUserPageState extends State<ShowCourseUserPage> {
   //LoadData
   Future<void> loadUserData() async {
     try {
-      var datacouse = await _courseService.showcourseEx(uid: widget.uid);
-      courses = datacouse.data;
+      // var datacouse = await _courseService.showcourseEx(uid: widget.uid);
+      // courses = datacouse.data;
     } catch (err) {
       log('Error: $err');
     }
