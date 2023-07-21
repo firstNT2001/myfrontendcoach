@@ -10,6 +10,7 @@ import 'package:get/get_core/src/get_main.dart';
 import '../page/coach/course/course_new_page.dart';
 import '../page/coach/FoodAndClip/coach_food_clip_page.dart';
 import '../page/coach/home_coach_page.dart';
+import '../page/coach/usersBuyCourses/show_user_page.dart';
 
 class SideMenu extends StatefulWidget {
   final String name, price, image;
@@ -98,7 +99,22 @@ class _SideMenuState extends State<SideMenu> {
                   ),
                   ListTile(
                     onTap: () {
-                      Get.to(() =>  LoginPage());
+                      Get.to(() => const ShowUserByCoursePage());
+                    },
+                    leading: const SizedBox(
+                        height: 34,
+                        width: 34,
+                        child: Icon(
+                          FontAwesomeIcons.house,
+                        )),
+                    title: Text(
+                      "คอร์สผู้ใช้",
+                      style: Theme.of(context).textTheme.titleLarge,
+                    ),
+                  ),
+                  ListTile(
+                    onTap: () {
+                      Get.to(() =>  const LoginPage());
                     },
                     leading: const SizedBox(
                         height: 34,

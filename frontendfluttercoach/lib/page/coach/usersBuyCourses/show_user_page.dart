@@ -3,13 +3,11 @@ import 'dart:developer';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:frontendfluttercoach/page/coach/usersBuyCourses/show_course_user_page.dart';
 import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
 import 'package:provider/provider.dart';
 
-import '../../../model/response/md_coach_course_get.dart';
-import '../../../service/course.dart';
+import '../../../model/response/md_Buying_get.dart';
+import '../../../service/buy.dart';
 import '../../../service/provider/appdata.dart';
 
 class ShowUserByCoursePage extends StatefulWidget {
@@ -22,14 +20,14 @@ class ShowUserByCoursePage extends StatefulWidget {
 class _ShowUserByCoursePageState extends State<ShowUserByCoursePage> {
   // Courses
   late Future<void> loadCourseDataMethod;
-  late CourseService _courseService;
-  List<Course> courses = [];
+  late BuyCourseService _BuyingService;
+  List<Buying> courses = [];
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-    _courseService = context.read<AppData>().courseService;
+    _BuyingService = context.read<AppData>().buyCourseService;
     loadCourseDataMethod = loadUserData();
   }
 
@@ -70,12 +68,12 @@ class _ShowUserByCoursePageState extends State<ShowUserByCoursePage> {
   Future<void> loadUserData() async {
     try {
       //Courses
-      var datas = await _courseService.courseUsers(
+      var datas = await _BuyingService.courseUsers(
           cid: context.read<AppData>().cid.toString());
       courses = datas.data;
-      for (var inder in courses) {
-        log(inder.buying!.customer.image);
-      }
+      // for (var inder in courses) {
+      //   log(inder.buying!.customer.image);
+      // }
     } catch (err) {
       log('Error: $err');
     }
@@ -98,7 +96,7 @@ class _ShowUserByCoursePageState extends State<ShowUserByCoursePage> {
                 height: MediaQuery.of(context).size.height * 0.15,
                 child: InkWell(
                   onTap: () {
-                    Get.to(() => ShowCourseUserPage(uid: course.buying!.customer.uid.toString()));
+                    //Get.to(() => ShowCourseUserPage(uid: course.buying!.customer.uid.toString()));
                   },
                   child: Column(
                     // mainAxisAlignment: MainAxisAlignment.start,
@@ -108,10 +106,10 @@ class _ShowUserByCoursePageState extends State<ShowUserByCoursePage> {
                       Row(
                         children: [
                           // ignore: unnecessary_null_comparison
-                          if (course.buying!.customer.image != '-') ...{
+                          if (course.customer.image != '-') ...{
                             CircleAvatar(
                               backgroundImage:
-                                  NetworkImage(course.buying!.customer.image),
+                                  NetworkImage(course.customer.image),
                               radius: 35,
                             )
                           } else
@@ -122,7 +120,7 @@ class _ShowUserByCoursePageState extends State<ShowUserByCoursePage> {
                             ),
                           const SizedBox(width: 20),
                           AutoSizeText(
-                            course.buying!.customer.fullName,
+                            course.customer.fullName,
                             maxLines: 5,
                             style: Theme.of(context).textTheme.titleMedium,
                           ),
