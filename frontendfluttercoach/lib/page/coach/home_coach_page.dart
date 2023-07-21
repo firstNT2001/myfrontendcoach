@@ -56,7 +56,7 @@ class _HomePageCoachState extends State<HomePageCoach> {
   String username = '', price = '', image = '';
 
   //Request
-  List<ModelRequest> requests = [];
+  List<Request> requests = [];
   late Future<void> loadRequestDataMethod;
   late RequestService _RequestService;
 

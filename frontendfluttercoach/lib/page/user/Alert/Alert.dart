@@ -20,7 +20,7 @@ class _AlertPageState extends State<AlertPage> {
   int uid = 0;
   late RequestService requestService;
   late Future<void> loadDataMethod;
-  List<ModelRequest> requests=[];
+  List<Request> requests=[];
   late String txtStatus;
   @override
   void initState() {

@@ -21,7 +21,7 @@ class _RequestPageState extends State<RequestPage> {
   bool isVisibles = true;
 
   //Request
-  List<ModelRequest> requests = [];
+  List<Request> requests = [];
   late Future<void> loadRequestDataMethod;
   late RequestService _RequestService;
 
