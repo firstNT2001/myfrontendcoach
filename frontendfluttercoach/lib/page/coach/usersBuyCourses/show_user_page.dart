@@ -3,22 +3,23 @@ import 'dart:developer';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:frontendfluttercoach/page/coach/usersBuyCourses/show_course_user_page.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:provider/provider.dart';
 
-import '../../model/response/md_coach_course_get.dart';
-import '../../service/course.dart';
-import '../../service/provider/appdata.dart';
+import '../../../model/response/md_coach_course_get.dart';
+import '../../../service/course.dart';
+import '../../../service/provider/appdata.dart';
 
-class CourseUserPage extends StatefulWidget {
-  const CourseUserPage({super.key});
+class ShowUserByCoursePage extends StatefulWidget {
+  const ShowUserByCoursePage({super.key});
 
   @override
-  State<CourseUserPage> createState() => _CourseUserPageState();
+  State<ShowUserByCoursePage> createState() => _ShowUserByCoursePageState();
 }
 
-class _CourseUserPageState extends State<CourseUserPage> {
+class _ShowUserByCoursePageState extends State<ShowUserByCoursePage> {
   // Courses
   late Future<void> loadCourseDataMethod;
   late CourseService _courseService;
@@ -29,7 +30,7 @@ class _CourseUserPageState extends State<CourseUserPage> {
     // TODO: implement initState
     super.initState();
     _courseService = context.read<AppData>().courseService;
-    loadCourseDataMethod = loadCourseData();
+    loadCourseDataMethod = loadUserData();
   }
 
   @override
@@ -37,7 +38,7 @@ class _CourseUserPageState extends State<CourseUserPage> {
     return Scaffold(
       resizeToAvoidBottomInset: false,
       appBar: AppBar(
-        backgroundColor: Theme.of(context).colorScheme.primary,
+        //backgroundColor: Theme.of(context).colorScheme.primary,
         title: Text(
           "",
           style: Theme.of(context).textTheme.headlineMedium,
@@ -57,7 +58,7 @@ class _CourseUserPageState extends State<CourseUserPage> {
             child: Padding(
               padding:
                   const EdgeInsets.only(left: 8, right: 8, top: 5, bottom: 5),
-              child: showCourse(),
+              child: showUser(),
             ),
           ),
         ],
@@ -66,7 +67,7 @@ class _CourseUserPageState extends State<CourseUserPage> {
   }
 
   //LoadData
-  Future<void> loadCourseData() async {
+  Future<void> loadUserData() async {
     try {
       //Courses
       var datas = await _courseService.courseUsers(
@@ -81,7 +82,7 @@ class _CourseUserPageState extends State<CourseUserPage> {
   }
 
   //Show Data
-  Widget showCourse() {
+  Widget showUser() {
     return FutureBuilder(
       future: loadCourseDataMethod,
       builder: (context, snapshot) {
@@ -96,7 +97,9 @@ class _CourseUserPageState extends State<CourseUserPage> {
               return SizedBox(
                 height: MediaQuery.of(context).size.height * 0.15,
                 child: InkWell(
-                  onTap: () {},
+                  onTap: () {
+                    Get.to(() => ShowCourseUserPage(uid: course.buying!.customer.uid.toString()));
+                  },
                   child: Column(
                     // mainAxisAlignment: MainAxisAlignment.start,
                     // crossAxisAlignment: CrossAxisAlignment.center,

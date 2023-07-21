@@ -11,48 +11,46 @@ import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:provider/provider.dart';
 
-import '../../../../../model/request/food_foodID_put.dart';
-import '../../../../../model/response/md_FoodList_get.dart';
-import '../../../../../model/response/md_Result.dart';
-import '../../../../../service/food.dart';
-import '../../../../../service/listFood.dart';
-import '../../../../../service/provider/appdata.dart';
-import '../../../home_foodAndClip.dart';
+import '../../../../../../model/request/clip_clipID_put.dart';
+import '../../../../../../model/response/md_ClipList_get.dart';
+import '../../../../../../model/response/md_Result.dart';
+import '../../../../../../service/clip.dart';
+import '../../../../../../service/listClip.dart';
+import '../../../../../../service/provider/appdata.dart';
+import '../../../../../../widget/showCilp.dart';
+import '../../course_food_clip.dart';
 
-class FoodEditSelectPage extends StatefulWidget {
-  const FoodEditSelectPage({
+class ClipEditSelectPage extends StatefulWidget {
+  const ClipEditSelectPage({
     super.key,
-    required this.fid,
+    required this.cpID,
     required this.did,
     required this.sequence,
-    required this.time,
+    required this.status,
   });
-  final String fid;
+  final String cpID;
   final String did;
   final String sequence;
-  final String time;
+  final int status;
   @override
-  State<FoodEditSelectPage> createState() => _FoodEditSelectPageState();
+  State<ClipEditSelectPage> createState() => _ClipEditSelectPageState();
 }
 
-class _FoodEditSelectPageState extends State<FoodEditSelectPage> {
+class _ClipEditSelectPageState extends State<ClipEditSelectPage> {
   // FoodService
-  late Future<void> loadListFoodDataMethod;
-  late ListFoodServices _listfoodService;
-  List<ModelFoodList> foods = [];
+  late Future<void> loadListClipDataMethod;
+  late ListClipServices _listclipService;
+  List<ModelClipList> clips = [];
   late ModelResult modelResult;
 
-  ///FoodCourses
-  late FoodServices _foodCourseService;
+  late ClipServices _clipService;
 
   @override
   void initState() {
     super.initState();
-    _listfoodService = context.read<AppData>().listfoodServices;
-    loadListFoodDataMethod = loadListFoodData();
-
-    //FoodCourses
-    _foodCourseService = context.read<AppData>().foodServices;
+    _clipService = context.read<AppData>().clipServices;
+    _listclipService = context.read<AppData>().listClipServices;
+    loadListClipDataMethod = loadListClipData();
   }
 
   @override
@@ -73,7 +71,7 @@ class _FoodEditSelectPageState extends State<FoodEditSelectPage> {
         iconTheme: const IconThemeData(
           color: Colors.black, //change your color here
         ),
-        title: const Text('เลือกเมนูอาหาร'),
+        title: const Text('เลือกท่าออกกำลังกาย'),
         centerTitle: true,
       ),
       body: Column(
@@ -82,7 +80,7 @@ class _FoodEditSelectPageState extends State<FoodEditSelectPage> {
             height: 10,
           ),
           Expanded(
-            child: showFood(),
+            child: showClip(),
           ),
         ],
       ),
@@ -90,58 +88,58 @@ class _FoodEditSelectPageState extends State<FoodEditSelectPage> {
   }
 
   //LoadData
-  Future<void> loadListFoodData() async {
+  Future<void> loadListClipData() async {
     try {
       // log(widget.did);
-      var datas = await _listfoodService.listFoods(ifid: '', cid: context.read<AppData>().cid.toString(), name: '');
-      foods = datas.data;
+      var datas =
+          await _listclipService.listClips(icpID: '', cid: context.read<AppData>().cid.toString(), name: '');
+      clips = datas.data;
       // log(foods.length.toString());
     } catch (err) {
       log('Error: $err');
     }
   }
 
-  Widget showFood() {
+  Widget showClip() {
     return FutureBuilder(
-      future: loadListFoodDataMethod,
+      future: loadListClipDataMethod,
       builder: (context, snapshot) {
         if (snapshot.connectionState != ConnectionState.done) {
           return const Center(child: CircularProgressIndicator());
         } else {
           return ListView.builder(
             shrinkWrap: true,
-            itemCount: foods.length,
+            itemCount: clips.length,
             itemBuilder: (context, index) {
-              final listfood = foods[index];
+              final listClip = clips[index];
               return Column(
                 children: [
                   SizedBox(
                     height: MediaQuery.of(context).size.height * 0.2,
                     child: InkWell(
                       onTap: () {
-                        //Get.to(() => FoodEditCoachPage(ifid: listfood.ifid));
-                        dialog(context, listfood.ifid, listfood.name,
-                            listfood.details);
+                        dialog(context, listClip.icpId, listClip.name,
+                            listClip.amountPerSet, listClip.video);
                       },
                       child: Row(
                         //mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          if (listfood.image != '') ...{
-                            SizedBox(
-                              width: MediaQuery.of(context).size.width * 0.4,
-                              height: MediaQuery.of(context).size.height * 0.2,
-                              child: Padding(
-                                padding: const EdgeInsets.all(20.0),
-                                child: ClipRRect(
-                                  borderRadius: BorderRadius.circular(8.0),
-                                  child: Image.network(
-                                    listfood.image,
-                                    fit: BoxFit.fill,
-                                  ),
-                                ),
-                              ),
-                            ),
+                          if (listClip.video != '') ...{
+                            // SizedBox(
+                            //   width: MediaQuery.of(context).size.width * 0.4,
+                            //   height: MediaQuery.of(context).size.height * 0.2,
+                            //   child: Padding(
+                            //     padding: const EdgeInsets.all(20.0),
+                            //     child: ClipRRect(
+                            //       borderRadius: BorderRadius.circular(8.0),
+                            //       child: Image.network(
+                            //         listClip.image,
+                            //         fit: BoxFit.fill,
+                            //       ),
+                            //     ),
+                            //   ),
+                            // ),
                           } else
                             Container(
                                 width: MediaQuery.of(context).size.width * 0.4,
@@ -159,17 +157,17 @@ class _FoodEditSelectPageState extends State<FoodEditSelectPage> {
                               SizedBox(
                                 width: MediaQuery.of(context).size.width * 0.5,
                                 child: AutoSizeText(
-                                  listfood.name,
+                                  listClip.name,
                                   maxLines: 5,
                                   style:
                                       Theme.of(context).textTheme.titleMedium,
                                 ),
                               ),
                               const SizedBox(height: 10),
-                              Text(
-                                "Calories : ${listfood.calories}",
-                                style: Theme.of(context).textTheme.titleMedium,
-                              )
+                              // Text(
+                              //   "Calories : ${listClip.calories}",
+                              //   style: Theme.of(context).textTheme.titleMedium,
+                              // )
                             ],
                           ),
                           //const SizedBox(height: 60),
@@ -190,13 +188,14 @@ class _FoodEditSelectPageState extends State<FoodEditSelectPage> {
     );
   }
 
-  void dialog(BuildContext context, int ifid, String name, String details) {
+  void dialog(
+      BuildContext context, int icpID, String name, String set, String video) {
     SmartDialog.show(
       alignment: Alignment.bottomCenter,
       builder: (_) {
         return Container(
           width: MediaQuery.of(context).size.width,
-          height: MediaQuery.of(context).size.height * 0.5,
+          height: MediaQuery.of(context).size.height * 0.7,
           decoration: const BoxDecoration(
             borderRadius: BorderRadius.only(
                 topRight: Radius.circular(20), topLeft: Radius.circular(20)),
@@ -211,13 +210,26 @@ class _FoodEditSelectPageState extends State<FoodEditSelectPage> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Padding(
-                    padding: const EdgeInsets.only(left: 20, bottom: 20),
+                    padding: const EdgeInsets.only(left: 20),
                     child: Text(name,
                         style: Theme.of(context).textTheme.titleLarge),
                   ),
+                  if (video != '') ...{
+                    WidgetShowCilp(urlVideo: video),
+                  } else ...{
+                    Container(
+                        width: MediaQuery.of(context).size.width * 0.7,
+                        height: MediaQuery.of(context).size.height * 0.3,
+                        decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(26),
+                            color: Theme.of(context).colorScheme.primary)),
+                    const SizedBox(
+                      height: 8,
+                    ),
+                  },
                   Padding(
                     padding: const EdgeInsets.only(left: 20, bottom: 10),
-                    child: Text("รายละเอียด",
+                    child: Text("จำนวนเซต",
                         style: Theme.of(context).textTheme.titleMedium),
                   ),
                   Padding(
@@ -226,7 +238,7 @@ class _FoodEditSelectPageState extends State<FoodEditSelectPage> {
                     child: SizedBox(
                       width: MediaQuery.of(context).size.width,
                       child: AutoSizeText(
-                        "   $details",
+                        "   $set",
                         maxLines: 8,
                         style: Theme.of(context).textTheme.titleMedium,
                       ),
@@ -241,12 +253,12 @@ class _FoodEditSelectPageState extends State<FoodEditSelectPage> {
                     padding: const EdgeInsets.only(left: 20, right: 20),
                     child: ElevatedButton(
                         onPressed: () async {
-                          log(widget.time);
-                          FoodFoodIdPut foodFoodIdPut = FoodFoodIdPut(
-                              listFoodId: ifid, time: widget.time, dayOfCouseId: int.parse(widget.did));
-                          log(jsonEncode(foodFoodIdPut));
-                          var response = await _foodCourseService
-                              .updateFoodByFoodID(widget.fid, foodFoodIdPut);
+                          log(widget.cpID);
+                          ClipClipIdPut request =
+                              ClipClipIdPut(listClipId: icpID, dayOfCouseId: int.parse(widget.did), );
+                          log(jsonEncode(request));
+                          var response = await _clipService.updateClipByClipID(
+                              widget.cpID, request);
                           modelResult = response.data;
                           log(modelResult.result);
                           if (modelResult.result == '1') {

@@ -4,7 +4,7 @@ import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 
-import '../page/coach/food/foodCourse/editFood/food_edit_select.dart';
+import '../page/coach/course/FoodAndClip/foodCourse/editFood/food_edit_select.dart';
 
 //มืออาหาร
 final selectedValuehand = TextEditingController();

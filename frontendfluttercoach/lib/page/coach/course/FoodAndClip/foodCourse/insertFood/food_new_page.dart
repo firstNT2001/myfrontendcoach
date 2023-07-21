@@ -1,65 +1,54 @@
 import 'dart:convert';
 import 'dart:developer';
 
-
-
-import 'package:flutter/services.dart';
+import 'package:auto_size_text/auto_size_text.dart';
+import 'package:flutter/material.dart';
+import 'package:badges/badges.dart' as badges;
+import 'package:badges/badges.dart';
 import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
 
-
-import 'package:auto_size_text/auto_size_text.dart';
-import 'package:badges/badges.dart';
-import 'package:flutter/material.dart';
-
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:frontendfluttercoach/model/response/md_FoodList_get.dart';
+import 'package:frontendfluttercoach/service/listFood.dart';
 import 'package:get/get.dart';
-
 import 'package:provider/provider.dart';
-import 'package:badges/badges.dart' as badges;
 
-import '../../../../model/request/clip_dayID_post.dart';
-import '../../../../model/response/md_ClipList_get.dart';
-import '../../../../service/listClip.dart';
-import '../../../../service/provider/appdata.dart';
-import '../../../../widget/showCilp.dart';
-import '../../../coach/home_foodAndClip.dart';
+import '../../../../../../model/request/food_dayID_post.dart';
+import '../../../../../../service/provider/appdata.dart';
+import '../../../../../../widget/wg_dropdown_string.dart';
+import '../../course_food_clip.dart';
+import 'food_select_time_page.dart';
 
-import 'clip_insert_page.dart';
-
-class ClipSelectPage extends StatefulWidget {
-  const ClipSelectPage({super.key, required this.did});
-  final  String did;
+class FoodNewCoursePage extends StatefulWidget {
+  const FoodNewCoursePage({super.key, required this.did});
+  final String did;
 
   @override
-  State<ClipSelectPage> createState() => _ClipSelectPageState();
+  State<FoodNewCoursePage> createState() => _FoodNewCoursePageState();
 }
 
-class _ClipSelectPageState extends State<ClipSelectPage> {
-  //ClipService
-  late Future<void> loadListClipDataMethod;
-  late ListClipServices _listClipService;
-  List<ModelClipList> listClips = [];
+class _FoodNewCoursePageState extends State<FoodNewCoursePage> {
+  // FoodService
+  late Future<void> loadListFoodDataMethod;
+  late ListFoodServices _listFoodService;
+  List<ModelFoodList> listFoods = [];
 
   //Color
-  List<Color> colorClips = [];
+  List<Color> colorFood = [];
 
   //ListIncrease
-  List<ModelClipList> increaseClips = [];
-  List<ClipDayIdPost> increaseClipDays = [];
+  List<ModelFoodList> increaseFood = [];
+  List<FoodDayIdPost> increaseFoodDay = [];
+  //มืออาหาร
+  final selectedValuehand = TextEditingController();
+  final List<String> listhand = ['มื้อเช้า', 'มื้อเที่ยง', 'มื้อเย็น'];
 
-  String video = "";
-  //image vdieo
-  // String? _thumbnailFile;
-  // String? _thumbnailUrl;
-
-  // Uint8List? _thumbnailData;
-
-  List<String> imageURL = [];
   @override
   void initState() {
     super.initState();
-    _listClipService = context.read<AppData>().listClipServices;
-    loadListClipDataMethod = loadListClipsData();
+    selectedValuehand.text = 'มื้อเช้า';
+    _listFoodService = context.read<AppData>().listfoodServices;
+    loadListFoodDataMethod = loadListFoodData();
   }
 
   @override
@@ -90,9 +79,9 @@ class _ClipSelectPageState extends State<ClipSelectPage> {
               ),
               badgeContent: Row(
                 children: [
-                  if (increaseClips.isNotEmpty)
+                  if (increaseFood.isNotEmpty)
                     Text(
-                      increaseClips.length.toString(),
+                      increaseFood.length.toString(),
                       // style: const TextStyle(color: Colors.white),
                     ),
                 ],
@@ -108,12 +97,13 @@ class _ClipSelectPageState extends State<ClipSelectPage> {
                   FontAwesomeIcons.angleRight,
                 ),
                 onPressed: () {
-                  if (increaseClips.isNotEmpty) {
-                    Get.to(() => ClipInsertPage(
+                  if (increaseFood.isNotEmpty) {
+                    Get.to(() => FoodSelectTimePage(
                           did: widget.did,
-                          modelClipList: increaseClips,
-                          increaseClip: increaseClipDays,
+                          modelFoodList: increaseFood,
+                          increaseFood: increaseFoodDay,
                         ));
+                    log(increaseFoodDay.length.toString());
                   }
                 },
               ),
@@ -137,7 +127,7 @@ class _ClipSelectPageState extends State<ClipSelectPage> {
                   visible: true,
                   child: Padding(
                     padding: const EdgeInsets.all(8.0),
-                    child: showClips(),
+                    child: showFood(),
                   ),
                 ),
               ),
@@ -146,136 +136,98 @@ class _ClipSelectPageState extends State<ClipSelectPage> {
         ));
   }
 
-  // //Image Vdieo
-  // void generateThumbnail(String url) async {
-  //   File videoTempFile = await copyAssetFile(url);
-
-  //   _thumbnailFile = await VideoThumbnail.thumbnailFile(
-  //       video: videoTempFile.path,
-  //       thumbnailPath: (await getTemporaryDirectory()).path,
-  //       imageFormat: ImageFormat.PNG);
-  //   imageURL.add(_thumbnailFile!);
-  //   // _thumbnailUrl = await VideoThumbnail.thumbnailFile(
-  //   //     video:
-  //   //         "https://flutter.github.io/assets-for-api-docs/assets/videos/butterfly.mp4",
-  //   //     thumbnailPath: (await getTemporaryDirectory()).path,
-  //   //     imageFormat: ImageFormat.WEBP);
-
-  //   // _thumbnailData = await VideoThumbnail.thumbnailData(
-  //   //   video: videoTempFile2.path,
-  //   //   imageFormat: ImageFormat.JPEG,
-  //   //   // maxHeight: 300,
-  //   //   // maxWidth: 300,
-  //   //   quality: 75,
-  //   // );
-
-  //   setState(() {});
-  // }
-
-  // Future<File> copyAssetFile(String assetFileName) async {
-  //   Directory tempDir = await getTemporaryDirectory();
-  //   final byteData = await rootBundle.load(assetFileName);
-
-  //   var videoThumbnailFile = File("${tempDir.path}/$assetFileName")
-  //     ..createSync(recursive: true)
-  //     ..writeAsBytesSync(byteData.buffer
-  //         .asUint8List(byteData.offsetInBytes, byteData.lengthInBytes));
-  //   return videoThumbnailFile;
-  // }
-
   //LoadData
-  Future<void> loadListClipsData() async {
+  Future<void> loadListFoodData() async {
     try {
-      var datas = await _listClipService.listClips(
-          icpID: '', cid: context.read<AppData>().cid.toString(), name: '');
-      listClips = datas.data;
+      var datas = await _listFoodService.listFoods(
+          ifid: '', cid: context.read<AppData>().cid.toString(), name: '');
+      listFoods = datas.data;
       // ignore: unused_local_variable
-      for (var index in listClips) {
+      for (var index in listFoods) {
         // ignore: use_build_context_synchronously
-        colorClips.add(context.read<AppData>().colorNotSelect);
-        //generateThumbnail(index.video.toString());
+        colorFood.add(context.read<AppData>().colorNotSelect);
       }
-
-      // log("image${listFoods[2].image}");
+      log("image${listFoods[2].image}");
     } catch (err) {
       log('Error: $err');
     }
   }
 
-  Widget showClips() {
+  Widget showFood() {
     return FutureBuilder(
-      future: loadListClipDataMethod,
+      future: loadListFoodDataMethod,
       builder: (context, snapshot) {
         if (snapshot.connectionState != ConnectionState.done) {
           return const Center(child: CircularProgressIndicator());
         } else {
           return ListView.builder(
             shrinkWrap: true,
-            itemCount: listClips.length,
+            itemCount: listFoods.length,
             itemBuilder: (context, index) {
-              final listClip = listClips[index];
+              final listFood = listFoods[index];
               return SizedBox(
                 height: MediaQuery.of(context).size.height * 0.2,
                 child: Card(
-                  color: colorClips[index],
+                  color: colorFood[index],
                   child: InkWell(
                     onTap: () {
-                      if (colorClips[index] !=
+                      if (colorFood[index] !=
                           context.read<AppData>().colorSelect) {
                         setState(() {
                           // เพิ่มเมนูอาหารนั้นเมือกกดเลือก
-                          ModelClipList request = ModelClipList(
-                              icpId: listClip.icpId,
-                              coachId: listClip.coachId,
-                              name: listClip.name,
-                              details: listClip.details,
-                              amountPerSet: listClip.amountPerSet,
-                              video: listClip.video);
-                          video =   listClip.video;
-                          _dialog(context, request, colorClips, index);
+                          ModelFoodList request = ModelFoodList(
+                              ifid: listFood.ifid,
+                              name: listFood.name,
+                              image: listFood.image,
+                              details: listFood.details,
+                              calories: listFood.calories);
+
+                          _dialog(context, request, colorFood, index);
                           //เปลี่ยนสีเมือเลือกเมนู฿อาหาร
                           // colorFood[index] = Colors.black12;
                         });
                       } else {
                         setState(() {
                           //กลับเป็นสีเดิมเมือเลือกเมนูอาหารซํ้า
-                          colorClips[index] =
+                          colorFood[index] =
                               context.read<AppData>().colorNotSelect;
+
                           //เอาเมนูอาหารที่เลือกออกจาก list model
-                          increaseClips.removeWhere(
-                              (item) => item.icpId == listClip.icpId);
-                          increaseClipDays.removeWhere(
-                              (item) => item.listClipId == listClip.icpId);
+                          increaseFoodDay.removeWhere(
+                              (item) => item.listFoodId == listFood.ifid);
+
+                          increaseFood.removeWhere(
+                              (item) => item.ifid == listFood.ifid);
                         });
                       }
                     },
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        if (listClip.video != '') ...{
-                          // Padding(
-                          //   padding: const EdgeInsets.only(
-                          //       left: 8, top: 5, bottom: 5),
-                          //   child: Container(
-                          //       width: MediaQuery.of(context).size.width * 0.3,
-                          //       height: MediaQuery.of(context).size.height,
-                          //       decoration: BoxDecoration(
-                          //         borderRadius: BorderRadius.circular(26),
-                          //         image: DecorationImage(
-                          //           image: NetworkImage(imageURL[0]),
-                          //         ),
-                          //       )),
-                          // ),
+                        if (listFood.image != '') ...{
+                          SizedBox(
+                            width: MediaQuery.of(context).size.width * 0.35,
+                            height: MediaQuery.of(context).size.height,
+                            child: Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: ClipRRect(
+                                borderRadius: BorderRadius.circular(8.0),
+                                child: Image.network(
+                                  listFood.image,
+                                  fit: BoxFit.fill,
+                                ),
+                              ),
+                            ),
+                          ),
                         } else
                           Padding(
-                            padding: const EdgeInsets.only(
-                                left: 8, top: 5, bottom: 5),
+                            padding: const EdgeInsets.all(8.0),
                             child: Container(
                                 width: MediaQuery.of(context).size.width * 0.3,
                                 height: MediaQuery.of(context).size.height,
                                 decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(26),
-                                    color: Colors.black26)),
+                                    borderRadius: BorderRadius.circular(8),
+                                    color: Colors.pink)),
                           ),
                         Column(
                           mainAxisAlignment: MainAxisAlignment.center,
@@ -284,20 +236,20 @@ class _ClipSelectPageState extends State<ClipSelectPage> {
                             SizedBox(
                               width: MediaQuery.of(context).size.width * 0.4,
                               child: AutoSizeText(
-                                listClip.name,
+                                listFood.name,
                                 maxLines: 5,
                                 style: Theme.of(context).textTheme.bodyLarge,
                               ),
                             ),
                             const SizedBox(height: 8),
-                            // SizedBox(
-                            //   width: MediaQuery.of(context).size.width * 0.4,
-                            //   child: AutoSizeText(
-                            //     'Calories: ${listFood.calories.toString()}',
-                            //     maxLines: 5,
-                            //     style: Theme.of(context).textTheme.bodyLarge,
-                            //   ),
-                            // ),
+                            SizedBox(
+                              width: MediaQuery.of(context).size.width * 0.4,
+                              child: AutoSizeText(
+                                'Calories: ${listFood.calories.toString()}',
+                                maxLines: 5,
+                                style: Theme.of(context).textTheme.bodyLarge,
+                              ),
+                            ),
                           ],
                         ),
                         const SizedBox(
@@ -315,51 +267,55 @@ class _ClipSelectPageState extends State<ClipSelectPage> {
     );
   }
 
-  void _dialog(BuildContext ctx, ModelClipList listClip, List<Color> colorList,
+  void _dialog(BuildContext ctx, ModelFoodList listFood, List<Color> colorList,
       int index) {
     //target widget
     SmartDialog.show(builder: (_) {
       return Container(
         width: MediaQuery.of(context).size.width * 0.9,
-        height: MediaQuery.of(context).size.height * 0.8,
+        height: MediaQuery.of(context).size.height * 0.75,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(20),
-          color: Colors.white,
+          color: Theme.of(context).colorScheme.tertiary,
         ),
         alignment: Alignment.center,
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
           //crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-           
             Padding(
               padding: const EdgeInsets.only(
                   left: 20, right: 20, top: 50, bottom: 0),
-              child: Text("คลิปท่าออกกำลังกาย",
+              child: Text("เมนูอาหาร",
                   style: Theme.of(context).textTheme.headlineSmall),
             ),
-            if (listClip.video != '' ) ...{
-              WidgetShowCilp(urlVideo: listClip.video),
+            if (listFood.image != '') ...{
+              Container(
+                  width: MediaQuery.of(context).size.width * 0.7,
+                  height: MediaQuery.of(context).size.height * 0.3,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(26),
+                    image: DecorationImage(
+                      image: NetworkImage(listFood.image),
+                    ),
+                  )),
             } else ...{
               Container(
                   width: MediaQuery.of(context).size.width * 0.7,
                   height: MediaQuery.of(context).size.height * 0.3,
                   decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(26),
-                      color: Theme.of(context).colorScheme.primary)),
+                      color: Colors.black26)),
               const SizedBox(
                 height: 8,
               ),
             },
-             const SizedBox(
-                height: 16,
-              ),
             Padding(
               padding: const EdgeInsets.only(bottom: 8),
               child: SizedBox(
                 width: MediaQuery.of(context).size.width * 0.7,
                 child: AutoSizeText(
-                  'ชื่อคลิป: ${listClip.name}',
+                  'ชื่อเมนู: ${listFood.name}',
                   maxLines: 5,
                   //style: Theme.of(context).textTheme.bodyLarge,
                 ),
@@ -370,7 +326,7 @@ class _ClipSelectPageState extends State<ClipSelectPage> {
               child: SizedBox(
                 width: MediaQuery.of(context).size.width * 0.7,
                 child: AutoSizeText(
-                  'รายละเอียด: ${listClip.details}',
+                  'รายละเอียด: ${listFood.details}',
                   maxLines: 5,
                   //style: Theme.of(context).textTheme.bodyLarge,
                 ),
@@ -379,25 +335,46 @@ class _ClipSelectPageState extends State<ClipSelectPage> {
             SizedBox(
                 width: MediaQuery.of(context).size.width * 0.7,
                 child: Text(
-                  'จำนวนเซ็ท: ${listClip.amountPerSet.toString()}',
+                  'Calories: ${listFood.calories.toString()}',
                   style: Theme.of(context).textTheme.bodyLarge,
                 )),
             Row(
-              mainAxisAlignment: MainAxisAlignment.end,
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               //MainAxisAlignment.end,
               children: [
+                Padding(
+                  padding: const EdgeInsets.only(left: 30),
+                  child: SizedBox(
+                    width: MediaQuery.of(context).size.width * 0.4,
+                    //height: MediaQuery.of(context).size.height * 0.2,
+                    child: WidgetDropdownString(
+                      title: 'เลือกมืออาหาร',
+                      selectedValue: selectedValuehand,
+                      ListItems: listhand,
+                    ),
+                  ),
+                ),
                 Padding(
                   padding: const EdgeInsets.only(right: 30),
                   child: ElevatedButton(
                       onPressed: () {
                         setState(() {
-                          increaseClips.add(listClip);
+                          increaseFood.add(listFood);
 
-                          ClipDayIdPost requestFoodPost = ClipDayIdPost(
-                              listClipId: listClip.icpId);
-                          increaseClipDays.add(requestFoodPost);
+                          FoodDayIdPost requestFoodPost = FoodDayIdPost(
+                            listFoodId: listFood.ifid,
+                            time: selectedValuehand.text == 'มื้อเช้า'
+                                ? '1'
+                                : selectedValuehand.text == 'มื้อเที่ยง'
+                                    ? '2'
+                                    : selectedValuehand.text == 'มื้อเย็น'
+                                        ? '3'
+                                        : '',
+                          );
+                          increaseFoodDay.add(requestFoodPost);
                           log(jsonEncode(requestFoodPost));
-
+                          selectedValuehand.text = 'มื้อเช้า';
+                          //เปลี่ยนสีเมือเลือกเมนู฿อาหาร
                           colorList[index] =
                               context.read<AppData>().colorSelect;
                         });
@@ -409,11 +386,8 @@ class _ClipSelectPageState extends State<ClipSelectPage> {
               ],
             )
           ],
-       ),
+        ),
       );
     });
   }
-
-
- 
 }
