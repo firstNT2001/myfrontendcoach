@@ -6,6 +6,7 @@ import 'package:dio/dio.dart';
 import '../model/request/course_EX.dart';
 import '../model/request/status_clip.dart';
 import '../model/response/clip_get_res.dart';
+import '../model/response/md_Buying_get.dart';
 import '../model/response/md_Course_get.dart';
 import '../model/response/md_Result.dart';
 import '../model/response/md_coach_course_get.dart';
@@ -29,20 +30,17 @@ abstract class CourseService {
       @Query("cid") required String cid,
       @Query("name") required String name});
 
-  @GET("/course/user")
-  Future<HttpResponse<List<Course>>> courseUsers(
-      {@Query("cid") required String cid});
-
+ 
   @GET("/course/sell/{coID}")
   Future<HttpResponse<Course>> coursebyCoID(@Path("coID") String coID);
 
   @GET("/courses")
-  Future<HttpResponse<List<Course>>> showcourseNotEx({
+  Future<HttpResponse<List<Buying>>> showcourseNotEx({
     @Query("uid") required String uid,
   });
 
   @GET("/courses/EX")
-  Future<HttpResponse<List<Course>>> showcourseEx({
+  Future<HttpResponse<List<Buying>>> showcourseEx({
     @Query("uid") required String uid,
   });
 

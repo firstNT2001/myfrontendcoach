@@ -6,8 +6,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
 import 'package:provider/provider.dart';
 
-import '../../../model/response/md_coach_course_get.dart';
-import '../../../model/response/md_course_buy.dart';
+import '../../../model/response/md_Buying_get.dart';
 import '../../../service/course.dart';
 import '../../../service/provider/appdata.dart';
 import '../Review/review.dart';
@@ -21,13 +20,12 @@ class HistoryPage extends StatefulWidget {
 
 class _HistoryPageState extends State<HistoryPage> {
   late CourseService courseService;
-  List<Course> courses = [];
+  List<Buying> courses = [];
   late Future<void> loadDataMethod;
 
   late int uid;
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     uid = context.read<AppData>().uid;
     courseService =
@@ -74,7 +72,7 @@ class _HistoryPageState extends State<HistoryPage> {
                                 decoration: BoxDecoration(
                                   color: const Color(0xff7c94b6),
                                   image: DecorationImage(
-                                      image: NetworkImage(listcours.image),
+                                      image: NetworkImage(listcours.course.image),
                                       fit: BoxFit.cover),
                                   borderRadius: BorderRadius.circular(20),
                                 ),
@@ -94,8 +92,8 @@ class _HistoryPageState extends State<HistoryPage> {
                                 // const Color.fromARGB(127, 0, 0, 0)
                                 const Color.fromARGB(255, 255, 255, 255)
                                     .withAlpha(0),
-                                Color.fromARGB(39, 255, 255, 255),
-                                Color.fromARGB(121, 255, 255, 255)
+                                const Color.fromARGB(39, 255, 255, 255),
+                                const Color.fromARGB(121, 255, 255, 255)
                               ],
                             ),
                             borderRadius: BorderRadius.circular(20),
@@ -107,7 +105,7 @@ class _HistoryPageState extends State<HistoryPage> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             mainAxisAlignment: MainAxisAlignment.end,
                             children: [
-                              Text(listcours.name,
+                              Text(listcours.course.name,
                                   style:
                                       Theme.of(context).textTheme.titleLarge),
                               Row(
@@ -119,7 +117,7 @@ class _HistoryPageState extends State<HistoryPage> {
                                       size: 16.0,
                                     ),
                                   ),
-                                  Text(listcours.coach.fullName,
+                                  Text(listcours.customer.fullName,
                                       style: Theme.of(context)
                                           .textTheme
                                           .bodyLarge),
@@ -135,7 +133,7 @@ class _HistoryPageState extends State<HistoryPage> {
                                       onPressed: () {
                                         Get.to(() => const ReviewPage());
                                       },
-                                      child: Text("ให้คะแนน")))
+                                      child: const Text("ให้คะแนน")))
                       ],
                     ),
                   ),
@@ -150,7 +148,7 @@ class _HistoryPageState extends State<HistoryPage> {
 
   Future<void> loadData() async {
     try {
-      log("idcus" + uid.toString());
+      log("idcus$uid");
       var datacouse = await courseService.showcourseEx(uid: uid.toString());
       courses = datacouse.data;
     } catch (err) {

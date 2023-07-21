@@ -105,32 +105,6 @@ class _CourseService implements CourseService {
   }
 
   @override
-  Future<HttpResponse<List<Course>>> courseUsers({required cid}) async {
-    const _extra = <String, dynamic>{};
-    final queryParameters = <String, dynamic>{r'cid': cid};
-    final _headers = <String, dynamic>{};
-    final _data = <String, dynamic>{};
-    final _result = await _dio.fetch<List<dynamic>>(
-        _setStreamType<HttpResponse<List<Course>>>(Options(
-      method: 'GET',
-      headers: _headers,
-      extra: _extra,
-    )
-            .compose(
-              _dio.options,
-              '/course/user',
-              queryParameters: queryParameters,
-              data: _data,
-            )
-            .copyWith(baseUrl: baseUrl ?? _dio.options.baseUrl)));
-    var value = _result.data!
-        .map((dynamic i) => Course.fromJson(i as Map<String, dynamic>))
-        .toList();
-    final httpResponse = HttpResponse(value, _result);
-    return httpResponse;
-  }
-
-  @override
   Future<HttpResponse<Course>> coursebyCoID(coID) async {
     const _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
@@ -155,13 +129,13 @@ class _CourseService implements CourseService {
   }
 
   @override
-  Future<HttpResponse<List<Course>>> showcourseNotEx({required uid}) async {
+  Future<HttpResponse<List<Buying>>> showcourseNotEx({required uid}) async {
     const _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{r'uid': uid};
     final _headers = <String, dynamic>{};
     final _data = <String, dynamic>{};
     final _result = await _dio.fetch<List<dynamic>>(
-        _setStreamType<HttpResponse<List<Course>>>(Options(
+        _setStreamType<HttpResponse<List<Buying>>>(Options(
       method: 'GET',
       headers: _headers,
       extra: _extra,
@@ -174,20 +148,20 @@ class _CourseService implements CourseService {
             )
             .copyWith(baseUrl: baseUrl ?? _dio.options.baseUrl)));
     var value = _result.data!
-        .map((dynamic i) => Course.fromJson(i as Map<String, dynamic>))
+        .map((dynamic i) => Buying.fromJson(i as Map<String, dynamic>))
         .toList();
     final httpResponse = HttpResponse(value, _result);
     return httpResponse;
   }
 
   @override
-  Future<HttpResponse<List<Course>>> showcourseEx({required uid}) async {
+  Future<HttpResponse<List<Buying>>> showcourseEx({required uid}) async {
     const _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{r'uid': uid};
     final _headers = <String, dynamic>{};
     final _data = <String, dynamic>{};
     final _result = await _dio.fetch<List<dynamic>>(
-        _setStreamType<HttpResponse<List<Course>>>(Options(
+        _setStreamType<HttpResponse<List<Buying>>>(Options(
       method: 'GET',
       headers: _headers,
       extra: _extra,
@@ -200,7 +174,7 @@ class _CourseService implements CourseService {
             )
             .copyWith(baseUrl: baseUrl ?? _dio.options.baseUrl)));
     var value = _result.data!
-        .map((dynamic i) => Course.fromJson(i as Map<String, dynamic>))
+        .map((dynamic i) => Buying.fromJson(i as Map<String, dynamic>))
         .toList();
     final httpResponse = HttpResponse(value, _result);
     return httpResponse;
