@@ -1,73 +1,87 @@
 import 'dart:developer';
 
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:frontendfluttercoach/page/coach/usersBuyCourses/show_course_user_page.dart';
 import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
 import 'package:provider/provider.dart';
 
-import '../../../service/course.dart';
+import '../../../model/response/md_Buying_get.dart';
+import '../../../service/buy.dart';
 import '../../../service/provider/appdata.dart';
 
-class ShowCourseUserPage extends StatefulWidget {
-  const ShowCourseUserPage({super.key, required this.uid});
-  final String uid;
+class ShowUserByCoursePage extends StatefulWidget {
+  const ShowUserByCoursePage({super.key});
+
   @override
-  State<ShowCourseUserPage> createState() => _ShowCourseUserPageState();
+  State<ShowUserByCoursePage> createState() => _ShowUserByCoursePageState();
 }
 
-class _ShowCourseUserPageState extends State<ShowCourseUserPage> {
+class _ShowUserByCoursePageState extends State<ShowUserByCoursePage> {
   // Courses
   late Future<void> loadCourseDataMethod;
-  late CourseService _courseService;
+  late BuyCourseService _BuyingService;
   List<Buying> courses = [];
+
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-    _courseService = context.read<AppData>().courseService;
+    _BuyingService = context.read<AppData>().buyCourseService;
     loadCourseDataMethod = loadUserData();
-    log(widget.uid);
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        resizeToAvoidBottomInset: false,
-        appBar: AppBar(
-          //backgroundColor: Theme.of(context).colorScheme.primary,
-          title: Text(
-            "",
-            style: Theme.of(context).textTheme.headlineMedium,
-          ),
-          leading: IconButton(
-            icon: const Icon(
-              FontAwesomeIcons.chevronLeft,
-            ),
-            onPressed: () {
-              Get.back();
-            },
-          ),
+      resizeToAvoidBottomInset: false,
+      appBar: AppBar(
+        //backgroundColor: Theme.of(context).colorScheme.primary,
+        title: Text(
+          "",
+          style: Theme.of(context).textTheme.headlineMedium,
         ),
-        body: Column(
-          children: [
-            loadcourse(),
-          ],
-        ));
+        leading: IconButton(
+          icon: const Icon(
+            FontAwesomeIcons.chevronLeft,
+          ),
+          onPressed: () {
+            Get.back();
+          },
+        ),
+      ),
+      body: Column(
+        children: [
+          Expanded(
+            child: Padding(
+              padding:
+                  const EdgeInsets.only(left: 8, right: 8, top: 5, bottom: 5),
+              child: showUser(),
+            ),
+          ),
+        ],
+      ),
+    );
   }
 
   //LoadData
   Future<void> loadUserData() async {
     try {
-      var datacouse = await _courseService.showcourseEx(uid: widget.uid);
-      courses = datacouse.data;
+      //Courses
+      var datas = await _BuyingService.courseUsers(
+          cid: context.read<AppData>().cid.toString());
+      courses = datas.data;
+      // for (var inder in courses) {
+      //   log(inder.buying!.customer.image);
+      // }
     } catch (err) {
       log('Error: $err');
     }
   }
 
-  Widget loadcourse() {
+  //Show Data
+  Widget showUser() {
     return FutureBuilder(
       future: loadCourseDataMethod,
       builder: (context, snapshot) {

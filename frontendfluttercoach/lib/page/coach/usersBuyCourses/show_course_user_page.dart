@@ -2,6 +2,7 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:frontendfluttercoach/model/response/md_Buying_get.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:provider/provider.dart';
@@ -61,9 +62,11 @@ class _ShowCourseUserPageState extends State<ShowCourseUserPage> {
 
   //LoadData
   Future<void> loadUserData() async {
-     try {
-      
-      var datacouse = await _courseService.showcourseEx(uid: widget.uid);
+    try {
+      var datacouse = await _buyingService.buying(
+          uid: widget.uid,
+          cid: context.read<AppData>().cid.toString(),
+          coID: '');
       courses = datacouse.data;
     } catch (err) {
       log('Error: $err');
@@ -87,73 +90,81 @@ class _ShowCourseUserPageState extends State<ShowCourseUserPage> {
                 child: Container(
                   alignment: Alignment.center,
                   width: double.infinity,
-                  child: AspectRatio(
-                    aspectRatio: 16 / 9,
-                    child: Stack(
-                      children: <Widget>[
-                        Container(
-                          alignment: Alignment.topCenter,
-                          child: AspectRatio(
-                              aspectRatio: 16 / 9,
-                              child: Container(
-                                decoration: BoxDecoration(
-                                  color: const Color(0xff7c94b6),
-                                  image: DecorationImage(
-                                      image: NetworkImage(listcours.course.image),
-                                      fit: BoxFit.cover),
-                                  borderRadius: BorderRadius.circular(20),
-                                ),
-                              )),
-                          //color: Colors.white,
-                        ),
-                        Container(
-                          padding: const EdgeInsets.all(5.0),
-                          alignment: Alignment.bottomCenter,
-                          decoration: BoxDecoration(
-                            gradient: LinearGradient(
-                              begin: Alignment.topCenter,
-                              end: Alignment.bottomCenter,
-                              colors: <Color>[
-                                // const Color.fromARGB(255, 0, 0, 0).withAlpha(0),
-                                // const Color.fromARGB(49, 0, 0, 0),
-                                // const Color.fromARGB(127, 0, 0, 0)
-                                const Color.fromARGB(255, 255, 255, 255)
-                                    .withAlpha(0),
-                                const Color.fromARGB(39, 255, 255, 255),
-                                const Color.fromARGB(121, 255, 255, 255)
-                              ],
-                            ),
-                            borderRadius: BorderRadius.circular(20),
-                          ),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            mainAxisAlignment: MainAxisAlignment.end,
-                            children: [
-                              Text(listcours.course.name,
-                                  style:
-                                      Theme.of(context).textTheme.titleLarge),
-                              Row(
-                                children: [
-                                  const Padding(
-                                    padding: EdgeInsets.only(right: 8),
-                                    child: Icon(
-                                      FontAwesomeIcons.solidUser,
-                                      size: 16.0,
-                                    ),
+                  child: InkWell(
+                    onTap: () {
+                        Get.to(() => CourseEditPage(
+                          coID: courses[index].course.coId.toString(),
+                        ));
+                    },
+                    child: AspectRatio(
+                      aspectRatio: 16 / 9,
+                      child: Stack(
+                        children: <Widget>[
+                          Container(
+                            alignment: Alignment.topCenter,
+                            child: AspectRatio(
+                                aspectRatio: 16 / 9,
+                                child: Container(
+                                  decoration: BoxDecoration(
+                                    color: const Color(0xff7c94b6),
+                                    image: DecorationImage(
+                                        image: NetworkImage(
+                                            listcours.course.image),
+                                        fit: BoxFit.cover),
+                                    borderRadius: BorderRadius.circular(20),
                                   ),
-                                  Text(listcours.customer.fullName,
-                                      style: Theme.of(context)
-                                          .textTheme
-                                          .bodyLarge),
+                                )),
+                            //color: Colors.white,
+                          ),
+                          Container(
+                            padding: const EdgeInsets.all(5.0),
+                            alignment: Alignment.bottomCenter,
+                            decoration: BoxDecoration(
+                              gradient: LinearGradient(
+                                begin: Alignment.topCenter,
+                                end: Alignment.bottomCenter,
+                                colors: <Color>[
+                                  // const Color.fromARGB(255, 0, 0, 0).withAlpha(0),
+                                  // const Color.fromARGB(49, 0, 0, 0),
+                                  // const Color.fromARGB(127, 0, 0, 0)
+                                  const Color.fromARGB(255, 255, 255, 255)
+                                      .withAlpha(0),
+                                  const Color.fromARGB(39, 255, 255, 255),
+                                  const Color.fromARGB(121, 255, 255, 255)
                                 ],
                               ),
-                            ],
+                              borderRadius: BorderRadius.circular(20),
+                            ),
                           ),
-                        ),
-                      ],
+                          Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              mainAxisAlignment: MainAxisAlignment.end,
+                              children: [
+                                Text(listcours.course.name,
+                                    style:
+                                        Theme.of(context).textTheme.titleLarge),
+                                Row(
+                                  children: [
+                                    const Padding(
+                                      padding: EdgeInsets.only(right: 8),
+                                      child: Icon(
+                                        FontAwesomeIcons.solidUser,
+                                        size: 16.0,
+                                      ),
+                                    ),
+                                    Text(listcours.customer.fullName,
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .bodyLarge),
+                                  ],
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
                   ),
                 ),

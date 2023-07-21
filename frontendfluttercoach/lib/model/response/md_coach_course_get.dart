@@ -4,7 +4,6 @@
 
 import 'dart:convert';
 
-import 'md_Buying_get.dart';
 import 'md_Coach_get.dart';
 
 List<Course> courseFromJson(String str) => List<Course>.from(json.decode(str).map((x) => Course.fromJson(x)));
@@ -42,8 +41,7 @@ class Course {
         required this.coach,
     });
 
-  factory Course.fromJson(Map<String, dynamic> json) {
-    return Course(
+    factory Course.fromJson(Map<String, dynamic> json) => Course(
         coId: json["CoID"],
         coachId: json["CoachID"],
         buyingId: json["BuyingID"],
