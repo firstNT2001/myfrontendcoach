@@ -18,6 +18,7 @@ import '../../model/response/md_coach_course_get.dart';
 import '../../service/buy.dart';
 import '../../service/course.dart';
 import '../../service/provider/appdata.dart';
+import 'mycourse.Detaildart/Widget/widget_loadreview.dart';
 import 'mycourse.Detaildart/mycourse.dart';
 
 class showCousePage extends StatefulWidget {
@@ -31,19 +32,15 @@ class _showCousePageState extends State<showCousePage> {
   late BuyCourseService buyCourseService;
   late CourseService courseService;
   late Future<void> loadDataMethod;
-  late ReviewService reviewService;
   List<Course> courses = [];
   late ModelResult moduleResult;
   int courseId = 0;
   int cusID = 0;
   int moneycus = 0;
-  late double calRating;
-  late int sumscore;
-  List<ModelReview> reviews = [];
   var buycourse;
   final now = DateTime.now();
-
   double value = 0.0;
+
   @override
   void initState() {
     // TODO: implement initState
@@ -53,8 +50,7 @@ class _showCousePageState extends State<showCousePage> {
     moneycus = context.read<AppData>().money;
     courseService =
         CourseService(Dio(), baseUrl: context.read<AppData>().baseurl);
-    reviewService =
-        ReviewService(Dio(), baseUrl: context.read<AppData>().baseurl);
+
     buyCourseService =
         BuyCourseService(Dio(), baseUrl: context.read<AppData>().baseurl);
     loadDataMethod = loadData();
@@ -75,30 +71,10 @@ class _showCousePageState extends State<showCousePage> {
           endIndent: 8,
           thickness: 3,
         ),
-        Center(
-          child: Column(
-            children: [
-              Text(
-                "คะแนนจากผู้ซื้อ",
-                style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-              ),
-              Text(
-                calRating.toStringAsFixed(1),
-                style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-              ),
-              FlutterRating(
-                size: 20,
-                starCount: 5,
-                rating: calRating,
-                allowHalfRating: true,
-                color: Colors.amber,
-                borderColor: Colors.grey,
-                mainAxisAlignment: MainAxisAlignment.center,
-              )
-            ],
-          ),
-        ),
-        Expanded(child: loadReview()),
+        Expanded(
+            child: WidgetloadeReview(
+          couseID: courseId.toString(),
+        )),
         SizedBox(
           width: 65,
           height: 65,
@@ -127,23 +103,7 @@ class _showCousePageState extends State<showCousePage> {
     try {
       var datacouse = await courseService.course(
           coID: courseId.toString(), cid: '', name: '');
-      var datareview = await reviewService.review(coID: courseId.toString());
       courses = datacouse.data;
-      reviews = datareview.data;
-      calRating = 0.0;
-      sumscore = 0;
-      for (int i = 0; i < reviews.length; i++) {
-        sumscore += reviews[i].score;
-        log("reviews[i].score" + reviews[i].score.toString());
-      }
-      log("COID" + courseId.toString());
-      log("sumscore" + sumscore.toString());
-      if (sumscore > 0) {
-        calRating = sumscore / reviews.length;
-      } else {
-        calRating = 0.00;
-      }
-      log("calRating" + calRating.toString());
     } catch (err) {
       log('Error: $err');
     }
@@ -234,49 +194,6 @@ class _showCousePageState extends State<showCousePage> {
             return const Center(child: CircularProgressIndicator());
           }
         });
-  }
-
-  Widget loadReview() {
-    return FutureBuilder(
-      future: loadDataMethod,
-      builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.done) {
-          return ListView.builder(
-              itemCount: reviews.length,
-              itemBuilder: (context, index) {
-                final review = reviews[index];
-                return Card(
-                  child: ListTile(
-                    leading: CircleAvatar(
-                      backgroundImage: NetworkImage(review.customer.image),
-                      radius: 30,
-                    ),
-                    title: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(review.customer.username,
-                            style: Theme.of(context).textTheme.bodyLarge),
-                        FlutterRating(
-                          size: 20,
-                          starCount: 5,
-                          rating: review.score.toDouble(),
-                          allowHalfRating: true,
-                          color: Colors.amber,
-                          borderColor: Colors.grey,
-                          mainAxisAlignment: MainAxisAlignment.start,
-                        )
-                      ],
-                    ),
-                    subtitle: Text(review.details,
-                        style: Theme.of(context).textTheme.bodyMedium),
-                  ),
-                );
-              });
-        } else {
-          return const Center(child: CircularProgressIndicator());
-        }
-      },
-    );
   }
 
   void _buycouse(BuildContext ctx) {
