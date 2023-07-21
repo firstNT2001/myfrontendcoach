@@ -2,11 +2,11 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:frontendfluttercoach/model/response/md_Buying_get.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:provider/provider.dart';
 
-import '../../../model/response/md_coach_course_get.dart';
 import '../../../service/course.dart';
 import '../../../service/provider/appdata.dart';
 
@@ -21,7 +21,7 @@ class _ShowCourseUserPageState extends State<ShowCourseUserPage> {
     // Courses
   late Future<void> loadCourseDataMethod;
   late CourseService _courseService;
-  List<Course> courses = [];
+  List<Buying> courses = [];
   @override
   void initState() {
     // TODO: implement initState
@@ -97,7 +97,7 @@ class _ShowCourseUserPageState extends State<ShowCourseUserPage> {
                                 decoration: BoxDecoration(
                                   color: const Color(0xff7c94b6),
                                   image: DecorationImage(
-                                      image: NetworkImage(listcours.image),
+                                      image: NetworkImage(listcours.course.image),
                                       fit: BoxFit.cover),
                                   borderRadius: BorderRadius.circular(20),
                                 ),
@@ -117,8 +117,8 @@ class _ShowCourseUserPageState extends State<ShowCourseUserPage> {
                                 // const Color.fromARGB(127, 0, 0, 0)
                                 const Color.fromARGB(255, 255, 255, 255)
                                     .withAlpha(0),
-                                Color.fromARGB(39, 255, 255, 255),
-                                Color.fromARGB(121, 255, 255, 255)
+                                const Color.fromARGB(39, 255, 255, 255),
+                                const Color.fromARGB(121, 255, 255, 255)
                               ],
                             ),
                             borderRadius: BorderRadius.circular(20),
@@ -130,7 +130,7 @@ class _ShowCourseUserPageState extends State<ShowCourseUserPage> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             mainAxisAlignment: MainAxisAlignment.end,
                             children: [
-                              Text(listcours.name,
+                              Text(listcours.course.name,
                                   style:
                                       Theme.of(context).textTheme.titleLarge),
                               Row(
@@ -142,7 +142,7 @@ class _ShowCourseUserPageState extends State<ShowCourseUserPage> {
                                       size: 16.0,
                                     ),
                                   ),
-                                  Text(listcours.coach.fullName,
+                                  Text(listcours.customer.fullName,
                                       style: Theme.of(context)
                                           .textTheme
                                           .bodyLarge),
