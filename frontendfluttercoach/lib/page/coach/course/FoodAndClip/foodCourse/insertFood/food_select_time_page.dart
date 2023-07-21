@@ -10,11 +10,11 @@ import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:provider/provider.dart';
 
-import '../../../../../model/request/food_dayID_post.dart';
-import '../../../../../model/response/md_FoodList_get.dart';
-import '../../../../../model/response/md_Result.dart';
-import '../../../../../service/provider/appdata.dart';
-import '../../../home_foodAndClip.dart';
+import '../../../../../../model/request/food_dayID_post.dart';
+import '../../../../../../model/response/md_FoodList_get.dart';
+import '../../../../../../model/response/md_Result.dart';
+import '../../../../../../service/provider/appdata.dart';
+import '../../course_food_clip.dart';
 
 class FoodSelectTimePage extends StatefulWidget {
   const FoodSelectTimePage(

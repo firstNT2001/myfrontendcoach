@@ -13,12 +13,12 @@ import 'package:loading_indicator/loading_indicator.dart';
 
 import 'package:provider/provider.dart';
 
-import '../../../model/request/listClip_clipID_put.dart';
-import '../../../model/response/md_ClipList_get.dart';
-import '../../../model/response/md_Result.dart';
-import '../../../service/listClip.dart';
-import '../../../service/provider/appdata.dart';
-import '../../../widget/wg_textField.dart';
+import '../../../../model/request/listClip_clipID_put.dart';
+import '../../../../model/response/md_ClipList_get.dart';
+import '../../../../model/response/md_Result.dart';
+import '../../../../service/listClip.dart';
+import '../../../../service/provider/appdata.dart';
+import '../../../../widget/wg_textField.dart';
 
 class ClipEditCoachPage extends StatefulWidget {
   final int icpId;

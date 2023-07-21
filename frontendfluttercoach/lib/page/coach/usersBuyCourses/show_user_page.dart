@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:frontendfluttercoach/page/coach/usersBuyCourses/show_course_user_page.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:provider/provider.dart';
@@ -10,8 +11,6 @@ import 'package:provider/provider.dart';
 import '../../../model/response/md_coach_course_get.dart';
 import '../../../service/course.dart';
 import '../../../service/provider/appdata.dart';
-
-
 
 class ShowUserByCoursePage extends StatefulWidget {
   const ShowUserByCoursePage({super.key});
@@ -39,7 +38,7 @@ class _ShowUserByCoursePageState extends State<ShowUserByCoursePage> {
     return Scaffold(
       resizeToAvoidBottomInset: false,
       appBar: AppBar(
-        backgroundColor: Theme.of(context).colorScheme.primary,
+        //backgroundColor: Theme.of(context).colorScheme.primary,
         title: Text(
           "",
           style: Theme.of(context).textTheme.headlineMedium,
@@ -98,7 +97,9 @@ class _ShowUserByCoursePageState extends State<ShowUserByCoursePage> {
               return SizedBox(
                 height: MediaQuery.of(context).size.height * 0.15,
                 child: InkWell(
-                  onTap: () {},
+                  onTap: () {
+                    Get.to(() => ShowCourseUserPage(uid: course.buying!.customer.uid.toString()));
+                  },
                   child: Column(
                     // mainAxisAlignment: MainAxisAlignment.start,
                     // crossAxisAlignment: CrossAxisAlignment.center,

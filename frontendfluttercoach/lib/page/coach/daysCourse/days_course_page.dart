@@ -19,8 +19,8 @@ import '../../../service/course.dart';
 import '../../../service/days.dart';
 import '../../../service/provider/appdata.dart';
 import '../../../widget/dialogs.dart';
+import '../course/FoodAndClip/course_food_clip.dart';
 
-import '../home_foodAndClip.dart';
 
 class DaysCoursePage extends StatefulWidget {
   const DaysCoursePage({super.key, required this.coID});

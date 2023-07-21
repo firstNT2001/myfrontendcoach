@@ -11,12 +11,12 @@ import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:provider/provider.dart';
 
-import '../../../../model/request/clip_dayID_post.dart';
-import '../../../../model/response/md_ClipList_get.dart';
-import '../../../../model/response/md_Result.dart';
-import '../../../../service/clip.dart';
-import '../../../../service/provider/appdata.dart';
-import '../../../coach/home_foodAndClip.dart';
+import '../../../../../../model/request/clip_dayID_post.dart';
+import '../../../../../../model/response/md_ClipList_get.dart';
+import '../../../../../../model/response/md_Result.dart';
+import '../../../../../../service/clip.dart';
+import '../../../../../../service/provider/appdata.dart';
+import '../../course_food_clip.dart';
 
 class ClipInsertPage extends StatefulWidget {
    const ClipInsertPage({super.key, required this.did, required this.modelClipList, required this.increaseClip});
