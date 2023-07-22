@@ -94,9 +94,9 @@ dependencies:
   loading_indicator: ^3.1.1
   percent_indicator: ^4.2.3
   flutter_rating_stars: ^1.0.3+4
-  flutter_rating_bar: ^4.0.1
   buddhist_datetime_dateformat:
     path: libraries/buddhist_datetime_dateformat_sns
+  flutter_rating_native: ^0.0.2
  
   # video_thumbnail: ^0.5.3
    

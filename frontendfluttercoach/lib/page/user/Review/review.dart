@@ -24,8 +24,8 @@ class _ReviewPageState extends State<ReviewPage> {
   late ReviewService reviewService;
   late ModelResult moduleResult;
 
-  int cid = 51;
-  int courseId = 301;
+  late int cid;
+  late int courseId;
   final TextEditingController detail = TextEditingController();
   final TextEditingController weight = TextEditingController();
   double value = 0.0;
@@ -36,9 +36,8 @@ class _ReviewPageState extends State<ReviewPage> {
     // TODO: implement initState
     super.initState();
     cid = context.read<AppData>().cid;
-    log(context.read<AppData>().baseurl);
-    reviewService =
-       context.read<AppData>().reviewService;
+    courseId = context.read<AppData>().idcourse;
+    reviewService = context.read<AppData>().reviewService;
   }
 
   @override
@@ -110,26 +109,27 @@ class _ReviewPageState extends State<ReviewPage> {
                 ),
                 SizedBox(
                     width: MediaQuery.of(context).size.width * 0.85,
-                    child:  TextField(
-                      controller: detail,
-                        keyboardType: TextInputType.multiline, maxLines: 4)),
+                    child: TextField(
+                        controller: detail,
+                        keyboardType: TextInputType.multiline,
+                        maxLines: 4)),
                 FilledButton(
                     onPressed: () async {
                       print(value.toInt());
                       print(cid);
-                     // log("A" + value.toString());
+                      // log("A" + value.toString());
                       //log("B"+rating.toString());
                       InsertReview insertReview = InsertReview(
-                          courseId: courseId,
+                          customerId: cid,
                           details: detail.text,
                           score: value.toInt(),
                           weight: int.parse(weight.text));
                       log(jsonEncode(insertReview));
                       insert = await reviewService.insertreview(
-                          cid.toString(), insertReview);
+                          courseId.toString(), insertReview);
                       moduleResult = insert.data;
                       log(moduleResult.result);
-                      // Get.to(() => MyCouses());
+                      Get.to(() => const MyCouses());
                     },
                     child: const Text("ยืนยัน"))
               ],
