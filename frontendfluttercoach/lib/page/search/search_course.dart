@@ -140,7 +140,7 @@ class _SearchCoursePageState extends State<SearchCoursePage> {
                 child: InkWell(
                   onTap: () {
                     Get.to(() => CourseEditPage(
-                          coID: courses[index].coId.toString(),
+                          coID: courses[index].coId.toString(), isVisible: false,
                         ));
                   },
                   child: Container(

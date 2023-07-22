@@ -92,9 +92,16 @@ class _ShowCourseUserPageState extends State<ShowCourseUserPage> {
                   width: double.infinity,
                   child: InkWell(
                     onTap: () {
+                      
                         Get.to(() => CourseEditPage(
-                          coID: courses[index].course.coId.toString(),
+                          coID: listcours.course.coId.toString(), isVisible: false,
                         ));
+                      // Get.to(() => ChatPage(
+                      //       roomID: listcours.course.coId.toString(),
+                      //       roomName: listcours.course.name,
+                      //       userID: context.read<AppData>().cid.toString(),
+                      //       firstName: context.read<AppData>().nameCoach,
+                      //     ));
                     },
                     child: AspectRatio(
                       aspectRatio: 16 / 9,

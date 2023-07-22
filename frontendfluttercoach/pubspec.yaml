@@ -97,6 +97,7 @@ dependencies:
   buddhist_datetime_dateformat:
     path: libraries/buddhist_datetime_dateformat_sns
   flutter_rating_native: ^0.0.2
+  msh_checkbox: ^2.0.1
  
   # video_thumbnail: ^0.5.3
    

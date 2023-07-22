@@ -26,11 +26,13 @@ class FoodEditSelectPage extends StatefulWidget {
     required this.did,
     required this.sequence,
     required this.time,
+    required this.isVisible
   });
   final String fid;
   final String did;
   final String sequence;
   final String time;
+  final bool isVisible;
   @override
   State<FoodEditSelectPage> createState() => _FoodEditSelectPageState();
 }
@@ -252,7 +254,7 @@ class _FoodEditSelectPageState extends State<FoodEditSelectPage> {
                           if (modelResult.result == '1') {
                             Get.to(() => HomeFoodAndClipPage(
                                   did: widget.did,
-                                  sequence: widget.sequence,
+                                  sequence: widget.sequence, isVisible: widget.isVisible,
                                 ));
                           } else {
                             // ignore: use_build_context_synchronously

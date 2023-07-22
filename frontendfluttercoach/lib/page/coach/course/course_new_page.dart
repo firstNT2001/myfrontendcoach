@@ -223,7 +223,7 @@ class _CourseNewPageState extends State<CourseNewPage> {
         // }
 
          Get.to(() => DaysCoursePage(
-              coID: moduleResult.result,
+              coID: moduleResult.result, isVisible: true,
             ));
       },
       child: const Text('Next'),
