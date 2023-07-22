@@ -9,7 +9,6 @@ import 'package:provider/provider.dart';
 
 import '../../../service/buy.dart';
 import '../../../service/provider/appdata.dart';
-import '../course/course_edit_page.dart';
 
 class ShowCourseUserPage extends StatefulWidget {
   const ShowCourseUserPage({super.key, required this.uid});
