@@ -14,7 +14,7 @@ abstract class ReviewService {
   Future<HttpResponse<List<ModelReview>>> review(
       {@Query("coID") required String coID});
 
-  @POST("/review/{coID}")
+  @POST("/review/{bid}")
   Future<HttpResponse<ModelResult>> insertreview(
-      @Path() String coID, @Body() InsertReview insertReview);
+      @Path() String bid, @Body() InsertReview insertReview);
 }
