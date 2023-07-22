@@ -117,9 +117,11 @@ class _WidgetloadeReviewState extends State<WidgetloadeReview> {
 
   Future<void> loadData() async {
     try {
+      log("A");
       var datareview =
           await reviewService.review(coID: widget.couseID.toString());
       reviews = datareview.data;
+      log("B");
       if (reviews.isNotEmpty) {
         final summ = reviews.map((e) => e.score as double).toList();
         calRating = summ.average;
@@ -129,12 +131,12 @@ class _WidgetloadeReviewState extends State<WidgetloadeReview> {
         // }
         log("COID${widget.couseID}");
         log("sumscore$sumscore");
-        if (sumscore > 0) {
-          calRating = sumscore / reviews.length;
-        } else {
-          calRating = 0.00;
-        }
-        log("calRating$calRating");
+        // if (sumscore > 0) {
+        //   calRating = sumscore / reviews.length;
+        // } else {
+        //   calRating = 0.00;
+        // }
+        // log("calRating$calRating");
       } else {
         calRating = 0.0;
         sumscore = 0;
