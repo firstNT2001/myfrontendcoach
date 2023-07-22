@@ -27,11 +27,13 @@ class ClipEditSelectPage extends StatefulWidget {
     required this.did,
     required this.sequence,
     required this.status,
+    required this.isVisible
   });
   final String cpID;
   final String did;
   final String sequence;
   final int status;
+  final bool isVisible;
   @override
   State<ClipEditSelectPage> createState() => _ClipEditSelectPageState();
 }
@@ -264,7 +266,7 @@ class _ClipEditSelectPageState extends State<ClipEditSelectPage> {
                           if (modelResult.result == '1') {
                             Get.to(() => HomeFoodAndClipPage(
                                   did: widget.did,
-                                  sequence: widget.sequence,
+                                  sequence: widget.sequence, isVisible: widget.isVisible,
                                 ));
                           } else {
                             // ignore: use_build_context_synchronously

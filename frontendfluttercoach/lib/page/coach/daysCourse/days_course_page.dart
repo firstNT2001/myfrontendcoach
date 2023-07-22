@@ -21,10 +21,11 @@ import '../../../service/provider/appdata.dart';
 import '../../../widget/dialogs.dart';
 import '../course/FoodAndClip/course_food_clip.dart';
 
-
 class DaysCoursePage extends StatefulWidget {
-  const DaysCoursePage({super.key, required this.coID});
+  const DaysCoursePage(
+      {super.key, required this.coID, required this.isVisible});
   final String coID;
+  final bool isVisible;
   @override
   State<DaysCoursePage> createState() => _DaysCoursePageState();
 }
@@ -70,34 +71,36 @@ class _DaysCoursePageState extends State<DaysCoursePage> {
         leading: IconButton(
           icon: const Icon(
             FontAwesomeIcons.chevronLeft,
-            color: Colors.white,
+            color: Colors.black,
           ),
           onPressed: () {
             Get.back();
           },
         ),
         actions: [
-          IconButton(
-            icon: const Icon(
-              FontAwesomeIcons.penToSquare,
-            ),
-            onPressed: () {
-              setState(() {
-                onVisibles = !onVisibles;
-                offVisibles = !offVisibles;
-              });
-              if (offVisibles == true) {
-                setState(() {
-                  title = 'Edit days';
-                });
-              } else {
-                setState(() {
-                  title = 'Days';
-                  loadDaysDataMethod = loadDaysDataAsync();
-                });
-              }
-            },
-          )
+          Visibility(
+              visible: widget.isVisible,
+              child: IconButton(
+                icon: const Icon(
+                  FontAwesomeIcons.penToSquare,
+                ),
+                onPressed: () {
+                  setState(() {
+                    onVisibles = !onVisibles;
+                    offVisibles = !offVisibles;
+                  });
+                  if (offVisibles == true) {
+                    setState(() {
+                      title = 'Edit days';
+                    });
+                  } else {
+                    setState(() {
+                      title = 'Days';
+                      loadDaysDataMethod = loadDaysDataAsync();
+                    });
+                  }
+                },
+              ))
         ],
         //backgroundColor: Theme.of(context).colorScheme.primaryContainer,
         iconTheme: const IconThemeData(
@@ -118,16 +121,17 @@ class _DaysCoursePageState extends State<DaysCoursePage> {
                         mainAxisAlignment: MainAxisAlignment.end,
                         children: [
                           //edit Day
-                      Padding(
-                        padding: const EdgeInsets.only(right:16.0,top: 10),
-                        child: ElevatedButton(
-                            onPressed: () {
-                              dialogInsertDay(context);
-                            },
-                            child: const Text("เพิ่มวัน")),
+                          Padding(
+                            padding:
+                                const EdgeInsets.only(right: 16.0, top: 10),
+                            child: ElevatedButton(
+                                onPressed: () {
+                                  dialogInsertDay(context);
+                                },
+                                child: const Text("เพิ่มวัน")),
+                          ),
+                        ],
                       ),
-                      ],),
-                    
                       Expanded(
                         child: Visibility(
                           visible: offVisibles,
@@ -193,6 +197,7 @@ class _DaysCoursePageState extends State<DaysCoursePage> {
                                                 did: listdays.did.toString(),
                                                 sequence: listdays.sequence
                                                     .toString(),
+                                                isVisible: widget.isVisible,
                                               ));
                                         },
                                       ),

@@ -20,9 +20,9 @@ import '../../course_food_clip.dart';
 import 'food_select_time_page.dart';
 
 class FoodNewCoursePage extends StatefulWidget {
-  const FoodNewCoursePage({super.key, required this.did});
+  const FoodNewCoursePage({super.key, required this.did, required this.isVisible});
   final String did;
-
+  final bool isVisible;
   @override
   State<FoodNewCoursePage> createState() => _FoodNewCoursePageState();
 }
@@ -64,7 +64,7 @@ class _FoodNewCoursePageState extends State<FoodNewCoursePage> {
             onPressed: () {
               Get.to(() => HomeFoodAndClipPage(
                     did: widget.did,
-                    sequence: context.read<AppData>().sequence,
+                    sequence: context.read<AppData>().sequence, isVisible: widget.isVisible,
                   ));
             },
           ),
@@ -101,7 +101,7 @@ class _FoodNewCoursePageState extends State<FoodNewCoursePage> {
                     Get.to(() => FoodSelectTimePage(
                           did: widget.did,
                           modelFoodList: increaseFood,
-                          increaseFood: increaseFoodDay,
+                          increaseFood: increaseFoodDay, isVisible: widget.isVisible,
                         ));
                     log(increaseFoodDay.length.toString());
                   }

@@ -15,7 +15,13 @@ class WidgetDropdownString extends StatefulWidget {
 class _WidgetDropdownStringState extends State<WidgetDropdownString> {
   @override
   Widget build(BuildContext context) {
-    return  DropdownLavel();
+    return  Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(widget.title),
+        DropdownLavel(),
+      ],
+    );
   }
   DropdownButtonFormField2<String> DropdownLavel() {
     return DropdownButtonFormField2(

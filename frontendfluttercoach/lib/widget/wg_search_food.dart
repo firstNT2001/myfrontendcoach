@@ -6,17 +6,22 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:frontendfluttercoach/model/response/food_get_res.dart';
 import 'package:frontendfluttercoach/widget/wg_editFood_Dialog.dart';
 
-
 import 'package:provider/provider.dart';
 
 import '../service/food.dart';
 import '../service/provider/appdata.dart';
 
 class WidgetSearchFood extends StatefulWidget {
-  const WidgetSearchFood({super.key, required this.searchName, required this.did, required this.sequence});
+  const WidgetSearchFood(
+      {super.key,
+      required this.searchName,
+      required this.did,
+      required this.sequence,
+      required this.isVisible});
   final TextEditingController searchName;
   final String did;
   final String sequence;
+  final bool isVisible;
   @override
   State<WidgetSearchFood> createState() => _WidgetSearchFoodState();
 }
@@ -134,14 +139,15 @@ class _WidgetSearchFoodState extends State<WidgetSearchFood> {
                   elevation: 1000,
                   child: InkWell(
                     onTap: () {
-                     dialogFoodEditInCourse(
+                      dialogFoodEditInCourse(
                           context,
                           listfood.listFood.image,
                           listfood.listFood.name,
                           listfood.time,
                           listfood.fid.toString(),
                           listfood.dayOfCouseId.toString(),
-                          widget.sequence);
+                          widget.sequence,
+                          widget.isVisible);
                     },
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,

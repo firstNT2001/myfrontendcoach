@@ -1,11 +1,8 @@
 import 'dart:convert';
 import 'dart:developer';
 
-
-
 import 'package:flutter/services.dart';
 import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
-
 
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:badges/badges.dart';
@@ -27,9 +24,9 @@ import '../../course_food_clip.dart';
 import 'clip_insert_page.dart';
 
 class ClipSelectPage extends StatefulWidget {
-  const ClipSelectPage({super.key, required this.did});
-  final  String did;
-
+  const ClipSelectPage({super.key, required this.did, required this.isVisible});
+  final String did;
+  final bool isVisible;
   @override
   State<ClipSelectPage> createState() => _ClipSelectPageState();
 }
@@ -76,6 +73,7 @@ class _ClipSelectPageState extends State<ClipSelectPage> {
               Get.to(() => HomeFoodAndClipPage(
                     did: widget.did,
                     sequence: context.read<AppData>().sequence,
+                    isVisible: widget.isVisible,
                   ));
             },
           ),
@@ -112,7 +110,7 @@ class _ClipSelectPageState extends State<ClipSelectPage> {
                     Get.to(() => ClipInsertPage(
                           did: widget.did,
                           modelClipList: increaseClips,
-                          increaseClip: increaseClipDays,
+                          increaseClip: increaseClipDays, isVisible: widget.isVisible,
                         ));
                   }
                 },
@@ -231,7 +229,7 @@ class _ClipSelectPageState extends State<ClipSelectPage> {
                               details: listClip.details,
                               amountPerSet: listClip.amountPerSet,
                               video: listClip.video);
-                          video =   listClip.video;
+                          video = listClip.video;
                           _dialog(context, request, colorClips, index);
                           //เปลี่ยนสีเมือเลือกเมนู฿อาหาร
                           // colorFood[index] = Colors.black12;
@@ -331,14 +329,13 @@ class _ClipSelectPageState extends State<ClipSelectPage> {
           mainAxisAlignment: MainAxisAlignment.start,
           //crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-           
             Padding(
               padding: const EdgeInsets.only(
                   left: 20, right: 20, top: 50, bottom: 0),
               child: Text("คลิปท่าออกกำลังกาย",
                   style: Theme.of(context).textTheme.headlineSmall),
             ),
-            if (listClip.video != '' ) ...{
+            if (listClip.video != '') ...{
               WidgetShowCilp(urlVideo: listClip.video),
             } else ...{
               Container(
@@ -351,9 +348,9 @@ class _ClipSelectPageState extends State<ClipSelectPage> {
                 height: 8,
               ),
             },
-             const SizedBox(
-                height: 16,
-              ),
+            const SizedBox(
+              height: 16,
+            ),
             Padding(
               padding: const EdgeInsets.only(bottom: 8),
               child: SizedBox(
@@ -393,8 +390,8 @@ class _ClipSelectPageState extends State<ClipSelectPage> {
                         setState(() {
                           increaseClips.add(listClip);
 
-                          ClipDayIdPost requestFoodPost = ClipDayIdPost(
-                              listClipId: listClip.icpId);
+                          ClipDayIdPost requestFoodPost =
+                              ClipDayIdPost(listClipId: listClip.icpId);
                           increaseClipDays.add(requestFoodPost);
                           log(jsonEncode(requestFoodPost));
 
@@ -409,11 +406,8 @@ class _ClipSelectPageState extends State<ClipSelectPage> {
               ],
             )
           ],
-       ),
+        ),
       );
     });
   }
-
-
- 
 }
