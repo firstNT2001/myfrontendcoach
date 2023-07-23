@@ -23,7 +23,7 @@ class ClipInsertPage extends StatefulWidget {
   //id Day
   final  String did;
   //Food
-  final  List<ModelClipList> modelClipList;
+  final  List<ListClip> modelClipList;
   final  List<ClipDayIdPost> increaseClip;
 
   final bool isVisible;

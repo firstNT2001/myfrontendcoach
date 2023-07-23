@@ -35,13 +35,13 @@ class _ClipSelectPageState extends State<ClipSelectPage> {
   //ClipService
   late Future<void> loadListClipDataMethod;
   late ListClipServices _listClipService;
-  List<ModelClipList> listClips = [];
+  List<ListClip> listClips = [];
 
   //Color
   List<Color> colorClips = [];
 
   //ListIncrease
-  List<ModelClipList> increaseClips = [];
+  List<ListClip> increaseClips = [];
   List<ClipDayIdPost> increaseClipDays = [];
 
   String video = "";
@@ -222,7 +222,7 @@ class _ClipSelectPageState extends State<ClipSelectPage> {
                           context.read<AppData>().colorSelect) {
                         setState(() {
                           // เพิ่มเมนูอาหารนั้นเมือกกดเลือก
-                          ModelClipList request = ModelClipList(
+                          ListClip request = ListClip(
                               icpId: listClip.icpId,
                               coachId: listClip.coachId,
                               name: listClip.name,
@@ -313,7 +313,7 @@ class _ClipSelectPageState extends State<ClipSelectPage> {
     );
   }
 
-  void _dialog(BuildContext ctx, ModelClipList listClip, List<Color> colorList,
+  void _dialog(BuildContext ctx, ListClip listClip, List<Color> colorList,
       int index) {
     //target widget
     SmartDialog.show(builder: (_) {

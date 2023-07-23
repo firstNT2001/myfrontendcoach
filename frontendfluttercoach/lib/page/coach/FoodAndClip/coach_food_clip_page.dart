@@ -40,7 +40,7 @@ class _FoodCoachPageState extends State<FoodCoachPage> {
   //Service ListClip
   late ListClipServices _listClipService;
   late Future<void> loadClipDataMethod;
-  late List<ModelClipList> clips = [];
+  late List<ListClip> clips = [];
 
   String cid = "";
   late ModelResult modelResult;

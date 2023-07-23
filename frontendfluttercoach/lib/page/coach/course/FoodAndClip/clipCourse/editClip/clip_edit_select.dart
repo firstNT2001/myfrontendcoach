@@ -42,7 +42,7 @@ class _ClipEditSelectPageState extends State<ClipEditSelectPage> {
   // FoodService
   late Future<void> loadListClipDataMethod;
   late ListClipServices _listclipService;
-  List<ModelClipList> clips = [];
+  List<ListClip> clips = [];
   late ModelResult modelResult;
 
   late ClipServices _clipService;

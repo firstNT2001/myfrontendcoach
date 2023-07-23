@@ -624,7 +624,7 @@ class _HomeFoodAndClipPageState extends State<HomeFoodAndClipPage> {
                   color: Colors.white,
                   child: InkWell(
                     onTap: () {
-                      ModelClipList request = ModelClipList(
+                      ListClip request = ListClip(
                           icpId: listClip.listClip.icpId,
                           coachId: listClip.listClip.coachId,
                           name: listClip.listClip.name,

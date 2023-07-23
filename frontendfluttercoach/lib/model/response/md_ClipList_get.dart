@@ -1,14 +1,14 @@
 // To parse this JSON data, do
 //
-//     final modelClipList = modelClipListFromJson(jsonString);
+//     final listClip = listClipFromJson(jsonString);
 
 import 'dart:convert';
 
-List<ModelClipList> modelClipListFromJson(String str) => List<ModelClipList>.from(json.decode(str).map((x) => ModelClipList.fromJson(x)));
+List<ListClip> listClipFromJson(String str) => List<ListClip>.from(json.decode(str).map((x) => ListClip.fromJson(x)));
 
-String modelClipListToJson(List<ModelClipList> data) => json.encode(List<dynamic>.from(data.map((x) => x.toJson())));
+String listClipToJson(List<ListClip> data) => json.encode(List<dynamic>.from(data.map((x) => x.toJson())));
 
-class ModelClipList {
+class ListClip {
     int icpId;
     int coachId;
     String name;
@@ -16,7 +16,7 @@ class ModelClipList {
     String video;
     String details;
 
-    ModelClipList({
+    ListClip({
         required this.icpId,
         required this.coachId,
         required this.name,
@@ -25,7 +25,7 @@ class ModelClipList {
         required this.details,
     });
 
-    factory ModelClipList.fromJson(Map<String, dynamic> json) => ModelClipList(
+    factory ListClip.fromJson(Map<String, dynamic> json) => ListClip(
         icpId: json["IcpID"],
         coachId: json["CoachID"],
         name: json["Name"],
