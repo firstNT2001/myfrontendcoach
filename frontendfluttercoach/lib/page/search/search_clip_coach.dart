@@ -24,7 +24,7 @@ class _SearchClipCoachPageState extends State<SearchClipCoachPage> {
   //Service ListClip
   late ListClipServices _listClipService;
   late Future<void> loadClipDataMethod;
-  late List<ModelClipList> clips = [];
+  late List<ListClip> clips = [];
   late ModelResult modelResult;
 
   TextEditingController searchName = TextEditingController();

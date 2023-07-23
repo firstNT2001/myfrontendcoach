@@ -14,7 +14,7 @@ abstract class ListClipServices {
   factory ListClipServices(Dio dio, {String baseUrl}) = _ListClipServices;
 
   @GET("/listClip")
-  Future<HttpResponse<List<ModelClipList>>> listClips(
+  Future<HttpResponse<List<ListClip>>> listClips(
       {@Query("icpID") required String icpID,
       @Query("cid") required String cid,
       @Query("name") required String name});

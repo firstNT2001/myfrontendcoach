@@ -8,7 +8,7 @@ import 'package:get/get_core/src/get_main.dart';
 import '../model/response/md_ClipList_get.dart';
 import '../page/coach/course/FoodAndClip/clipCourse/editClip/clip_edit_select.dart';
 
-void dialogClipEditInCourse(BuildContext context, ModelClipList listClip, String cpID, String did, String sequence, int status, bool isVisible) {
+void dialogClipEditInCourse(BuildContext context, ListClip listClip, String cpID, String did, String sequence, int status, bool isVisible) {
     //target widget
     SmartDialog.show(builder: (_) {
       return Container(

@@ -19,7 +19,7 @@ class ModelClip {
     int listClipId;
     int dayOfCouseId;
     String status;
-    ModelClipList listClip;
+    ListClip listClip;
 
     ModelClip({
         required this.cpId,
@@ -36,7 +36,7 @@ class ModelClip {
         listClipId: json["ListClipID"],
         dayOfCouseId: json["DayOfCouseID"],
         status: json["Status"],
-        listClip: ModelClipList.fromJson(json["ListClip"]),
+        listClip: ListClip.fromJson(json["ListClip"]),
     );
     }
 
