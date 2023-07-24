@@ -102,8 +102,6 @@ class _CourseEditPageState extends State<CourseEditPage> {
     _courseService = context.read<AppData>().courseService;
     loadDataMethod = loadDataAsync();
 
-   
-
     _daysService = context.read<AppData>().daysService;
     loadDaysDataMethod = loadDaysDataAsync();
   }
@@ -598,7 +596,7 @@ class _CourseEditPageState extends State<CourseEditPage> {
               ),
               GridView.builder(
                 gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: 5, mainAxisExtent: 70),
+                    crossAxisCount: 5, mainAxisExtent: 65),
                 shrinkWrap: true,
                 itemCount: modelDays.length,
                 itemBuilder: (context, index) {
@@ -606,6 +604,7 @@ class _CourseEditPageState extends State<CourseEditPage> {
                   return Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: Container(
+                     
                       decoration: const BoxDecoration(
                         color: Colors.white,
                         shape: BoxShape.circle,
@@ -616,25 +615,19 @@ class _CourseEditPageState extends State<CourseEditPage> {
                               spreadRadius: 0)
                         ],
                       ),
-                      child: Card(
-                          color: const Color.fromARGB(255, 229, 228, 228),
-                          elevation: 0,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(150),
-                          ),
-                          child: InkWell(
-                              onTap: () {
-                                Get.to(() => HomeFoodAndClipPage(
-                                      did: modelDay.did.toString(),
-                                      sequence: modelDay.sequence.toString(),
-                                      isVisible: widget.isVisible,
-                                    ));
-                              },
-                              child: Center(
-                                  child: Text(modelDay.sequence.toString(),
-                                      style: Theme.of(context)
-                                          .textTheme
-                                          .bodyLarge)))),
+                      child: InkWell(
+                          onTap: () {
+                            Get.to(() => HomeFoodAndClipPage(
+                                  did: modelDay.did.toString(),
+                                  sequence: modelDay.sequence.toString(),
+                                  isVisible: widget.isVisible,
+                                ));
+                          },
+                          child: Center(
+                              child: Text(modelDay.sequence.toString(),
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .bodyLarge))),
                     ),
                   );
                 },
