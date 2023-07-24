@@ -17,7 +17,9 @@ import '../../../../../../model/response/md_Result.dart';
 import '../../../../../../service/clip.dart';
 import '../../../../../../service/listClip.dart';
 import '../../../../../../service/provider/appdata.dart';
+import '../../../../../../service/request.dart';
 import '../../../../../../widget/showCilp.dart';
+import '../../../../../Request/request_page.dart';
 import '../../course_food_clip.dart';
 
 class ClipEditSelectPage extends StatefulWidget {
@@ -38,20 +40,29 @@ class ClipEditSelectPage extends StatefulWidget {
 }
 
 class _ClipEditSelectPageState extends State<ClipEditSelectPage> {
-  // FoodService
+  // ClipService
   late Future<void> loadListClipDataMethod;
   late ListClipServices _listclipService;
   List<ListClip> clips = [];
   late ModelResult modelResult;
 
   late ClipServices _clipService;
+  
+  //Request
+  // ignore: non_constant_identifier_names
+  late RequestService _RequestService;
 
   @override
   void initState() {
     super.initState();
     _clipService = context.read<AppData>().clipServices;
+
     _listclipService = context.read<AppData>().listClipServices;
     loadListClipDataMethod = loadListClipData();
+
+     //Request
+    _RequestService = context.read<AppData>().requestService;
+    
   }
 
   @override
@@ -247,52 +258,106 @@ class _ClipEditSelectPageState extends State<ClipEditSelectPage> {
                   ),
                 ],
               ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.only(left: 20, right: 20),
-                    child: ElevatedButton(
-                        onPressed: () async {
-                          log(widget.cpID);
-                          ClipClipIdPut request = ClipClipIdPut(
-                            listClipId: icpID,
-                            dayOfCouseId: int.parse(widget.did),
-                          );
-                          log(jsonEncode(request));
-                          var response = await _clipService.updateClipByClipID(
-                              widget.cpID, request);
-                          modelResult = response.data;
-                          log(modelResult.result);
-                          if (widget.isVisible == true) {
-                            if (modelResult.result == '1') {
-                              Get.to(() => HomeFoodAndClipPage(
-                                    did: widget.did,
-                                    sequence: widget.sequence,
-                                    isVisible: widget.isVisible,
-                                  ));
-                            } else {
-                              // ignore: use_build_context_synchronously
-                              CherryToast.warning(
-                                title: Text('มีเมนู $name ในวันนี้แล้ว'),
-                                displayTitle: false,
-                                description: Text('มีเมนู $name ในวันนี้แล้ว'),
-                                toastPosition: Position.bottom,
-                                animationDuration:
-                                    const Duration(milliseconds: 1000),
-                                autoDismiss: true,
-                              ).show(context);
-                            }
-                          }
-                        },
-                        child: const Text("บันทึก")),
-                  ),
-                ],
-              )
+              Visibility(
+                  visible: widget.isVisible,
+                  child: buttonEditClip(icpID, name, context)),
+
+              if(widget.isVisible == false)...{
+                buttonRequest(icpID, name, context)
+              }
+          
             ],
           ),
         );
       },
+    );
+  }
+
+  Row buttonEditClip(int icpID, String name, BuildContext context) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.end,
+      children: [
+        Padding(
+          padding: const EdgeInsets.only(left: 20, right: 20),
+          child: ElevatedButton(
+              onPressed: () async {
+               
+                log(widget.cpID);
+                ClipClipIdPut request = ClipClipIdPut(
+                  listClipId: icpID,
+                  dayOfCouseId: int.parse(widget.did),
+                );
+                log(jsonEncode(request));
+                var response =
+                    await _clipService.updateClipByClipID(widget.cpID, request);
+                modelResult = response.data;
+                log(modelResult.result);
+
+                if (modelResult.result == '1') {
+                  Get.to(() => HomeFoodAndClipPage(
+                        did: widget.did,
+                        sequence: widget.sequence,
+                        isVisible: widget.isVisible,
+                      ));
+                } else {
+                  // ignore: use_build_context_synchronously
+                  CherryToast.warning(
+                    title: Text('มีเมนู $name ในวันนี้แล้ว'),
+                    displayTitle: false,
+                    description: Text('มีเมนู $name ในวันนี้แล้ว'),
+                    toastPosition: Position.bottom,
+                    animationDuration: const Duration(milliseconds: 1000),
+                    autoDismiss: true,
+                  ).show(context);
+                }
+              },
+              child: const Text("บันทึก")),
+        ),
+      ],
+    );
+  }
+
+  Row buttonRequest(int icpID, String name, BuildContext context) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.end,
+      children: [
+        Padding(
+          padding: const EdgeInsets.only(left: 20, right: 20),
+          child: ElevatedButton(
+              onPressed: () async {
+                 
+                log(widget.cpID);
+                ClipClipIdPut request = ClipClipIdPut(
+                  listClipId: icpID,
+                  dayOfCouseId: int.parse(widget.did),
+                );
+                log(jsonEncode(request));
+                var response =
+                    await _clipService.updateClipByClipID(widget.cpID, request);
+                modelResult = response.data;
+                log(modelResult.result);
+
+                if (modelResult.result == '1') {
+                   var response =
+                    // ignore: use_build_context_synchronously
+                    await _RequestService.updateRequestStatus(context.read<AppData>().rqID);
+                modelResult = response.data;
+                  Get.to(() => const RequestPage());
+                } else {
+                  // ignore: use_build_context_synchronously
+                  CherryToast.warning(
+                    title: Text('มีเมนู $name ในวันนี้แล้ว'),
+                    displayTitle: false,
+                    description: Text('มีเมนู $name ในวันนี้แล้ว'),
+                    toastPosition: Position.bottom,
+                    animationDuration: const Duration(milliseconds: 1000),
+                    autoDismiss: true,
+                  ).show(context);
+                }
+              },
+              child: const Text("บันทึก")),
+        ),
+      ],
     );
   }
 }

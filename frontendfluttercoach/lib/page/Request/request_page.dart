@@ -239,6 +239,7 @@ class _RequestPageState extends State<RequestPage> {
                       child: const Text("ยกเลิก")),
                   FilledButton(
                       onPressed: () {
+                        context.read<AppData>().rqID = request.rpId.toString();
                         Get.to(() => ClipEditSelectPage(cpID: request.clipId.toString(), did: request.clip.dayOfCouseId.toString(), isVisible: false, sequence: '', status: 1,));
                       },
                       child: const Text("ตกลง"))
