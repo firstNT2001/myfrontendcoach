@@ -52,9 +52,9 @@ class _ShowCourseUserPageState extends State<ShowCourseUserPage> {
           ),
         ),
         body: SafeArea(
-          child: ListView(
+          child: Column(
             children: [
-              loadcourse(),
+              Expanded(child: loadcourse()),
             ],
           ),
         ));

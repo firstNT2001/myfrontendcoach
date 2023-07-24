@@ -75,6 +75,7 @@ class _HomeFoodAndClipPageState extends State<HomeFoodAndClipPage> {
   @override
   void initState() {
     super.initState();
+    log(widget.did);
     context.read<AppData>().sequence = widget.sequence;
 
     //Food
