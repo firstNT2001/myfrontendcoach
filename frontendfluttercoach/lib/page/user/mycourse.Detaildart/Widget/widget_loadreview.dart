@@ -45,32 +45,29 @@ class _WidgetloadeReviewState extends State<WidgetloadeReview> {
         if (snapshot.connectionState == ConnectionState.done) {
           return Column(
             children: [
-              Container(
-                color: Colors.yellow,
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
-                    Text(
-                      "คะแนนจากผู้ซื้อ",
-                      style:
-                          TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-                    ),
-                    Text(
-                      calRating.toStringAsFixed(1),
-                      style:
-                          TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-                    ),
-                    FlutterRating(
-                      size: 20,
-                      starCount: 5,
-                      rating: calRating,
-                      allowHalfRating: true,
-                      color: Colors.amber,
-                      borderColor: Colors.grey,
-                      mainAxisAlignment: MainAxisAlignment.center,
-                    )
-                  ],
-                ),
+              Column(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  Text(
+                    "คะแนนจากผู้ซื้อ",
+                    style:
+                        TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                  ),
+                  Text(
+                    calRating.toStringAsFixed(1),
+                    style:
+                        TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                  ),
+                  FlutterRating(
+                    size: 20,
+                    starCount: 5,
+                    rating: calRating,
+                    allowHalfRating: true,
+                    color: Colors.amber,
+                    borderColor: Colors.grey,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                  )
+                ],
               ),
               Expanded(
                 child: ListView.builder(
@@ -122,22 +119,10 @@ class _WidgetloadeReviewState extends State<WidgetloadeReview> {
           await reviewService.review(coID: widget.couseID.toString());
       reviews = datareview.data;
       log("B");
-      if (reviews.isNotEmpty) {
-        final summ = reviews.map((e) => e.score as double).toList();
+      if(reviews.isNotEmpty){
+          final summ = reviews.map((e) => e.score as int).toList();
         calRating = summ.average;
-        // for (int i = 0; i < reviews.length; i++) {
-        //   sumscore += reviews[i].score;
-        //   log("reviews[i].score${reviews[i].score}");
-        // }
-        log("COID${widget.couseID}");
-        log("sumscore$sumscore");
-        // if (sumscore > 0) {
-        //   calRating = sumscore / reviews.length;
-        // } else {
-        //   calRating = 0.00;
-        // }
-        // log("calRating$calRating");
-      } else {
+      }else {
         calRating = 0.0;
         sumscore = 0;
       }

@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_rating_native/flutter_rating_native.dart';
 import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:frontendfluttercoach/page/user/profilecoach.dart';
 
 import 'package:frontendfluttercoach/service/review.dart';
 import 'package:get/get.dart';
@@ -132,7 +133,10 @@ class _showCousePageState extends State<showCousePage> {
                 Padding(
                   padding: const EdgeInsets.only(left: 15, bottom: 20),
                   child: FilledButton.icon(
-                      onPressed: () {},
+                      onPressed: () {
+                        log("courses.first.coach.cid ="+courses.first.coach.cid.toString());
+                        Get.to(() => ProfileCoachPage(coachID: courses.first.coach.cid,));
+                      },
                       icon: const Icon(
                         FontAwesomeIcons.solidUser,
                         size: 14,
@@ -181,7 +185,8 @@ class _showCousePageState extends State<showCousePage> {
                   padding: EdgeInsets.only(left: 8),
                   child: Text(
                     "รายละเอียดคอร์ส",
-                    style: TextStyle(fontSize: 16),
+                    style: TextStyle(fontSize: 16)
+                    
                   ),
                 ),
                 Padding(
