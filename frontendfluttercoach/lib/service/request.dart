@@ -20,4 +20,8 @@ abstract class RequestService {
   @POST("/request/{uid}")
   Future<HttpResponse<ModelResult>> insertRequest(
       @Path("uid") String uid, @Body() UserRequest userRequest);
+
+  @PUT("/request/{rqID}")
+  Future<HttpResponse<ModelResult>> updateRequestStatus(
+      @Path() String rqID);    
 }
