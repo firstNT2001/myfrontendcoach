@@ -217,6 +217,9 @@ class _HomePageCoachState extends State<HomePageCoach> {
     try {
       var datas = await _coachService.coach(nameCoach: '', cid: cid);
       coachs = datas.data;
+      // ignore: use_build_context_synchronously
+      context.read<AppData>().nameCoach = coachs.first.fullName;
+      log(context.read<AppData>().nameCoach);
     } catch (err) {
       log('Error: $err');
     }
@@ -250,7 +253,7 @@ class _HomePageCoachState extends State<HomePageCoach> {
                 child: InkWell(
                   onTap: () {
                     Get.to(() => CourseEditPage(
-                          coID: courses[index].coId.toString(),
+                          coID: courses[index].coId.toString(), isVisible: true,
                         ));
                   },
                   child: Container(

@@ -19,13 +19,14 @@ import '../../../../../../service/provider/appdata.dart';
 import '../../course_food_clip.dart';
 
 class ClipInsertPage extends StatefulWidget {
-   const ClipInsertPage({super.key, required this.did, required this.modelClipList, required this.increaseClip});
+   const ClipInsertPage({super.key, required this.did, required this.modelClipList, required this.increaseClip,required this.isVisible});
   //id Day
   final  String did;
   //Food
-  final  List<ModelClipList> modelClipList;
+  final  List<ListClip> modelClipList;
   final  List<ClipDayIdPost> increaseClip;
 
+  final bool isVisible;
   @override
   State<ClipInsertPage> createState() => _ClipInsertPageState();
 }
@@ -121,7 +122,7 @@ class _ClipInsertPageState extends State<ClipInsertPage> {
                                     Get.to(() => HomeFoodAndClipPage(
                                           did: widget.did,
                                           sequence:
-                                              context.read<AppData>().sequence,
+                                              context.read<AppData>().sequence, isVisible: widget.isVisible,
                                         ));
                                   } else {
                                     // ignore: use_build_context_synchronously

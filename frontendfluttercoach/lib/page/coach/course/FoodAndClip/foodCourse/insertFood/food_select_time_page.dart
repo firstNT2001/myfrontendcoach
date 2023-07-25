@@ -21,13 +21,15 @@ class FoodSelectTimePage extends StatefulWidget {
       {super.key,
       required this.did,
       required this.modelFoodList,
-      required this.increaseFood});
+      required this.increaseFood,
+      required this.isVisible});
   //id Day
   final String did;
   //Food
   final List<ModelFoodList> modelFoodList;
   final List<FoodDayIdPost> increaseFood;
 
+  final bool isVisible;
   @override
   State<FoodSelectTimePage> createState() => _FoodSelectTimePageState();
 }
@@ -124,7 +126,7 @@ class _FoodSelectTimePageState extends State<FoodSelectTimePage> {
                                     Get.to(() => HomeFoodAndClipPage(
                                           did: widget.did,
                                           sequence:
-                                              context.read<AppData>().sequence,
+                                              context.read<AppData>().sequence, isVisible: widget.isVisible,
                                         ));
                                   } else {
                                     // ignore: use_build_context_synchronously

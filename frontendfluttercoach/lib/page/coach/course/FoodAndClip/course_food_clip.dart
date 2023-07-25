@@ -14,6 +14,7 @@ import 'package:frontendfluttercoach/model/response/food_get_res.dart';
 
 import 'package:frontendfluttercoach/service/clip.dart';
 import 'package:get/get.dart';
+import 'package:msh_checkbox/msh_checkbox.dart';
 import 'package:provider/provider.dart';
 
 import '../../../../model/request/food_foodID_put.dart';
@@ -32,10 +33,14 @@ import 'foodCourse/insertFood/food_new_page.dart';
 
 class HomeFoodAndClipPage extends StatefulWidget {
   const HomeFoodAndClipPage(
-      {super.key, required this.did, required this.sequence});
+      {super.key,
+      required this.did,
+      required this.sequence,
+      required this.isVisible});
 
   final String did;
   final String sequence;
+  final bool isVisible;
 
   @override
   State<HomeFoodAndClipPage> createState() => _HomeFoodAndClipPageState();
@@ -89,6 +94,7 @@ class _HomeFoodAndClipPageState extends State<HomeFoodAndClipPage> {
       length: 2,
       child: Scaffold(
           floatingActionButton: SpeedDial(
+            visible: widget.isVisible,
             animatedIcon: AnimatedIcons.menu_close,
             overlayOpacity: 0.4,
             children: [
@@ -96,13 +102,19 @@ class _HomeFoodAndClipPageState extends State<HomeFoodAndClipPage> {
                   child: const Icon(FontAwesomeIcons.bowlFood),
                   label: 'เพิ่มเมนู',
                   onTap: () {
-                    Get.to(() => FoodNewCoursePage(did: widget.did));
+                    Get.to(() => FoodNewCoursePage(
+                          did: widget.did,
+                          isVisible: widget.isVisible,
+                        ));
                   }),
               SpeedDialChild(
                   child: const Icon(FontAwesomeIcons.dumbbell),
                   label: 'เพิ่มคลิป',
                   onTap: () {
-                    Get.to(() => ClipSelectPage(did: widget.did));
+                    Get.to(() => ClipSelectPage(
+                          did: widget.did,
+                          isVisible: widget.isVisible,
+                        ));
                   }),
             ],
           ),
@@ -121,20 +133,6 @@ class _HomeFoodAndClipPageState extends State<HomeFoodAndClipPage> {
                 Get.back();
               },
             ),
-            actions: [
-              IconButton(
-                onPressed: () {
-                  Get.to(() => WidgetSearchFood(
-                        searchName: searchName,
-                        did: widget.did,
-                        sequence: widget.sequence,
-                      ));
-                },
-                icon: const Icon(
-                  FontAwesomeIcons.magnifyingGlass,
-                ),
-              )
-            ],
             bottom: const TabBar(tabs: [
               Tab(
                 icon: Icon(
@@ -197,6 +195,7 @@ class _HomeFoodAndClipPageState extends State<HomeFoodAndClipPage> {
                 searchName: searchName,
                 did: widget.did,
                 sequence: widget.sequence,
+                isVisible: widget.isVisible,
               ));
         },
         child: Container(
@@ -220,6 +219,7 @@ class _HomeFoodAndClipPageState extends State<HomeFoodAndClipPage> {
                           searchName: searchName,
                           did: widget.did,
                           sequence: widget.sequence,
+                          isVisible: widget.isVisible,
                         ));
                   },
                   icon: const Icon(
@@ -290,14 +290,15 @@ class _HomeFoodAndClipPageState extends State<HomeFoodAndClipPage> {
                           listfood.time,
                           listfood.fid.toString(),
                           listfood.dayOfCouseId.toString(),
-                          widget.sequence);
+                          widget.sequence,
+                          widget.isVisible);
                     },
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         // ignore: unnecessary_null_comparison
-                        if (listfood.listFood.image != null) ...{
+                        if (listfood.listFood.image != '') ...{
                           Padding(
                               padding: const EdgeInsets.only(
                                   left: 8, right: 8, top: 5, bottom: 5),
@@ -316,19 +317,24 @@ class _HomeFoodAndClipPageState extends State<HomeFoodAndClipPage> {
                               )),
                         } else
                           Padding(
-                            padding: const EdgeInsets.only(
-                                left: 8, top: 5, bottom: 5),
-                            child: Container(
-                                width: MediaQuery.of(context).size.width * 0.3,
-                                height: MediaQuery.of(context).size.height,
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(26),
-                                  image: DecorationImage(
-                                    image:
-                                        NetworkImage(listfood.listFood.image),
-                                  ),
-                                )),
-                          ),
+                              padding: const EdgeInsets.only(
+                                  left: 8, right: 8, top: 5, bottom: 5),
+                              child: Center(
+                                child: ClipRRect(
+                                  borderRadius:
+                                      BorderRadius.circular(20), // Image border
+                                  child: SizedBox.fromSize(
+                                      size: const Size.fromRadius(
+                                          48), // Image radius
+                                      child: Container(
+                                        decoration: BoxDecoration(
+                                          color: const Color(0xff7c94b6),
+                                          borderRadius:
+                                              BorderRadius.circular(20),
+                                        ),
+                                      )),
+                                ),
+                              )),
                         Column(
                           mainAxisAlignment: MainAxisAlignment.center,
                           crossAxisAlignment: CrossAxisAlignment.start,
@@ -360,14 +366,16 @@ class _HomeFoodAndClipPageState extends State<HomeFoodAndClipPage> {
                                       borderRadius: BorderRadius.circular(30)),
                                   child: TextButton(
                                     onPressed: () {
-                                      dialogFoodEditMealInCourse(
-                                          context,
-                                          listfood.listFood.ifid,
-                                          listfood.listFood.name,
-                                          listfood.listFood.image,
-                                          listfood.listFood.calories,
-                                          listfood.time,
-                                          listfood.fid.toString());
+                                      if (widget.isVisible == true) {
+                                        dialogFoodEditMealInCourse(
+                                            context,
+                                            listfood.listFood.ifid,
+                                            listfood.listFood.name,
+                                            listfood.listFood.image,
+                                            listfood.listFood.calories,
+                                            listfood.time,
+                                            listfood.fid.toString());
+                                      }
                                     },
                                     child: Text(
                                       listfood.time == '1'
@@ -383,14 +391,24 @@ class _HomeFoodAndClipPageState extends State<HomeFoodAndClipPage> {
                                     ),
                                   ),
                                 ),
-                                const SizedBox(width: 20),
-                                IconButton(
-                                  onPressed: () {
-                                    dialogDeleteFood(
-                                        context, listfood.fid.toString());
-                                  },
-                                  icon: const Icon(
-                                    FontAwesomeIcons.trash,
+                                if (widget.isVisible == false) ...{
+                                  const SizedBox(width: 60)
+                                },
+                                Visibility(
+                                  visible: widget.isVisible,
+                                  child: Column(
+                                    children: [
+                                      const SizedBox(width: 20),
+                                      IconButton(
+                                        onPressed: () {
+                                          dialogDeleteFood(
+                                              context, listfood.fid.toString());
+                                        },
+                                        icon: const Icon(
+                                          FontAwesomeIcons.trash,
+                                        ),
+                                      ),
+                                    ],
                                   ),
                                 ),
                               ],
@@ -606,7 +624,7 @@ class _HomeFoodAndClipPageState extends State<HomeFoodAndClipPage> {
                   color: Colors.white,
                   child: InkWell(
                     onTap: () {
-                      ModelClipList request = ModelClipList(
+                      ListClip request = ListClip(
                           icpId: listClip.listClip.icpId,
                           coachId: listClip.listClip.coachId,
                           name: listClip.listClip.name,
@@ -620,10 +638,11 @@ class _HomeFoodAndClipPageState extends State<HomeFoodAndClipPage> {
                           listClip.cpId.toString(),
                           listClip.dayOfCouseId.toString(),
                           widget.sequence,
-                          int.parse(listClip.status));
+                          int.parse(listClip.status),
+                          widget.isVisible);
                     },
                     child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      //mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Padding(
@@ -646,9 +665,31 @@ class _HomeFoodAndClipPageState extends State<HomeFoodAndClipPage> {
                             ),
                           ),
                         ),
-                        const SizedBox(
-                          width: 50,
-                        ),
+                        // const SizedBox(
+                        //   width: 50,
+                        // ),
+                        if (widget.isVisible == false) ...{
+                          Center(
+                            child: MSHCheckbox(
+                              size: 30,
+                              value: listClip.status == '1'
+                                ? true
+                                : listClip.status == '0'
+                                    ? false
+                                        : false,
+                              colorConfig:
+                                  MSHColorConfig.fromCheckedUncheckedDisabled(
+                                checkedColor: Colors.blue,
+                              ),
+                              style: MSHCheckboxStyle.fillFade,
+                              onChanged: (selected) {
+                                setState(() {
+                                  //isChecked = selected;
+                                });
+                              },
+                            ),
+                          )
+                        }
                       ],
                     ),
                   ),

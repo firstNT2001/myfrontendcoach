@@ -13,17 +13,23 @@ class WidgetTextFieldString extends StatefulWidget {
 class _WidgetTextFieldStringState extends State<WidgetTextFieldString> {
   @override
   Widget build(BuildContext context) {
-    return TextField(
-        controller: widget.controller,
-        //autofocus: true,
-        // onChanged: (String value) {
-        //   setState(() => chackNameAndPassword = "");
-        // },
-        textAlignVertical: TextAlignVertical.center,
-        textAlign: TextAlign.center,
-        decoration: InputDecoration(
-            labelText: widget.labelText,
-            filled: true,
-            fillColor: Theme.of(context).colorScheme.background));
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(widget.labelText),
+        TextField(
+            controller: widget.controller,
+            //autofocus: true,
+            // onChanged: (String value) {
+            //   setState(() => chackNameAndPassword = "");
+            // },
+            textAlignVertical: TextAlignVertical.center,
+            textAlign: TextAlign.center,
+            decoration: InputDecoration(
+                //labelText: widget.labelText,
+                filled: true,
+                fillColor: Theme.of(context).colorScheme.background)),
+      ],
+    );
   }
 }

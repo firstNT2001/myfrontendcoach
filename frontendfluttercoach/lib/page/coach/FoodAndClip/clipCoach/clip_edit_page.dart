@@ -32,7 +32,7 @@ class _ClipEditCoachPageState extends State<ClipEditCoachPage> {
   //Service ListClip
   late ListClipServices _listClipService;
   late Future<void> loadClipDataMethod;
-  late List<ModelClipList> listclips = [];
+  late List<ListClip> listclips = [];
 
   //Controller Clip
   TextEditingController name = TextEditingController();
