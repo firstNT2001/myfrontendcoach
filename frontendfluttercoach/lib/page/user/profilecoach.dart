@@ -51,7 +51,9 @@ class _ProfileCoachPageState extends State<ProfileCoachPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: SafeArea(
-        child: ListView(children: [
+        child: ListView(
+         // crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
           loadcoach(),
          // const Divider(
          //   color: Colors.black,
@@ -93,7 +95,7 @@ Widget loadcourse() {
         } else {
           return ListView.builder(
             shrinkWrap: true,
-            physics: ScrollPhysics(),
+            primary: false,
             itemCount: courses.length,
             itemBuilder: (context, index) {
               final listcours = courses[index];
