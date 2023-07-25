@@ -19,7 +19,7 @@ class _BuyCourseService implements BuyCourseService {
   String? baseUrl;
 
   @override
-  Future<HttpResponse<ModelCourse>> buyCourse(
+  Future<HttpResponse<ModelResult>> buyCourse(
     coID,
     buyCoursecoId,
   ) async {
@@ -29,7 +29,7 @@ class _BuyCourseService implements BuyCourseService {
     final _data = <String, dynamic>{};
     _data.addAll(buyCoursecoId.toJson());
     final _result = await _dio.fetch<Map<String, dynamic>>(
-        _setStreamType<HttpResponse<ModelCourse>>(Options(
+        _setStreamType<HttpResponse<ModelResult>>(Options(
       method: 'POST',
       headers: _headers,
       extra: _extra,
@@ -41,7 +41,7 @@ class _BuyCourseService implements BuyCourseService {
               data: _data,
             )
             .copyWith(baseUrl: baseUrl ?? _dio.options.baseUrl)));
-    final value = ModelCourse.fromJson(_result.data!);
+    final value = ModelResult.fromJson(_result.data!);
     final httpResponse = HttpResponse(value, _result);
     return httpResponse;
   }

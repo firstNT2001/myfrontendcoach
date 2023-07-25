@@ -174,11 +174,14 @@ class _ShowDayMycourseState extends State<ShowDayMycourse> {
                           ],
                         ),
                         trailing: ElevatedButton(
-                            onPressed: () {
+                            onPressed: () { 
                               if (widget.expirationDate == "0001-01-01T00:00:00Z") {
                                 //log(message);
                                 _bindPage(context);
                                 log("ยังไม่เริ่ม$widget.expirationDate");
+                                setState(() {
+                                  loadDataMethod = loadData();
+                                });
                               } else if( today.day > expirationDate.day){
 
                                   log("IUIUIU "+today.day.toString());
@@ -253,6 +256,7 @@ class _ShowDayMycourseState extends State<ShowDayMycourse> {
                       context.read<AppData>().did = days.first.did;
                       context.read<AppData>().idcourse = coID;
                       log(days.first.did.toString());
+                      SmartDialog.dismiss();
                       Get.to(() => showFood(indexSeq: days.first.sequence-1));
                     },
                     child: const Text('เริ่มเลย'),

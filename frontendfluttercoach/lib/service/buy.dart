@@ -4,6 +4,7 @@ import 'package:dio/dio.dart';
 
 import '../model/request/buycourse_coID_post.dart';
 import '../model/response/md_Buying_get.dart';
+import '../model/response/md_Result.dart';
 
 part 'generated/buy.g.dart';
 
@@ -12,7 +13,7 @@ abstract class BuyCourseService {
   factory BuyCourseService(Dio dio, {String baseUrl}) = _BuyCourseService;
 
   @POST("/buycourse/{coID}")
-  Future<HttpResponse<ModelCourse>> buyCourse(
+  Future<HttpResponse<ModelResult>> buyCourse(
       @Path("coID") String coID, @Body() BuyCoursecoIdPost buyCoursecoId);
       
   @GET("/buy/user/{cid}")
