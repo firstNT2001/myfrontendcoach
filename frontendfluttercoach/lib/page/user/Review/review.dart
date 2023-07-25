@@ -14,7 +14,8 @@ import '../../../model/request/insertReview.dart';
 import '../../../model/response/md_Result.dart';
 
 class ReviewPage extends StatefulWidget {
-  const ReviewPage({super.key});
+  ReviewPage({super.key, required this.billID});
+  late int billID;
 
   @override
   State<ReviewPage> createState() => _ReviewPageState();
@@ -24,8 +25,7 @@ class _ReviewPageState extends State<ReviewPage> {
   late ReviewService reviewService;
   late ModelResult moduleResult;
 
-  late int cid;
-  late int courseId;
+  late int uid;
   final TextEditingController detail = TextEditingController();
   final TextEditingController weight = TextEditingController();
   double value = 0.0;
@@ -35,8 +35,7 @@ class _ReviewPageState extends State<ReviewPage> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    cid = context.read<AppData>().cid;
-    courseId = context.read<AppData>().idcourse;
+    uid = context.read<AppData>().uid;
     reviewService = context.read<AppData>().reviewService;
   }
 
@@ -115,18 +114,16 @@ class _ReviewPageState extends State<ReviewPage> {
                         maxLines: 4)),
                 FilledButton(
                     onPressed: () async {
-                      print(value.toInt());
-                      print(cid);
                       // log("A" + value.toString());
                       //log("B"+rating.toString());
                       InsertReview insertReview = InsertReview(
-                          customerId: cid,
+                          customerId: uid,
                           details: detail.text,
                           score: value.toInt(),
                           weight: int.parse(weight.text));
                       log(jsonEncode(insertReview));
                       insert = await reviewService.insertreview(
-                          courseId.toString(), insertReview);
+                          widget.billID.toString(), insertReview);
                       moduleResult = insert.data;
                       log(moduleResult.result);
                       Get.to(() => const MyCouses());

@@ -132,7 +132,7 @@ class _HistoryPageState extends State<HistoryPage> {
                             bottom: 8,
                             child: FilledButton(
                                 onPressed: () {
-                                  Get.to(() => const ReviewPage());
+                                  Get.to(() => ReviewPage(billID: listcours.bid,));
                                 },
                                 child: const Text("ให้คะแนน")))
                       ],

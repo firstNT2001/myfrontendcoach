@@ -46,7 +46,7 @@ class _ReviewService implements ReviewService {
 
   @override
   Future<HttpResponse<ModelResult>> insertreview(
-    coID,
+    bid,
     insertReview,
   ) async {
     const _extra = <String, dynamic>{};
@@ -62,7 +62,7 @@ class _ReviewService implements ReviewService {
     )
             .compose(
               _dio.options,
-              '/review/${coID}',
+              '/review/${bid}',
               queryParameters: queryParameters,
               data: _data,
             )
