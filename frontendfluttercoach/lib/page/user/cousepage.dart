@@ -19,6 +19,7 @@ import '../../model/response/md_coach_course_get.dart';
 import '../../service/buy.dart';
 import '../../service/course.dart';
 import '../../service/provider/appdata.dart';
+import '../../widget/dialogs.dart';
 import 'mycourse.Detaildart/Widget/widget_loadreview.dart';
 import 'mycourse.Detaildart/mycourse.dart';
 
@@ -273,10 +274,11 @@ class _showCousePageState extends State<showCousePage> {
                       style: Theme.of(context).textTheme.bodyLarge),
                 ),
                 FilledButton(
-                    onPressed: () {
+                    onPressed: () async{
+                      startLoading(context);
                       log("Date time = " + now.toString());
                       String cdate2 =
-                          DateFormat("yyyy-dd-MM").format(DateTime.now());
+                          DateFormat("yyyy-MM-dd").format(DateTime.now());
                       log("Date time2 = " + cdate2);
 
                       var proposedDate = "${cdate2}T00:00:00.000Z";
@@ -287,9 +289,14 @@ class _showCousePageState extends State<showCousePage> {
                           buyDateTime: proposedDate,);
                       log(jsonEncode(buyCoursecoIdPost));
                       log(cusID.toString());
-                      buycourse = buyCourseService.buyCourse(
+                      buycourse = await buyCourseService.buyCourse(
                           courseId.toString(), buyCoursecoIdPost);
-                      Get.to(() => const MyCouses());
+                          moduleResult = buycourse.data;
+                      if(moduleResult.result == "1"){
+                        stopLoading();
+                         Get.to(() => const MyCouses());
+                      }
+                      
                     },
                     child: Text("ชำระเงิน",
                         style: Theme.of(context).textTheme.bodyLarge)),
