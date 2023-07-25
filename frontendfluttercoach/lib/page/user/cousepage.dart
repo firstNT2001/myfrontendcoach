@@ -284,8 +284,7 @@ class _showCousePageState extends State<showCousePage> {
                       //log("Date time3 = $proposedDate");
                       BuyCoursecoIdPost buyCoursecoIdPost = BuyCoursecoIdPost(
                           customerId: cusID,
-                          buyDateTime: proposedDate,
-                          image: "-");
+                          buyDateTime: proposedDate,);
                       log(jsonEncode(buyCoursecoIdPost));
                       log(cusID.toString());
                       buycourse = buyCourseService.buyCourse(
