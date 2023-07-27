@@ -69,164 +69,205 @@ class _LoginPageState extends State<LoginPage> {
                     decoration: BoxDecoration(
                         gradient: LinearGradient(
               colors: [
-                Color.fromARGB(242, 255, 177, 31),
-                Color.fromARGB(230, 252, 134, 24),
-                Color.fromARGB(230, 252, 134, 24),
+                const Color.fromARGB(242, 255, 177, 31),
+                const Color.fromARGB(230, 252, 134, 24),
+                const Color.fromARGB(230, 252, 134, 24),
                 Theme.of(context).colorScheme.primary,
               ],
               begin: Alignment.topLeft,
               end: Alignment.bottomRight,
             )))),
-            Expanded(child: Container(color: Colors.white))
+             Expanded(child: Container(color: Colors.white))
           ],
         ),
+        // ignore: prefer_const_constructors
+        Padding(
+          padding: const EdgeInsets.only(top: 80),
+          child: const Positioned.fill(
+              child: Align(
+            alignment: Alignment.topCenter,
+            child: Column(
+              children: [
+                Text("ยินดีต้อนรับ",
+                    style: TextStyle(fontSize: 25, color: Colors.white)),
+                Padding(
+                  padding: EdgeInsets.only(top: 30),
+                  child: Text("DAILY WORKOUT COACHING",
+                      style: TextStyle(fontSize: 25, color: Colors.white)),
+                ),
+              ],
+            ),
+          )),
+        ),
+
         Center(
-          child: Card(
-            color: Color.fromRGBO(255, 255, 255, 1),
-            clipBehavior: Clip.antiAlias,
-            elevation: 2,
-            child: SizedBox(
-              width: MediaQuery.of(context).size.width * 0.8,
-              height: MediaQuery.of(context).size.height * 0.5,
-              child: Container(
-                child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Padding(
+          child: Container(
+            padding: EdgeInsets.all(1),
+      margin: EdgeInsets.all(1), 
+      decoration: BoxDecoration(
+        color: Theme.of(context).colorScheme.secondaryContainer,
+        borderRadius: BorderRadius.all(Radius.circular(30)),
+        boxShadow: [
+          BoxShadow(
+            color: Color.fromARGB(255, 151, 151, 151),
+            offset: Offset(0, 0),
+            blurRadius: 7.0,
+            spreadRadius: 1.0,
+          )
+        ],
+      ),
+            child: Card(
+              shape: RoundedRectangleBorder(
+                
+                borderRadius: BorderRadius.circular(30.0),
+              ),
+              color: Theme.of(context).colorScheme.secondaryContainer,
+              clipBehavior: Clip.antiAlias,
+              elevation: 0,
+              child: SizedBox(
+                width: MediaQuery.of(context).size.width * 0.89,
+                height: MediaQuery.of(context).size.height * 0.45,
+                child: Container(
+                  child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Padding(
+                            padding: const EdgeInsets.only(
+                                left: 20, right: 20, top: 16, bottom: 10),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Text('เข้าสู่ระบบ',
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .headlineSmall),
+                              ],
+                            )),
+                        Padding(
                           padding: const EdgeInsets.only(
-                              left: 20, right: 20, top: 16, bottom: 10),
+                              left: 20, right: 20, top: 16),
+                          child: TextField(
+                              controller: email,
+                              //autofocus: true,
+                              onChanged: (String value) {
+                                setState(() => titleErr = '');
+                              },
+                              textAlignVertical: TextAlignVertical.center,
+                              textAlign: TextAlign.center,
+                              decoration: InputDecoration(
+                                  labelText: 'อีเมลผู้ใช้ (email)',
+                                  filled: true,
+                                  fillColor: Theme.of(context)
+                                      .colorScheme
+                                      .background)),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.only(
+                              left: 20, right: 20, top: 16),
+                          child: TextField(
+                            textAlignVertical: TextAlignVertical.center,
+                            textAlign: TextAlign.center,
+                            controller: password,
+                            onChanged: (String value) {
+                              setState(() => chackNameAndPassword = "");
+                              setState(() => titleErr = '');
+                            },
+                            obscureText: !showPassword,
+                            decoration: InputDecoration(
+                                labelText: 'รหัสผ่าน (password)',
+                                filled: true,
+                                fillColor:
+                                    Theme.of(context).colorScheme.background),
+                          ),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.only(
+                              left: 20, right: 20, top: 2),
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.start,
                             children: [
-                              Text('เข้าสู่ระบบ',
-                                  style: Theme.of(context)
-                                      .textTheme
-                                      .headlineSmall),
+                              Text(
+                                titleErr,
+                                style: TextStyle(
+                                    color: Theme.of(context).colorScheme.error),
+                                // selectionColor: Theme.of(context).colorScheme.error,
+                              )
                             ],
-                          )),
-                      Padding(
-                        padding:
-                            const EdgeInsets.only(left: 20, right: 20, top: 16),
-                        child: TextField(
-                            controller: email,
-                            //autofocus: true,
-                            onChanged: (String value) {
-                              setState(() => titleErr = '');
-                            },
-                            textAlignVertical: TextAlignVertical.center,
-                            textAlign: TextAlign.center,
-                            decoration: InputDecoration(
-                                labelText: 'อีเมลผู้ใช้ (email)',
-                                filled: true,
-                                fillColor:
-                                    Theme.of(context).colorScheme.background)),
-                      ),
-                      Padding(
-                        padding:
-                            const EdgeInsets.only(left: 20, right: 20, top: 16),
-                        child: TextField(
-                          textAlignVertical: TextAlignVertical.center,
-                          textAlign: TextAlign.center,
-                          controller: password,
-                          onChanged: (String value) {
-                            setState(() => chackNameAndPassword = "");
-                            setState(() => titleErr = '');
-                          },
-                          obscureText: !showPassword,
-                          decoration: InputDecoration(
-                              labelText: 'รหัสผ่าน (password)',
-                              filled: true,
-                              fillColor:
-                                  Theme.of(context).colorScheme.background),
+                          ),
                         ),
-                      ),
-                      Padding(
-                        padding:
-                            const EdgeInsets.only(left: 20, right: 20, top: 2),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          children: [
-                            Text(
-                              titleErr,
-                              style: TextStyle(
-                                  color: Theme.of(context).colorScheme.error),
-                              // selectionColor: Theme.of(context).colorScheme.error,
-                            )
-                          ],
-                        ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.only(
-                            left: 20, right: 20, bottom: 16),
-                        child: SizedBox(
-                          width: double.infinity,
-                          child: FilledButton.icon(
-                              icon: const FaIcon(
-                                  FontAwesomeIcons.rightToBracket,
-                                  size: 16),
-                              onPressed: () async {
-                                await login(context);
-                              },
-                              label: Text(
-                                'เข้าสู่ระบบ',
-                                style: Theme.of(context).textTheme.titleMedium,
-                              )),
-                        ),
-                      ),
-                      const Padding(
-                          padding:
-                              EdgeInsets.only(left: 20, right: 20, bottom: 16),
-                          child: Divider()),
-                      Padding(
-                        padding: const EdgeInsets.only(
-                            left: 20, right: 20, bottom: 10),
-                        child: SizedBox(
-                          width: double.infinity,
-                          height: 45,
-                          child: ElevatedButton.icon(
-                              icon: const FaIcon(FontAwesomeIcons.facebookF,
-                                  size: 16),
-                              onPressed: () async {
-                                // await login(context);
-                              },
-                              style: ElevatedButton.styleFrom(
-                                  foregroundColor: Colors.white,
-                                  backgroundColor: const Color(
-                                      0xff39579A) // Text Color (Foreground color)
-                                  ),
-                              label: const Text(
-                                'Login with Facebook',
-                                //style: Theme.of(context).textTheme.titleMedium,
-                              )),
-                        ),
-                      ),
-                      Padding(
-                          padding: const EdgeInsets.only(
-                              left: 20, right: 20, bottom: 16),
-                          child: TextButton(
-                              onPressed: () {
-                                Get.to(const RegisterPage());
-                              },
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  const Text(" Don't have any account? "),
-                                  Text(
-                                    " Signup",
-                                    style: TextStyle(
-                                        color: Theme.of(context)
-                                            .colorScheme
-                                            .error),
-                                  )
-                                ],
-                              ))),
-                    ]),
+                        // Padding(
+                        //   padding: const EdgeInsets.only(
+                        //       left: 20, right: 20, bottom: 16),
+                        //   child: SizedBox(
+                        //     width: double.infinity,
+                        //     child: FilledButton.icon(
+                        //         icon: const FaIcon(
+                        //             FontAwesomeIcons.rightToBracket,
+                        //             size: 16),
+                        //         onPressed: () async {
+                        //           await login(context);
+                        //         },
+                        //         label: Text(
+                        //           'เข้าสู่ระบบ',
+                        //           style: Theme.of(context).textTheme.titleMedium,
+                        //         )),
+                        //   ),
+                        // ),
+                        const Padding(
+                            padding: EdgeInsets.only(
+                                left: 20, right: 20, bottom: 16),
+                            child: Divider()),
+                        // Padding(
+                        //   padding: const EdgeInsets.only(
+                        //       left: 20, right: 20, bottom: 10),
+                        //   child: SizedBox(
+                        //     width: double.infinity,
+                        //     height: 45,
+                        //     child: ElevatedButton.icon(
+                        //         icon: const FaIcon(FontAwesomeIcons.facebookF,
+                        //             size: 16),
+                        //         onPressed: () async {
+                        //           // await login(context);
+                        //         },
+                        //         style: ElevatedButton.styleFrom(
+                        //             foregroundColor: Colors.white,
+                        //             backgroundColor: const Color(
+                        //                 0xff39579A) // Text Color (Foreground color)
+                        //             ),
+                        //         label: const Text(
+                        //           'Login with Facebook',
+                        //           //style: Theme.of(context).textTheme.titleMedium,
+                        //         )),
+                        //   ),
+                        // ),
+                        Padding(
+                            padding: const EdgeInsets.only(
+                                left: 20, right: 20, bottom: 16),
+                            child: TextButton(
+                                onPressed: () {
+                                  Get.to(const RegisterPage());
+                                },
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    const Text(" Don't have any account? "),
+                                    Text(
+                                      " Signup",
+                                      style: TextStyle(
+                                          color: Theme.of(context)
+                                              .colorScheme
+                                              .error),
+                                    )
+                                  ],
+                                ))),
+                      ]),
+                ),
               ),
             ),
           ),
         ),
         Positioned(
-          bottom: 180,
+          bottom: 210,
           right: 170,
           child: Material(
             type: MaterialType.transparency,
@@ -234,11 +275,11 @@ class _LoginPageState extends State<LoginPage> {
               decoration: BoxDecoration(
                 border: Border.all(
                     color: Theme.of(context).colorScheme.primary, width: 7.0),
-                color: Color.fromARGB(255, 255, 239, 228),
+                color: const Color.fromARGB(255, 255, 239, 228),
                 shape: BoxShape.circle,
                 boxShadow: [
                   BoxShadow(
-                    offset: Offset(0, 1),
+                    offset: const Offset(0, 1),
                     blurRadius: 1,
                     color: Colors.black.withOpacity(0.50),
                   ),
@@ -247,9 +288,9 @@ class _LoginPageState extends State<LoginPage> {
               child: InkWell(
                 //borderRadius: BorderRadius.circular(100.0),
                 onTap: () async {
-                   await login(context);
+                  await login(context);
                 },
-                child: Padding(
+                child: const Padding(
                   padding: EdgeInsets.all(14.0),
                   child: Icon(
                     FontAwesomeIcons.arrowRightLong,
@@ -260,7 +301,79 @@ class _LoginPageState extends State<LoginPage> {
               ),
             ),
           ),
-        )
+        ),
+        Positioned(
+          bottom: 210,
+          right: 170,
+          child: Material(
+            type: MaterialType.transparency,
+            child: Ink(
+              decoration: BoxDecoration(
+                border: Border.all(
+                    color: Theme.of(context).colorScheme.primary, width: 7.0),
+                color: const Color.fromARGB(255, 255, 239, 228),
+                shape: BoxShape.circle,
+                boxShadow: [
+                  BoxShadow(
+                    offset: const Offset(0, 1),
+                    blurRadius: 1,
+                    color: Colors.black.withOpacity(0.50),
+                  ),
+                ],
+              ),
+              child: InkWell(
+                //borderRadius: BorderRadius.circular(100.0),
+                onTap: () async {
+                  await login(context);
+                },
+                child: const Padding(
+                  padding: EdgeInsets.all(14.0),
+                  child: Icon(
+                    FontAwesomeIcons.arrowRightLong,
+                    size: 25.0,
+                    color: Colors.black,
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ),
+        Positioned(
+            bottom: 100,
+            right: 135,
+            child: Column(
+              children: const [
+                Text("เข้าสู่ระบบผ่าน facebook",),
+              ],
+            )),
+        // Positioned(
+        //   bottom: 150,
+        //   right: 170,
+        //   child: Container(width: 50,),
+        //   // child: Padding(
+        //   //                 padding: const EdgeInsets.only(
+        //   //                     left: 20,  top: 100),
+        //   //                 child: SizedBox(
+        //   //                   width: double.infinity,
+        //   //                   height: 45,
+        //   //                   child: ElevatedButton.icon(
+        //   //                       icon: const FaIcon(FontAwesomeIcons.facebookF,
+        //   //                           size: 16),
+        //   //                       onPressed: () async {
+        //   //                         // await login(context);
+        //   //                       },
+        //   //                       style: ElevatedButton.styleFrom(
+        //   //                           foregroundColor: Colors.white,
+        //   //                           backgroundColor: const Color(
+        //   //                               0xff39579A) // Text Color (Foreground color)
+        //   //                           ),
+        //   //                       label: const Text(
+        //   //                         'Login with Facebook',
+        //   //                         //style: Theme.of(context).textTheme.titleMedium,
+        //   //                       )),
+        //   //                 ),
+        //   //               ),
+        // ),
       ],
     ));
   }
