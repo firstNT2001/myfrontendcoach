@@ -61,44 +61,46 @@ class _showCousePageState extends State<showCousePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        body: Column(
-      children: [
-        Padding(
-          padding: const EdgeInsets.only(bottom: 5),
-          child: loadCourse(),
-        ),
-        const Divider(
-          color: Color.fromARGB(255, 83, 83, 83),
-          indent: 8,
-          endIndent: 8,
-          thickness: 3,
-        ),
-        Expanded(
-            child: WidgetloadeReview(
-          couseID: courseId.toString(),
-        )),
-        SizedBox(
-          width: 65,
-          height: 65,
-          child: ElevatedButton(
-            onPressed: () {
-              _buycouse(context);
-            },
-            style: ElevatedButton.styleFrom(
-              primary: const Color.fromARGB(255, 15, 15, 15),
-              shape: const CircleBorder(), //<-- SEE HERE
-              //padding: EdgeInsets.all(30),
-            ),
-            child: const Icon(
-              //<-- SEE HERE
-              Icons.shopping_basket_outlined,
-              color: Color.fromARGB(255, 255, 255, 255),
-              size: 35,
+        body: SafeArea(
+          child: Column(
+              children: [
+          Padding(
+            padding: const EdgeInsets.only(bottom: 5),
+            child: loadCourse(),
+          ),
+          const Divider(
+            color: Color.fromARGB(255, 83, 83, 83),
+            indent: 8,
+            endIndent: 8,
+            thickness: 3,
+          ),
+          Expanded(
+              child: WidgetloadeReview(
+            couseID: courseId.toString(),
+          )),
+          SizedBox(
+            width: 65,
+            height: 65,
+            child: ElevatedButton(
+              onPressed: () {
+                _buycouse(context);
+              },
+              style: ElevatedButton.styleFrom(
+                primary: const Color.fromARGB(255, 15, 15, 15),
+                shape: const CircleBorder(), //<-- SEE HERE
+                //padding: EdgeInsets.all(30),
+              ),
+              child: const Icon(
+                //<-- SEE HERE
+                Icons.shopping_basket_outlined,
+                color: Color.fromARGB(255, 255, 255, 255),
+                size: 35,
+              ),
             ),
           ),
-        ),
-      ],
-    ));
+              ],
+            ),
+        ));
   }
 
   Future<void> loadData() async {

@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:frontendfluttercoach/page/user/profileUser.dart';
 import 'package:persistent_bottom_nav_bar_v2/persistent-tab-view.dart';
-import 'homepageUser.dart';
+import 'homepage/homepageUser.dart';
 import 'money/money.dart';
 import 'mycourse.Detaildart/mycourse.dart';
 

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:frontendfluttercoach/page/user/homepageUser.dart';
+import 'package:frontendfluttercoach/page/user/homepage/homepageUser.dart';
 import 'package:frontendfluttercoach/page/auth/login.dart';
 import 'package:get/get.dart';
 

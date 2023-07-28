@@ -1,22 +1,23 @@
 import 'dart:convert';
 
+import 'package:custom_rating_bar/custom_rating_bar.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
-
+import 'package:frontendfluttercoach/page/user/homepage/widget/widget_search.dart';
 
 import 'package:get/get.dart';
 import 'package:provider/provider.dart';
 import 'package:retrofit/retrofit.dart';
 import 'dart:developer';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import '../../model/response/md_Coach_get.dart';
-import '../../model/response/md_Customer_get.dart';
-import '../../model/response/md_coach_course_get.dart';
-import '../../service/coach.dart';
-import '../../service/course.dart';
-import '../../service/customer.dart';
-import '../../service/provider/appdata.dart';
-import 'cousepage.dart';
+import '../../../model/response/md_Coach_get.dart';
+import '../../../model/response/md_Customer_get.dart';
+import '../../../model/response/md_coach_course_get.dart';
+import '../../../service/coach.dart';
+import '../../../service/course.dart';
+import '../../../service/customer.dart';
+import '../../../service/provider/appdata.dart';
+import '../cousepage.dart';
 
 class HomePageUser extends StatefulWidget {
   const HomePageUser({super.key});
@@ -27,18 +28,10 @@ class HomePageUser extends StatefulWidget {
 
 class _HomePageUserState extends State<HomePageUser> {
   late Future<void> loadDataMethod;
-  late CoachService coachService;
   late CourseService courseService;
   late CustomerService customerService;
   late HttpResponse<Customer> customer;
-
-  List<Coach> coaches = [];
   List<Course> courses = [];
-  //List<ModelCourse> coursesAll = [];
-
-  //late List<Coachbycourse> coachname=[];
-  TextEditingController myController = TextEditingController();
-
   int uid = 0;
   bool isVisible = false;
   bool isSuggestVisible = true;
@@ -48,8 +41,6 @@ class _HomePageUserState extends State<HomePageUser> {
     // TODO: implement initState
     super.initState();
     uid = context.read<AppData>().uid;
-    coachService =
-        CoachService(Dio(), baseUrl: context.read<AppData>().baseurl);
     courseService =
         CourseService(Dio(), baseUrl: context.read<AppData>().baseurl);
     customerService =
@@ -67,12 +58,12 @@ class _HomePageUserState extends State<HomePageUser> {
           const Padding(
             padding: EdgeInsets.only(left: 15, top: 45),
             child: Text("DAILY WORKOUT",
-                style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold)),
+                style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold)),
           ),
           const Padding(
             padding: EdgeInsets.only(left: 15),
             child: Text("COACHING",
-                style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold)),
+                style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold)),
           ),
           Center(
             child: Padding(
@@ -82,55 +73,30 @@ class _HomePageUserState extends State<HomePageUser> {
                 decoration: BoxDecoration(
                     color: const Color.fromARGB(255, 243, 243, 244),
                     borderRadius: BorderRadius.circular(15)),
-                child: TextField(
-                  controller: myController,
-                  onChanged: (value) {
-                      if (myController.text.isNotEmpty) {
-                      coachService
-                          .coach(nameCoach: myController.text, cid: "")
-                          .then((coachdata) {
-                        var datacoach = coachdata.data;
-                        //var checkcoaches = coaches.length;
-                        coaches = datacoach;
-                        if (coaches.isNotEmpty) {
-                          //log("message"+coaches.first);
-                          setState(() {
-                            isVisible = true;
-                            isSuggestVisible = false;
-                          });
-
-                          log(coaches.length.toString());
-                        } else {
-                          setState(() {
-                            isVisible = false;
-                            isSuggestVisible = true;
-                          });
-                        }
-                      });
-                      courseService
-                          .course(cid: '', coID: '', name: myController.text)
-                          .then((coursedata) {
-                        var datacourse = coursedata.data;
-                        courses = datacourse;
-                        if (courses.isNotEmpty) {
-                          setState(() {});
-                          log(courses.length.toString());
-                        }
-                      });
-                    } else {
-                      setState(() {
-                        isVisible = false;
-                        isSuggestVisible = true;
-                      });
-                    }
+                child: TextField(                 
+                  readOnly: true,
+                  onTap: () {
+                    Get.to(() => const Widgetsearch());
                   },
-                  // onSubmitted: (value) {
-                  
-                  // },
-                  decoration: const InputDecoration(
+                  decoration:  InputDecoration(
+                    
                       border: InputBorder.none,
-                      enabledBorder: InputBorder.none,
-                      focusedBorder: InputBorder.none,
+                       enabledBorder: OutlineInputBorder(
+                                borderSide: BorderSide(
+                                    width: 1,
+                                    color: Theme.of(context)
+                                        .colorScheme
+                                        .tertiary), //<-- SEE HERE
+                                borderRadius: BorderRadius.circular(20.0),
+                              ),
+                        focusedBorder: OutlineInputBorder(
+                                borderSide: BorderSide(
+                                    width: 1.5,
+                                    color: Theme.of(context)
+                                        .colorScheme
+                                        .tertiary), //<-- SEE HERE
+                                borderRadius: BorderRadius.circular(20.0),
+                              ),
                       prefixIcon: Icon(FontAwesomeIcons.search),
                       hintText: "ค้นหา",
                       hintStyle: TextStyle(color: Colors.grey)),
@@ -138,52 +104,12 @@ class _HomePageUserState extends State<HomePageUser> {
               ),
             ),
           ),
+          //showCourseAll
           Visibility(
             visible: isSuggestVisible,
             child: Expanded(
               child: Padding(
                 padding: const EdgeInsets.only(left: 8, right: 8),
-                child: loadcourse(),
-              ),
-            ),
-          ),
-
-          Visibility(
-            visible: isVisible,
-            child: Expanded(
-              child: Container(
-                child: Padding(
-                  padding: const EdgeInsets.all(20.0),
-                  child: ListView.builder(
-                      shrinkWrap: true,
-                      itemCount: coaches.length,
-                      itemBuilder: (context, index) {
-                        final coach = coaches[index];
-                        return Card(
-                          color: Theme.of(context).colorScheme.outline,
-                          child: ListTile(
-                            leading: CircleAvatar(
-                              radius: 50,
-                              backgroundImage: NetworkImage(coach.image),
-                            ),
-                            title: Text(coach.username.toString(),
-                                style: Theme.of(context).textTheme.bodyLarge),
-                            subtitle: Text(coach.fullName,
-                                style: Theme.of(context).textTheme.bodyLarge),
-                            trailing: const Icon(Icons.arrow_forward),
-                          ),
-                        );
-                      }),
-                ),
-              ),
-            ),
-          ),
-          //showCourse
-          Visibility(
-            visible: isVisible,
-            child: Expanded(
-              child: Padding(
-                padding: const EdgeInsets.all(20.0),
                 child: loadcourse(),
               ),
             ),
@@ -197,7 +123,7 @@ class _HomePageUserState extends State<HomePageUser> {
     try {
       // Coachbycourse course = Coachbycourse();
       // log(jsonEncode(course));
-      log("User ID"+uid.toString());
+      log("User ID" + uid.toString());
       customer = await customerService.customer(uid: uid.toString());
       var datacourse = await courseService.course(coID: '', cid: '', name: '');
 
@@ -249,7 +175,8 @@ class _HomePageUserState extends State<HomePageUser> {
                                 aspectRatio: 16 / 9,
                                 child: Container(
                                   decoration: BoxDecoration(
-                                    color: const Color(0xff7c94b6),
+                                    color:
+                                        Theme.of(context).colorScheme.onPrimary,
                                     image: DecorationImage(
                                         image: NetworkImage(listcours.image),
                                         fit: BoxFit.cover),
@@ -286,8 +213,8 @@ class _HomePageUserState extends State<HomePageUser> {
                               mainAxisAlignment: MainAxisAlignment.end,
                               children: [
                                 Text(listcours.name,
-                                    style:
-                                        Theme.of(context).textTheme.titleLarge),
+                                    style:Theme.of(context).textTheme.titleLarge!.copyWith(color: Colors.white),
+                                        ),
                                 Row(
                                   children: [
                                     const Padding(
@@ -295,64 +222,28 @@ class _HomePageUserState extends State<HomePageUser> {
                                       child: Icon(
                                         FontAwesomeIcons.solidUser,
                                         size: 16.0,
+                                        color: Colors.white,
                                       ),
                                     ),
                                     Text(listcours.coach.fullName,
                                         style: Theme.of(context)
                                             .textTheme
-                                            .bodyLarge),
+                                            .bodyLarge!.copyWith(color: Colors.white),),
                                   ],
                                 ),
-                                (listcours.level == '1')
-                                    ? Row(
-                                        children: [
-                                          Icon(FontAwesomeIcons.bolt,
-                                              size: 16,
-                                              color: Theme.of(context)
+                                 RatingBar.readOnly(
+                                  isHalfAllowed: false,
+                                  filledIcon: FontAwesomeIcons.bolt,
+                                  size: 16,
+                                  emptyIcon: FontAwesomeIcons.bolt,
+                                  filledColor: Theme.of(context)
                                                   .colorScheme
-                                                  .tertiaryContainer),
-                                          const Icon(FontAwesomeIcons.bolt,
-                                              size: 16),
-                                          const Icon(FontAwesomeIcons.bolt,
-                                              size: 16),
-                                        ],
-                                      )
-                                    : (listcours.level == '2')
-                                        ? Row(
-                                            children: [
-                                              Icon(FontAwesomeIcons.bolt,
-                                                  size: 16,
-                                                  color: Theme.of(context)
-                                                      .colorScheme
-                                                      .tertiaryContainer),
-                                              Icon(FontAwesomeIcons.bolt,
-                                                  size: 16,
-                                                  color: Theme.of(context)
-                                                      .colorScheme
-                                                      .tertiaryContainer),
-                                              const Icon(FontAwesomeIcons.bolt,
-                                                  size: 16),
-                                            ],
-                                          )
-                                        : Row(
-                                            children: [
-                                              Icon(FontAwesomeIcons.bolt,
-                                                  size: 16,
-                                                  color: Theme.of(context)
-                                                      .colorScheme
-                                                      .tertiaryContainer),
-                                              Icon(FontAwesomeIcons.bolt,
-                                                  size: 16,
-                                                  color: Theme.of(context)
-                                                      .colorScheme
-                                                      .tertiaryContainer),
-                                              Icon(FontAwesomeIcons.bolt,
-                                                  size: 16,
-                                                  color: Theme.of(context)
-                                                      .colorScheme
-                                                      .tertiaryContainer),
-                                            ],
-                                          )
+                                                  .tertiaryContainer,
+                                  emptyColor: Color.fromARGB(255, 245, 245, 245),
+                                  initialRating: double.parse(listcours.level),
+                                  maxRating: 3,
+                                ),
+                               
                               ],
                             ),
                           )
@@ -368,7 +259,7 @@ class _HomePageUserState extends State<HomePageUser> {
       },
     );
   }
- //customer
+  //customer
   // Widget loadcustomer() {
   //   return FutureBuilder(
   //     future: loadDataMethod,
