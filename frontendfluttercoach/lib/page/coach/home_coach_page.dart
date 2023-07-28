@@ -7,6 +7,7 @@ import 'package:badges/badges.dart';
 
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:frontendfluttercoach/service/request.dart';
+import 'package:frontendfluttercoach/widget/dialogs.dart';
 import 'package:get/get.dart';
 
 import 'package:flutter/material.dart';
@@ -123,7 +124,7 @@ class _HomePageCoachState extends State<HomePageCoach> {
               child: Text("COACHING",
                   style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold)),
             ),
-          
+
             //search course
             searchButter(context),
 
@@ -238,7 +239,7 @@ class _HomePageCoachState extends State<HomePageCoach> {
       future: loadCourseDataMethod,
       builder: (context, snapshot) {
         if (snapshot.connectionState != ConnectionState.done) {
-          return const Center(child: CircularProgressIndicator());
+          return Center(child: load(context));
         } else {
           return ListView.builder(
             shrinkWrap: true,
@@ -250,7 +251,8 @@ class _HomePageCoachState extends State<HomePageCoach> {
                 child: InkWell(
                   onTap: () {
                     Get.to(() => CourseEditPage(
-                          coID: courses[index].coId.toString(), isVisible: true,
+                          coID: courses[index].coId.toString(),
+                          isVisible: true,
                         ));
                   },
                   child: Container(
@@ -260,24 +262,23 @@ class _HomePageCoachState extends State<HomePageCoach> {
                       aspectRatio: 16 / 9,
                       child: Stack(
                         children: <Widget>[
-                          if (listcours.image != '')...{
-                              Container(
-                                alignment: Alignment.topCenter,
-                                child: AspectRatio(
-                                    aspectRatio: 16 / 9,
-                                    child: Container(
-                                      decoration: BoxDecoration(
-                                        color: const Color(0xff7c94b6),
-                                        image: DecorationImage(
-                                            image:
-                                                NetworkImage(listcours.image),
-                                            fit: BoxFit.cover),
-                                        borderRadius: BorderRadius.circular(20),
-                                      ),
-                                    )),
-                                //color: Colors.white,
-                              ),
-                            },
+                          if (listcours.image != '') ...{
+                            Container(
+                              alignment: Alignment.topCenter,
+                              child: AspectRatio(
+                                  aspectRatio: 16 / 9,
+                                  child: Container(
+                                    decoration: BoxDecoration(
+                                      color: const Color(0xff7c94b6),
+                                      image: DecorationImage(
+                                          image: NetworkImage(listcours.image),
+                                          fit: BoxFit.cover),
+                                      borderRadius: BorderRadius.circular(20),
+                                    ),
+                                  )),
+                              //color: Colors.white,
+                            ),
+                          },
                           Container(
                             padding: const EdgeInsets.all(5.0),
                             alignment: Alignment.bottomCenter,
@@ -427,7 +428,7 @@ class _HomePageCoachState extends State<HomePageCoach> {
               ],
             );
           } else {
-            return const Center(child: CircularProgressIndicator());
+            return Center(child: load(context));
           }
         });
   }
