@@ -1,5 +1,6 @@
 import 'package:flex_color_scheme/flex_color_scheme.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 
 class AppTheme {
@@ -17,12 +18,12 @@ class DefaultTheme {
 theme: FlexThemeData.light(
   colors: const FlexSchemeColor(
     primary: Color(0xffff6000),
-    primaryContainer: Color(0xffffe6c7),
+    primaryContainer: Color(0xffffddc9),
     secondary: Color(0xffffee00),
-    secondaryContainer: Color(0xffffdbcf),
+    secondaryContainer: Color(0xffffb77d),
     tertiary: Color(0xff454545),
     tertiaryContainer: Color(0xff95f0ff),
-    appBarColor: Color(0xffffdbcf),
+    appBarColor: Color(0xffffb77d),
     error: Color(0xffb00020),
   ),
   surfaceMode: FlexSurfaceMode.levelSurfacesLowScaffold,
@@ -32,12 +33,17 @@ theme: FlexThemeData.light(
     blendOnColors: false,
     useTextTheme: true,
     useM2StyleDividerInM3: true,
+    inputDecoratorBackgroundAlpha: 16,
+    inputDecoratorBorderSchemeColor: SchemeColor.onBackground,
+    inputDecoratorRadius: 33.0,
+    inputDecoratorFocusedBorderWidth: 1.0,
+    cardRadius: 20.0,
   ),
   visualDensity: FlexColorScheme.comfortablePlatformDensity,
   useMaterial3: true,
   swapLegacyOnMaterial3: true,
   // To use the Playground font, add GoogleFonts package and uncomment
-  // fontFamily: GoogleFonts.notoSans().fontFamily,
+   fontFamily: GoogleFonts.mali().fontFamily,
 ),
 darkTheme: FlexThemeData.dark(
   colors: const FlexSchemeColor(
@@ -56,6 +62,9 @@ darkTheme: FlexThemeData.dark(
     blendOnLevel: 20,
     useTextTheme: true,
     useM2StyleDividerInM3: true,
+    inputDecoratorRadius: 33.0,
+    inputDecoratorFocusedBorderWidth: 1.0,
+    cardRadius: 20.0,
   ),
   visualDensity: FlexColorScheme.comfortablePlatformDensity,
   useMaterial3: true,
