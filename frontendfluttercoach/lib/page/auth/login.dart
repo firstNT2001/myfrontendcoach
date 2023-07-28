@@ -207,7 +207,7 @@ class _LoginPageState extends State<LoginPage> {
                               },
                               label: Text(
                                 'เข้าสู่ระบบ',
-                                style: Theme.of(context).textTheme.titleMedium,
+                                style: Theme.of(context).textTheme.titleMedium!.copyWith(color: Colors.white),
                               )),
                         ),
                       ),

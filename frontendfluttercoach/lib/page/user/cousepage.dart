@@ -62,8 +62,8 @@ class _showCousePageState extends State<showCousePage> {
   Widget build(BuildContext context) {
     return Scaffold(
         body: SafeArea(
-          child: Column(
-              children: [
+      child: Column(
+        children: [
           Padding(
             padding: const EdgeInsets.only(bottom: 5),
             child: loadCourse(),
@@ -78,29 +78,17 @@ class _showCousePageState extends State<showCousePage> {
               child: WidgetloadeReview(
             couseID: courseId.toString(),
           )),
-          SizedBox(
-            width: 65,
-            height: 65,
-            child: ElevatedButton(
-              onPressed: () {
-                _buycouse(context);
-              },
-              style: ElevatedButton.styleFrom(
-                primary: const Color.fromARGB(255, 15, 15, 15),
-                shape: const CircleBorder(), //<-- SEE HERE
-                //padding: EdgeInsets.all(30),
-              ),
-              child: const Icon(
-                //<-- SEE HERE
-                Icons.shopping_basket_outlined,
-                color: Color.fromARGB(255, 255, 255, 255),
-                size: 35,
-              ),
-            ),
-          ),
-              ],
-            ),
-        ));
+          FloatingActionButton(
+            onPressed: () {
+              _buycouse(context);
+              // ignore: prefer_const_constructors
+            },
+            shape: const CircleBorder(),
+            child: Icon(Icons.shopping_cart),
+          )
+        ],
+      ),
+    ));
   }
 
   Future<void> loadData() async {
@@ -121,12 +109,26 @@ class _showCousePageState extends State<showCousePage> {
             return Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Image.network(
-                  courses.first.image,
-                  height: 200,
-                  width: double.infinity,
-                  fit: BoxFit.cover,
+                Container(
+                  alignment: Alignment.topCenter,
+                  child: AspectRatio(
+                      aspectRatio: 16 / 9,
+                      child: Container(
+                        decoration: BoxDecoration(
+                          color: Theme.of(context).colorScheme.onPrimary,
+                          image: DecorationImage(
+                              image: NetworkImage(courses.first.image),
+                              fit: BoxFit.cover),
+                        ),
+                      )),
+                  //color: Colors.white,
                 ),
+                // Image.network(
+                //   courses.first.image,
+                //   height: 200,
+                //   width: double.infinity,
+                //   fit: BoxFit.cover,
+                // ),
                 Padding(
                   padding: const EdgeInsets.only(left: 15, top: 25),
                   child: Text(courses.first.name,
@@ -137,8 +139,11 @@ class _showCousePageState extends State<showCousePage> {
                   padding: const EdgeInsets.only(left: 15, bottom: 20),
                   child: FilledButton.icon(
                       onPressed: () {
-                        log("courses.first.coach.cid ="+courses.first.coach.cid.toString());
-                        Get.to(() => ProfileCoachPage(coachID: courses.first.coach.cid,));
+                        log("courses.first.coach.cid =" +
+                            courses.first.coach.cid.toString());
+                        Get.to(() => ProfileCoachPage(
+                              coachID: courses.first.coach.cid,
+                            ));
                       },
                       icon: const Icon(
                         FontAwesomeIcons.solidUser,
@@ -146,6 +151,89 @@ class _showCousePageState extends State<showCousePage> {
                       ),
                       label: Text(courses.first.coach.fullName,
                           style: Theme.of(context).textTheme.bodyMedium)),
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.only(left: 10, right: 8),
+                      child: Container(
+                        height: 90,
+                        width: 80,
+                        decoration: BoxDecoration(
+                            color:
+                                Theme.of(context).colorScheme.primaryContainer,
+                            borderRadius: BorderRadius.circular(15)
+                            //more than 50% of width makes circle
+                            ),
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Text(courses.first.days.toString()),Text("วัน/คอร์ส"),
+
+                              ],
+                            ),
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(left: 10, right: 8),
+                      child: Container(
+                        height: 90,
+                        width: 80,
+                        decoration: BoxDecoration(
+                            color:
+                                Theme.of(context).colorScheme.primaryContainer,
+                            borderRadius: BorderRadius.circular(15)
+                            //more than 50% of width makes circle
+                            ),
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Text(courses.first.days.toString()),Text("วัน/คอร์ส"),
+
+                              ],
+                            ),
+                      ),
+                    ),Padding(
+                      padding: const EdgeInsets.only(left: 10, right: 8),
+                      child: Container(
+                        height: 90,
+                        width: 80,
+                        decoration: BoxDecoration(
+                            color:
+                                Theme.of(context).colorScheme.primaryContainer,
+                            borderRadius: BorderRadius.circular(15)
+                            //more than 50% of width makes circle
+                            ),
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Text(courses.first.days.toString()),Text("วัน/คอร์ส"),
+
+                              ],
+                            ),
+                      ),
+                    ),Padding(
+                      padding: const EdgeInsets.only(left: 10, right: 8),
+                      child: Container(
+                        height: 90,
+                        width: 80,
+                        decoration: BoxDecoration(
+                            color:
+                                Theme.of(context).colorScheme.primaryContainer,
+                            borderRadius: BorderRadius.circular(15)
+                            //more than 50% of width makes circle
+                            ),
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Text(courses.first.days.toString()),Text("วัน/คอร์ส"),
+
+                              ],
+                            ),
+                      ),
+                    ),
+                  ],
                 ),
                 Row(
                   children: [
@@ -186,16 +274,13 @@ class _showCousePageState extends State<showCousePage> {
                 ),
                 const Padding(
                   padding: EdgeInsets.only(left: 8),
-                  child: Text(
-                    "รายละเอียดคอร์ส",
-                    style: TextStyle(fontSize: 16)
-                    
-                  ),
+                  child:
+                      Text("รายละเอียดคอร์ส", style: TextStyle(fontSize: 16)),
                 ),
                 Padding(
                   padding: const EdgeInsets.only(left: 15, bottom: 12),
                   child: Text(courses.first.details),
-                )
+                ),
               ],
             );
           } else {
@@ -276,7 +361,7 @@ class _showCousePageState extends State<showCousePage> {
                       style: Theme.of(context).textTheme.bodyLarge),
                 ),
                 FilledButton(
-                    onPressed: () async{
+                    onPressed: () async {
                       startLoading(context);
                       log("Date time = " + now.toString());
                       String cdate2 =
@@ -287,18 +372,18 @@ class _showCousePageState extends State<showCousePage> {
                       log("Date time3 = $proposedDate");
                       //log("Date time3 = $proposedDate");
                       BuyCoursecoIdPost buyCoursecoIdPost = BuyCoursecoIdPost(
-                          customerId: cusID,
-                          buyDateTime: proposedDate,);
+                        customerId: cusID,
+                        buyDateTime: proposedDate,
+                      );
                       log(jsonEncode(buyCoursecoIdPost));
                       log(cusID.toString());
                       buycourse = await buyCourseService.buyCourse(
                           courseId.toString(), buyCoursecoIdPost);
-                          moduleResult = buycourse.data;
-                      if(moduleResult.result == "1"){
+                      moduleResult = buycourse.data;
+                      if (moduleResult.result == "1") {
                         stopLoading();
-                         Get.to(() => const MyCouses());
+                        Get.to(() => const MyCouses());
                       }
-                      
                     },
                     child: Text("ชำระเงิน",
                         style: Theme.of(context).textTheme.bodyLarge)),
@@ -309,4 +394,6 @@ class _showCousePageState extends State<showCousePage> {
       );
     });
   }
-}
+
+}  
+
