@@ -18,9 +18,10 @@ import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';
 
 Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
   GetStorage gs = GetStorage();
   final DefaultTheme defaultTheme = DefaultTheme();
-  WidgetsFlutterBinding.ensureInitialized();
+  
   // Screen size
   Size screenSize =
       MediaQueryData.fromWindow(WidgetsBinding.instance.window).size;
