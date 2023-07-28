@@ -16,11 +16,11 @@ class DefaultTheme {
 // In that case remove them after copying this theme to your app.
 theme: FlexThemeData.light(
   colors: const FlexSchemeColor(
-    primary: Color(0xff004881),
-    primaryContainer: Color(0xffd0e4ff),
-    secondary: Color(0xffac3306),
-    secondaryContainer: Color(0xffffdbcf),
-    tertiary: Color(0xff006875),
+    primary: Color(0xffff6000),
+    primaryContainer: Color(0xffffddc9),
+    secondary: Color(0xffffee00),
+    secondaryContainer: Color(0xffffb77d),
+    tertiary: Color(0xff454545),
     tertiaryContainer: Color(0xff95f0ff),
     appBarColor: Color(0xffffb77d),
     error: Color(0xffb00020),
