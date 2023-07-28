@@ -219,6 +219,7 @@ class _HomePageCoachState extends State<HomePageCoach> {
       coachs = datas.data;
       // ignore: use_build_context_synchronously
       context.read<AppData>().nameCoach = coachs.first.fullName;
+      // ignore: use_build_context_synchronously
       log(context.read<AppData>().nameCoach);
     } catch (err) {
       log('Error: $err');
