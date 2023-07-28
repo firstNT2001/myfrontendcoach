@@ -29,6 +29,7 @@ class _MyCousesState extends State<MyCouses> {
 
   double percen = 0;
   late int coID;
+  late int coachID;
   //show day not ex
   DateTime nows = DateTime.now();
   late DateTime today;
@@ -86,9 +87,11 @@ class _MyCousesState extends State<MyCouses> {
   Future<void> loadData() async {
     try {
       log(context.read<AppData>().uid.toString());
-     var datas = await _coachService.showcourseNotEx(uid: context.read<AppData>().uid.toString());
-     courses = datas.data;
-     log(courses.first.bid.toString());
+      var datas = await _coachService.showcourseNotEx(
+          uid: context.read<AppData>().uid.toString());
+      courses = datas.data;
+
+      log(courses.first.bid.toString());
     } catch (err) {
       log('Error: $err');
     }
@@ -110,6 +113,7 @@ class _MyCousesState extends State<MyCouses> {
                 padding: const EdgeInsets.only(left: 10, right: 10, bottom: 20),
                 child: InkWell(
                   onTap: () {
+                    context.read<AppData>().cid = listcours.course.coachId;
                     log(listcours.customerId.toString());
                     log(listcours.course.image);
                     String stExpirationDay = listcours.course.expirationDate;

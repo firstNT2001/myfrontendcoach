@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_rating_native/flutter_rating_native.dart';
 import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:frontendfluttercoach/page/user/profilecoach.dart';
 
 import 'package:frontendfluttercoach/service/review.dart';
 import 'package:get/get.dart';
@@ -18,6 +19,7 @@ import '../../model/response/md_coach_course_get.dart';
 import '../../service/buy.dart';
 import '../../service/course.dart';
 import '../../service/provider/appdata.dart';
+import '../../widget/dialogs.dart';
 import 'mycourse.Detaildart/Widget/widget_loadreview.dart';
 import 'mycourse.Detaildart/mycourse.dart';
 
@@ -132,7 +134,10 @@ class _showCousePageState extends State<showCousePage> {
                 Padding(
                   padding: const EdgeInsets.only(left: 15, bottom: 20),
                   child: FilledButton.icon(
-                      onPressed: () {},
+                      onPressed: () {
+                        log("courses.first.coach.cid ="+courses.first.coach.cid.toString());
+                        Get.to(() => ProfileCoachPage(coachID: courses.first.coach.cid,));
+                      },
                       icon: const Icon(
                         FontAwesomeIcons.solidUser,
                         size: 14,
@@ -181,7 +186,8 @@ class _showCousePageState extends State<showCousePage> {
                   padding: EdgeInsets.only(left: 8),
                   child: Text(
                     "รายละเอียดคอร์ส",
-                    style: TextStyle(fontSize: 16),
+                    style: TextStyle(fontSize: 16)
+                    
                   ),
                 ),
                 Padding(
@@ -268,10 +274,11 @@ class _showCousePageState extends State<showCousePage> {
                       style: Theme.of(context).textTheme.bodyLarge),
                 ),
                 FilledButton(
-                    onPressed: () {
+                    onPressed: () async{
+                      startLoading(context);
                       log("Date time = " + now.toString());
                       String cdate2 =
-                          DateFormat("yyyy-dd-MM").format(DateTime.now());
+                          DateFormat("yyyy-MM-dd").format(DateTime.now());
                       log("Date time2 = " + cdate2);
 
                       var proposedDate = "${cdate2}T00:00:00.000Z";
@@ -279,13 +286,17 @@ class _showCousePageState extends State<showCousePage> {
                       //log("Date time3 = $proposedDate");
                       BuyCoursecoIdPost buyCoursecoIdPost = BuyCoursecoIdPost(
                           customerId: cusID,
-                          buyDateTime: proposedDate,
-                          image: "-");
+                          buyDateTime: proposedDate,);
                       log(jsonEncode(buyCoursecoIdPost));
                       log(cusID.toString());
-                      buycourse = buyCourseService.buyCourse(
+                      buycourse = await buyCourseService.buyCourse(
                           courseId.toString(), buyCoursecoIdPost);
-                      Get.to(() => const MyCouses());
+                          moduleResult = buycourse.data;
+                      if(moduleResult.result == "1"){
+                        stopLoading();
+                         Get.to(() => const MyCouses());
+                      }
+                      
                     },
                     child: Text("ชำระเงิน",
                         style: Theme.of(context).textTheme.bodyLarge)),

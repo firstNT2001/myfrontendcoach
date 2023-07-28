@@ -11,24 +11,20 @@ String buyCoursecoIdPostToJson(BuyCoursecoIdPost data) => json.encode(data.toJso
 
 class BuyCoursecoIdPost {
     int customerId;
-    String buyDateTime;
-    String image;
+    String buyDateTime; 
 
     BuyCoursecoIdPost({
         required this.customerId,
         required this.buyDateTime,
-        required this.image,
     });
 
     factory BuyCoursecoIdPost.fromJson(Map<String, dynamic> json) => BuyCoursecoIdPost(
         customerId: json["CustomerID"],
         buyDateTime: json["BuyDateTime"],
-        image: json["Image"],
     );
 
     Map<String, dynamic> toJson() => {
         "CustomerID": customerId,
         "BuyDateTime": buyDateTime,
-        "Image": image,
     };
 }
