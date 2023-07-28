@@ -9,6 +9,7 @@ import 'package:provider/provider.dart';
 import '../../../model/response/md_Coach_get.dart';
 import '../../../service/coach.dart';
 import '../../../service/provider/appdata.dart';
+import '../../../widget/dialogs.dart';
 import 'coach_editProfile.dart';
 
 class CoachPage extends StatefulWidget {
@@ -155,7 +156,7 @@ class _CoachPageState extends State<CoachPage> {
               ],
             );
           } else {
-            return const Center(child: CircularProgressIndicator());
+            return Center(child: load(context));
           }
         });
   }

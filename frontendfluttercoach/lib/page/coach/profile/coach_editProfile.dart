@@ -13,6 +13,7 @@ import 'package:provider/provider.dart';
 import '../../../model/response/md_Coach_get.dart';
 import '../../../service/coach.dart';
 import '../../../service/provider/appdata.dart';
+import '../../../widget/dialogs.dart';
 import '../../../widget/wg_dropdown_string.dart';
 import '../../../widget/wg_textField.dart';
 import '../../../widget/wg_textFieldLines.dart';
@@ -58,44 +59,39 @@ class _CoachEidtProfilePageState extends State<CoachEidtProfilePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       resizeToAvoidBottomInset: false,
-      appBar: AppBar(
-        //backgroundColor: Theme.of(context).colorScheme.primary,
+      // appBar: AppBar(
+      //   //backgroundColor: Theme.of(context).colorScheme.primary,
 
-        leading: IconButton(
-          icon: const Icon(
-            FontAwesomeIcons.chevronLeft,
-          ),
-          onPressed: () {
-            Get.back();
-          },
-        ),
-      ),
+      //   leading: IconButton(
+      //     icon: const Icon(
+      //       FontAwesomeIcons.chevronLeft,
+      //     ),
+      //     onPressed: () {
+      //       Get.back();
+      //     },
+      //   ),
+      // ),
       body: SafeArea(
           child: ListView(
         children: [
-          Center(
-            child: Text(
-              'Edit Profile',
-              style: Theme.of(context).textTheme.headlineMedium,
-            ),
-          ),
-          const SizedBox(
-            height: 8,
-          ),
-          Expanded(child: showCoach()),
-          Padding(
-             padding:
-                      const EdgeInsets.only(bottom: 18, left: 20, right: 20),
-            child: FilledButton(
-              //style: style,
-              onPressed: () async {
-                
-              },
-              child: const Text('Next'),
-            ),
-          )
+          showCoach(),
         ],
       )),
+    );
+  }
+
+  Widget button() {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 18, left: 20, right: 20),
+      child: SizedBox(
+        width: MediaQuery.of(context).size.width,
+        // height: MediaQuery.of(context).size.height ,
+        child: FilledButton(
+          //style: style,
+          onPressed: () async {},
+          child: const Text('Next'),
+        ),
+      ),
     );
   }
 
@@ -133,6 +129,26 @@ class _CoachEidtProfilePageState extends State<CoachEidtProfilePage> {
               //mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: IconButton(
+                    icon: const Icon(
+                      FontAwesomeIcons.chevronLeft,
+                    ),
+                    onPressed: () {
+                      Get.back();
+                    },
+                  ),
+                ),
+                Center(
+                  child: Text(
+                    'Edit Profile',
+                    style: Theme.of(context).textTheme.headlineMedium,
+                  ),
+                ),
+                const SizedBox(
+                  height: 8,
+                ),
                 if (pickedImg != null) ...{
                   Center(
                     child: ClipOval(
@@ -248,7 +264,7 @@ class _CoachEidtProfilePageState extends State<CoachEidtProfilePage> {
                       const EdgeInsets.only(bottom: 8, left: 20, right: 20),
                   child: WidgetTextFieldLines(
                     controller: qualification,
-                    labelText: 'จบจาก',
+                    labelText: 'วุฒิการศึกษา',
                   ),
                 ),
                 Padding(
@@ -259,10 +275,11 @@ class _CoachEidtProfilePageState extends State<CoachEidtProfilePage> {
                     labelText: 'ประวัติส่วนตัว',
                   ),
                 ),
+                button(),
               ],
             );
           } else {
-            return const Center(child: CircularProgressIndicator());
+            return Center(child: load(context));
           }
         });
   }
