@@ -82,12 +82,12 @@ class _LoginPageState extends State<LoginPage> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
                   Text("เข้าสู่ระบบ",
-                      style: TextStyle(color: Colors.white, fontSize: 30)),
+                      style: TextStyle(color: Colors.white, fontSize: 40)),
                   SizedBox(
                     height: 10,
                   ),
                   Text("ยินดีต้อนรับ",
-                      style: TextStyle(color: Colors.white, fontSize: 18)),
+                      style: TextStyle(color: Colors.white, fontSize: 25)),
                 ],
               ),
             ),
@@ -196,7 +196,7 @@ class _LoginPageState extends State<LoginPage> {
                         ),
                       Padding(
                         padding: const EdgeInsets.only(
-                            left: 20, right: 20, top: 30,bottom: 30),
+                            left: 20, right: 20, top: 30,bottom: 22),
                         child: SizedBox(
                           width: double.infinity,
                           child: FilledButton.icon(
