@@ -43,7 +43,7 @@ theme: FlexThemeData.light(
   useMaterial3: true,
   swapLegacyOnMaterial3: true,
   // To use the Playground font, add GoogleFonts package and uncomment
-   fontFamily: GoogleFonts.mali().fontFamily,
+   fontFamily: GoogleFonts.ibmPlexSansThai().fontFamily,
 ),
 darkTheme: FlexThemeData.dark(
   colors: const FlexSchemeColor(
