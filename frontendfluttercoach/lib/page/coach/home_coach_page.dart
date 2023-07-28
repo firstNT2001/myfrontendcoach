@@ -72,7 +72,7 @@ class _HomePageCoachState extends State<HomePageCoach> {
     loadCourseDataMethod = loadCourseData();
 
     //Course
-    _coachService = context.read<AppData>().couchService;
+    _coachService = context.read<AppData>().coachService;
     loadCoachDataMethod = loadCoachData();
 
     //Request
@@ -113,10 +113,6 @@ class _HomePageCoachState extends State<HomePageCoach> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            //  FilledButton.icon(onPressed: (){
-            //           //roomchat= widget.namecourse+coID.toString();
-            //           Get.to(() => const ShowUserByCoursePage());
-            //         }, icon: const Icon(FontAwesomeIcons.facebookMessenger,size: 16,), label: Text("คุยกับโค้ช")),
             const Padding(
               padding: EdgeInsets.only(left: 15),
               child: Text("DAILY WORKOUT",
@@ -127,7 +123,7 @@ class _HomePageCoachState extends State<HomePageCoach> {
               child: Text("COACHING",
                   style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold)),
             ),
-
+          
             //search course
             searchButter(context),
 

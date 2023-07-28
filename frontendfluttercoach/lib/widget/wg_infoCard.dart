@@ -4,7 +4,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 
-import '../page/coach/coach_page.dart';
+import '../page/coach/profile/coach_page.dart';
 
 class InfoCard extends StatelessWidget {
   const InfoCard({
