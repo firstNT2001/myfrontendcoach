@@ -1,4 +1,3 @@
-import 'package:frontendfluttercoach/model/response/course_get_res.dart';
 import 'package:retrofit/retrofit.dart';
 import 'package:dio/dio.dart';
 

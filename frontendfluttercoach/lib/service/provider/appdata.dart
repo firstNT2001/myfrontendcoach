@@ -63,7 +63,7 @@ class AppData with ChangeNotifier {
       ListClipServices(Dio(), baseUrl: baseurl);
   AuthService get authService => AuthService(Dio(), baseUrl: baseurl);
   CourseService get courseService => CourseService(Dio(), baseUrl: baseurl);
-  CoachService get couchService => CoachService(Dio(), baseUrl: baseurl);
+  CoachService get coachService => CoachService(Dio(), baseUrl: baseurl);
   RequestService get requestService => RequestService(Dio(), baseUrl: baseurl);
   DaysService get daysService => DaysService(Dio(), baseUrl: baseurl);
   ReviewService get reviewService => ReviewService(Dio(), baseUrl: baseurl);

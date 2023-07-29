@@ -7,6 +7,7 @@ import 'package:badges/badges.dart';
 
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:frontendfluttercoach/service/request.dart';
+import 'package:frontendfluttercoach/widget/dialogs.dart';
 import 'package:get/get.dart';
 
 import 'package:flutter/material.dart';
@@ -72,7 +73,7 @@ class _HomePageCoachState extends State<HomePageCoach> {
     loadCourseDataMethod = loadCourseData();
 
     //Course
-    _coachService = context.read<AppData>().couchService;
+    _coachService = context.read<AppData>().coachService;
     loadCoachDataMethod = loadCoachData();
 
     //Request
@@ -113,10 +114,6 @@ class _HomePageCoachState extends State<HomePageCoach> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            //  FilledButton.icon(onPressed: (){
-            //           //roomchat= widget.namecourse+coID.toString();
-            //           Get.to(() => const ShowUserByCoursePage());
-            //         }, icon: const Icon(FontAwesomeIcons.facebookMessenger,size: 16,), label: Text("คุยกับโค้ช")),
             const Padding(
               padding: EdgeInsets.only(left: 15),
               child: Text("DAILY WORKOUT",
@@ -219,6 +216,7 @@ class _HomePageCoachState extends State<HomePageCoach> {
       coachs = datas.data;
       // ignore: use_build_context_synchronously
       context.read<AppData>().nameCoach = coachs.first.fullName;
+      // ignore: use_build_context_synchronously
       log(context.read<AppData>().nameCoach);
     } catch (err) {
       log('Error: $err');
@@ -241,7 +239,7 @@ class _HomePageCoachState extends State<HomePageCoach> {
       future: loadCourseDataMethod,
       builder: (context, snapshot) {
         if (snapshot.connectionState != ConnectionState.done) {
-          return const Center(child: CircularProgressIndicator());
+          return Center(child: load(context));
         } else {
           return ListView.builder(
             shrinkWrap: true,
@@ -253,7 +251,8 @@ class _HomePageCoachState extends State<HomePageCoach> {
                 child: InkWell(
                   onTap: () {
                     Get.to(() => CourseEditPage(
-                          coID: courses[index].coId.toString(), isVisible: true,
+                          coID: courses[index].coId.toString(),
+                          isVisible: true,
                         ));
                   },
                   child: Container(
@@ -263,24 +262,23 @@ class _HomePageCoachState extends State<HomePageCoach> {
                       aspectRatio: 16 / 9,
                       child: Stack(
                         children: <Widget>[
-                          if (listcours.image != '')...{
-                              Container(
-                                alignment: Alignment.topCenter,
-                                child: AspectRatio(
-                                    aspectRatio: 16 / 9,
-                                    child: Container(
-                                      decoration: BoxDecoration(
-                                        color: const Color(0xff7c94b6),
-                                        image: DecorationImage(
-                                            image:
-                                                NetworkImage(listcours.image),
-                                            fit: BoxFit.cover),
-                                        borderRadius: BorderRadius.circular(20),
-                                      ),
-                                    )),
-                                //color: Colors.white,
-                              ),
-                            },
+                          if (listcours.image != '') ...{
+                            Container(
+                              alignment: Alignment.topCenter,
+                              child: AspectRatio(
+                                  aspectRatio: 16 / 9,
+                                  child: Container(
+                                    decoration: BoxDecoration(
+                                      color: const Color(0xff7c94b6),
+                                      image: DecorationImage(
+                                          image: NetworkImage(listcours.image),
+                                          fit: BoxFit.cover),
+                                      borderRadius: BorderRadius.circular(20),
+                                    ),
+                                  )),
+                              //color: Colors.white,
+                            ),
+                          },
                           Container(
                             padding: const EdgeInsets.all(5.0),
                             alignment: Alignment.bottomCenter,
@@ -430,7 +428,7 @@ class _HomePageCoachState extends State<HomePageCoach> {
               ],
             );
           } else {
-            return const Center(child: CircularProgressIndicator());
+            return Center(child: load(context));
           }
         });
   }

@@ -152,12 +152,13 @@ class _CourseEditPageState extends State<CourseEditPage> {
 
   Padding showText(BuildContext context, double width, double padding) {
     return Padding(
-      padding: EdgeInsets.only(top: MediaQuery.of(context).size.height * 0.35),
+      padding: EdgeInsets.only(top: MediaQuery.of(context).size.height / 3),
       child: Container(
-        decoration: BoxDecoration(
-            borderRadius: const BorderRadius.only(
+        width: MediaQuery.of(context).size.width,
+        decoration: const BoxDecoration(
+            borderRadius: BorderRadius.only(
                 topLeft: Radius.circular(20), topRight: Radius.circular(20)),
-            color: Theme.of(context).colorScheme.onSecondary),
+            color: Colors.white),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [

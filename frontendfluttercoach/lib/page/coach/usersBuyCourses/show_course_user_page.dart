@@ -52,9 +52,9 @@ class _ShowCourseUserPageState extends State<ShowCourseUserPage> {
           ),
         ),
         body: SafeArea(
-          child: ListView(
+          child: Column(
             children: [
-              loadcourse(),
+              Expanded(child: showCourse()),
             ],
           ),
         ));
@@ -73,7 +73,7 @@ class _ShowCourseUserPageState extends State<ShowCourseUserPage> {
     }
   }
 
-  Widget loadcourse() {
+  Widget showCourse() {
     return FutureBuilder(
       future: loadCourseDataMethod,
       builder: (context, snapshot) {
@@ -92,7 +92,6 @@ class _ShowCourseUserPageState extends State<ShowCourseUserPage> {
                   width: double.infinity,
                   child: InkWell(
                     onTap: () {
-                      
                         Get.to(() => CourseEditPage(
                           coID: listcours.course.coId.toString(), isVisible: false,
                         ));
