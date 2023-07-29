@@ -4,7 +4,9 @@ import 'package:dio/dio.dart';
 
 
 import '../model/request/auth_login_post.dart';
+import '../model/request/registerCoachDTO.dart';
 import '../model/response/auth_login_res.dart';
+import '../model/response/md_Result.dart';
 
 
 
@@ -20,5 +22,8 @@ abstract class AuthService {
   //  @POST("/user/loginfb")
   // Future<HttpResponse<ModelCidAndUid>> loginfb(@Body() LoginFbDto login);
   // //Future<HttpResponse<Customer>> loginfbCus(@Body() LoginFbDto login);
+  @PUT("/auth//Coach/{cid}")
+  Future<HttpResponse<ModelResult>> updateCoach(
+      @Path() String cid, @Body() RegisterCoachDto registerCoachDto);
  
 }
