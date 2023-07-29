@@ -13,11 +13,13 @@ import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import '../../model/request/buycourse_coID_post.dart';
+import '../../model/response/md_Day_showmycourse.dart';
 import '../../model/response/md_Result.dart';
 import '../../model/response/md_Review_get.dart';
 import '../../model/response/md_coach_course_get.dart';
 import '../../service/buy.dart';
 import '../../service/course.dart';
+import '../../service/day.dart';
 import '../../service/provider/appdata.dart';
 import '../../widget/dialogs.dart';
 import 'mycourse.Detaildart/Widget/widget_loadreview.dart';
@@ -32,10 +34,13 @@ class showCousePage extends StatefulWidget {
 
 class _showCousePageState extends State<showCousePage> {
   late BuyCourseService buyCourseService;
+  late DayService dayService;
   late CourseService courseService;
   late Future<void> loadDataMethod;
   List<Course> courses = [];
+  List<DayDetail> clip = [];
   late ModelResult moduleResult;
+  int amountclip = 0;
   int courseId = 0;
   int cusID = 0;
   int moneycus = 0;
@@ -52,6 +57,7 @@ class _showCousePageState extends State<showCousePage> {
     moneycus = context.read<AppData>().money;
     courseService =
         CourseService(Dio(), baseUrl: context.read<AppData>().baseurl);
+    dayService = DayService(Dio(), baseUrl: context.read<AppData>().baseurl);
 
     buyCourseService =
         BuyCourseService(Dio(), baseUrl: context.read<AppData>().baseurl);
@@ -69,34 +75,32 @@ class _showCousePageState extends State<showCousePage> {
             child: loadCourse(),
           ),
           const Divider(
-            color: Color.fromARGB(255, 83, 83, 83),
+            color: Color.fromARGB(255, 194, 194, 194),
             indent: 8,
             endIndent: 8,
-            thickness: 3,
+            thickness: 1.5,
           ),
           Expanded(
               child: WidgetloadeReview(
             couseID: courseId.toString(),
           )),
-          
           Row(
-                        mainAxisAlignment: MainAxisAlignment.end,
-                        children: [
-                          //edit Day
-                          Padding(
-                            padding:
-                                const EdgeInsets.only(right: 16.0, bottom: 10),
-                            child:FloatingActionButton(
-            onPressed: () {
-              _buycouse(context);
-              // ignore: prefer_const_constructors
-            },
-            shape: const CircleBorder(),
-            child: Icon(Icons.shopping_cart),
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [
+              //edit Day
+              Padding(
+                padding: const EdgeInsets.only(right: 16.0, bottom: 10),
+                child: FloatingActionButton(
+                  onPressed: () {
+                    _buycouse(context);
+                    // ignore: prefer_const_constructors
+                  },
+                  shape: const CircleBorder(),
+                  child: const Icon(Icons.shopping_cart),
+                ),
+              ),
+            ],
           ),
-                          ),
-                        ],
-                      ),
         ],
       ),
     ));
@@ -107,6 +111,17 @@ class _showCousePageState extends State<showCousePage> {
       var datacouse = await courseService.course(
           coID: courseId.toString(), cid: '', name: '');
       courses = datacouse.data;
+      var dataclip = await dayService.day(
+          did: '', coID: courseId.toString(), sequence: '');
+      clip = dataclip.data;
+      // for (int i = 1; i <= clip.length; i++) {
+      //   // log("cid = "+clip[i].clips.first.cpId.toString());
+      //    log("cid = "+i.toString());
+      //    for(int k = 0; k < clip.)
+      // }
+      // log("amountclip =" + clip.first.clips.first.cpId.toString());
+      // amountclip = clip.length;
+      // log("amountclip =" + amountclip.toString());
     } catch (err) {
       log('Error: $err');
     }
@@ -164,132 +179,134 @@ class _showCousePageState extends State<showCousePage> {
                           style: Theme.of(context).textTheme.bodyMedium)),
                 ),
                 Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: [
                     Padding(
-                      padding: const EdgeInsets.only(left: 10, right: 8),
+                      padding: const EdgeInsets.only(left: 10, right: 10),
                       child: Container(
-                        height: 90,
-                        width: 80,
+                        height: 80,
+                        width: 70,
                         decoration: BoxDecoration(
                             color:
                                 Theme.of(context).colorScheme.primaryContainer,
                             borderRadius: BorderRadius.circular(15)
                             //more than 50% of width makes circle
                             ),
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Text(courses.first.days.toString()),Text("วัน/คอร์ส"),
-
-                              ],
-                            ),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text(courses.first.days.toString()),
+                            const Text("วัน"),
+                          ],
+                        ),
                       ),
                     ),
                     Padding(
-                      padding: const EdgeInsets.only(left: 10, right: 8),
+                      padding: const EdgeInsets.only( right: 10),
                       child: Container(
-                        height: 90,
-                        width: 80,
+                        height: 80,
+                        width: 70,
                         decoration: BoxDecoration(
                             color:
                                 Theme.of(context).colorScheme.primaryContainer,
                             borderRadius: BorderRadius.circular(15)
                             //more than 50% of width makes circle
                             ),
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                //Text(courses.first.),Text("วัน/คอร์ส"),
-
-                              ],
-                            ),
+                        child: const Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            //Text(courses.first.),Text("วัน/คอร์ส"),
+                          ],
+                        ),
                       ),
-                    ),Padding(
-                      padding: const EdgeInsets.only(left: 10, right: 8),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(right: 10,),
                       child: Container(
-                        height: 90,
-                        width: 80,
+                        height: 80,
+                        width: 70,
                         decoration: BoxDecoration(
                             color:
                                 Theme.of(context).colorScheme.primaryContainer,
                             borderRadius: BorderRadius.circular(15)
                             //more than 50% of width makes circle
                             ),
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Text(courses.first.days.toString()),Text("วัน/คอร์ส"),
-
-                              ],
-                            ),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            
+                            Text( courses.first.amount.toString() ),
+                            const Text("คน"),
+                          ],
+                        ),
                       ),
-                    ),Padding(
-                      padding: const EdgeInsets.only(left: 10, right: 8),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(right: 10),
                       child: Container(
-                        height: 90,
-                        width: 80,
+                        height: 80,
+                        width: 70,
                         decoration: BoxDecoration(
                             color:
                                 Theme.of(context).colorScheme.primaryContainer,
                             borderRadius: BorderRadius.circular(15)
                             //more than 50% of width makes circle
                             ),
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Text(courses.first.days.toString()),Text("วัน/คอร์ส"),
-
-                              ],
-                            ),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text(courses.first.price.toString()),
+                            const Text("บาท"),
+                          ],
+                        ),
                       ),
                     ),
                   ],
                 ),
-                Row(
-                  children: [
-                    const Padding(
-                      padding: EdgeInsets.only(right: 8, left: 15),
-                      child: Icon(FontAwesomeIcons.calendar),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(right: 32),
-                      child: Text(courses.first.days.toString() + "วัน/คอร์ส"),
-                    ),
-                    const Padding(
-                      padding: EdgeInsets.only(right: 8),
-                      child: Icon(FontAwesomeIcons.moneyBills),
-                    ),
-                    const Text("27 คลิป")
-                  ],
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(top: 8, bottom: 20),
-                  child: Row(
-                    children: [
-                      const Padding(
-                        padding: EdgeInsets.only(right: 10, left: 15),
-                        child: Icon(FontAwesomeIcons.userPlus),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.only(right: 60),
-                        child: Text(courses.first.amount.toString() + "คน"),
-                      ),
-                      const Padding(
-                        padding: EdgeInsets.only(right: 8),
-                        child: Icon(FontAwesomeIcons.youtube),
-                      ),
-                      Text(courses.first.price.toString() + "บาท"),
-                    ],
-                  ),
-                ),
+                // Row(
+                //   children: [
+                //     const Padding(
+                //       padding: EdgeInsets.only(right: 8, left: 15),
+                //       child: Icon(FontAwesomeIcons.calendar),
+                //     ),
+                //     Padding(
+                //       padding: const EdgeInsets.only(right: 32),
+                //       child: Text(courses.first.days.toString() + "วัน/คอร์ส"),
+                //     ),
+                //     const Padding(
+                //       padding: EdgeInsets.only(right: 8),
+                //       child: Icon(FontAwesomeIcons.moneyBills),
+                //     ),
+                //     const Text("27 คลิป")
+                //   ],
+                // ),
+                // Padding(
+                //   padding: const EdgeInsets.only(top: 8, bottom: 20),
+                //   child: Row(
+                //     children: [
+                //       const Padding(
+                //         padding: EdgeInsets.only(right: 10, left: 15),
+                //         child: Icon(FontAwesomeIcons.userPlus),
+                //       ),
+                //       Padding(
+                //         padding: const EdgeInsets.only(right: 60),
+                //         child: Text(courses.first.amount.toString() + "คน"),
+                //       ),
+                //       const Padding(
+                //         padding: EdgeInsets.only(right: 8),
+                //         child: Icon(FontAwesomeIcons.youtube),
+                //       ),
+                //       Text(courses.first.price.toString() + "บาท"),
+                //     ],
+                //   ),
+                // ),
                 const Padding(
-                  padding: EdgeInsets.only(left: 8),
+                  padding: EdgeInsets.only(left: 8,top: 20),
                   child:
                       Text("รายละเอียดคอร์ส", style: TextStyle(fontSize: 16)),
                 ),
                 Padding(
-                  padding: const EdgeInsets.only(left: 15, bottom: 12),
+                  padding: const EdgeInsets.only(left: 15, bottom: 12,right: 15),
                   child: Text(courses.first.details),
                 ),
               ],
@@ -405,6 +422,4 @@ class _showCousePageState extends State<showCousePage> {
       );
     });
   }
-
-}  
-
+}
