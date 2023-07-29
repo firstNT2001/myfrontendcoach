@@ -5,12 +5,15 @@ import 'package:file_picker/file_picker.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:frontendfluttercoach/model/response/md_Result.dart';
 import 'package:frontendfluttercoach/widget/wg_textField_int%20copy.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:provider/provider.dart';
 
+import '../../../model/request/registerCoachDTO.dart';
 import '../../../model/response/md_Coach_get.dart';
+import '../../../service/auth.dart';
 import '../../../service/coach.dart';
 import '../../../service/provider/appdata.dart';
 import '../../../widget/dialogs.dart';
@@ -31,6 +34,9 @@ class _CoachEidtProfilePageState extends State<CoachEidtProfilePage> {
   late CoachService _coachService;
   List<Coach> coachs = [];
 
+  ///UpdateCoach
+  late AuthService _authService;
+  late ModelResult modelResult;
   //selectimg
   PlatformFile? pickedImg;
   UploadTask? uploadTask;
@@ -48,10 +54,12 @@ class _CoachEidtProfilePageState extends State<CoachEidtProfilePage> {
   // ignore: non_constant_identifier_names
   final List<String> LevelItems = ['ชาย', 'หญิง'];
   final selectedValue = TextEditingController();
+
   @override
   void initState() {
     super.initState();
     _coachService = context.read<AppData>().coachService;
+    _authService = context.read<AppData>().authService;
     loadCoachDataMethod = loadCoachData();
   }
 
@@ -59,18 +67,6 @@ class _CoachEidtProfilePageState extends State<CoachEidtProfilePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       resizeToAvoidBottomInset: false,
-      // appBar: AppBar(
-      //   //backgroundColor: Theme.of(context).colorScheme.primary,
-
-      //   leading: IconButton(
-      //     icon: const Icon(
-      //       FontAwesomeIcons.chevronLeft,
-      //     ),
-      //     onPressed: () {
-      //       Get.back();
-      //     },
-      //   ),
-      // ),
       body: SafeArea(
           child: ListView(
         children: [
@@ -88,7 +84,31 @@ class _CoachEidtProfilePageState extends State<CoachEidtProfilePage> {
         // height: MediaQuery.of(context).size.height ,
         child: FilledButton(
           //style: style,
-          onPressed: () async {},
+          onPressed: () async {
+            if (pickedImg != null) await uploadfile();
+            if (pickedImg == null) profile = coachs.first.image;
+            RegisterCoachDto request = RegisterCoachDto(
+                fullName: fullName.text,
+                username: name.text,
+                email: email.text,
+                password: coachs.first.password,
+                image: profile,
+                gender: (selectedValue.text) == 'ชาย'
+                    ? '2'
+                    : (selectedValue.text == 'หญิง')
+                        ? '1'
+                        : '1',
+                phone: phone.text,
+                birthday: coachs.first.birthday,
+                property: property.text,
+                qualification: qualification.text,
+                facebookId: coachs.first.facebookId);
+            var result = await _authService.updateCoach(
+                // ignore: use_build_context_synchronously
+                context.read<AppData>().cid.toString(), request);
+            modelResult = result.data;
+            log(modelResult.result);
+          },
           child: const Text('Next'),
         ),
       ),
@@ -102,12 +122,14 @@ class _CoachEidtProfilePageState extends State<CoachEidtProfilePage> {
       var datas = await _coachService.coach(
           nameCoach: '', cid: context.read<AppData>().cid.toString());
       coachs = datas.data;
+
       fullName.text = coachs.first.fullName;
       name.text = coachs.first.username;
       email.text = coachs.first.email;
       phone.text = coachs.first.phone;
       qualification.text = coachs.first.qualification;
       property.text = coachs.first.property;
+
       if (coachs.first.gender == '2') {
         selectedValue.text = LevelItems[0];
       } else {
