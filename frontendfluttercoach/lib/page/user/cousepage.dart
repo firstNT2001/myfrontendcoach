@@ -78,14 +78,25 @@ class _showCousePageState extends State<showCousePage> {
               child: WidgetloadeReview(
             couseID: courseId.toString(),
           )),
-          FloatingActionButton(
+          
+          Row(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: [
+                          //edit Day
+                          Padding(
+                            padding:
+                                const EdgeInsets.only(right: 16.0, bottom: 10),
+                            child:FloatingActionButton(
             onPressed: () {
               _buycouse(context);
               // ignore: prefer_const_constructors
             },
             shape: const CircleBorder(),
             child: Icon(Icons.shopping_cart),
-          )
+          ),
+                          ),
+                        ],
+                      ),
         ],
       ),
     ));
@@ -189,7 +200,7 @@ class _showCousePageState extends State<showCousePage> {
                             child: Column(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
-                                Text(courses.first.days.toString()),Text("วัน/คอร์ส"),
+                                //Text(courses.first.),Text("วัน/คอร์ส"),
 
                               ],
                             ),
