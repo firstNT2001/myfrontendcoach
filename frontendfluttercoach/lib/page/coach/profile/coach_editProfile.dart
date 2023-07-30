@@ -6,7 +6,6 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:frontendfluttercoach/model/response/md_Result.dart';
-import 'package:frontendfluttercoach/widget/wg_textField_int%20copy.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:provider/provider.dart';
@@ -17,9 +16,11 @@ import '../../../service/auth.dart';
 import '../../../service/coach.dart';
 import '../../../service/provider/appdata.dart';
 import '../../../widget/dialogs.dart';
-import '../../../widget/wg_dropdown_string.dart';
-import '../../../widget/wg_textField.dart';
-import '../../../widget/wg_textFieldLines.dart';
+import '../../../widget/dropdown/wg_dropdown_string.dart';
+import '../../../widget/textField/wg_textField.dart';
+import '../../../widget/textField/wg_textFieldLines.dart';
+import '../../../widget/textField/wg_textField_int copy.dart';
+
 
 class CoachEidtProfilePage extends StatefulWidget {
   const CoachEidtProfilePage({super.key});
@@ -37,6 +38,7 @@ class _CoachEidtProfilePageState extends State<CoachEidtProfilePage> {
   ///UpdateCoach
   late AuthService _authService;
   late ModelResult modelResult;
+
   //selectimg
   PlatformFile? pickedImg;
   UploadTask? uploadTask;
@@ -50,6 +52,8 @@ class _CoachEidtProfilePageState extends State<CoachEidtProfilePage> {
   final qualification = TextEditingController();
   final property = TextEditingController();
 
+
+  
   //selectLevel
   // ignore: non_constant_identifier_names
   final List<String> LevelItems = ['ชาย', 'หญิง'];
@@ -109,7 +113,7 @@ class _CoachEidtProfilePageState extends State<CoachEidtProfilePage> {
             modelResult = result.data;
             log(modelResult.result);
           },
-          child: const Text('Next'),
+          child: const Text('บันทึก'),
         ),
       ),
     );
@@ -234,7 +238,7 @@ class _CoachEidtProfilePageState extends State<CoachEidtProfilePage> {
                         child: WidgetDropdownString(
                           title: 'เพศ',
                           selectedValue: selectedValue,
-                          ListItems: LevelItems,
+                          listItems: LevelItems,
                         ),
                       ),
                     ],
@@ -259,6 +263,7 @@ class _CoachEidtProfilePageState extends State<CoachEidtProfilePage> {
                         child: WidgetTextFieldInt(
                           controller: phone,
                           labelText: 'เบอร์โทร',
+                          maxLength: 10,
                         ),
                       ),
                       SizedBox(
