@@ -18,7 +18,7 @@ import '../../../../model/request/listClip_coachID_post.dart';
 import '../../../../model/response/md_Result.dart';
 import '../../../../service/listClip.dart';
 import '../../../../service/provider/appdata.dart';
-import '../../../../widget/wg_textField.dart';
+import '../../../../widget/textField/wg_textField.dart';
 
 
 class ClipNewCoachPage extends StatefulWidget {

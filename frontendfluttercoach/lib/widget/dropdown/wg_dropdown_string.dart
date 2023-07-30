@@ -1,13 +1,12 @@
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/framework.dart';
 
 
 class WidgetDropdownString extends StatefulWidget {
-   const WidgetDropdownString({super.key, required this.title, required this.selectedValue, required this.ListItems});
+   const WidgetDropdownString({super.key, required this.title, required this.selectedValue, required this.listItems});
   final String title;
   final TextEditingController  selectedValue;
-  final List<String> ListItems; 
+  final List<String> listItems; 
   @override
   State<WidgetDropdownString> createState() => _WidgetDropdownStringState();
 }
@@ -23,6 +22,7 @@ class _WidgetDropdownStringState extends State<WidgetDropdownString> {
       ],
     );
   }
+  // ignore: non_constant_identifier_names
   DropdownButtonFormField2<String> DropdownLavel() {
     return DropdownButtonFormField2(
       decoration: InputDecoration(
@@ -42,7 +42,7 @@ class _WidgetDropdownStringState extends State<WidgetDropdownString> {
         style: const TextStyle(fontSize: 14),
       ),
       value: widget.selectedValue.text,
-      items: widget.ListItems.map((item) => DropdownMenuItem<String>(
+      items: widget.listItems.map((item) => DropdownMenuItem<String>(
             value: item,
             child: Text(
               item,

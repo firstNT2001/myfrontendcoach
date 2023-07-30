@@ -15,7 +15,7 @@ import 'package:provider/provider.dart';
 
 import '../../../../../../model/request/food_dayID_post.dart';
 import '../../../../../../service/provider/appdata.dart';
-import '../../../../../../widget/wg_dropdown_string.dart';
+import '../../../../../../widget/dropdown/wg_dropdown_string.dart';
 import '../../course_food_clip.dart';
 import 'food_select_time_page.dart';
 
@@ -350,7 +350,7 @@ class _FoodNewCoursePageState extends State<FoodNewCoursePage> {
                     child: WidgetDropdownString(
                       title: 'เลือกมืออาหาร',
                       selectedValue: selectedValuehand,
-                      ListItems: listhand,
+                      listItems: listhand,
                     ),
                   ),
                 ),

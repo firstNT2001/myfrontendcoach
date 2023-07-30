@@ -18,10 +18,11 @@ import '../../../model/request/course_coachID_post.dart';
 import '../../../model/response/md_Result.dart';
 import '../../../service/course.dart';
 import '../../../service/provider/appdata.dart';
-import '../../../widget/wg_dropdown_notValue_string.dart';
+import '../../../widget/dropdown/wg_dropdown_notValue_string.dart';
 
-import '../../../widget/wg_textField.dart';
-import '../../../widget/wg_textFieldLines.dart';
+import '../../../widget/textField/wg_textField.dart';
+import '../../../widget/textField/wg_textFieldLines.dart';
+
 import '../daysCourse/days_course_page.dart';
 
 class CourseNewPage extends StatefulWidget {

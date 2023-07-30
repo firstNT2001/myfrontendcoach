@@ -24,7 +24,7 @@ import '../../../../model/response/md_Result.dart';
 import '../../../../service/food.dart';
 import '../../../../service/provider/appdata.dart';
 
-import '../../../../widget/wg_dropdown_string.dart';
+import '../../../../widget/dropdown/wg_dropdown_string.dart';
 import '../../../../widget/wg_editClip_Dialog.dart';
 import '../../../../widget/wg_editFood_Dialog.dart';
 import '../../../../widget/wg_search_food.dart';
@@ -481,7 +481,7 @@ class _HomeFoodAndClipPageState extends State<HomeFoodAndClipPage> {
                         child: WidgetDropdownString(
                           title: 'เลือกมืออาหาร',
                           selectedValue: selectedValuehand,
-                          ListItems: listhand,
+                          listItems: listhand,
                         ),
                       ),
                     ],

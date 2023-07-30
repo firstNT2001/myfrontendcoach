@@ -22,10 +22,11 @@ import '../../../service/days.dart';
 import '../../../service/provider/appdata.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
-import '../../../widget/wg_dropdown_string.dart';
-import '../../../widget/wg_textField.dart';
-import '../../../widget/wg_textFieldLines.dart';
-import '../../../widget/wg_textField_int.dart';
+import '../../../widget/dropdown/wg_dropdown_string.dart';
+
+import '../../../widget/textField/wg_textField.dart';
+import '../../../widget/textField/wg_textFieldLines.dart';
+import '../../../widget/textField/wg_textField_int copy.dart';
 import '../../user/chat/chat.dart';
 import '../daysCourse/days_course_page.dart';
 import 'FoodAndClip/course_food_clip.dart';
@@ -186,6 +187,7 @@ class _CourseEditPageState extends State<CourseEditPage> {
                           child: WidgetTextFieldInt(
                             controller: amount,
                             labelText: 'จำนวนคน',
+                            maxLength: 2,
                           ),
                         ),
                         SizedBox(
@@ -193,6 +195,7 @@ class _CourseEditPageState extends State<CourseEditPage> {
                           child: WidgetTextFieldInt(
                             controller: days,
                             labelText: 'จำนวนวัน',
+                            maxLength: 2,
                           ),
                         ),
                       ],
@@ -209,6 +212,7 @@ class _CourseEditPageState extends State<CourseEditPage> {
                           child: WidgetTextFieldInt(
                             controller: price,
                             labelText: 'ราคา',
+                            maxLength: 5,
                           ),
                         ),
                         SizedBox(
@@ -216,7 +220,7 @@ class _CourseEditPageState extends State<CourseEditPage> {
                           child: WidgetDropdownString(
                             title: 'เลือกความยากง่าย',
                             selectedValue: selectedValue,
-                            ListItems: LevelItems,
+                            listItems: LevelItems,
                           ),
                         ),
                       ],
