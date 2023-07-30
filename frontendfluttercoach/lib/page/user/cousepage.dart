@@ -67,43 +67,40 @@ class _showCousePageState extends State<showCousePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+        floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
+        floatingActionButton: SizedBox(
+          height: 60,
+          width: 60,
+          child: FloatingActionButton(
+            backgroundColor: Theme.of(context).colorScheme.primary,
+            foregroundColor: Colors.white,
+            onPressed: () {
+              _buycouse(context);
+              // ignore: prefer_const_constructors
+            },
+            shape: const CircleBorder(),
+            child: const Icon(Icons.shopping_cart),
+          ),
+        ),
         body: SafeArea(
-      child: Column(
-        children: [
-          Padding(
-            padding: const EdgeInsets.only(bottom: 5),
-            child: loadCourse(),
-          ),
-          const Divider(
-            color: Color.fromARGB(255, 194, 194, 194),
-            indent: 8,
-            endIndent: 8,
-            thickness: 1.5,
-          ),
-          Expanded(
-              child: WidgetloadeReview(
-            couseID: courseId.toString(),
-          )),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.end,
+          child: ListView(
             children: [
-              //edit Day
               Padding(
-                padding: const EdgeInsets.only(right: 16.0, bottom: 10),
-                child: FloatingActionButton(
-                  onPressed: () {
-                    _buycouse(context);
-                    // ignore: prefer_const_constructors
-                  },
-                  shape: const CircleBorder(),
-                  child: const Icon(Icons.shopping_cart),
-                ),
+                padding: const EdgeInsets.only(bottom: 5),
+                child: loadCourse(),
+              ),
+              const Divider(
+                color: Color.fromARGB(255, 194, 194, 194),
+                indent: 8,
+                endIndent: 8,
+                thickness: 1.5,
+              ),
+              WidgetloadeReview(
+                couseID: courseId.toString(),
               ),
             ],
           ),
-        ],
-      ),
-    ));
+        ));
   }
 
   Future<void> loadData() async {
@@ -178,135 +175,169 @@ class _showCousePageState extends State<showCousePage> {
                       label: Text(courses.first.coach.fullName,
                           style: Theme.of(context).textTheme.bodyMedium)),
                 ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.only(left: 10, right: 10),
-                      child: Container(
-                        height: 80,
-                        width: 70,
-                        decoration: BoxDecoration(
-                            color:
-                                Theme.of(context).colorScheme.primaryContainer,
-                            borderRadius: BorderRadius.circular(15)
-                            //more than 50% of width makes circle
-                            ),
-                        child: Column(
+                Padding(
+                  padding: const EdgeInsets.only(left: 20, right: 20),
+                  child: Container(
+                    width: 400,
+                    height: 80,
+                    //color: Colors.green,
+                    decoration: BoxDecoration(
+                        color: Theme.of(context).colorScheme.primaryContainer,
+                        borderRadius: BorderRadius.circular(15)
+                        //more than 50% of width makes circle
+                        ),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        Column(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             Text(courses.first.days.toString()),
                             const Text("วัน"),
                           ],
                         ),
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only( right: 10),
-                      child: Container(
-                        height: 80,
-                        width: 70,
-                        decoration: BoxDecoration(
-                            color:
-                                Theme.of(context).colorScheme.primaryContainer,
-                            borderRadius: BorderRadius.circular(15)
-                            //more than 50% of width makes circle
-                            ),
-                        child: const Column(
+                        const VerticalDivider(
+                          color: Color.fromARGB(
+                              255, 134, 134, 134), //color of divider
+                          //width space of divider
+                          thickness: 2, //thickness of divier line
+                          indent: 10, //Spacing at the top of divider.
+                          endIndent: 10, //Spacing at the bottom of divider.
+                        ),
+                        const Column(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            //Text(courses.first.),Text("วัน/คอร์ส"),
+                            Text("clip"),
                           ],
                         ),
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(right: 10,),
-                      child: Container(
-                        height: 80,
-                        width: 70,
-                        decoration: BoxDecoration(
-                            color:
-                                Theme.of(context).colorScheme.primaryContainer,
-                            borderRadius: BorderRadius.circular(15)
-                            //more than 50% of width makes circle
-                            ),
-                        child: Column(
+                        const VerticalDivider(
+                          color: Color.fromARGB(
+                              255, 134, 134, 134), //color of divider
+                          //width space of divider
+                          thickness: 2, //thickness of divier line
+                          indent: 10, //Spacing at the top of divider.
+                          endIndent: 10, //Spacing at the bottom of divider.
+                        ),
+                        Column(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            
-                            Text( courses.first.amount.toString() ),
+                            Text(courses.first.amount.toString()),
                             const Text("คน"),
                           ],
                         ),
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(right: 10),
-                      child: Container(
-                        height: 80,
-                        width: 70,
-                        decoration: BoxDecoration(
-                            color:
-                                Theme.of(context).colorScheme.primaryContainer,
-                            borderRadius: BorderRadius.circular(15)
-                            //more than 50% of width makes circle
-                            ),
-                        child: Column(
+                        const VerticalDivider(
+                          color: Color.fromARGB(
+                              255, 134, 134, 134), //color of divider
+                          //width space of divider
+                          thickness: 2, //thickness of divier line
+                          indent: 10, //Spacing at the top of divider.
+                          endIndent: 10, //Spacing at the bottom of divider.
+                        ),
+                        Column(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             Text(courses.first.price.toString()),
                             const Text("บาท"),
                           ],
                         ),
-                      ),
+                      ],
                     ),
-                  ],
+                  ),
                 ),
                 // Row(
+                //   mainAxisAlignment: MainAxisAlignment.spaceAround,
                 //   children: [
-                //     const Padding(
-                //       padding: EdgeInsets.only(right: 8, left: 15),
-                //       child: Icon(FontAwesomeIcons.calendar),
+                //     Padding(
+                //       padding: const EdgeInsets.only(left: 10, right: 10),
+                //       child: Container(
+                //         height: 80,
+                //         width: 70,
+                //         decoration: BoxDecoration(
+                //             color:
+                //                 Theme.of(context).colorScheme.primaryContainer,
+                //             borderRadius: BorderRadius.circular(15)
+                //             //more than 50% of width makes circle
+                //             ),
+                //         child: Column(
+                //           mainAxisAlignment: MainAxisAlignment.center,
+                //           children: [
+                //             Text(courses.first.days.toString()),
+                //             const Text("วัน"),
+                //           ],
+                //         ),
+                //       ),
                 //     ),
                 //     Padding(
-                //       padding: const EdgeInsets.only(right: 32),
-                //       child: Text(courses.first.days.toString() + "วัน/คอร์ส"),
+                //       padding: const EdgeInsets.only(right: 10),
+                //       child: Container(
+                //         height: 80,
+                //         width: 70,
+                //         decoration: BoxDecoration(
+                //             color:
+                //                 Theme.of(context).colorScheme.primaryContainer,
+                //             borderRadius: BorderRadius.circular(15)
+                //             //more than 50% of width makes circle
+                //             ),
+                //         child: const Column(
+                //           mainAxisAlignment: MainAxisAlignment.center,
+                //           children: [
+                //             //Text(courses.first.),Text("วัน/คอร์ส"),
+                //           ],
+                //         ),
+                //       ),
                 //     ),
-                //     const Padding(
-                //       padding: EdgeInsets.only(right: 8),
-                //       child: Icon(FontAwesomeIcons.moneyBills),
+                //     Padding(
+                //       padding: const EdgeInsets.only(
+                //         right: 10,
+                //       ),
+                //       child: Container(
+                //         height: 80,
+                //         width: 70,
+                //         decoration: BoxDecoration(
+                //             color:
+                //                 Theme.of(context).colorScheme.primaryContainer,
+                //             borderRadius: BorderRadius.circular(15)
+                //             //more than 50% of width makes circle
+                //             ),
+                //         child: Column(
+                //           mainAxisAlignment: MainAxisAlignment.center,
+                //           children: [
+                //             Text(courses.first.amount.toString()),
+                //             const Text("คน"),
+                //           ],
+                //         ),
+                //       ),
                 //     ),
-                //     const Text("27 คลิป")
+                //     Padding(
+                //       padding: const EdgeInsets.only(right: 10),
+                //       child: Container(
+                //         height: 80,
+                //         width: 70,
+                //         decoration: BoxDecoration(
+                //             color:
+                //                 Theme.of(context).colorScheme.primaryContainer,
+                //             borderRadius: BorderRadius.circular(15)
+                //             //more than 50% of width makes circle
+                //             ),
+                //         child: Column(
+                //           mainAxisAlignment: MainAxisAlignment.center,
+                //           children: [
+                //             Text(courses.first.price.toString()),
+                //             const Text("บาท"),
+                //           ],
+                //         ),
+                //       ),
+                //     ),
                 //   ],
                 // ),
-                // Padding(
-                //   padding: const EdgeInsets.only(top: 8, bottom: 20),
-                //   child: Row(
-                //     children: [
-                //       const Padding(
-                //         padding: EdgeInsets.only(right: 10, left: 15),
-                //         child: Icon(FontAwesomeIcons.userPlus),
-                //       ),
-                //       Padding(
-                //         padding: const EdgeInsets.only(right: 60),
-                //         child: Text(courses.first.amount.toString() + "คน"),
-                //       ),
-                //       const Padding(
-                //         padding: EdgeInsets.only(right: 8),
-                //         child: Icon(FontAwesomeIcons.youtube),
-                //       ),
-                //       Text(courses.first.price.toString() + "บาท"),
-                //     ],
-                //   ),
-                // ),
                 const Padding(
-                  padding: EdgeInsets.only(left: 8,top: 20),
+                  padding: EdgeInsets.only(left: 8, top: 20),
                   child:
                       Text("รายละเอียดคอร์ส", style: TextStyle(fontSize: 16)),
                 ),
                 Padding(
-                  padding: const EdgeInsets.only(left: 15, bottom: 12,right: 15),
+                  padding:
+                      const EdgeInsets.only(left: 15, bottom: 12, right: 15),
                   child: Text(courses.first.details),
                 ),
               ],
