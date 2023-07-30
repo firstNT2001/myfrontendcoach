@@ -1,12 +1,19 @@
+import 'dart:developer';
 import 'dart:io';
 
 import 'package:file_picker/file_picker.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:frontendfluttercoach/model/request/registerCusDTO.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
+import 'package:provider/provider.dart';
 
+import '../../model/request/registerCoachDTO.dart';
+import '../../model/response/md_Result.dart';
+import '../../service/auth.dart';
+import '../../service/provider/appdata.dart';
 import '../../widget/dropdown/wg_dropdown_notValue_string.dart';
 import '../../widget/textField/wg_textField.dart';
 import '../../widget/textField/wg_textFieldLines.dart';
@@ -20,6 +27,10 @@ class RegisterPage extends StatefulWidget {
 }
 
 class _RegisterPageState extends State<RegisterPage> {
+  //Service
+  late AuthService _authService;
+  late ModelResult modelResult;
+
   //selectimg
   PlatformFile? pickedImg;
   UploadTask? uploadTask;
@@ -50,6 +61,7 @@ class _RegisterPageState extends State<RegisterPage> {
   @override
   void initState() {
     super.initState();
+    _authService = context.read<AppData>().authService;
   }
 
   @override
@@ -274,30 +286,59 @@ class _RegisterPageState extends State<RegisterPage> {
                 profile =
                     'https://t3.ftcdn.net/jpg/03/46/83/96/360_F_346839683_6nAPzbhpSkIpb8pmAwufkC7c5eD7wYws.jpg';
               }
-              if(widget.isVisible == true){
-
+              if (widget.isVisible == true) {
+                if (height.text != '' || weight.text != '') {
+                  RegisterCusDto request = RegisterCusDto(
+                    fullName: fullName.text,
+                    username: name.text,
+                    email: email.text,
+                    password: password1.text,
+                    image: profile,
+                    gender: (selectedValue.text) == 'ชาย'
+                        ? '2'
+                        : (selectedValue.text == 'หญิง')
+                            ? '1'
+                            : '1',
+                    phone: phone.text,
+                    birthday: '2002-02-14T00:00:00Z',
+                    height: int.parse(height.text),
+                    weight: int.parse(weight.text),
+                  );
+                  var result = await _authService.regCus(request);
+                  modelResult = result.data;
+                  log(modelResult.result);
+                } else {
+                  setState(() {
+                    textErr = 'กรุณากรอกข้อมูลให้ครบ';
+                  });
+                }
+              } else {
+                if (property.text != '' || qualification.text != '') {
+                  RegisterCoachDto request = RegisterCoachDto(
+                      fullName: fullName.text,
+                      username: name.text,
+                      email: email.text,
+                      password: password1.text,
+                      image: profile,
+                      gender: (selectedValue.text) == 'ชาย'
+                          ? '2'
+                          : (selectedValue.text == 'หญิง')
+                              ? '1'
+                              : '1',
+                      phone: phone.text,
+                      birthday: '2002-02-14T00:00:00Z',
+                      property: property.text,
+                      qualification: qualification.text,
+                      facebookId: '');
+                  var result = await _authService.regCoach(request);
+                  modelResult = result.data;
+                  log(modelResult.result);
+                } else {
+                  setState(() {
+                    textErr = 'กรุณากรอกข้อมูลให้ครบ';
+                  });
+                }
               }
-              // RegisterCoachDto request = RegisterCoachDto(
-              //     fullName: fullName.text,
-              //     username: name.text,
-              //     email: email.text,
-              //     password: coachs.first.password,
-              //     image: profile,
-              //     gender: (selectedValue.text) == 'ชาย'
-              //         ? '2'
-              //         : (selectedValue.text == 'หญิง')
-              //             ? '1'
-              //             : '1',
-              //     phone: phone.text,
-              //     birthday: coachs.first.birthday,
-              //     property: property.text,
-              //     qualification: qualification.text,
-              //     facebookId: coachs.first.facebookId);
-              // var result = await _authService.updateCoach(
-              //     // ignore: use_build_context_synchronously
-              //     context.read<AppData>().cid.toString(), request);
-              // modelResult = result.data;
-              // log(modelResult.result);
             }
           },
           child: const Text('สมัครสมาชิก'),
