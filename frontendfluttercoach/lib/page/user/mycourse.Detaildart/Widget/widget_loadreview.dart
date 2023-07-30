@@ -48,7 +48,7 @@ class _WidgetloadeReviewState extends State<WidgetloadeReview> {
               Column(
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
-                  Text(
+                  const Text(
                     "คะแนนจากผู้ซื้อ",
                     style:
                         TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
@@ -56,7 +56,7 @@ class _WidgetloadeReviewState extends State<WidgetloadeReview> {
                   Text(
                     calRating.toStringAsFixed(1),
                     style:
-                        TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                        const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                   ),
                   FlutterRating(
                     size: 20,
@@ -69,12 +69,9 @@ class _WidgetloadeReviewState extends State<WidgetloadeReview> {
                   )
                 ],
               ),
-              Expanded(
-                child: ListView.builder(
-                    itemCount: reviews.length,
-                    itemBuilder: (context, index) {
-                      final review = reviews[index];
-                      return Card(
+              Column(children: reviews.map((review) =>   Padding(
+                padding: const EdgeInsets.only(left: 10, right: 10, bottom: 20),
+                child: Card(
                         child: ListTile(
                           leading: CircleAvatar(
                             backgroundImage:
@@ -100,9 +97,10 @@ class _WidgetloadeReviewState extends State<WidgetloadeReview> {
                           subtitle: Text(review.details,
                               style: Theme.of(context).textTheme.bodyMedium),
                         ),
-                      );
-                    }),
-              ),
+                      ),
+              )
+           ).toList(),)
+             
             ],
           );
         } else {
@@ -130,4 +128,5 @@ class _WidgetloadeReviewState extends State<WidgetloadeReview> {
       log('Error: $err');
     }
   }
+
 }

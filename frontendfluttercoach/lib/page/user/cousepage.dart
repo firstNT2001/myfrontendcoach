@@ -13,11 +13,13 @@ import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import '../../model/request/buycourse_coID_post.dart';
+import '../../model/response/md_Day_showmycourse.dart';
 import '../../model/response/md_Result.dart';
 import '../../model/response/md_Review_get.dart';
 import '../../model/response/md_coach_course_get.dart';
 import '../../service/buy.dart';
 import '../../service/course.dart';
+import '../../service/day.dart';
 import '../../service/provider/appdata.dart';
 import '../../widget/dialogs.dart';
 import 'mycourse.Detaildart/Widget/widget_loadreview.dart';
@@ -32,10 +34,13 @@ class showCousePage extends StatefulWidget {
 
 class _showCousePageState extends State<showCousePage> {
   late BuyCourseService buyCourseService;
+  late DayService dayService;
   late CourseService courseService;
   late Future<void> loadDataMethod;
   List<Course> courses = [];
+  List<DayDetail> clip = [];
   late ModelResult moduleResult;
+  int amountclip = 0;
   int courseId = 0;
   int cusID = 0;
   int moneycus = 0;
@@ -52,6 +57,7 @@ class _showCousePageState extends State<showCousePage> {
     moneycus = context.read<AppData>().money;
     courseService =
         CourseService(Dio(), baseUrl: context.read<AppData>().baseurl);
+    dayService = DayService(Dio(), baseUrl: context.read<AppData>().baseurl);
 
     buyCourseService =
         BuyCourseService(Dio(), baseUrl: context.read<AppData>().baseurl);
@@ -61,44 +67,40 @@ class _showCousePageState extends State<showCousePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        body: Column(
-      children: [
-        Padding(
-          padding: const EdgeInsets.only(bottom: 5),
-          child: loadCourse(),
-        ),
-        const Divider(
-          color: Color.fromARGB(255, 83, 83, 83),
-          indent: 8,
-          endIndent: 8,
-          thickness: 3,
-        ),
-        Expanded(
-            child: WidgetloadeReview(
-          couseID: courseId.toString(),
-        )),
-        SizedBox(
-          width: 65,
-          height: 65,
-          child: ElevatedButton(
+        floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
+        floatingActionButton: SizedBox(
+          height: 60,
+          width: 60,
+          child: FloatingActionButton(
+            backgroundColor: Theme.of(context).colorScheme.primary,
+            foregroundColor: Colors.white,
             onPressed: () {
               _buycouse(context);
+              // ignore: prefer_const_constructors
             },
-            style: ElevatedButton.styleFrom(
-              primary: const Color.fromARGB(255, 15, 15, 15),
-              shape: const CircleBorder(), //<-- SEE HERE
-              //padding: EdgeInsets.all(30),
-            ),
-            child: const Icon(
-              //<-- SEE HERE
-              Icons.shopping_basket_outlined,
-              color: Color.fromARGB(255, 255, 255, 255),
-              size: 35,
-            ),
+            shape: const CircleBorder(),
+            child: const Icon(Icons.shopping_cart),
           ),
         ),
-      ],
-    ));
+        body: SafeArea(
+          child: ListView(
+            children: [
+              Padding(
+                padding: const EdgeInsets.only(bottom: 5),
+                child: loadCourse(),
+              ),
+              const Divider(
+                color: Color.fromARGB(255, 194, 194, 194),
+                indent: 8,
+                endIndent: 8,
+                thickness: 1.5,
+              ),
+              WidgetloadeReview(
+                couseID: courseId.toString(),
+              ),
+            ],
+          ),
+        ));
   }
 
   Future<void> loadData() async {
@@ -106,6 +108,17 @@ class _showCousePageState extends State<showCousePage> {
       var datacouse = await courseService.course(
           coID: courseId.toString(), cid: '', name: '');
       courses = datacouse.data;
+      var dataclip = await dayService.day(
+          did: '', coID: courseId.toString(), sequence: '');
+      clip = dataclip.data;
+      // for (int i = 1; i <= clip.length; i++) {
+      //   // log("cid = "+clip[i].clips.first.cpId.toString());
+      //    log("cid = "+i.toString());
+      //    for(int k = 0; k < clip.)
+      // }
+      // log("amountclip =" + clip.first.clips.first.cpId.toString());
+      // amountclip = clip.length;
+      // log("amountclip =" + amountclip.toString());
     } catch (err) {
       log('Error: $err');
     }
@@ -119,12 +132,26 @@ class _showCousePageState extends State<showCousePage> {
             return Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Image.network(
-                  courses.first.image,
-                  height: 200,
-                  width: double.infinity,
-                  fit: BoxFit.cover,
+                Container(
+                  alignment: Alignment.topCenter,
+                  child: AspectRatio(
+                      aspectRatio: 16 / 9,
+                      child: Container(
+                        decoration: BoxDecoration(
+                          color: Theme.of(context).colorScheme.onPrimary,
+                          image: DecorationImage(
+                              image: NetworkImage(courses.first.image),
+                              fit: BoxFit.cover),
+                        ),
+                      )),
+                  //color: Colors.white,
                 ),
+                // Image.network(
+                //   courses.first.image,
+                //   height: 200,
+                //   width: double.infinity,
+                //   fit: BoxFit.cover,
+                // ),
                 Padding(
                   padding: const EdgeInsets.only(left: 15, top: 25),
                   child: Text(courses.first.name,
@@ -135,8 +162,11 @@ class _showCousePageState extends State<showCousePage> {
                   padding: const EdgeInsets.only(left: 15, bottom: 20),
                   child: FilledButton.icon(
                       onPressed: () {
-                        log("courses.first.coach.cid ="+courses.first.coach.cid.toString());
-                        Get.to(() => ProfileCoachPage(coachID: courses.first.coach.cid,));
+                        log("courses.first.coach.cid =" +
+                            courses.first.coach.cid.toString());
+                        Get.to(() => ProfileCoachPage(
+                              coachID: courses.first.coach.cid,
+                            ));
                       },
                       icon: const Icon(
                         FontAwesomeIcons.solidUser,
@@ -145,55 +175,171 @@ class _showCousePageState extends State<showCousePage> {
                       label: Text(courses.first.coach.fullName,
                           style: Theme.of(context).textTheme.bodyMedium)),
                 ),
-                Row(
-                  children: [
-                    const Padding(
-                      padding: EdgeInsets.only(right: 8, left: 15),
-                      child: Icon(FontAwesomeIcons.calendar),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(right: 32),
-                      child: Text(courses.first.days.toString() + "วัน/คอร์ส"),
-                    ),
-                    const Padding(
-                      padding: EdgeInsets.only(right: 8),
-                      child: Icon(FontAwesomeIcons.moneyBills),
-                    ),
-                    const Text("27 คลิป")
-                  ],
-                ),
                 Padding(
-                  padding: const EdgeInsets.only(top: 8, bottom: 20),
-                  child: Row(
-                    children: [
-                      const Padding(
-                        padding: EdgeInsets.only(right: 10, left: 15),
-                        child: Icon(FontAwesomeIcons.userPlus),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.only(right: 60),
-                        child: Text(courses.first.amount.toString() + "คน"),
-                      ),
-                      const Padding(
-                        padding: EdgeInsets.only(right: 8),
-                        child: Icon(FontAwesomeIcons.youtube),
-                      ),
-                      Text(courses.first.price.toString() + "บาท"),
-                    ],
+                  padding: const EdgeInsets.only(left: 20, right: 20),
+                  child: Container(
+                    width: 400,
+                    height: 80,
+                    //color: Colors.green,
+                    decoration: BoxDecoration(
+                        color: Theme.of(context).colorScheme.primaryContainer,
+                        borderRadius: BorderRadius.circular(15)
+                        //more than 50% of width makes circle
+                        ),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text(courses.first.days.toString()),
+                            const Text("วัน"),
+                          ],
+                        ),
+                        const VerticalDivider(
+                          color: Color.fromARGB(
+                              255, 134, 134, 134), //color of divider
+                          //width space of divider
+                          thickness: 2, //thickness of divier line
+                          indent: 10, //Spacing at the top of divider.
+                          endIndent: 10, //Spacing at the bottom of divider.
+                        ),
+                        const Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text("clip"),
+                          ],
+                        ),
+                        const VerticalDivider(
+                          color: Color.fromARGB(
+                              255, 134, 134, 134), //color of divider
+                          //width space of divider
+                          thickness: 2, //thickness of divier line
+                          indent: 10, //Spacing at the top of divider.
+                          endIndent: 10, //Spacing at the bottom of divider.
+                        ),
+                        Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text(courses.first.amount.toString()),
+                            const Text("คน"),
+                          ],
+                        ),
+                        const VerticalDivider(
+                          color: Color.fromARGB(
+                              255, 134, 134, 134), //color of divider
+                          //width space of divider
+                          thickness: 2, //thickness of divier line
+                          indent: 10, //Spacing at the top of divider.
+                          endIndent: 10, //Spacing at the bottom of divider.
+                        ),
+                        Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text(courses.first.price.toString()),
+                            const Text("บาท"),
+                          ],
+                        ),
+                      ],
+                    ),
                   ),
                 ),
+                // Row(
+                //   mainAxisAlignment: MainAxisAlignment.spaceAround,
+                //   children: [
+                //     Padding(
+                //       padding: const EdgeInsets.only(left: 10, right: 10),
+                //       child: Container(
+                //         height: 80,
+                //         width: 70,
+                //         decoration: BoxDecoration(
+                //             color:
+                //                 Theme.of(context).colorScheme.primaryContainer,
+                //             borderRadius: BorderRadius.circular(15)
+                //             //more than 50% of width makes circle
+                //             ),
+                //         child: Column(
+                //           mainAxisAlignment: MainAxisAlignment.center,
+                //           children: [
+                //             Text(courses.first.days.toString()),
+                //             const Text("วัน"),
+                //           ],
+                //         ),
+                //       ),
+                //     ),
+                //     Padding(
+                //       padding: const EdgeInsets.only(right: 10),
+                //       child: Container(
+                //         height: 80,
+                //         width: 70,
+                //         decoration: BoxDecoration(
+                //             color:
+                //                 Theme.of(context).colorScheme.primaryContainer,
+                //             borderRadius: BorderRadius.circular(15)
+                //             //more than 50% of width makes circle
+                //             ),
+                //         child: const Column(
+                //           mainAxisAlignment: MainAxisAlignment.center,
+                //           children: [
+                //             //Text(courses.first.),Text("วัน/คอร์ส"),
+                //           ],
+                //         ),
+                //       ),
+                //     ),
+                //     Padding(
+                //       padding: const EdgeInsets.only(
+                //         right: 10,
+                //       ),
+                //       child: Container(
+                //         height: 80,
+                //         width: 70,
+                //         decoration: BoxDecoration(
+                //             color:
+                //                 Theme.of(context).colorScheme.primaryContainer,
+                //             borderRadius: BorderRadius.circular(15)
+                //             //more than 50% of width makes circle
+                //             ),
+                //         child: Column(
+                //           mainAxisAlignment: MainAxisAlignment.center,
+                //           children: [
+                //             Text(courses.first.amount.toString()),
+                //             const Text("คน"),
+                //           ],
+                //         ),
+                //       ),
+                //     ),
+                //     Padding(
+                //       padding: const EdgeInsets.only(right: 10),
+                //       child: Container(
+                //         height: 80,
+                //         width: 70,
+                //         decoration: BoxDecoration(
+                //             color:
+                //                 Theme.of(context).colorScheme.primaryContainer,
+                //             borderRadius: BorderRadius.circular(15)
+                //             //more than 50% of width makes circle
+                //             ),
+                //         child: Column(
+                //           mainAxisAlignment: MainAxisAlignment.center,
+                //           children: [
+                //             Text(courses.first.price.toString()),
+                //             const Text("บาท"),
+                //           ],
+                //         ),
+                //       ),
+                //     ),
+                //   ],
+                // ),
                 const Padding(
-                  padding: EdgeInsets.only(left: 8),
-                  child: Text(
-                    "รายละเอียดคอร์ส",
-                    style: TextStyle(fontSize: 16)
-                    
-                  ),
+                  padding: EdgeInsets.only(left: 8, top: 20),
+                  child:
+                      Text("รายละเอียดคอร์ส", style: TextStyle(fontSize: 16)),
                 ),
                 Padding(
-                  padding: const EdgeInsets.only(left: 15, bottom: 12),
+                  padding:
+                      const EdgeInsets.only(left: 15, bottom: 12, right: 15),
                   child: Text(courses.first.details),
-                )
+                ),
               ],
             );
           } else {
@@ -274,7 +420,7 @@ class _showCousePageState extends State<showCousePage> {
                       style: Theme.of(context).textTheme.bodyLarge),
                 ),
                 FilledButton(
-                    onPressed: () async{
+                    onPressed: () async {
                       startLoading(context);
                       log("Date time = " + now.toString());
                       String cdate2 =
@@ -285,18 +431,18 @@ class _showCousePageState extends State<showCousePage> {
                       log("Date time3 = $proposedDate");
                       //log("Date time3 = $proposedDate");
                       BuyCoursecoIdPost buyCoursecoIdPost = BuyCoursecoIdPost(
-                          customerId: cusID,
-                          buyDateTime: proposedDate,);
+                        customerId: cusID,
+                        buyDateTime: proposedDate,
+                      );
                       log(jsonEncode(buyCoursecoIdPost));
                       log(cusID.toString());
                       buycourse = await buyCourseService.buyCourse(
                           courseId.toString(), buyCoursecoIdPost);
-                          moduleResult = buycourse.data;
-                      if(moduleResult.result == "1"){
+                      moduleResult = buycourse.data;
+                      if (moduleResult.result == "1") {
                         stopLoading();
-                         Get.to(() => const MyCouses());
+                        Get.to(() => const MyCouses());
                       }
-                      
                     },
                     child: Text("ชำระเงิน",
                         style: Theme.of(context).textTheme.bodyLarge)),

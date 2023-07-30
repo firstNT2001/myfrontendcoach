@@ -16,7 +16,7 @@ import '../../service/auth.dart';
 import '../../service/provider/appdata.dart';
 
 import '../coach/home_coach_page.dart';
-import '../user/homepageUser.dart';
+import '../user/homepage/homepageUser.dart';
 import '../user/navigationbar.dart';
 import 'register.dart';
 
@@ -204,7 +204,7 @@ class _LoginPageState extends State<LoginPage> {
                               },
                               label: Text(
                                 'เข้าสู่ระบบ',
-                                style: Theme.of(context).textTheme.titleMedium,
+                                style: Theme.of(context).textTheme.titleMedium!.copyWith(color: Colors.white),
                               )),
                         ),
                       ),

@@ -159,14 +159,10 @@ class _MyCousesState extends State<MyCouses> {
                                 begin: Alignment.topCenter,
                                 end: Alignment.bottomCenter,
                                 colors: <Color>[
-                                  // const Color.fromARGB(255, 0, 0, 0)
-                                  //     .withAlpha(0),
-                                  // const Color.fromARGB(49, 0, 0, 0),
-                                  // const Color.fromARGB(127, 0, 0, 0)
-                                  const Color.fromARGB(255, 255, 255, 255)
+                                  const Color.fromARGB(255, 0, 0, 0)
                                       .withAlpha(0),
-                                  const Color.fromARGB(39, 255, 255, 255),
-                                  const Color.fromARGB(107, 255, 255, 255)
+                                  const Color.fromARGB(49, 0, 0, 0),
+                                  const Color.fromARGB(127, 0, 0, 0)
                                 ],
                               ),
                               borderRadius: BorderRadius.circular(20),
@@ -180,7 +176,10 @@ class _MyCousesState extends State<MyCouses> {
                               children: [
                                 Text(
                                   listcours.course.name,
-                                  style: Theme.of(context).textTheme.titleLarge,
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .titleLarge!
+                                      .copyWith(color: Colors.white),
                                 ),
                                 Row(
                                   children: [
@@ -189,26 +188,52 @@ class _MyCousesState extends State<MyCouses> {
                                       child: Icon(
                                         FontAwesomeIcons.solidUser,
                                         size: 16.0,
+                                        color: Colors.white,
                                       ),
                                     ),
-                                    Text(listcours.course.coach.fullName,
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .bodyLarge),
+                                    Text(
+                                      listcours.course.coach.fullName,
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .bodyLarge!
+                                          .copyWith(color: Colors.white),
+                                    ),
                                   ],
                                 ),
                                 Padding(
-                                  padding: const EdgeInsets.only(
-                                      bottom: 4.0, top: 4.0),
-                                  child: LinearPercentIndicator(
-                                    width: 280.0,
-                                    lineHeight: 8.0,
-                                    percent: 0.1,
-                                    backgroundColor:
-                                        const Color.fromRGBO(255, 249, 249, 1),
-                                    progressColor: Colors.greenAccent,
+                                  padding:
+                                      EdgeInsets.only(bottom: 4.0, top: 4.0),
+                                  child: FittedBox(
+                                    child: LinearPercentIndicator(
+                                      width: MediaQuery.of(context).size.width *
+                                          0.65,
+                                      fillColor:
+                                          Color.fromARGB(0, 255, 255, 255),
+                                      lineHeight: 10.0,
+                                      percent: 0.5,
+                                      trailing: Text(
+                                        "50.0%",
+                                        style: TextStyle(fontSize:16.0,color: Colors.white),
+                                      ),
+                                      barRadius: Radius.circular(7),
+                                      backgroundColor: Colors.grey,
+                                      progressColor:
+                                          Theme.of(context).colorScheme.primary,
+                                    ),
                                   ),
                                 ),
+                                // Padding(
+                                //   padding: const EdgeInsets.only(
+                                //       bottom: 4.0, top: 4.0),
+                                //   child: LinearPercentIndicator(
+                                //     width: 280.0,
+                                //     lineHeight: 8.0,
+                                //     percent: 0.1,
+                                //     backgroundColor:
+                                //         const Color.fromRGBO(255, 249, 249, 1),
+                                //     progressColor: Colors.greenAccent,
+                                //   ),
+                                // ),
                               ],
                             ),
                           )
