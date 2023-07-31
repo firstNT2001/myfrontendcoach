@@ -674,10 +674,10 @@ class _HomeFoodAndClipPageState extends State<HomeFoodAndClipPage> {
                             child: MSHCheckbox(
                               size: 30,
                               value: listClip.status == '1'
-                                ? true
-                                : listClip.status == '0'
-                                    ? false
-                                        : false,
+                                  ? true
+                                  : listClip.status == '0'
+                                      ? false
+                                      : false,
                               colorConfig:
                                   MSHColorConfig.fromCheckedUncheckedDisabled(
                                 checkedColor: Colors.blue,
