@@ -26,11 +26,12 @@ class _WidgetTextFieldIntState extends State<WidgetTextFieldInt> {
             keyboardType: TextInputType.number,
             controller: widget.controller,
             maxLength: widget.maxLength,
+    
             //inputFormatters: [LengthLimitingTextInputFormatter(widget.maxLength)],
             textAlignVertical: TextAlignVertical.center,
             textAlign: TextAlign.center,
             decoration: InputDecoration(
-                //labelText: widget.labelText,
+                 counterText: "",
                 filled: true,
                 fillColor: Theme.of(context).colorScheme.background)),
       ],

@@ -252,7 +252,18 @@ class _RegisterPageState extends State<RegisterPage> {
           ),
         ),
       },
-      Text(textErr),
+      Row(
+        mainAxisAlignment: MainAxisAlignment.end,
+        children: [
+          Padding(
+            padding: const EdgeInsets.only(bottom: 8, left: 20, right: 23),
+            child: Text(
+              textErr,
+              style: TextStyle(color: Theme.of(context).colorScheme.error),
+            ),
+          ),
+        ],
+      ),
       button(),
     ]);
   }
