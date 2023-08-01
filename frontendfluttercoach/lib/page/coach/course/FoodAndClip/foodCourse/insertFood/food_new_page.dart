@@ -20,7 +20,8 @@ import '../../course_food_clip.dart';
 import 'food_select_time_page.dart';
 
 class FoodNewCoursePage extends StatefulWidget {
-  const FoodNewCoursePage({super.key, required this.did, required this.isVisible});
+  const FoodNewCoursePage(
+      {super.key, required this.did, required this.isVisible});
   final String did;
   final bool isVisible;
   @override
@@ -64,7 +65,8 @@ class _FoodNewCoursePageState extends State<FoodNewCoursePage> {
             onPressed: () {
               Get.to(() => HomeFoodAndClipPage(
                     did: widget.did,
-                    sequence: context.read<AppData>().sequence, isVisible: widget.isVisible,
+                    sequence: context.read<AppData>().sequence,
+                    isVisible: widget.isVisible,
                   ));
             },
           ),
@@ -101,7 +103,8 @@ class _FoodNewCoursePageState extends State<FoodNewCoursePage> {
                     Get.to(() => FoodSelectTimePage(
                           did: widget.did,
                           modelFoodList: increaseFood,
-                          increaseFood: increaseFoodDay, isVisible: widget.isVisible,
+                          increaseFood: increaseFoodDay,
+                          isVisible: widget.isVisible,
                         ));
                     log(increaseFoodDay.length.toString());
                   }
@@ -276,7 +279,7 @@ class _FoodNewCoursePageState extends State<FoodNewCoursePage> {
         height: MediaQuery.of(context).size.height * 0.75,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(20),
-          color: Theme.of(context).colorScheme.tertiary,
+          color: Colors.white,
         ),
         alignment: Alignment.center,
         child: Column(
@@ -285,24 +288,23 @@ class _FoodNewCoursePageState extends State<FoodNewCoursePage> {
           children: [
             Padding(
               padding: const EdgeInsets.only(
-                  left: 20, right: 20, top: 50, bottom: 0),
+                  left: 20, right: 20, top: 50, bottom: 10),
               child: Text("เมนูอาหาร",
                   style: Theme.of(context).textTheme.headlineSmall),
             ),
             if (listFood.image != '') ...{
-              Container(
-                  width: MediaQuery.of(context).size.width * 0.7,
-                  height: MediaQuery.of(context).size.height * 0.3,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(26),
-                    image: DecorationImage(
-                      image: NetworkImage(listFood.image),
-                    ),
+              ClipRRect(
+                  borderRadius: BorderRadius.circular(15),
+                  child: Image.network(
+                    listFood.image,
+                    width: MediaQuery.of(context).size.width * 0.7,
+                    height: MediaQuery.of(context).size.height * 0.2,
+                    fit: BoxFit.cover,
                   )),
             } else ...{
               Container(
                   width: MediaQuery.of(context).size.width * 0.7,
-                  height: MediaQuery.of(context).size.height * 0.3,
+                    height: MediaQuery.of(context).size.height * 0.2,
                   decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(26),
                       color: Colors.black26)),
@@ -311,10 +313,10 @@ class _FoodNewCoursePageState extends State<FoodNewCoursePage> {
               ),
             },
             Padding(
-              padding: const EdgeInsets.only(bottom: 8),
+              padding: const EdgeInsets.only(top: 10, bottom: 8),
               child: SizedBox(
                 width: MediaQuery.of(context).size.width * 0.7,
-                child: AutoSizeText(
+                child: Text(
                   'ชื่อเมนู: ${listFood.name}',
                   maxLines: 5,
                   //style: Theme.of(context).textTheme.bodyLarge,
@@ -332,15 +334,22 @@ class _FoodNewCoursePageState extends State<FoodNewCoursePage> {
                 ),
               ),
             ),
-            SizedBox(
-                width: MediaQuery.of(context).size.width * 0.7,
-                child: Text(
-                  'Calories: ${listFood.calories.toString()}',
-                  style: Theme.of(context).textTheme.bodyLarge,
-                )),
             Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              //MainAxisAlignment.end,
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.only(right: 30, bottom: 8.0),
+                  child: SizedBox(
+                      //width: MediaQuery.of(context).size.width * 0.7,
+                      child: Text(
+                    'Calories: ${listFood.calories.toString()}',
+                    style: Theme.of(context).textTheme.bodyLarge,
+                  )),
+                ),
+              ],
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.start,
               children: [
                 Padding(
                   padding: const EdgeInsets.only(left: 30),
@@ -354,9 +363,14 @@ class _FoodNewCoursePageState extends State<FoodNewCoursePage> {
                     ),
                   ),
                 ),
+              ],
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
                 Padding(
                   padding: const EdgeInsets.only(right: 30),
-                  child: ElevatedButton(
+                  child: FilledButton(
                       onPressed: () {
                         setState(() {
                           increaseFood.add(listFood);

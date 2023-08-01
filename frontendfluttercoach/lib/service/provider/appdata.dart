@@ -21,7 +21,7 @@ class AppData with ChangeNotifier {
   String baseUrlGB = "https://api.gbprimepay.com";
   //Color
   //Color colorCard;
-  Color colorSelect = Color(0xff872100);
+  Color colorSelect = Color.fromARGB(255, 170, 168, 167);
   Color colorNotSelect = Color.fromARGB(255, 255, 255, 255);
 
   Map<String, dynamic> userFacebook = {};

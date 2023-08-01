@@ -25,6 +25,7 @@ import '../../../../service/food.dart';
 import '../../../../service/provider/appdata.dart';
 
 import '../../../../widget/dropdown/wg_dropdown_string.dart';
+import '../../../../widget/image_video.dart';
 import '../../../../widget/wg_editClip_Dialog.dart';
 import '../../../../widget/wg_editFood_Dialog.dart';
 import '../../../../widget/wg_search_food.dart';
@@ -134,18 +135,21 @@ class _HomeFoodAndClipPageState extends State<HomeFoodAndClipPage> {
                 Get.back();
               },
             ),
-            bottom: const TabBar(tabs: [
-              Tab(
-                icon: Icon(
-                  FontAwesomeIcons.bowlFood,
-                ),
-              ),
-              Tab(
-                icon: Icon(
-                  FontAwesomeIcons.dumbbell,
-                ),
-              )
-            ]),
+            bottom: const TabBar(
+                labelColor: Colors.black, //<-- selected text color
+                unselectedLabelColor: Colors.white, //<-- Unselected text
+                tabs: [
+                  Tab(
+                    icon: Icon(
+                      FontAwesomeIcons.bowlFood,
+                    ),
+                  ),
+                  Tab(
+                    icon: Icon(
+                      FontAwesomeIcons.dumbbell,
+                    ),
+                  )
+                ]),
             centerTitle: true,
           ),
           body: TabBarView(
@@ -614,85 +618,128 @@ class _HomeFoodAndClipPageState extends State<HomeFoodAndClipPage> {
         if (snapshot.connectionState != ConnectionState.done) {
           return const Center(child: CircularProgressIndicator());
         } else {
-          return ListView.builder(
+          return GridView.builder(
+            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: 2,
+              mainAxisExtent: 230,
+            ),
             shrinkWrap: true,
             itemCount: clips.length,
             itemBuilder: (context, index) {
               final listClip = clips[index];
               return SizedBox(
                 height: MediaQuery.of(context).size.height * 0.2,
-                child: Card(
-                  color: Colors.white,
-                  child: InkWell(
-                    onTap: () {
-                      ListClip request = ListClip(
-                          icpId: listClip.listClip.icpId,
-                          coachId: listClip.listClip.coachId,
-                          name: listClip.listClip.name,
-                          video: listClip.listClip.video,
-                          details: listClip.listClip.details,
-                          amountPerSet: listClip.listClip.amountPerSet);
-                      log(listClip.cpId.toString());
-                      dialogClipEditInCourse(
-                          context,
-                          request,
-                          listClip.cpId.toString(),
-                          listClip.dayOfCouseId.toString(),
-                          widget.sequence,
-                          int.parse(listClip.status),
-                          widget.isVisible);
-                    },
-                    child: Row(
-                      //mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.only(
-                              left: 8, right: 8, top: 5, bottom: 5),
-                          child: Container(
-                              width: MediaQuery.of(context).size.width * 0.3,
-                              height: MediaQuery.of(context).size.height,
-                              decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(26),
-                                  color: Colors.pink)),
-                        ),
-                        Center(
-                          child: SizedBox(
-                            width: MediaQuery.of(context).size.width * 0.4,
-                            child: AutoSizeText(
-                              listClip.listClip.name,
-                              maxLines: 5,
-                              style: Theme.of(context).textTheme.titleMedium,
+                child: InkWell(
+                  onTap: () {
+                    ListClip request = ListClip(
+                        icpId: listClip.listClip.icpId,
+                        coachId: listClip.listClip.coachId,
+                        name: listClip.listClip.name,
+                        video: listClip.listClip.video,
+                        details: listClip.listClip.details,
+                        amountPerSet: listClip.listClip.amountPerSet);
+                    log(listClip.cpId.toString());
+                    dialogClipEditInCourse(
+                        context,
+                        request,
+                        listClip.cpId.toString(),
+                        listClip.dayOfCouseId.toString(),
+                        widget.sequence,
+                        int.parse(listClip.status),
+                        widget.isVisible);
+                  },
+                  child: Column(
+                    //mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Stack(
+                        children: [
+                          if (listClip.listClip.video != '') ...{
+                            Padding(
+                              padding: const EdgeInsets.only(
+                                  left: 8, right: 8, top: 5, bottom: 5),
+                              child: AspectRatio(
+                                  aspectRatio: 16 / 13,
+                                  child: Container(
+                                    decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(26),
+                                        color: Colors.pink),
+                                    child: VideoItem(
+                                      video: listClip.listClip.video,
+                                    ),
+                                  )),
+                            )
+                          } else
+                            Padding(
+                              padding: const EdgeInsets.only(
+                                  left: 8, right: 8, top: 5, bottom: 5),
+                              child: AspectRatio(
+                                  aspectRatio: 16 / 13,
+                                  child: Container(
+                                    decoration: BoxDecoration(
+                                      color: const Color.fromARGB(
+                                          255, 207, 208, 209),
+                                      borderRadius: BorderRadius.circular(20),
+                                    ),
+                                  )),
+                            ),
+                          Visibility(
+                            visible: widget.isVisible,
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.end,
+                              children: [
+                                IconButton(
+                                  onPressed: () {
+                                    dialogDeleteClip(
+                                        context, listClip.cpId.toString());
+                                  },
+                                  icon: const Icon(
+                                    FontAwesomeIcons.trash,
+                                    color: Colors.white,
+                                  ),
+                                ),
+                              ],
                             ),
                           ),
+                          if (widget.isVisible == false) ...{
+                            Row(
+                                mainAxisAlignment: MainAxisAlignment.end,
+                                children: [
+                                  MSHCheckbox(
+                                    size: 30,
+                                    value: listClip.status == '1'
+                                        ? true
+                                        : listClip.status == '0'
+                                            ? false
+                                            : false,
+                                    colorConfig: MSHColorConfig
+                                        .fromCheckedUncheckedDisabled(
+                                      checkedColor: Colors.blue,
+                                    ),
+                                    style: MSHCheckboxStyle.fillFade,
+                                    onChanged: (selected) {
+                                      setState(() {
+                                        //isChecked = selected;
+                                      });
+                                    },
+                                  ),
+                                ])
+                          }
+                        ],
+                      ),
+                      Center(
+                        child: SizedBox(
+                          child: AutoSizeText(
+                            listClip.listClip.name,
+                            maxLines: 2,
+                            style: Theme.of(context).textTheme.titleMedium,
+                          ),
                         ),
-                        // const SizedBox(
-                        //   width: 50,
-                        // ),
-                        if (widget.isVisible == false) ...{
-                          Center(
-                            child: MSHCheckbox(
-                              size: 30,
-                              value: listClip.status == '1'
-                                  ? true
-                                  : listClip.status == '0'
-                                      ? false
-                                      : false,
-                              colorConfig:
-                                  MSHColorConfig.fromCheckedUncheckedDisabled(
-                                checkedColor: Colors.blue,
-                              ),
-                              style: MSHCheckboxStyle.fillFade,
-                              onChanged: (selected) {
-                                setState(() {
-                                  //isChecked = selected;
-                                });
-                              },
-                            ),
-                          )
-                        }
-                      ],
-                    ),
+                      ),
+                      const SizedBox(
+                        width: 50,
+                      ),
+                    ],
                   ),
                 ),
               );
@@ -701,5 +748,57 @@ class _HomeFoodAndClipPageState extends State<HomeFoodAndClipPage> {
         }
       },
     );
+  }
+
+  void dialogDeleteClip(BuildContext context, String cpid) {
+    //target widget
+    SmartDialog.show(builder: (_) {
+      return Container(
+        width: MediaQuery.of(context).size.width * 0.8,
+        height: MediaQuery.of(context).size.height * 0.3,
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(20),
+          color: Colors.white,
+        ),
+        alignment: Alignment.center,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          //crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Padding(
+              padding: const EdgeInsets.only(
+                  left: 20, right: 20, top: 50, bottom: 16),
+              child: Text("คุณต้องการลบหรือไม",
+                  style: Theme.of(context).textTheme.headlineSmall),
+            ),
+            Padding(
+              padding: const EdgeInsets.only(top: 20),
+              child: Row(
+                //mainAxisSize: MainAxisSize.max,
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  FilledButton(
+                      onPressed: () {
+                        SmartDialog.dismiss();
+                      },
+                      child: const Text("ยกเลิก")),
+                  FilledButton(
+                      onPressed: () async {
+                        var response = await _clipService.deleteClip(cpid);
+                        modelResult = response.data;
+                        log(modelResult.result);
+                        setState(() {
+                          loadClipDataMethod = loadClipData();
+                        });
+                        SmartDialog.dismiss();
+                      },
+                      child: const Text("ตกลง"))
+                ],
+              ),
+            ),
+          ],
+        ),
+      );
+    });
   }
 }
