@@ -18,6 +18,7 @@ import '../../../../../../model/request/clip_dayID_post.dart';
 import '../../../../../../model/response/md_ClipList_get.dart';
 import '../../../../../../service/listClip.dart';
 import '../../../../../../service/provider/appdata.dart';
+import '../../../../../../widget/image_video.dart';
 import '../../../../../../widget/showCilp.dart';
 import '../../course_food_clip.dart';
 
@@ -251,36 +252,40 @@ class _ClipSelectPageState extends State<ClipSelectPage> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         if (listClip.video != '') ...{
-                          // Padding(
-                          //   padding: const EdgeInsets.only(
-                          //       left: 8, top: 5, bottom: 5),
-                          //   child: Container(
-                          //       width: MediaQuery.of(context).size.width * 0.3,
-                          //       height: MediaQuery.of(context).size.height,
-                          //       decoration: BoxDecoration(
-                          //         borderRadius: BorderRadius.circular(26),
-                          //         image: DecorationImage(
-                          //           image: NetworkImage(imageURL[0]),
-                          //         ),
-                          //       )),
-                          // ),
+                           Padding(
+                              padding: const EdgeInsets.only(
+                                  left: 8, right: 8, top: 5, bottom: 5),
+                              child: AspectRatio(
+                                  aspectRatio: 16 / 16,
+                                  child: Container(
+                                    decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(26),
+                                        color: Colors.pink),
+                                    child: VideoItem(
+                                      video: listClip.video,
+                                    ),
+                                  )),
+                            )
                         } else
-                          Padding(
-                            padding: const EdgeInsets.only(
-                                left: 8, top: 5, bottom: 5),
-                            child: Container(
-                                width: MediaQuery.of(context).size.width * 0.3,
-                                height: MediaQuery.of(context).size.height,
-                                decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(26),
-                                    color: Colors.black26)),
-                          ),
+                           Padding(
+                              padding: const EdgeInsets.only(
+                                  left: 8, right: 8, top: 5, bottom: 5),
+                              child: AspectRatio(
+                                  aspectRatio: 16 / 16,
+                                  child: Container(
+                                    decoration: BoxDecoration(
+                                      color: const Color.fromARGB(
+                                          255, 207, 208, 209),
+                                      borderRadius: BorderRadius.circular(20),
+                                    ),
+                                  )),
+                            ),
                         Column(
                           mainAxisAlignment: MainAxisAlignment.center,
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             SizedBox(
-                              width: MediaQuery.of(context).size.width * 0.4,
+                              width: MediaQuery.of(context).size.width * 0.34,
                               child: AutoSizeText(
                                 listClip.name,
                                 maxLines: 5,

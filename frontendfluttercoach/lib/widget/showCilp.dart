@@ -5,8 +5,7 @@ import 'package:flutter/material.dart';
 import 'dialogs.dart';
 
 class WidgetShowCilp extends StatefulWidget {
-  const WidgetShowCilp(
-      {super.key, required this.urlVideo});
+  const WidgetShowCilp({super.key, required this.urlVideo});
   final String urlVideo;
   @override
   State<WidgetShowCilp> createState() => _WidgetShowCilpState();
@@ -19,7 +18,7 @@ class _WidgetShowCilpState extends State<WidgetShowCilp> {
   @override
   void initState() {
     super.initState();
-     startLoading(context);
+    startLoading(context);
     _videoPlayerController = VideoPlayerController.network(videoUrl)
       ..initialize().then((value) => setState(() {}));
     _customVideoPlayerController = CustomVideoPlayerController(
@@ -41,9 +40,10 @@ class _WidgetShowCilpState extends State<WidgetShowCilp> {
   Column showClip() {
     return Column(
       children: [
-       
-        CustomVideoPlayer(
-            customVideoPlayerController: _customVideoPlayerController),
+        _videoPlayerController.value.isInitialized
+            ? CustomVideoPlayer(
+                customVideoPlayerController: _customVideoPlayerController)
+            : Center(child: load(context)),
       ],
     );
   }

@@ -8,7 +8,6 @@ import 'package:firebase_storage/firebase_storage.dart';
 
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:frontendfluttercoach/page/coach/home_coach_page.dart';
 import 'package:get/get.dart';
 
 import 'package:provider/provider.dart';
@@ -23,6 +22,7 @@ import '../../../widget/dropdown/wg_dropdown_notValue_string.dart';
 import '../../../widget/textField/wg_textField.dart';
 import '../../../widget/textField/wg_textFieldLines.dart';
 
+import '../../../widget/textField/wg_textField_int copy.dart';
 import '../daysCourse/days_course_page.dart';
 
 class CourseNewPage extends StatefulWidget {
@@ -55,14 +55,16 @@ class _CourseNewPageState extends State<CourseNewPage> {
 
   // ignore: prefer_typing_uninitialized_variables
 
-
   //selectimg
   PlatformFile? pickedImg;
   UploadTask? uploadTask;
-  String profile = " ";
+  String profile = "";
 
   String statusCourse = "";
   String imageCourse = "";
+
+  String textErr = '';
+
   @override
   void initState() {
     // ignore: todo
@@ -79,7 +81,7 @@ class _CourseNewPageState extends State<CourseNewPage> {
   Widget build(BuildContext context) {
     Size screenSize = MediaQuery.of(context).size;
     double width = (screenSize.width > 550) ? 550 : screenSize.width;
-    double padding = 8;
+    double padding = 13;
     return Scaffold(
       body: SafeArea(
         child: ListView(
@@ -87,28 +89,28 @@ class _CourseNewPageState extends State<CourseNewPage> {
             Stack(
               children: [
                 inputImage(context),
-                Padding(
-                  padding: const EdgeInsets.only(top: 250),
-                  child: SizedBox(
-                    width: MediaQuery.of(context).size.width,
-                    height: MediaQuery.of(context).size.height * 0.6,
+                Positioned(
+                  child: Padding(
+                    padding: EdgeInsets.only(
+                        top: MediaQuery.of(context).size.height / 3),
                     child: Container(
+                      width: MediaQuery.of(context).size.width,
                       decoration: const BoxDecoration(
                           borderRadius: BorderRadius.only(
                               topLeft: Radius.circular(20),
                               topRight: Radius.circular(20)),
                           color: Colors.white),
                       child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Padding(
                             padding: const EdgeInsets.only(
-                                bottom: 8, top: 28, left: 13, right: 13),
+                                bottom: 8, top: 28, left: 20, right: 20),
                             child: WidgetTextFieldString(
                               controller: name,
                               labelText: 'ชื่อ',
                             ),
                           ),
-
                           Padding(
                             padding: const EdgeInsets.only(bottom: 8),
                             child: Row(
@@ -117,18 +119,20 @@ class _CourseNewPageState extends State<CourseNewPage> {
                               children: [
                                 SizedBox(
                                   width: (width - 16 - (3 * padding)) / 2,
-                                  child: WidgetTextFieldString(
+                                  child: WidgetTextFieldInt(
                                     controller: amount,
                                     labelText: 'จำนวนคน',
+                                    maxLength: 2,
                                   ),
                                 ),
-                                  SizedBox(
-                                      width: (width - 16 - (3 * padding)) / 2,
-                                      child: WidgetTextFieldString(
-                                        controller: days,
-                                        labelText: 'จำนวนวัน',
-                                      ),
-                                    ),
+                                SizedBox(
+                                  width: (width - 16 - (3 * padding)) / 2,
+                                  child: WidgetTextFieldInt(
+                                    controller: days,
+                                    labelText: 'จำนวนวัน',
+                                    maxLength: 2,
+                                  ),
+                                ),
                               ],
                             ),
                           ),
@@ -140,9 +144,10 @@ class _CourseNewPageState extends State<CourseNewPage> {
                               children: [
                                 SizedBox(
                                   width: (width - 16 - (3 * padding)) / 2,
-                                  child: WidgetTextFieldString(
+                                  child: WidgetTextFieldInt(
                                     controller: price,
                                     labelText: 'ราคา',
+                                    maxLength: 5,
                                   ),
                                 ),
                                 SizedBox(
@@ -151,23 +156,43 @@ class _CourseNewPageState extends State<CourseNewPage> {
                                     title: 'เลือกความยากง่าย',
                                     selectedValue: selectedValue,
                                     ListItems: LevelItems,
+                                    //listItems: LevelItems,
                                   ),
                                 ),
                               ],
                             ),
                           ),
-
                           Padding(
                               padding: const EdgeInsets.only(
-                                  bottom: 8, top: 8, left: 13, right: 13),
+                                  bottom: 15, top: 8, left: 20, right: 20),
                               child: WidgetTextFieldLines(
                                 controller: details,
                                 labelText: 'รายละเอียด',
                               )),
-                          // switchOnOffStatus(context),
-                          SizedBox(
-                              width: MediaQuery.of(context).size.width * 0.6,
-                              child: buttonNext())
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.end,
+                            children: [
+                              Padding(
+                                padding: const EdgeInsets.only(
+                                    bottom: 8, left: 20, right: 23),
+                                child: Text(
+                                  textErr,
+                                  style: TextStyle(
+                                      color:
+                                          Theme.of(context).colorScheme.error),
+                                ),
+                              ),
+                            ],
+                          ),
+                          Center(
+                            child: Padding(
+                              padding: const EdgeInsets.only(
+                                  bottom: 18, left: 20, right: 20),
+                              child: SizedBox(
+                                  width: MediaQuery.of(context).size.width,
+                                  child: buttonNext()),
+                            ),
+                          ),
                         ],
                       ),
                     ),
@@ -181,51 +206,59 @@ class _CourseNewPageState extends State<CourseNewPage> {
     );
   }
 
-  ElevatedButton buttonNext() {
-    return ElevatedButton(
+  FilledButton buttonNext() {
+    return FilledButton(
       //style: style,
       onPressed: () async {
-        log("selectedValue${selectedValue.text}");
-        if (selectedValue.text == 'ง่าย') {
-          lavel = 1;
-        } else if (selectedValue.text == 'ปานกลาง') {
-          lavel = 2;
+        if (name.text == '' ||
+            details.text == '' ||
+            lavel.toString() == '' ||
+            amount.text == '' ||
+            days.text == '' ||
+            price.text == '') {
+          setState(() {
+            textErr = 'กรุณากรอกข้อมูลให้ครบ';
+          });
+        } else if (pickedImg == null) {
+          setState(() {
+            textErr = 'กรุณาใส่รูป';
+          });
         } else {
-
-          lavel = 3;
+          log("selectedValue${selectedValue.text}");
+          if (selectedValue.text == 'ง่าย') {
+            lavel = 1;
+          } else if (selectedValue.text == 'ปานกลาง') {
+            lavel = 2;
+          } else {
+            lavel = 3;
+          }
+          log(selectedValue.text);
+          if (pickedImg != null) await uploadfile();
+          //if (pickedImg == null) profile = courses.first.image;
+          CourseCoachIdPost request = CourseCoachIdPost(
+              bid: null,
+              name: name.text,
+              details: details.text,
+              level: lavel.toString(),
+              amount: int.parse(amount.text),
+              image: profile,
+              days: int.parse(days.text),
+              price: int.parse(price.text),
+              status: status,
+              expirationDate: null);
+          log(jsonEncode(request));
+          log(cid.toString());
+          var response =
+              await courseService.insetCourseByCoachID(cid.toString(), request);
+          moduleResult = response.data;
+          log(moduleResult.result);
+         
+            Get.to(() => DaysCoursePage(
+                  coID: moduleResult.result,
+                  isVisible: true,
+                ));
+          
         }
-        log(selectedValue.text);
-        if (pickedImg != null) await uploadfile();
-        //if (pickedImg == null) profile = courses.first.image;
-        CourseCoachIdPost request = CourseCoachIdPost(
-            bid: null,
-            name: name.text,
-            details: details.text,
-            level: lavel.toString(),
-            amount: int.parse(amount.text),
-            image: profile,
-            days: int.parse(days.text),
-            price: int.parse(price.text),
-            status: status,
-            expirationDate: null);
-        log(jsonEncode(request));
-        log(cid.toString());
-        var response = await courseService.insetCourseByCoachID(
-            cid.toString(), request);
-        moduleResult = response.data;
-        log(moduleResult.result);
-        // if (moduleResult.result == "1") {
-        //   // ignore: use_build_context_synchronously
-        //   //showDialogRowsAffected(context, "บันทึกสำเร็จ");
-        //   Get.to(() => const HomePageCoach());
-        // } else {
-        //   // ignore: use_build_context_synchronously
-        //   //showDialogRowsAffected(context, "บันทึกไม่สำเร็จ");
-        // }
-
-         Get.to(() => DaysCoursePage(
-              coID: moduleResult.result, isVisible: true,
-            ));
       },
       child: const Text('Next'),
     );
@@ -270,11 +303,11 @@ class _CourseNewPageState extends State<CourseNewPage> {
                 image: const DecorationImage(
                   fit: BoxFit.cover,
                   image: NetworkImage(
-                      "https://www.finearts.cmu.ac.th/wp-content/uploads/2021/07/blank-profile-picture-973460_1280-1.png"),
+                      "https://meetmore.net/wp-content/uploads/2020/10/%E0%B8%AD%E0%B8%AD%E0%B8%81%E0%B8%81%E0%B8%B3%E0%B8%A5%E0%B8%B1%E0%B8%87%E0%B8%81%E0%B8%B2%E0%B8%A2%E0%B9%84%E0%B8%A1%E0%B9%88%E0%B8%A1%E0%B8%B5%E0%B9%80%E0%B8%AB%E0%B8%87%E0%B8%B7%E0%B9%88%E0%B8%AD-%E0%B8%88%E0%B8%B0%E0%B8%8A%E0%B9%88%E0%B8%A7%E0%B8%A2%E0%B9%80%E0%B8%9C%E0%B8%B2%E0%B8%9E%E0%B8%A5%E0%B8%B2%E0%B8%8D%E0%B9%84%E0%B8%AB%E0%B8%A1.png"),
                 )),
           ),
         Positioned(
-            bottom: 70,
+            bottom: 60,
             right: 8,
             child: InkWell(
               onTap: () {
@@ -284,13 +317,13 @@ class _CourseNewPageState extends State<CourseNewPage> {
               child: Container(
                 height: 40,
                 width: 40,
-                decoration: BoxDecoration(
+                decoration: const BoxDecoration(
                     shape: BoxShape.circle,
-                    border: Border.all(width: 4, color: Colors.white),
-                    color: Colors.amber),
+                    //border: Border.all(width: 4, color: Colors.white),
+                    color: Colors.white),
                 child: const Icon(
-                  Icons.edit,
-                  color: Colors.white,
+                  FontAwesomeIcons.camera,
+                  color: Colors.black,
                 ),
               ),
             )),
@@ -308,24 +341,10 @@ class _CourseNewPageState extends State<CourseNewPage> {
                     color: Colors.black,
                   ),
                   onPressed: () {
-                    Get.to(() => const HomePageCoach());
+                    Get.back();
                   },
                 ),
               ),
-              // CircleAvatar(
-              //     backgroundColor: Colors.white,
-              //     radius: 20,
-              //     child: IconButton(
-              //       icon: const Icon(
-              //         FontAwesomeIcons.trash,
-              //         color: Colors.black,
-              //       ),
-              //       onPressed: () async {
-              //         var response =
-              //             await _courseService.deleteCourse(widget.coID);
-              //         modelResult = response.data;
-              //       },
-              //     )),
             ],
           ),
         ),

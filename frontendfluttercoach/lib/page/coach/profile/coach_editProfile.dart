@@ -21,7 +21,6 @@ import '../../../widget/textField/wg_textField.dart';
 import '../../../widget/textField/wg_textFieldLines.dart';
 import '../../../widget/textField/wg_textField_int copy.dart';
 
-
 class CoachEidtProfilePage extends StatefulWidget {
   const CoachEidtProfilePage({super.key});
 
@@ -52,8 +51,6 @@ class _CoachEidtProfilePageState extends State<CoachEidtProfilePage> {
   final qualification = TextEditingController();
   final property = TextEditingController();
 
-
-  
   //selectLevel
   // ignore: non_constant_identifier_names
   final List<String> LevelItems = ['ชาย', 'หญิง'];
@@ -75,46 +72,49 @@ class _CoachEidtProfilePageState extends State<CoachEidtProfilePage> {
           child: ListView(
         children: [
           showCoach(),
+          Padding(
+                  padding:
+                      const EdgeInsets.only(bottom: 18, left: 20, right: 20),
+                  child: button(),
+                ),
         ],
       )),
     );
   }
 
   Widget button() {
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 18, left: 20, right: 20),
-      child: SizedBox(
-        width: MediaQuery.of(context).size.width,
-        // height: MediaQuery.of(context).size.height ,
-        child: FilledButton(
-          //style: style,
-          onPressed: () async {
-            if (pickedImg != null) await uploadfile();
-            if (pickedImg == null) profile = coachs.first.image;
-            RegisterCoachDto request = RegisterCoachDto(
-                fullName: fullName.text,
-                username: name.text,
-                email: email.text,
-                password: coachs.first.password,
-                image: profile,
-                gender: (selectedValue.text) == 'ชาย'
-                    ? '2'
-                    : (selectedValue.text == 'หญิง')
-                        ? '1'
-                        : '1',
-                phone: phone.text,
-                birthday: coachs.first.birthday,
-                property: property.text,
-                qualification: qualification.text,
-                facebookId: coachs.first.facebookId);
-            var result = await _authService.updateCoach(
-                // ignore: use_build_context_synchronously
-                context.read<AppData>().cid.toString(), request);
-            modelResult = result.data;
-            log(modelResult.result);
-          },
-          child: const Text('บันทึก'),
-        ),
+    return SizedBox(
+      width: MediaQuery.of(context).size.width,
+      // height: MediaQuery.of(context).size.height ,
+      child: FilledButton(
+        //style: style,
+        onPressed: () async {
+          if (pickedImg != null) await uploadfile();
+          if (pickedImg == null) profile = coachs.first.image;
+          RegisterCoachDto request = RegisterCoachDto(
+              fullName: fullName.text,
+              username: name.text,
+              email: email.text,
+              password: coachs.first.password,
+              image: profile,
+              gender: (selectedValue.text) == 'ชาย'
+                  ? '2'
+                  : (selectedValue.text == 'หญิง')
+                      ? '1'
+                      : '1',
+              phone: phone.text,
+              birthday: coachs.first.birthday,
+              property: property.text,
+              qualification: qualification.text,
+              facebookId: coachs.first.facebookId);
+          var result = await _authService.updateCoach(
+              // ignore: use_build_context_synchronously
+              context.read<AppData>().cid.toString(),
+              request);
+          modelResult = result.data;
+          log(modelResult.result);
+        },
+        child: const Text('บันทึก'),
       ),
     );
   }
@@ -302,7 +302,11 @@ class _CoachEidtProfilePageState extends State<CoachEidtProfilePage> {
                     labelText: 'ประวัติส่วนตัว',
                   ),
                 ),
-                button(),
+                Padding(
+                  padding:
+                      const EdgeInsets.only(bottom: 18, left: 20, right: 20),
+                  child: button(),
+                ),
               ],
             );
           } else {

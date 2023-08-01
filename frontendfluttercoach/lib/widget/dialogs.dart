@@ -1,3 +1,5 @@
+import 'package:cherry_toast/cherry_toast.dart';
+import 'package:cherry_toast/resources/arrays.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
@@ -48,8 +50,28 @@ void stopLoading() {
 }
 
 Widget load(BuildContext context) => LoadingAnimationWidget.waveDots(
-    color: const Color.fromARGB(255, 186, 182, 182),
-    // leftDotColor: const Color(0xFF1A1A3F),
-    // rightDotColor: const Color(0xFFEA3799),
-    size: 50,
-  );
+      color: const Color.fromARGB(255, 186, 182, 182),
+      // leftDotColor: const Color(0xFF1A1A3F),
+      // rightDotColor: const Color(0xFFEA3799),
+      size: 50,
+    );
+void warning(BuildContext context) {
+  CherryToast.warning(
+    title: const Text('บันทึกไม่สำเร็จ'),
+    displayTitle: false,
+    description: const Text('บันทึกไม่สำเร็จ'),
+    toastPosition: Position.bottom,
+    animationDuration: const Duration(milliseconds: 1000),
+    autoDismiss: true,
+  ).show(context);
+}
+void warningDelete(BuildContext context) {
+  CherryToast.warning(
+    title: const Text('ลบไม่สำเร็จ'),
+    displayTitle: false,
+    description: const Text('ลบไม่สำเร็จ'),
+    toastPosition: Position.bottom,
+    animationDuration: const Duration(milliseconds: 1000),
+    autoDismiss: true,
+  ).show(context);
+}

@@ -6,6 +6,9 @@ import 'dart:io';
 import 'package:file_picker/file_picker.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
+import 'package:frontendfluttercoach/page/coach/home_coach_page.dart';
+import 'package:frontendfluttercoach/widget/dialogs.dart';
 
 import 'package:get/get.dart';
 import 'package:provider/provider.dart';
@@ -95,6 +98,8 @@ class _CourseEditPageState extends State<CourseEditPage> {
   final List<String> LevelItems = ['ง่าย', 'ปานกลาง', 'ยาก'];
   final selectedValue = TextEditingController();
 
+  String textErr = "";
+
   @override
   void initState() {
     super.initState();
@@ -175,7 +180,6 @@ class _CourseEditPageState extends State<CourseEditPage> {
                       labelText: 'ชื่อ',
                     ),
                   ),
-
                   Padding(
                     padding: const EdgeInsets.only(bottom: 8),
                     child: Row(
@@ -191,13 +195,14 @@ class _CourseEditPageState extends State<CourseEditPage> {
                           ),
                         ),
                         SizedBox(
-                          width: (width - 16 - (3 * padding)) / 2,
-                          child: WidgetTextFieldInt(
-                            controller: days,
-                            labelText: 'จำนวนวัน',
-                            maxLength: 2,
-                          ),
-                        ),
+                            width: (width - 16 - (3 * padding)) / 2,
+                            child: Column(
+                              children: [
+                                const SizedBox(height: 20),
+                                const Text('จำนวนวัน'),
+                                Text(days.text),
+                              ],
+                            )),
                       ],
                     ),
                   ),
@@ -226,7 +231,6 @@ class _CourseEditPageState extends State<CourseEditPage> {
                       ],
                     ),
                   ),
-
                   Padding(
                       padding: const EdgeInsets.only(
                           bottom: 8, top: 8, left: 13, right: 13),
@@ -234,7 +238,20 @@ class _CourseEditPageState extends State<CourseEditPage> {
                         controller: details,
                         labelText: 'รายละเอียด',
                       )),
-                  // switchOnOffStatus(context),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.only(
+                            bottom: 8, left: 20, right: 23),
+                        child: Text(
+                          textErr,
+                          style: TextStyle(
+                              color: Theme.of(context).colorScheme.error),
+                        ),
+                      ),
+                    ],
+                  ),
                 ],
               ),
             ),
@@ -292,9 +309,13 @@ class _CourseEditPageState extends State<CourseEditPage> {
             Visibility(
               visible: widget.isVisible,
               child: Center(
-                child: SizedBox(
-                    width: MediaQuery.of(context).size.width * 0.6,
-                    child: buttonNext()),
+                child: Padding(
+                  padding:
+                      const EdgeInsets.only(bottom: 8, left: 13, right: 13),
+                  child: SizedBox(
+                      width: MediaQuery.of(context).size.width,
+                      child: buttonNext()),
+                ),
               ),
             )
           ],
@@ -393,10 +414,9 @@ class _CourseEditPageState extends State<CourseEditPage> {
                       icon: const Icon(
                         FontAwesomeIcons.trash,
                       ),
-                      onPressed: () async {
-                        var response =
-                            await _courseService.deleteCourse(widget.coID);
-                        modelResult = response.data;
+                      onPressed: () {
+                        dialogDelete(context);
+                     
                       },
                     )),
               ),
@@ -412,22 +432,26 @@ class _CourseEditPageState extends State<CourseEditPage> {
       //style: style,
       onPressed: () async {
         if (widget.isVisible == true) {
-          if (courses.first.name != name.text ||
-              courses.first.details != details.text ||
-              courses.first.level != lavel.toString() ||
-              courses.first.amount != int.parse(amount.text) ||
-              courses.first.image != profile ||
-              courses.first.price != int.parse(price.text) ||
-              courses.first.status != status) {
-            log("selectedValue${selectedValue.text}");
-            if (selectedValue.text == 'ง่าย') {
-              lavel = 1;
-            } else if (selectedValue.text == 'ปานกลาง') {
-              lavel = 2;
-            } else {
-              lavel = 3;
-            }
-            log(selectedValue.text);
+          if (selectedValue.text == 'ง่าย') {
+            lavel = 1;
+          } else if (selectedValue.text == 'ปานกลาง') {
+            lavel = 2;
+          } else {
+            lavel = 3;
+          }
+          if (name.text == '' ||
+              details.text == '' ||
+              lavel.toString() == '' ||
+              amount.text == '' ||
+              price.text == '') {
+            setState(() {
+              textErr = 'กรุณากรอกข้อมูลให้ครบ';
+            });
+            log(textErr);
+          } else {
+            setState(() {
+              textErr = '';
+            });
             if (pickedImg != null) await uploadfile();
             if (pickedImg == null) profile = courses.first.image;
             CourseCourseIdPut updateCourseDTO = CourseCourseIdPut(
@@ -446,78 +470,21 @@ class _CourseEditPageState extends State<CourseEditPage> {
                 widget.coID.toString(), updateCourseDTO);
             moduleResult = updateCourse.data;
             log(jsonEncode(moduleResult.result));
+            if (moduleResult.result == '0') {
+              Get.to(() => DaysCoursePage(
+                    coID: widget.coID,
+                    isVisible: widget.isVisible,
+                  ));
+            } else {
+              // ignore: use_build_context_synchronously
+              warning(context);
+            }
           }
         }
-
-        Get.to(() => DaysCoursePage(
-              coID: widget.coID,
-              isVisible: widget.isVisible,
-            ));
       },
       child: const Text('Next'),
     );
   }
-
-  // Switch switchOnOffStatus(BuildContext context) {
-  //   return Switch(
-  //     onChanged: (bool value) {
-  //       setState(() {
-  //         switchOnOff = value;
-  //       });
-  //       log(switchOnOff.toString());
-  //       if (value == true) {
-  //         showDialog<String>(
-  //             context: context,
-  //             builder: (BuildContext context) => AlertDialog(
-  //                   title: const Text('เปิดขายคอร์สหรือไม'),
-  //                   content: const Text('ต้องการเปิดขายคอร์สหรือไม'),
-  //                   actions: <Widget>[
-  //                     TextButton(
-  //                         child: const Text('Cancel'),
-  //                         onPressed: () {
-  //                           Navigator.pop(context, 'Cancel');
-  //                           setState(() {
-  //                             switchOnOff = false;
-  //                           });
-  //                         }),
-  //                     TextButton(
-  //                       onPressed: () {
-  //                         Navigator.pop(context, 'OK');
-  //                         status = "1";
-  //                       },
-  //                       child: const Text('OK'),
-  //                     ),
-  //                   ],
-  //                 ));
-  //       } else if (value == false) {
-  //         showDialog<String>(
-  //             context: context,
-  //             builder: (BuildContext context) => AlertDialog(
-  //                   title: const Text('ปิดขายคอร์สหรือไม'),
-  //                   content: const Text('ต้องการปิดขายคอร์สหรือไม'),
-  //                   actions: <Widget>[
-  //                     TextButton(
-  //                         child: const Text('Cancel'),
-  //                         onPressed: () {
-  //                           Navigator.pop(context, 'Cancel');
-  //                           setState(() {
-  //                             switchOnOff = true;
-  //                           });
-  //                         }),
-  //                     TextButton(
-  //                       onPressed: () {
-  //                         Navigator.pop(context, 'OK');
-  //                         status = "0";
-  //                       },
-  //                       child: const Text('OK'),
-  //                     ),
-  //                   ],
-  //                 ));
-  //       }
-  //     },
-  //     value: switchOnOff,
-  //   );
-  // }
 
   //LoadData
   Future<void> loadDataAsync() async {
@@ -609,7 +576,6 @@ class _CourseEditPageState extends State<CourseEditPage> {
                   return Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: Container(
-                     
                       decoration: const BoxDecoration(
                         color: Colors.white,
                         shape: BoxShape.circle,
@@ -630,9 +596,8 @@ class _CourseEditPageState extends State<CourseEditPage> {
                           },
                           child: Center(
                               child: Text(modelDay.sequence.toString(),
-                                  style: Theme.of(context)
-                                      .textTheme
-                                      .bodyLarge))),
+                                  style:
+                                      Theme.of(context).textTheme.bodyLarge))),
                     ),
                   );
                 },
@@ -688,5 +653,60 @@ class _CourseEditPageState extends State<CourseEditPage> {
     final urlDownload = await snapshot.ref.getDownloadURL();
     // print('link img firebase $urlDownload');
     profile = urlDownload;
+  }
+  //Dialog Delete
+  void dialogDelete(BuildContext context) {
+    //target widget
+    SmartDialog.show(builder: (_) {
+      return Container(
+        width: MediaQuery.of(context).size.width * 0.8,
+        height: MediaQuery.of(context).size.height * 0.3,
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(20),
+          color: Colors.white,
+        ),
+        alignment: Alignment.center,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          //crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Padding(
+              padding: const EdgeInsets.only(
+                  left: 20, right: 20, top: 50, bottom: 16),
+              child: Text("คุณต้องการลบหรือไม",
+                  style: Theme.of(context).textTheme.headlineSmall),
+            ),
+            Padding(
+              padding: const EdgeInsets.only(top: 20),
+              child: Row(
+                //mainAxisSize: MainAxisSize.max,
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  FilledButton(
+                      onPressed: () {
+                        SmartDialog.dismiss();
+                      },
+                      child: const Text("ยกเลิก")),
+                  FilledButton(
+                      onPressed: () async {
+                          var response =
+                            await _courseService.deleteCourse(widget.coID);
+                        modelResult = response.data;
+                        SmartDialog.dismiss();
+                        if(modelResult.result == '1'){
+                          Get.to(() => const HomePageCoach());
+                        }else{
+                          // ignore: use_build_context_synchronously
+                          warningDelete(context);
+                        }
+                      },
+                      child: const Text("ตกลง"))
+                ],
+              ),
+            ),
+          ],
+        ),
+      );
+    });
   }
 }

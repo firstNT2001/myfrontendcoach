@@ -37,10 +37,10 @@ class _WidgetDropdownStringNotValueState extends State<WidgetDropdownStringNotVa
         //Add label If you want but add hint outside the decoration to be aligned in the button perfectly.
       ),
       isExpanded: true,
-      hint:  Text(
-        widget.title,
-        style: const TextStyle(fontSize: 14),
-      ),
+      // hint:  Text(
+      //   widget.title,
+      //   style: const TextStyle(fontSize: 14),
+      // ),
      // value: widget.selectedValue.text,
       items: widget.ListItems.map((item) => DropdownMenuItem<String>(
             value: item,

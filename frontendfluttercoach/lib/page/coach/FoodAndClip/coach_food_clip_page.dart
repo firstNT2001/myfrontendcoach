@@ -1,6 +1,5 @@
 import 'dart:developer';
 
-import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
@@ -17,6 +16,7 @@ import '../../../service/listClip.dart';
 import '../../../service/listFood.dart';
 import '../../../service/provider/appdata.dart';
 
+import '../../../widget/image_video.dart';
 import 'clipCoach/clip_edit_page.dart';
 import 'clipCoach/clip_new_page.dart';
 import '../../search/search_clip_coach.dart';
@@ -92,24 +92,30 @@ class _FoodCoachPageState extends State<FoodCoachPage> {
                 'อาหารและคลิป',
                 style: Theme.of(context).textTheme.headlineSmall,
               )),
-          bottom: const TabBar(tabs: [
-            Tab(
-              icon: Icon(
-                FontAwesomeIcons.bowlFood,
-              ),
-            ),
-            Tab(
-              icon: Icon(
-                FontAwesomeIcons.dumbbell,
-              ),
-            )
-          ]),
+          bottom: const TabBar(
+              labelColor: Colors.black, //<-- selected text color
+              unselectedLabelColor: Colors.white, //<-- Unselected text
+              tabs: [
+                Tab(
+                  icon: Icon(
+                    FontAwesomeIcons.bowlFood,
+                  ),
+                ),
+                Tab(
+                  icon: Icon(
+                    FontAwesomeIcons.dumbbell,
+                  ),
+                )
+              ]),
           centerTitle: true,
         ),
         body: TabBarView(
           children: [
             Column(
               children: [
+                const SizedBox(
+                  height: 10,
+                ),
                 searchFood(context),
                 Expanded(
                   child: Padding(
@@ -122,6 +128,9 @@ class _FoodCoachPageState extends State<FoodCoachPage> {
             ),
             Column(
               children: [
+                const SizedBox(
+                  height: 10,
+                ),
                 searchClip(context),
                 Expanded(
                   child: Padding(
@@ -230,7 +239,7 @@ class _FoodCoachPageState extends State<FoodCoachPage> {
         } else {
           return GridView.builder(
             gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 2, mainAxisExtent: 250),
+                crossAxisCount: 2, mainAxisExtent: 200),
             shrinkWrap: true,
             itemCount: foods.length,
             itemBuilder: (context, index) {
@@ -238,57 +247,68 @@ class _FoodCoachPageState extends State<FoodCoachPage> {
               return Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: SizedBox(
-                  height: MediaQuery.of(context).size.height * 0.4,
+                  //height: MediaQuery.of(context).size.height * 0.4,
                   child: InkWell(
                     onTap: () {
                       Get.to(() => FoodEditCoachPage(ifid: listfood.ifid));
                     },
                     child: Column(
                       children: [
-                        if (listfood.image != '') ...{
-                          AspectRatio(
-                              aspectRatio: 16 / 13,
-                              child: Container(
-                                decoration: BoxDecoration(
-                                  color: const Color(0xff7c94b6),
-                                  image: DecorationImage(
-                                      image: NetworkImage(listfood.image),
-                                      fit: BoxFit.cover),
-                                  borderRadius: BorderRadius.circular(20),
+                        Stack(
+                          children: [
+                            if (listfood.image != '') ...{
+                              AspectRatio(
+                                  aspectRatio: 16 / 13,
+                                  child: Container(
+                                    decoration: BoxDecoration(
+                                      color: const Color(0xff7c94b6),
+                                      image: DecorationImage(
+                                          image: NetworkImage(listfood.image),
+                                          fit: BoxFit.cover),
+                                      borderRadius: BorderRadius.circular(20),
+                                    ),
+                                  )),
+                              //color: Colors.white,
+                            } else
+                              AspectRatio(
+                                  aspectRatio: 16 / 13,
+                                  child: Container(
+                                    decoration: BoxDecoration(
+                                      color: const Color.fromARGB(
+                                          255, 207, 208, 209),
+                                      borderRadius: BorderRadius.circular(20),
+                                    ),
+                                  )),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.end,
+                              children: [
+                                IconButton(
+                                  onPressed: () {
+                                    dialogDeleteFood(
+                                        context, listfood.ifid.toString());
+                                  },
+                                  icon: const Icon(
+                                    FontAwesomeIcons.trash,
+                                    color: Color.fromARGB(255, 93, 93, 93),
+                                  ),
                                 ),
-                              )),
-                          //color: Colors.white,
-                        } else
-                          AspectRatio(
-                              aspectRatio: 16 / 13,
-                              child: Container(
-                                decoration: BoxDecoration(
-                                  color: const Color(0xff7c94b6),
-                                  borderRadius: BorderRadius.circular(20),
-                                ),
-                              )),
+                              ],
+                            ),
+                          ],
+                        ),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             Padding(
                               padding: const EdgeInsets.only(left: 16, top: 8),
                               child: SizedBox(
-                                width: MediaQuery.of(context).size.width * 0.25,
-                                child: AutoSizeText(
+                                width: MediaQuery.of(context).size.width * 0.35,
+                                child: Text(
                                   listfood.name,
-                                  maxLines: 5,
+                                  maxLines: 2,
                                   style:
                                       Theme.of(context).textTheme.titleMedium,
                                 ),
-                              ),
-                            ),
-                            IconButton(
-                              onPressed: () {
-                                dialogDeleteFood(
-                                    context, listfood.ifid.toString());
-                              },
-                              icon: const Icon(
-                                FontAwesomeIcons.trash,
                               ),
                             ),
                           ],
@@ -316,7 +336,7 @@ class _FoodCoachPageState extends State<FoodCoachPage> {
           return GridView.builder(
             gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
               crossAxisCount: 2,
-              mainAxisExtent: 250,
+              mainAxisExtent: 200,
             ),
             shrinkWrap: true,
             itemCount: clips.length,
@@ -332,39 +352,57 @@ class _FoodCoachPageState extends State<FoodCoachPage> {
                     },
                     child: Column(
                       children: [
-                        AspectRatio(
-                            aspectRatio: 16 / 13,
-                            child: Container(
-                              decoration: BoxDecoration(
-                                color: const Color(0xff7c94b6),
-                                borderRadius: BorderRadius.circular(20),
-                              ),
-                            )),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        Stack(
                           children: [
-                            Padding(
-                              padding: const EdgeInsets.only(left: 16, top: 8),
-                              child: SizedBox(
-                                width: MediaQuery.of(context).size.width * 0.25,
-                                child: AutoSizeText(
-                                  listClips.name,
-                                  maxLines: 5,
-                                  style:
-                                      Theme.of(context).textTheme.titleMedium,
+                            if (listClips.video != '') ...{
+                              AspectRatio(
+                                  aspectRatio: 16 / 13,
+                                  child: Container(
+                                    decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(26),
+                                        color: Colors.pink),
+                                    child: VideoItem(
+                                      video: listClips.video,
+                                    ),
+                                  )),
+                            } else
+                              AspectRatio(
+                                  aspectRatio: 16 / 13,
+                                  child: Container(
+                                    decoration: BoxDecoration(
+                                      color: const Color.fromARGB(
+                                          255, 207, 208, 209),
+                                      borderRadius: BorderRadius.circular(20),
+                                    ),
+                                  )),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.end,
+                              children: [
+                                IconButton(
+                                  onPressed: () {
+                                    dialogDeleteClip(
+                                        context, listClips.icpId.toString());
+                                  },
+                                  icon: const Icon(
+                                    FontAwesomeIcons.trash,
+                                    color: Color.fromARGB(255, 93, 93, 93),
+                                  ),
                                 ),
-                              ),
-                            ),
-                            IconButton(
-                              onPressed: () {
-                                dialogDeleteClip(
-                                    context, listClips.icpId.toString());
-                              },
-                              icon: const Icon(
-                                FontAwesomeIcons.trash,
-                              ),
-                            ),
+                              ],
+                            )
                           ],
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.only(left: 16, top: 8),
+                          child: SizedBox(
+                            width: MediaQuery.of(context).size.width * 0.35,
+                            child: Text(
+                              listClips.name,
+                              maxLines: 2,
+                              style:
+                                  Theme.of(context).textTheme.titleMedium,
+                            ),
+                          ),
                         )
                       ],
                     ),
