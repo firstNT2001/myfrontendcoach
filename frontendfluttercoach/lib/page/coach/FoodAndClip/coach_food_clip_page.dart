@@ -359,8 +359,8 @@ class _FoodCoachPageState extends State<FoodCoachPage> {
                                   aspectRatio: 16 / 13,
                                   child: Container(
                                     decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.circular(26),
-                                        color: Colors.pink),
+                                      borderRadius: BorderRadius.circular(26),
+                                    ),
                                     child: VideoItem(
                                       video: listClips.video,
                                     ),
@@ -399,8 +399,7 @@ class _FoodCoachPageState extends State<FoodCoachPage> {
                             child: Text(
                               listClips.name,
                               maxLines: 2,
-                              style:
-                                  Theme.of(context).textTheme.titleMedium,
+                              style: Theme.of(context).textTheme.titleMedium,
                             ),
                           ),
                         )
