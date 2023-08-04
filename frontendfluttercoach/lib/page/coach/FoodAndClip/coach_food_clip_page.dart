@@ -65,6 +65,7 @@ class _FoodCoachPageState extends State<FoodCoachPage> {
       length: 2,
       child: Scaffold(
         floatingActionButton: SpeedDial(
+          backgroundColor: Theme.of(context).colorScheme.primary,
           animatedIcon: AnimatedIcons.menu_close,
           overlayOpacity: 0.4,
           children: [
@@ -85,17 +86,29 @@ class _FoodCoachPageState extends State<FoodCoachPage> {
         resizeToAvoidBottomInset: false,
         appBar: AppBar(
           automaticallyImplyLeading: false,
-          backgroundColor: Theme.of(context).colorScheme.primary,
+          backgroundColor: Colors.transparent,
+          leading: IconButton(
+            icon: const Icon(
+              FontAwesomeIcons.chevronLeft,
+            ),
+            onPressed: () {
+              Get.back();
+            },
+          ),
           title: TextButton(
               onPressed: () {},
               child: Text(
                 'อาหารและคลิป',
                 style: Theme.of(context).textTheme.headlineSmall,
               )),
-          bottom: const TabBar(
-              labelColor: Colors.black, //<-- selected text color
-              unselectedLabelColor: Colors.white, //<-- Unselected text
-              tabs: [
+          bottom: TabBar(
+              labelColor: Theme.of(context)
+                  .colorScheme
+                  .primary, //<-- selected text color
+              unselectedLabelColor: Theme.of(context)
+                  .colorScheme
+                  .primaryContainer, //<-- Unselected text
+              tabs: const [
                 Tab(
                   icon: Icon(
                     FontAwesomeIcons.bowlFood,
@@ -239,7 +252,7 @@ class _FoodCoachPageState extends State<FoodCoachPage> {
         } else {
           return GridView.builder(
             gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 2, mainAxisExtent: 200),
+                crossAxisCount: 2, mainAxisExtent: 230),
             shrinkWrap: true,
             itemCount: foods.length,
             itemBuilder: (context, index) {
@@ -336,7 +349,7 @@ class _FoodCoachPageState extends State<FoodCoachPage> {
           return GridView.builder(
             gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
               crossAxisCount: 2,
-              mainAxisExtent: 200,
+              mainAxisExtent: 230,
             ),
             shrinkWrap: true,
             itemCount: clips.length,
@@ -447,7 +460,7 @@ class _FoodCoachPageState extends State<FoodCoachPage> {
         height: MediaQuery.of(context).size.height * 0.3,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(20),
-          color: Theme.of(context).colorScheme.primaryContainer,
+          color: Colors.white,
         ),
         alignment: Alignment.center,
         child: Column(

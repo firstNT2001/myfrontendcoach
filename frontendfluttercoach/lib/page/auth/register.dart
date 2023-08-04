@@ -1,6 +1,7 @@
 import 'dart:developer';
 import 'dart:io';
 
+import 'package:email_validator/email_validator.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
@@ -57,6 +58,14 @@ class _RegisterPageState extends State<RegisterPage> {
   // ignore: non_constant_identifier_names
   final List<String> LevelItems = ['ชาย', 'หญิง'];
   final selectedValue = TextEditingController();
+
+  // Method to validate the email the take
+  // the user email as an input and
+  // print the bool value in the console.
+  bool validate(String email) {
+    bool isvalid = EmailValidator.validate(email);
+    return isvalid;
+  }
 
   @override
   void initState() {
@@ -277,6 +286,7 @@ class _RegisterPageState extends State<RegisterPage> {
         child: FilledButton(
           //style: style,
           onPressed: () async {
+            
             if (fullName.text == '' ||
                 name.text == '' ||
                 selectedValue.text == '' ||
@@ -291,7 +301,11 @@ class _RegisterPageState extends State<RegisterPage> {
               setState(() {
                 textErr = 'รหัสไม่ตรงกัน';
               });
-            } else {
+            } else if (validate(email.text) == false ) {
+              setState(() {
+                textErr = 'อีมลไม่ถูกต้อง';
+              });
+            }else {
               if (pickedImg != null) await uploadfile();
               if (pickedImg == null) {
                 profile =
@@ -360,7 +374,7 @@ class _RegisterPageState extends State<RegisterPage> {
 
   //Image
   Future selectImg() async {
-    final result = await FilePicker.platform.pickFiles();
+    final result = await FilePicker.platform.pickFiles(type: FileType.image);
     if (result == null) return;
 
     setState(() {

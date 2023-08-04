@@ -18,6 +18,7 @@ import '../../../../../../service/clip.dart';
 import '../../../../../../service/listClip.dart';
 import '../../../../../../service/provider/appdata.dart';
 import '../../../../../../service/request.dart';
+import '../../../../../../widget/image_video.dart';
 import '../../../../../../widget/showCilp.dart';
 import '../../../../../Request/request_page.dart';
 import '../../course_food_clip.dart';
@@ -47,7 +48,7 @@ class _ClipEditSelectPageState extends State<ClipEditSelectPage> {
   late ModelResult modelResult;
 
   late ClipServices _clipService;
-  
+
   //Request
   // ignore: non_constant_identifier_names
   late RequestService _RequestService;
@@ -60,9 +61,8 @@ class _ClipEditSelectPageState extends State<ClipEditSelectPage> {
     _listclipService = context.read<AppData>().listClipServices;
     loadListClipDataMethod = loadListClipData();
 
-     //Request
+    //Request
     _RequestService = context.read<AppData>().requestService;
-    
   }
 
   @override
@@ -138,29 +138,34 @@ class _ClipEditSelectPageState extends State<ClipEditSelectPage> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           if (listClip.video != '') ...{
-                            // SizedBox(
-                            //   width: MediaQuery.of(context).size.width * 0.4,
-                            //   height: MediaQuery.of(context).size.height * 0.2,
-                            //   child: Padding(
-                            //     padding: const EdgeInsets.all(20.0),
-                            //     child: ClipRRect(
-                            //       borderRadius: BorderRadius.circular(8.0),
-                            //       child: Image.network(
-                            //         listClip.image,
-                            //         fit: BoxFit.fill,
-                            //       ),
-                            //     ),
-                            //   ),
-                            // ),
-                          } else
-                            Container(
-                                width: MediaQuery.of(context).size.width * 0.4,
-                                height:
-                                    MediaQuery.of(context).size.height * 0.2,
-                                padding: const EdgeInsets.all(8.0),
-                                decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(8),
-                                    color: Colors.white)),
+                           Padding(
+                              padding: const EdgeInsets.only(
+                                  left: 8, right: 8, top: 5, bottom: 5),
+                              child: AspectRatio(
+                                  aspectRatio: 16 / 16,
+                                  child: Container(
+                                    decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(26),
+                                        color: Colors.pink),
+                                    child: VideoItem(
+                                      video: listClip.video,
+                                    ),
+                                  )),
+                            )
+                        } else
+                           Padding(
+                              padding: const EdgeInsets.only(
+                                  left: 8, right: 8, top: 5, bottom: 5),
+                              child: AspectRatio(
+                                  aspectRatio: 16 / 16,
+                                  child: Container(
+                                    decoration: BoxDecoration(
+                                      color: const Color.fromARGB(
+                                          255, 207, 208, 209),
+                                      borderRadius: BorderRadius.circular(20),
+                                    ),
+                                  )),
+                            ),
                           const SizedBox(width: 10),
                           Column(
                             mainAxisAlignment: MainAxisAlignment.center,
@@ -261,11 +266,9 @@ class _ClipEditSelectPageState extends State<ClipEditSelectPage> {
               Visibility(
                   visible: widget.isVisible,
                   child: buttonEditClip(icpID, name, context)),
-
-              if(widget.isVisible == false)...{
+              if (widget.isVisible == false) ...{
                 buttonRequest(icpID, name, context)
               }
-          
             ],
           ),
         );
@@ -281,7 +284,6 @@ class _ClipEditSelectPageState extends State<ClipEditSelectPage> {
           padding: const EdgeInsets.only(left: 20, right: 20),
           child: ElevatedButton(
               onPressed: () async {
-               
                 log(widget.cpID);
                 ClipClipIdPut request = ClipClipIdPut(
                   listClipId: icpID,
@@ -325,7 +327,6 @@ class _ClipEditSelectPageState extends State<ClipEditSelectPage> {
           padding: const EdgeInsets.only(left: 20, right: 20),
           child: ElevatedButton(
               onPressed: () async {
-                 
                 log(widget.cpID);
                 ClipClipIdPut request = ClipClipIdPut(
                   listClipId: icpID,
@@ -338,10 +339,11 @@ class _ClipEditSelectPageState extends State<ClipEditSelectPage> {
                 log(modelResult.result);
 
                 if (modelResult.result == '1') {
-                   var response =
-                    // ignore: use_build_context_synchronously
-                    await _RequestService.updateRequestStatus(context.read<AppData>().rqID);
-                modelResult = response.data;
+                  var response =
+                      // ignore: use_build_context_synchronously
+                      await _RequestService.updateRequestStatus(
+                          context.read<AppData>().rqID);
+                  modelResult = response.data;
                   Get.to(() => const RequestPage());
                 } else {
                   // ignore: use_build_context_synchronously
