@@ -72,11 +72,7 @@ class _CoachEidtProfilePageState extends State<CoachEidtProfilePage> {
           child: ListView(
         children: [
           showCoach(),
-          Padding(
-                  padding:
-                      const EdgeInsets.only(bottom: 18, left: 20, right: 20),
-                  child: button(),
-                ),
+         
         ],
       )),
     );
@@ -318,7 +314,7 @@ class _CoachEidtProfilePageState extends State<CoachEidtProfilePage> {
   //
   //Image
   Future selectImg() async {
-    final result = await FilePicker.platform.pickFiles();
+    final result = await FilePicker.platform.pickFiles(type: FileType.image);
     if (result == null) return;
 
     setState(() {

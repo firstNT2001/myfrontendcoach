@@ -17,6 +17,8 @@ import '../../../../model/response/md_Result.dart';
 import '../../../../service/listFood.dart';
 import '../../../../service/provider/appdata.dart';
 import '../../../../widget/textField/wg_textField.dart';
+import '../../../../widget/textField/wg_textFieldLines.dart';
+import '../../../../widget/textField/wg_textField_int copy.dart';
 import '../coach_food_clip_page.dart';
 
 class FoodEditCoachPage extends StatefulWidget {
@@ -45,6 +47,9 @@ class _FoodEditCoachPageState extends State<FoodEditCoachPage> {
   PlatformFile? pickedImg;
   UploadTask? uploadTask;
   String profile = " ";
+
+  String textErr = '';
+
   @override
   void initState() {
     super.initState();
@@ -56,32 +61,10 @@ class _FoodEditCoachPageState extends State<FoodEditCoachPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      resizeToAvoidBottomInset: false,
-      appBar: AppBar(
-        backgroundColor: Theme.of(context).colorScheme.primary,
-        title: TextButton(
-            onPressed: () {},
-            child: Text(
-              'เพิ่มเมนูอาหาร',
-              style: Theme.of(context).textTheme.headlineSmall,
-            )),
-        leading: IconButton(
-          icon: const Icon(
-            FontAwesomeIcons.chevronLeft,
-          ),
-          onPressed: () {
-            Get.back();
-          },
-        ),
-      ),
       body: SafeArea(
-        child: Column(
+        child: ListView(
           children: [
-            Expanded(
-                child: Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: inputTextFood(),
-            )),
+            inputTextFood(),
           ],
         ),
       ),
@@ -96,53 +79,117 @@ class _FoodEditCoachPageState extends State<FoodEditCoachPage> {
             return Container();
             //return const Center(child: CircularProgressIndicator());
           }
-          return Column(
+          return Stack(
             children: [
               inputImage(context),
-              const SizedBox(height: 20),
-              WidgetTextFieldString(
-                controller: name,
-                labelText: 'ชื่อ',
-              ),
-              const SizedBox(height: 18),
-              WidgetTextFieldString(
-                controller: details,
-                labelText: 'details',
-              ),
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: ElevatedButton(
-                    onPressed: () async {
-                      log(widget.ifid.toString());
-                      log(context.read<AppData>().cid.toString());
-                      if (pickedImg != null) await uploadfile();
-                      if (pickedImg == null) profile = foods.first.image;
-                      ListFoodFoodIdPut request = ListFoodFoodIdPut(
-                          name: name.text,
-                          image: profile,
-                          details: details.text,
-                          calories: int.parse(calories.text),
-                          coachId: context.read<AppData>().cid);
-                      log(jsonEncode(request));
-                      editFood = await _listfoodService.updateListFoodByFoodID(
-                          widget.ifid.toString(), request);
-                      modelResult = editFood.data;
-                      log(jsonEncode(modelResult.result));
-                      if (modelResult.result == "1") {
-                        Get.to(() => const FoodCoachPage());
-                      }
-                    },
-                    child: const Text('บันทึก')),
-              )
+              Positioned(
+                  child: Padding(
+                      padding: EdgeInsets.only(
+                          top: MediaQuery.of(context).size.height / 3),
+                      child: Container(
+                          width: MediaQuery.of(context).size.width,
+                          decoration: const BoxDecoration(
+                              borderRadius: BorderRadius.only(
+                                  topLeft: Radius.circular(20),
+                                  topRight: Radius.circular(20)),
+                              color: Colors.white),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Padding(
+                                padding: const EdgeInsets.only(
+                                    bottom: 18, top: 28, left: 20, right: 20),
+                                child: WidgetTextFieldString(
+                                  controller: name,
+                                  labelText: 'ขื่อเมนู',
+                                ),
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.only(
+                                    bottom: 18, left: 20, right: 20),
+                                child: WidgetTextFieldInt(
+                                  controller: calories,
+                                  labelText: 'Calories',
+                                  maxLength: 2,
+                                ),
+                              ),
+                              Padding(
+                                  padding: const EdgeInsets.only(
+                                      bottom: 18, left: 20, right: 20),
+                                  child: WidgetTextFieldLines(
+                                    controller: details,
+                                    labelText: 'ส่วนผสม',
+                                  )),
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.end,
+                                children: [
+                                  Padding(
+                                    padding: const EdgeInsets.only(
+                                        bottom: 8, left: 20, right: 23),
+                                    child: Text(
+                                      textErr,
+                                      style: TextStyle(
+                                          color:
+                                              Theme.of(context).colorScheme.error),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              Center(
+                                child: Padding(
+                                  padding: const EdgeInsets.only(
+                                      bottom: 18, left: 20, right: 20),
+                                  child: SizedBox(
+                                      width: MediaQuery.of(context).size.width,
+                                      child: button(context)),
+                                ),
+                              ),
+                            ],
+                          )))),
             ],
           );
         });
   }
 
+  FilledButton button(BuildContext context) {
+    return FilledButton(
+        onPressed: () async {
+          if (name.text.isEmpty ||
+              details.text.isEmpty ||
+              calories.text.isEmpty) {
+            setState(() {
+              textErr = 'กรุณากรอกข้อมูลให้ครบ';
+            });
+          } else {
+            log(widget.ifid.toString());
+            log(context.read<AppData>().cid.toString());
+            if (pickedImg != null) await uploadfile();
+            if (pickedImg == null) profile = foods.first.image;
+            ListFoodFoodIdPut request = ListFoodFoodIdPut(
+                name: name.text,
+                image: profile,
+                details: details.text,
+                calories: int.parse(calories.text),
+                coachId: context.read<AppData>().cid);
+            log(jsonEncode(request));
+            editFood = await _listfoodService.updateListFoodByFoodID(
+                widget.ifid.toString(), request);
+            modelResult = editFood.data;
+            log(jsonEncode(modelResult.result));
+            if (modelResult.result == "1") {
+              Get.to(() => const FoodCoachPage());
+            }
+          }
+        },
+        child: const Text('บันทึก'));
+  }
+
   Future<void> loadDataAsync() async {
     try {
       var res = await _listfoodService.listFoods(
-          ifid: widget.ifid.toString(), cid: context.read<AppData>().cid.toString(), name: '');
+          ifid: widget.ifid.toString(),
+          cid: context.read<AppData>().cid.toString(),
+          name: '');
       foods = res.data;
       name.text = foods.first.name;
       details.text = foods.first.details;
@@ -167,7 +214,7 @@ class _FoodEditCoachPageState extends State<FoodEditCoachPage> {
   }
 
   Future selectImg() async {
-    final result = await FilePicker.platform.pickFiles();
+    final result = await FilePicker.platform.pickFiles(type: FileType.image);
     if (result == null) return;
 
     setState(() {
@@ -198,7 +245,21 @@ class _FoodEditCoachPageState extends State<FoodEditCoachPage> {
                     ),
                     fit: BoxFit.cover)),
           ),
-        } else ...{
+          }else if (foods.first.image.isEmpty) ...{
+            Container(
+              width: MediaQuery.of(context).size.width,
+              height: MediaQuery.of(context).size.height * 0.4,
+              decoration: BoxDecoration(
+                //borderRadius: BorderRadius.circular(20),
+                boxShadow: [
+                  BoxShadow(
+                      spreadRadius: 2,
+                      blurRadius: 10,
+                      color: Colors.black.withOpacity(0.1))
+                ],
+              ),
+            ),
+        } else
           Container(
             width: MediaQuery.of(context).size.width,
             height: MediaQuery.of(context).size.height * 0.4,
@@ -216,9 +277,8 @@ class _FoodEditCoachPageState extends State<FoodEditCoachPage> {
                   image: NetworkImage(foods.first.image),
                 )),
           ),
-        },
         Positioned(
-            bottom: 70,
+            bottom: 60,
             right: 8,
             child: InkWell(
               onTap: () {
@@ -228,16 +288,37 @@ class _FoodEditCoachPageState extends State<FoodEditCoachPage> {
               child: Container(
                 height: 40,
                 width: 40,
-                decoration: BoxDecoration(
+                decoration: const BoxDecoration(
                     shape: BoxShape.circle,
-                    border: Border.all(width: 4, color: Colors.white),
-                    color: Colors.amber),
+                    //border: Border.all(width: 4, color: Colors.white),
+                    color: Colors.white),
                 child: const Icon(
-                  Icons.edit,
-                  color: Colors.white,
+                  FontAwesomeIcons.camera,
+                  color: Colors.black,
                 ),
               ),
             )),
+        Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              CircleAvatar(
+                backgroundColor: Colors.white,
+                radius: 20,
+                child: IconButton(
+                  icon: const Icon(
+                    FontAwesomeIcons.chevronLeft,
+                    color: Colors.black,
+                  ),
+                  onPressed: () {
+                    Get.back();
+                  },
+                ),
+              ),
+            ],
+          ),
+        ),
       ],
     );
   }

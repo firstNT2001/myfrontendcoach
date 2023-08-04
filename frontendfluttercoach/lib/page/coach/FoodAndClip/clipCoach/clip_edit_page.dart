@@ -18,7 +18,9 @@ import '../../../../model/response/md_ClipList_get.dart';
 import '../../../../model/response/md_Result.dart';
 import '../../../../service/listClip.dart';
 import '../../../../service/provider/appdata.dart';
+import '../../../../widget/showCilp.dart';
 import '../../../../widget/textField/wg_textField.dart';
+import '../../../../widget/textField/wg_textFieldLines.dart';
 
 class ClipEditCoachPage extends StatefulWidget {
   final int icpId;
@@ -50,6 +52,8 @@ class _ClipEditCoachPageState extends State<ClipEditCoachPage> {
 
   //Result update Clips
   late ModelResult modelResult;
+
+  String textErr = '';
   @override
   void initState() {
     // TODO: implement initState
@@ -57,37 +61,16 @@ class _ClipEditCoachPageState extends State<ClipEditCoachPage> {
     //LoadClipService
     _listClipService = context.read<AppData>().listClipServices;
     loadClipDataMethod = loadClipData();
+    log(pickedFile.toString());
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      resizeToAvoidBottomInset: false,
-      appBar: AppBar(
-        backgroundColor: Theme.of(context).colorScheme.primary,
-        title: TextButton(
-            onPressed: () {},
-            child: Text(
-              'เพิ่มเมนูอาหาร',
-              style: Theme.of(context).textTheme.headlineSmall,
-            )),
-        leading: IconButton(
-          icon: const Icon(
-            FontAwesomeIcons.chevronLeft,
-          ),
-          onPressed: () {
-            Get.back();
-          },
-        ),
-      ),
       body: SafeArea(
-        child: Column(
+        child: ListView(
           children: [
-            Expanded(
-                child: Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: inputTextClips(),
-            )),
+            inputTextClips(),
           ],
         ),
       ),
@@ -104,7 +87,66 @@ class _ClipEditCoachPageState extends State<ClipEditCoachPage> {
             //return const Center(child: CircularProgressIndicator());
           }
           return Column(
-            children: [
+            children: [video(), textFieldAll(context)],
+          );
+        });
+  }
+
+  Column textFieldAll(BuildContext context) {
+    return Column(
+      children: [
+        Padding(
+          padding:
+              const EdgeInsets.only(bottom: 18, top: 28, left: 20, right: 20),
+          child: WidgetTextFieldString(
+            controller: name,
+            labelText: 'ชื่อ',
+          ),
+        ),
+        Padding(
+          padding: const EdgeInsets.only(bottom: 18, left: 20, right: 20),
+          child: WidgetTextFieldString(
+            controller: amountPerSet,
+            labelText: 'จำนวนเซ็ท',
+          ),
+        ),
+        Padding(
+          padding: const EdgeInsets.only(bottom: 18, left: 20, right: 20),
+          child: WidgetTextFieldLines(
+            controller: details,
+            labelText: 'รายละเอียดท่าออกกำลังกาย',
+          ),
+        ),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.end,
+          children: [
+            Padding(
+              padding: const EdgeInsets.only(bottom: 8, left: 20, right: 23),
+              child: Text(
+                textErr,
+                style: TextStyle(color: Theme.of(context).colorScheme.error),
+              ),
+            ),
+          ],
+        ),
+        Center(
+          child: Padding(
+            padding: const EdgeInsets.only(bottom: 18, left: 20, right: 20),
+            child: SizedBox(
+                width: MediaQuery.of(context).size.width,
+                child: button(context)),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Column video() {
+    return Column(
+      children: [
+        Stack(
+          children: [
+            if (pickedFile != null) ...{
               Expanded(
                 child: SafeArea(
                   child: CustomVideoPlayer(
@@ -112,53 +154,101 @@ class _ClipEditCoachPageState extends State<ClipEditCoachPage> {
                           _customVideoPlayerController),
                 ),
               ),
-              const SizedBox(
-                height: 12,
+            } else if (listclips.first.video != '') ...{
+               WidgetShowCilp(
+                urlVideo: listclips.first.video,
               ),
-              ElevatedButton(
-                onPressed: selectFile,
-                child: const Text('Select File'),
+            } else
+             Container(
+                width: MediaQuery.of(context).size.width,
+                height: MediaQuery.of(context).size.height * 0.3,
+                decoration: BoxDecoration(
+                  //borderRadius: BorderRadius.circular(20),
+                  boxShadow: [
+                    BoxShadow(
+                        spreadRadius: 2,
+                        blurRadius: 10,
+                        color: Colors.black.withOpacity(0.1))
+                  ],
+                ),
               ),
-              const SizedBox(
-                height: 12,
+            
+            Positioned(
+                bottom: 60,
+                right: 8,
+                child: InkWell(
+                  onTap: () {
+                    log("message");
+                    selectFile();
+                  },
+                  child: Container(
+                    height: 40,
+                    width: 40,
+                    decoration: const BoxDecoration(
+                        shape: BoxShape.circle,
+                        //border: Border.all(width: 4, color: Colors.white),
+                        color: Colors.white),
+                    child: const Icon(
+                      FontAwesomeIcons.camera,
+                      color: Colors.black,
+                    ),
+                  ),
+                )),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  CircleAvatar(
+                    backgroundColor: Colors.white,
+                    radius: 20,
+                    child: IconButton(
+                      icon: const Icon(
+                        FontAwesomeIcons.chevronLeft,
+                        color: Colors.black,
+                      ),
+                      onPressed: () {
+                        Get.back();
+                      },
+                    ),
+                  ),
+                ],
               ),
-              const SizedBox(height: 20),
-              WidgetTextFieldString(
-                controller: name,
-                labelText: 'ชื่อ',
-              ),
-              const SizedBox(height: 18),
-              WidgetTextFieldString(
-                controller: details,
-                labelText: 'details',
-              ),
-              const SizedBox(height: 18),
-              WidgetTextFieldString(
-                controller: amountPerSet,
-                labelText: 'details',
-              ),
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: ElevatedButton(
-                    onPressed: () async {
-                      ListClipClipIdPut listClipCoachIdPut = ListClipClipIdPut(
-                          name: name.text,
-                          amountPerSet: amountPerSet.text,
-                          video: pathVdieo,
-                          details: details.text,
-                          coachId: context.read<AppData>().cid);
-                      log(jsonEncode(listClipCoachIdPut));
-                      var insertClip =
-                          await _listClipService.updateListClipByClipID(
-                              widget.icpId.toString(), listClipCoachIdPut);
-                      modelResult = insertClip.data;
-                      log(jsonEncode(modelResult.result));
-                    },
-                    child: const Text('บันทึก')),
-              )
-            ],
-          );
-        });
+            ),
+          ],
+        ),
+      ],
+    );
+  }
+
+  FilledButton button(BuildContext context) {
+    return FilledButton(
+        onPressed: () async {
+          if (name.text.isEmpty ||
+              amountPerSet.text.isEmpty ||
+              details.text.isEmpty) {
+            setState(() {
+              textErr = 'กรุณากรอกข้อมูลให้ครบ';
+            });
+          } else if (pathVdieo.isEmpty) {
+            setState(() {
+              textErr = 'กรุณาเพิ่มวิดิโอ';
+            });
+          } else {
+            ListClipClipIdPut listClipCoachIdPut = ListClipClipIdPut(
+                name: name.text,
+                amountPerSet: amountPerSet.text,
+                video: pathVdieo,
+                details: details.text,
+                coachId: context.read<AppData>().cid);
+            log(jsonEncode(listClipCoachIdPut));
+            var insertClip = await _listClipService.updateListClipByClipID(
+                widget.icpId.toString(), listClipCoachIdPut);
+            modelResult = insertClip.data;
+            log(jsonEncode(modelResult.result));
+          }
+        },
+        child: const Text('บันทึก'));
   }
 
   //loadData
@@ -167,15 +257,7 @@ class _ClipEditCoachPageState extends State<ClipEditCoachPage> {
       var datas = await _listClipService.listClips(
           icpID: widget.icpId.toString(), cid: '', name: '');
       listclips = datas.data;
-
-      _videoPlayerController =
-          VideoPlayerController.network(listclips.first.video)
-            ..initialize().then((value) => setState(() {}));
-      // ignore: use_build_context_synchronously
-      _customVideoPlayerController = CustomVideoPlayerController(
-        context: context,
-        videoPlayerController: _videoPlayerController,
-      );
+      log(listclips.first.video);
       name.text = listclips.first.name;
       details.text = listclips.first.details;
       amountPerSet.text = listclips.first.amountPerSet;
@@ -241,6 +323,7 @@ class _ClipEditCoachPageState extends State<ClipEditCoachPage> {
     super.dispose();
     _customVideoPlayerController.dispose();
   }
+
   // StartLoading And StopLoading
   Widget loadingIndicator(BuildContext context) => Container(
         decoration: BoxDecoration(

@@ -662,8 +662,8 @@ class _HomeFoodAndClipPageState extends State<HomeFoodAndClipPage> {
                                   aspectRatio: 16 / 13,
                                   child: Container(
                                     decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.circular(26),
-                                        color: Colors.pink),
+                                      borderRadius: BorderRadius.circular(26),
+                                    ),
                                     child: VideoItem(
                                       video: listClip.listClip.video,
                                     ),
