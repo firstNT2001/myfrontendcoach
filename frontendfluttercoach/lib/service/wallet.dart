@@ -3,7 +3,7 @@ import 'package:dio/dio.dart';
 
 import '../model/request/wallet_uid.dart';
 import '../model/response/md_Result.dart';
-import '../model/response/md_res_gbprime.dart';
+import '../model/response/md_historyWallet_get.dart';
 
 part 'generated/wallet.g.dart';
 
@@ -14,7 +14,8 @@ abstract class WalletService {
   Future<HttpResponse<ModelResult>> insertWallet(
       @Path("uid") String uid, @Body() WalletUser walletUser);
 
-  @POST("/gbcallback")
-  Future<HttpResponse<ModelResult>> updateWallet(
-      @Body() ResponseGbprime responseGbprime);
+  @GET("/wallet")
+  Future<HttpResponse<List<Historywallet>>> showHistorywall({
+    @Query("uid") required String uid,
+  });
 }
