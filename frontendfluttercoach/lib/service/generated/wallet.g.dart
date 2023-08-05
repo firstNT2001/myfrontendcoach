@@ -47,26 +47,28 @@ class _WalletService implements WalletService {
   }
 
   @override
-  Future<HttpResponse<ModelResult>> updateWallet(responseGbprime) async {
+  Future<HttpResponse<List<Historywallet>>> showHistorywall(
+      {required uid}) async {
     const _extra = <String, dynamic>{};
-    final queryParameters = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{r'uid': uid};
     final _headers = <String, dynamic>{};
     final _data = <String, dynamic>{};
-    _data.addAll(responseGbprime.toJson());
-    final _result = await _dio.fetch<Map<String, dynamic>>(
-        _setStreamType<HttpResponse<ModelResult>>(Options(
-      method: 'POST',
+    final _result = await _dio.fetch<List<dynamic>>(
+        _setStreamType<HttpResponse<List<Historywallet>>>(Options(
+      method: 'GET',
       headers: _headers,
       extra: _extra,
     )
             .compose(
               _dio.options,
-              '/gbcallback',
+              '/wallet',
               queryParameters: queryParameters,
               data: _data,
             )
             .copyWith(baseUrl: baseUrl ?? _dio.options.baseUrl)));
-    final value = ModelResult.fromJson(_result.data!);
+    var value = _result.data!
+        .map((dynamic i) => Historywallet.fromJson(i as Map<String, dynamic>))
+        .toList();
     final httpResponse = HttpResponse(value, _result);
     return httpResponse;
   }
