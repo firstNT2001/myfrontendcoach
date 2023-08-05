@@ -5,7 +5,6 @@ import 'package:email_validator/email_validator.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:frontendfluttercoach/page/user/editProfile.dart';
 import 'package:frontendfluttercoach/widget/textField/wg_textField.dart';
 import 'package:get/get.dart';
 import 'package:base32/base32.dart';
@@ -24,7 +23,6 @@ import '../../service/coach.dart';
 import '../../service/customer.dart';
 import '../../service/provider/appdata.dart';
 import '../../widget/textField/wg_textField_int copy.dart';
-import '../coach/profile/coach_editProfile.dart';
 import 'login.dart';
 
 class EditPasswordPage extends StatefulWidget {
