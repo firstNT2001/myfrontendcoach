@@ -286,7 +286,7 @@ class _LoginPageState extends State<LoginPage> {
       Get.to(() => const HomePageCoach());
       setState(() => titleErr = '');
     } else if (authLoginRes.uid > 0) {
-      Get.to(() => const HomePageUser());
+      Get.to(() => const NavbarBottom());
       setState(() => titleErr = '');
     } else {
       log('ไม่พบ');
