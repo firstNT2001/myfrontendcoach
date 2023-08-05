@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:developer';
 
 import 'package:email_validator/email_validator.dart';
 import 'package:flutter/cupertino.dart';
@@ -15,6 +16,8 @@ import 'package:otp/otp.dart';
 import 'package:provider/provider.dart';
 
 import '../../model/request/auth_password.dart';
+import '../../model/response/md_Coach_get.dart';
+import '../../model/response/md_Customer_get.dart';
 import '../../model/response/md_Result.dart';
 import '../../service/auth.dart';
 import '../../service/coach.dart';
@@ -34,9 +37,15 @@ class EditPasswordPage extends StatefulWidget {
 
 class _EditPasswordPageState extends State<EditPasswordPage> {
   //Service
+  late Future<void> loadDataMethod;
+
   late CoachService _coachService;
   late CustomerService _customerService;
-  
+
+  //Model
+  List<Coach> modelCoach = [];
+  late Customer modelCustomer;
+
   late AuthService authService;
   late ModelResult modelResult;
 
@@ -56,8 +65,12 @@ class _EditPasswordPageState extends State<EditPasswordPage> {
   void initState() {
     // TODO: implement initState
     super.initState();
+    _coachService = context.read<AppData>().coachService;
+    _customerService = context.read<AppData>().customerService;
     authService = context.read<AppData>().authService;
+
     password = widget.password;
+    loadDataMethod = loadData();
   }
 
   @override
@@ -65,7 +78,7 @@ class _EditPasswordPageState extends State<EditPasswordPage> {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          "เปรียนรหัสผ่าน",
+          "ลืมรหัสผ่าน",
           style: Theme.of(context).textTheme.headlineMedium,
         ),
         backgroundColor: Colors.transparent,
@@ -81,132 +94,7 @@ class _EditPasswordPageState extends State<EditPasswordPage> {
       ),
       body: SafeArea(
           child: ListView(
-        children: [
-          const SizedBox(
-            height: 20,
-          ),
-          Visibility(
-              visible: emailVisible,
-              child: Column(
-                children: [
-                  Padding(
-                    padding:
-                        const EdgeInsets.only(bottom: 8, left: 20, right: 20),
-                    child: WidgetTextFieldString(
-                      controller: email,
-                      labelText: 'Email',
-                    ),
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.only(
-                            bottom: 8, left: 20, right: 23),
-                        child: Text(
-                          textErr,
-                          style: TextStyle(
-                              color: Theme.of(context).colorScheme.error),
-                        ),
-                      ),
-                    ],
-                  ),
-                  Padding(
-                    padding:
-                        const EdgeInsets.only(bottom: 18, left: 20, right: 20),
-                    child: buttonEmail(),
-                  ),
-                  const Divider(endIndent: 20, indent: 20),
-                ],
-              )),
-          Visibility(
-              visible: otpVisible,
-              child: Column(
-                children: [
-                  Padding(
-                    padding:
-                        const EdgeInsets.only(bottom: 8, left: 20, right: 20),
-                    child: WidgetTextFieldInt(
-                      controller: otp,
-                      labelText: 'OTP',
-                      maxLength: 6,
-                    ),
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.only(
-                            bottom: 8, left: 20, right: 23),
-                        child: Text(
-                          textErr,
-                          style: TextStyle(
-                              color: Theme.of(context).colorScheme.error),
-                        ),
-                      ),
-                    ],
-                  ),
-                  Padding(
-                    padding:
-                        const EdgeInsets.only(bottom: 18, left: 20, right: 20),
-                    child: buttonOTP(),
-                  ),
-                  const Divider(endIndent: 20, indent: 20),
-                ],
-              )),
-          Visibility(
-              visible: isVisible,
-              child: Column(
-                children: [
-                  Padding(
-                    padding:
-                        const EdgeInsets.only(bottom: 8, left: 20, right: 20),
-                    child: textPassword(
-                      password1,
-                    ),
-                  ),
-                  Padding(
-                    padding:
-                        const EdgeInsets.only(bottom: 8, left: 20, right: 20),
-                    child: textPassword(
-                      password2,
-                    ),
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.only(
-                            bottom: 8, left: 20, right: 23),
-                        child: Text(
-                          textErr,
-                          style: TextStyle(
-                              color: Theme.of(context).colorScheme.error),
-                        ),
-                      ),
-                    ],
-                  ),
-                  Visibility(
-                    visible: widget.visible,
-                    child: Padding(
-                      padding: const EdgeInsets.only(
-                          bottom: 18, left: 20, right: 20),
-                      child: buttonCoach(),
-                    ),
-                  ),
-                  if (widget.visible == false) ...{
-                    Visibility(
-                      visible: widget.visible,
-                      child: Padding(
-                        padding: const EdgeInsets.only(
-                            bottom: 18, left: 20, right: 20),
-                        child: buttonCus(),
-                      ),
-                    )
-                  }
-                ],
-              ))
-        ],
+        children: [show()],
       )),
     );
   }
@@ -228,10 +116,22 @@ class _EditPasswordPageState extends State<EditPasswordPage> {
             });
           } else {
             setState(() {
-              textErr = '';
-              emailVisible = false;
-              otpVisible = true;
+              _coachService
+                  .coach(cid: '', nameCoach: '', email: email.text)
+                  .then((coachdata) {
+                var coachDatas = coachdata.data;
+                modelCoach = coachDatas;
+                if (modelCoach.isNotEmpty) {
+                  setState(() {});
+                  log(modelCoach.length.toString());
+                }
+              });
+
+              // textErr = '';
+              // emailVisible = false;
+              // otpVisible = true;
             });
+            log(modelCoach.first.email);
           }
         },
         child: const Text('ยืนยัน'),
@@ -380,16 +280,161 @@ class _EditPasswordPageState extends State<EditPasswordPage> {
     );
   }
 
-  // String getGoogleAuthenticatorUri(String appname, String email, String key) {
-  //   List<int> list = utf8.encode(key);
-  //   String hex = HEX.encode(list);
-  //   String secret = base32.encodeHexString(hex);
-  //   log('secret $secret');
-  //   String uri =
-  //       'otpauth://totp/${Uri.encodeComponent('$appname:$email?secret=$secret&issuer=$appname')}';
+  //LoadData
+  Future<void> loadData() async {
+    try {
+      //Courses
+      var coachDatas =
+          await _coachService.coach(nameCoach: '', cid: '', email: '');
+      modelCoach = coachDatas.data;
 
-  //   return uri;
-  // }
+      // var cusDatas =
+      //     await _customerService.customer(email: email.text, uid: '');
+      // modelCustomer = cusDatas.data;
+    } catch (err) {
+      log('Error: $err');
+    }
+  }
+
+  Widget show() {
+    return FutureBuilder(
+      future: loadDataMethod,
+      builder: (context, snapshot) {
+        if (snapshot.connectionState != ConnectionState.done) {
+          return const Center(child: CircularProgressIndicator());
+        } else {
+          return Column(
+            children: [
+              const SizedBox(
+                height: 20,
+              ),
+              Visibility(
+                  visible: emailVisible,
+                  child: Column(
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.only(
+                            bottom: 8, left: 20, right: 20),
+                        child: WidgetTextFieldString(
+                          controller: email,
+                          labelText: 'Email',
+                        ),
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.only(
+                                bottom: 8, left: 20, right: 23),
+                            child: Text(
+                              textErr,
+                              style: TextStyle(
+                                  color: Theme.of(context).colorScheme.error),
+                            ),
+                          ),
+                        ],
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(
+                            bottom: 18, left: 20, right: 20),
+                        child: buttonEmail(),
+                      ),
+                      const Divider(endIndent: 20, indent: 20),
+                    ],
+                  )),
+              Visibility(
+                  visible: otpVisible,
+                  child: Column(
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.only(
+                            bottom: 8, left: 20, right: 20),
+                        child: WidgetTextFieldInt(
+                          controller: otp,
+                          labelText: 'OTP',
+                          maxLength: 6,
+                        ),
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.only(
+                                bottom: 8, left: 20, right: 23),
+                            child: Text(
+                              textErr,
+                              style: TextStyle(
+                                  color: Theme.of(context).colorScheme.error),
+                            ),
+                          ),
+                        ],
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(
+                            bottom: 18, left: 20, right: 20),
+                        child: buttonOTP(),
+                      ),
+                      const Divider(endIndent: 20, indent: 20),
+                    ],
+                  )),
+              Visibility(
+                  visible: isVisible,
+                  child: Column(
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.only(
+                            bottom: 8, left: 20, right: 20),
+                        child: textPassword(
+                          password1,
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(
+                            bottom: 8, left: 20, right: 20),
+                        child: textPassword(
+                          password2,
+                        ),
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.only(
+                                bottom: 8, left: 20, right: 23),
+                            child: Text(
+                              textErr,
+                              style: TextStyle(
+                                  color: Theme.of(context).colorScheme.error),
+                            ),
+                          ),
+                        ],
+                      ),
+                      Visibility(
+                        visible: widget.visible,
+                        child: Padding(
+                          padding: const EdgeInsets.only(
+                              bottom: 18, left: 20, right: 20),
+                          child: buttonCoach(),
+                        ),
+                      ),
+                      if (widget.visible == false) ...{
+                        Visibility(
+                          visible: widget.visible,
+                          child: Padding(
+                            padding: const EdgeInsets.only(
+                                bottom: 18, left: 20, right: 20),
+                            child: buttonCus(),
+                          ),
+                        )
+                      }
+                    ],
+                  ))
+            ],
+          );
+        }
+      },
+    );
+  }
 
   String getTotp(String key) {
     List<int> list = utf8.encode(key);

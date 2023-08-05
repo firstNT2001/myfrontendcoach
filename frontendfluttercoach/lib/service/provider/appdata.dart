@@ -9,6 +9,7 @@ import 'package:frontendfluttercoach/service/listClip.dart';
 import '../auth.dart';
 
 import '../buy.dart';
+import '../customer.dart';
 import '../days.dart';
 
 import '../listFood.dart';
@@ -68,4 +69,5 @@ class AppData with ChangeNotifier {
   DaysService get daysService => DaysService(Dio(), baseUrl: baseurl);
   ReviewService get reviewService => ReviewService(Dio(), baseUrl: baseurl);
   BuyCourseService get buyCourseService => BuyCourseService(Dio(), baseUrl: baseurl);
+  CustomerService get customerService => CustomerService(Dio(), baseUrl: baseurl);
 }
