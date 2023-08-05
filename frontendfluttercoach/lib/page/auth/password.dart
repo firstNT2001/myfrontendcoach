@@ -18,6 +18,7 @@ import '../../model/request/auth_password.dart';
 import '../../model/response/md_Result.dart';
 import '../../service/auth.dart';
 import '../../service/coach.dart';
+import '../../service/customer.dart';
 import '../../service/provider/appdata.dart';
 import '../../widget/textField/wg_textField_int copy.dart';
 import '../coach/profile/coach_editProfile.dart';
@@ -32,8 +33,10 @@ class EditPasswordPage extends StatefulWidget {
 }
 
 class _EditPasswordPageState extends State<EditPasswordPage> {
+  //Service
   late CoachService _coachService;
-
+  late CustomerService _customerService;
+  
   late AuthService authService;
   late ModelResult modelResult;
 

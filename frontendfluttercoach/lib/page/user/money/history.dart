@@ -84,7 +84,7 @@ class _HistoryWalletState extends State<HistoryWallet> {
 
   Future<void> loadData() async {
     try {
-      customer = await customerService.customer(uid: uid.toString());
+      customer = await customerService.customer(uid: uid.toString(), email: '');
       log('cussss: ${uid}');
       
 
