@@ -7,13 +7,14 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:frontendfluttercoach/page/user/profileUser.dart';
 import 'package:get/get.dart';
+import 'package:hex/hex.dart';
 import 'package:otp/otp.dart';
 
 import 'package:provider/provider.dart';
 import 'package:retrofit/retrofit.dart';
 import 'package:syncfusion_flutter_barcodes/barcodes.dart';
 import '../../model/request/updateCus.dart';
-
+import 'package:base32/base32.dart';
 import '../../model/response/md_Customer_get.dart';
 import '../../model/response/md_Result.dart';
 
@@ -249,29 +250,30 @@ class _editProfileCusState extends State<editProfileCus> {
                   // txtfildn(_password, "รหัสผ่าน", "รหัสผ่าน"),
                   FilledButton(
                       onPressed: () async{
-                        GenOTP =await OTP.generateHOTPCodeString(
-                            _username.text, int.parse(_password.text));
-                        log("GenOTP" + GenOTP);
-                        if(GenOTP.isNotEmpty){
-                          setState(() {
-                            isvisible = true;
-                          });
-                          
-                        }else{
-                          log("message n=not otp");
-                        }
-                        
+                       GenOTP= getGoogleAuthenticatorUri("Coaching", _email.text, _password.text);
+                       log(GenOTP);
+                          if (GenOTP.isNotEmpty){
+                            setState(() {
+                              isvisible =true;
+                            });
+                          }
                       },
-                      child: Text("เปลี่ยนรหัสผ่าน")),
+                      child: Text("สร้างGoogle Authenticator")),
                   Visibility(
                     visible: isvisible,
-                    child: Container(
-                      height: 200,
-                      child: SfBarcodeGenerator(
-                        value: GenOTP,
-                        symbology: QRCode(),
-                        showValue: false,
-                      ),
+                    child: Column(
+                      children: [
+                        Container(
+                          height: 200,
+                          child: Image.network(
+                'https://www.google.com/chart?chs=200x200&chld=M|0&cht=qr&chl=$GenOTP')
+                        ),
+                        FilledButton(onPressed: (){
+                          setState(() {
+                            isvisible =false;
+                          });
+                        }, child: Text("ซ่อน QR Code"))
+                      ],
                     ),
                   ),
                   txtfild(_email, "e-mail", "e-mail"),
@@ -415,5 +417,15 @@ class _editProfileCusState extends State<editProfileCus> {
         ),
       ],
     );
+  }
+  String getGoogleAuthenticatorUri(String appname, String email, String key) {
+    List<int> list = utf8.encode(key);
+    String hex = HEX.encode(list);
+    String secret = base32.encodeHexString(hex);
+    log('secret $secret');
+    String uri =
+        'otpauth://totp/${Uri.encodeComponent('$appname:$email?secret=$secret&issuer=$appname')}';
+
+    return uri;
   }
 }
