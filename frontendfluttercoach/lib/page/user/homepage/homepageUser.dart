@@ -31,7 +31,7 @@ class _HomePageUserState extends State<HomePageUser> {
   late Future<void> loadDataMethod;
   late CourseService courseService;
   late CustomerService customerService;
-  late HttpResponse<Customer> customer;
+  List<Customer> customer = [];
   List<Course> courses = [];
   int uid = 0;
   bool isVisible = false;
@@ -128,7 +128,8 @@ class _HomePageUserState extends State<HomePageUser> {
       // Coachbycourse course = Coachbycourse();
       // log(jsonEncode(course));
       log("User ID" + uid.toString());
-      customer = await customerService.customer(uid: uid.toString(), email: '');
+      var result = await customerService.customer(uid: uid.toString(), email: '');
+      customer = result.data;
       var datacourse = await courseService.course(coID: '', cid: '', name: '');
 
       courses = datacourse.data;
@@ -161,9 +162,9 @@ class _HomePageUserState extends State<HomePageUser> {
                 child: InkWell(
                   onTap: () {
                     log(listcours.coId.toString());
-                    log(customer.data.price.toString());
+                    log(customer.first.price.toString());
                     context.read<AppData>().idcourse = listcours.coId;
-                    context.read<AppData>().money = customer.data.price;
+                    context.read<AppData>().money = customer.first.price;
                     pushNewScreen(
                       context,
                       screen: const showCousePage(),

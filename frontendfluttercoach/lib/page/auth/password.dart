@@ -41,8 +41,8 @@ class _EditPasswordPageState extends State<EditPasswordPage> {
 
   //Model
   List<Coach> modelCoach = [];
-  late Customer modelCustomer;
-
+  List<Customer> modelCustomer = [];
+ 
   late AuthService authService;
   late ModelResult modelResult;
 
@@ -69,7 +69,7 @@ class _EditPasswordPageState extends State<EditPasswordPage> {
     _customerService = context.read<AppData>().customerService;
     authService = context.read<AppData>().authService;
 
-    loadDataMethod = loadData();
+    //loadDataMethod = loadData();
   }
 
   @override
@@ -114,55 +114,59 @@ class _EditPasswordPageState extends State<EditPasswordPage> {
               textErr = 'อีมลไม่ถูกต้อง';
             });
           } else {
-            setState(() {
-              _coachService
-                  .coach(cid: '', nameCoach: '', email: email.text)
-                  .then((coachdata) {
-                var coachDatas = coachdata.data;
-                modelCoach = coachDatas;
-                if (modelCoach.isNotEmpty) {
-                  setState(() {});
-                  log(modelCoach.length.toString());
-                }
-              });
+            setState(
+              () {
+                _coachService
+                    .coach(cid: '', nameCoach: '', email: email.text)
+                    .then((coachdata) {
+                  var coachDatas = coachdata.data;
+                  modelCoach = coachDatas;
+                  if (modelCoach.isNotEmpty) {
+                    setState(() {});
+                    log(modelCoach.length.toString());
+                  }
+                });
 
-              _customerService
-                  .customer(email: email.text, uid: '')
-                  .then((cusdata) {
-                var cusDatas = cusdata.data;
-                modelCustomer = cusDatas;
-                // if (modelCustomer.isNotEmpty) {
-                //   setState(() {});
-                //   log(modelCoach.length.toString());
-                // }
-              });
-              if (modelCoach.first.password != '' &&
-                  modelCustomer.password != '') {
-                setState(() {
-                  password = modelCoach.first.password;
-                  otpVisible = true;
-                  emailVisible = false;
-                  resetPasswordAll = true;
+                _customerService
+                    .customer(email: email.text, uid: '')
+                    .then((cusdata) {
+                  var cusDatas = cusdata.data;
+                  modelCustomer = cusDatas;
+                  if (modelCustomer.isNotEmpty) {
+                    setState(() {});
+                    log(modelCustomer.length.toString());
+                  }
                 });
-              } else if (modelCoach.isNotEmpty) {
-                setState(() {
-                  password = modelCoach.first.password;
-                  otpVisible = true;
-                  emailVisible = false;
-                  resetPassword = true;
-                });
-              } else if (modelCustomer.password.isNotEmpty) {
-                setState(() {
-                  password = modelCoach.first.password;
-                  otpVisible = true;
-                  emailVisible = false;
-                });
-              } else {
-                setState(() {
-                  textErr = 'อีมลไม่ถูกต้อง';
-                });
-              }
-            });
+                if (modelCoach.isNotEmpty &&
+                    modelCustomer.isNotEmpty) {
+                  setState(() {
+                    password = modelCoach.first.password;
+                    otpVisible = true;
+                    emailVisible = false;
+                    resetPasswordAll = true;
+                  });
+                } else if (modelCoach.isNotEmpty) {
+                  setState(() {
+                    password = modelCoach.first.password;
+                    otpVisible = true;
+                    emailVisible = false;
+                    resetPassword = true;
+                  });
+                } else if (modelCustomer.isNotEmpty) {
+                  setState(() {
+                    password = modelCoach.first.password;
+                    otpVisible = true;
+                    emailVisible = false;
+                  });
+                } else {
+                  setState(() {
+                    textErr = 'อีมลไม่ถูกต้อง';
+                  });
+                }
+              },
+            );
+            // log("modelCoach${modelCoach.length}");
+            // log("modelCustomer${modelCustomer.uid}");
           }
         },
         child: const Text('ยืนยัน'),
@@ -177,14 +181,17 @@ class _EditPasswordPageState extends State<EditPasswordPage> {
       child: FilledButton(
         //style: style,
         onPressed: () {
+          setState(() {
+            textErr = '';
+          });
           if (otp.text.isEmpty) {
             setState(() {
               textErr = 'กรุณากรอกข้อมูล OTP';
             });
           } else {
-            log(email.text+password);
-            log(getTotp(email.text+password));
-            if (otp.text == getTotp(email.text+password)) {
+            log(email.text + password);
+            log(getTotp(email.text + password));
+            if (otp.text == getTotp(email.text + password)) {
               setState(() {
                 otpVisible = false;
                 isVisible = true;
@@ -225,7 +232,7 @@ class _EditPasswordPageState extends State<EditPasswordPage> {
             } else {
               AuthPassword request = AuthPassword(password: password1.text);
               var response = await authService.passwordCus(
-                  modelCustomer.uid.toString(), request);
+                  modelCustomer.first.uid.toString(), request);
               modelResult = response.data;
             }
 
@@ -260,15 +267,15 @@ class _EditPasswordPageState extends State<EditPasswordPage> {
             });
           } else {
             AuthPassword request = AuthPassword(password: password1.text);
-            log( modelCoach.first.password);
+            log(modelCoach.first.password);
             // ignore: unused_local_variable
             var response = await authService.passwordCoach(
                 modelCoach.first.cid.toString(), request);
-            
+
             AuthPassword request2 = AuthPassword(password: password1.text);
             log(jsonEncode(request2));
-            var response2 =
-                await authService.passwordCus(modelCustomer.uid.toString(), request2);
+            var response2 = await authService.passwordCus(
+                modelCustomer.first.uid.toString(), request2);
             modelResult = response2.data;
 
             log(modelResult.result);
@@ -334,11 +341,11 @@ class _EditPasswordPageState extends State<EditPasswordPage> {
     try {
       //Courses
       var coachDatas =
-          await _coachService.coach(nameCoach: '', cid: '', email: '');
+          await _coachService.coach(nameCoach: '', cid: '', email: email.text);
       modelCoach = coachDatas.data;
 
       var cusDatas =
-          await _customerService.customer(email: '', uid: '');
+          await _customerService.customer(email: email.text, uid: '');
       modelCustomer = cusDatas.data;
     } catch (err) {
       log('Error: $err');
@@ -346,140 +353,131 @@ class _EditPasswordPageState extends State<EditPasswordPage> {
   }
 
   Widget show() {
-    return FutureBuilder(
-      future: loadDataMethod,
-      builder: (context, snapshot) {
-        if (snapshot.connectionState != ConnectionState.done) {
-          return const Center(child: CircularProgressIndicator());
-        } else {
-          return Column(
-            children: [
-              const SizedBox(
-                height: 20,
-              ),
-              Visibility(
-                  visible: emailVisible,
-                  child: Column(
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.only(
-                            bottom: 8, left: 20, right: 20),
-                        child: WidgetTextFieldString(
-                          controller: email,
-                          labelText: 'Email',
-                        ),
+    return Column(
+      children: [
+        const SizedBox(
+          height: 20,
+        ),
+        Visibility(
+            visible: emailVisible,
+            child: Column(
+              children: [
+                Padding(
+                  padding:
+                      const EdgeInsets.only(bottom: 8, left: 20, right: 20),
+                  child: WidgetTextFieldString(
+                    controller: email,
+                    labelText: 'Email',
+                  ),
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    Padding(
+                      padding:
+                          const EdgeInsets.only(bottom: 8, left: 20, right: 23),
+                      child: Text(
+                        textErr,
+                        style: TextStyle(
+                            color: Theme.of(context).colorScheme.error),
                       ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.end,
-                        children: [
-                          Padding(
-                            padding: const EdgeInsets.only(
-                                bottom: 8, left: 20, right: 23),
-                            child: Text(
-                              textErr,
-                              style: TextStyle(
-                                  color: Theme.of(context).colorScheme.error),
-                            ),
-                          ),
-                        ],
+                    ),
+                  ],
+                ),
+                Padding(
+                  padding:
+                      const EdgeInsets.only(bottom: 18, left: 20, right: 20),
+                  child: buttonEmail(),
+                ),
+                const Divider(endIndent: 20, indent: 20),
+              ],
+            )),
+        Visibility(
+            visible: otpVisible,
+            child: Column(
+              children: [
+                Padding(
+                  padding:
+                      const EdgeInsets.only(bottom: 8, left: 20, right: 20),
+                  child: WidgetTextFieldInt(
+                    controller: otp,
+                    labelText: 'OTP',
+                    maxLength: 6,
+                  ),
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    Padding(
+                      padding:
+                          const EdgeInsets.only(bottom: 8, left: 20, right: 23),
+                      child: Text(
+                        textErr,
+                        style: TextStyle(
+                            color: Theme.of(context).colorScheme.error),
                       ),
-                      Padding(
-                        padding: const EdgeInsets.only(
-                            bottom: 18, left: 20, right: 20),
-                        child: buttonEmail(),
+                    ),
+                  ],
+                ),
+                Padding(
+                  padding:
+                      const EdgeInsets.only(bottom: 18, left: 20, right: 20),
+                  child: buttonOTP(),
+                ),
+                const Divider(endIndent: 20, indent: 20),
+              ],
+            )),
+        Visibility(
+            visible: isVisible,
+            child: Column(
+              children: [
+                Padding(
+                  padding:
+                      const EdgeInsets.only(bottom: 8, left: 20, right: 20),
+                  child: textPassword(
+                    password1,
+                  ),
+                ),
+                Padding(
+                  padding:
+                      const EdgeInsets.only(bottom: 8, left: 20, right: 20),
+                  child: textPassword(
+                    password2,
+                  ),
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    Padding(
+                      padding:
+                          const EdgeInsets.only(bottom: 8, left: 20, right: 23),
+                      child: Text(
+                        textErr,
+                        style: TextStyle(
+                            color: Theme.of(context).colorScheme.error),
                       ),
-                      const Divider(endIndent: 20, indent: 20),
-                    ],
-                  )),
-              Visibility(
-                  visible: otpVisible,
-                  child: Column(
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.only(
-                            bottom: 8, left: 20, right: 20),
-                        child: WidgetTextFieldInt(
-                          controller: otp,
-                          labelText: 'OTP',
-                          maxLength: 6,
-                        ),
-                      ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.end,
-                        children: [
-                          Padding(
-                            padding: const EdgeInsets.only(
-                                bottom: 8, left: 20, right: 23),
-                            child: Text(
-                              textErr,
-                              style: TextStyle(
-                                  color: Theme.of(context).colorScheme.error),
-                            ),
-                          ),
-                        ],
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.only(
-                            bottom: 18, left: 20, right: 20),
-                        child: buttonOTP(),
-                      ),
-                      const Divider(endIndent: 20, indent: 20),
-                    ],
-                  )),
-              Visibility(
-                  visible: isVisible,
-                  child: Column(
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.only(
-                            bottom: 8, left: 20, right: 20),
-                        child: textPassword(
-                          password1,
-                        ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.only(
-                            bottom: 8, left: 20, right: 20),
-                        child: textPassword(
-                          password2,
-                        ),
-                      ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.end,
-                        children: [
-                          Padding(
-                            padding: const EdgeInsets.only(
-                                bottom: 8, left: 20, right: 23),
-                            child: Text(
-                              textErr,
-                              style: TextStyle(
-                                  color: Theme.of(context).colorScheme.error),
-                            ),
-                          ),
-                        ],
-                      ),
-                      Visibility(
-                        visible: resetPassword,
-                        child: Padding(
-                          padding: const EdgeInsets.only(
-                              bottom: 18, left: 20, right: 20),
-                          child: buttonReset(),
-                        ),
-                      ),
-                      Visibility(
-                        visible: resetPasswordAll,
-                        child: Padding(
-                          padding: const EdgeInsets.only(
-                              bottom: 18, left: 20, right: 20),
-                          child: buttonResetAll(),
-                        ),
-                      ),
-                    ],
-                  ))
-            ],
-          );
-        }
-      },
+                    ),
+                  ],
+                ),
+                Visibility(
+                  visible: resetPassword,
+                  child: Padding(
+                    padding:
+                        const EdgeInsets.only(bottom: 18, left: 20, right: 20),
+                    child: buttonReset(),
+                  ),
+                ),
+                Visibility(
+                  visible: resetPasswordAll,
+                  child: Padding(
+                    padding:
+                        const EdgeInsets.only(bottom: 18, left: 20, right: 20),
+                    child: buttonResetAll(),
+                  ),
+                ),
+              ],
+            ))
+      ],
     );
   }
 

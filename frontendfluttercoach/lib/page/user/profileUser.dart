@@ -25,7 +25,7 @@ class ProfileUser extends StatefulWidget {
 class _ProfileUserState extends State<ProfileUser> {
   late CustomerService customerService;
   late Future<void> loadDataMethod;
-  late HttpResponse<Customer> customer;
+  List<Customer> customer = [];
   late int uid;
 
   @override
@@ -65,7 +65,7 @@ class _ProfileUserState extends State<ProfileUser> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 // ignore: unnecessary_null_comparison
-                if (customer.data.uid != null)
+                if (customer.first.uid != null)
                   Padding(
                     padding: const EdgeInsets.only(left: 25, top: 30),
                     child: Column(
@@ -76,15 +76,15 @@ class _ProfileUserState extends State<ProfileUser> {
                               minRadius: 35,
                               maxRadius: 55,
                               backgroundImage:
-                                  NetworkImage(customer.data.image),
+                                  NetworkImage(customer.first.image),
                             ),
                             Container(
                               child: Column(
                                 children: [
-                                  Text("@ " + customer.data.username),
+                                  Text("@ " + customer.first.username),
                                   Padding(
                                     padding: const EdgeInsets.only(left: 30),
-                                    child: Text(customer.data.fullName),
+                                    child: Text(customer.first.fullName),
                                   ),
                                 ],
                               ),
@@ -120,7 +120,7 @@ class _ProfileUserState extends State<ProfileUser> {
                                     ),
                                     Padding(
                                       padding: const EdgeInsets.only(left: 18),
-                                      child: Text(customer.data.fullName),
+                                      child: Text(customer.first.fullName),
                                     )
                                   ],
                                 ),
@@ -136,7 +136,7 @@ class _ProfileUserState extends State<ProfileUser> {
                                     ),
                                     Padding(
                                       padding: const EdgeInsets.only(left: 18),
-                                      child: Text(customer.data.phone),
+                                      child: Text(customer.first.phone),
                                     ),
                                   ],
                                 ),
@@ -152,7 +152,7 @@ class _ProfileUserState extends State<ProfileUser> {
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
                                 Text("ยอดคงเหลือ"),
-                                Text(customer.data.price.toString())
+                                Text(customer.first.price.toString())
                               ],
                             ),
                           ),
@@ -188,8 +188,8 @@ class _ProfileUserState extends State<ProfileUser> {
         children: [
           InkWell(
             onTap: () {
-              log(customer.data.uid.toString());
-              context.read<AppData>().uid = customer.data.uid;
+              log(customer.first.uid.toString());
+              context.read<AppData>().uid = customer.first.uid;
               Get.to(() =>  MyCouses());
             },
             child: Card(
@@ -217,8 +217,8 @@ class _ProfileUserState extends State<ProfileUser> {
           ),
           InkWell(
             onTap: () {
-              log(customer.data.uid.toString());
-              context.read<AppData>().uid = customer.data.uid;
+              log(customer.first.uid.toString());
+              context.read<AppData>().uid = customer.first.uid;
               Get.to(() => const chatOfCustomer());
             },
             child: Card(
@@ -246,8 +246,8 @@ class _ProfileUserState extends State<ProfileUser> {
           ),
           InkWell(
             onTap: () {
-              log(customer.data.uid.toString());
-              context.read<AppData>().uid = customer.data.uid;
+              log(customer.first.uid.toString());
+              context.read<AppData>().uid = customer.first.uid;
               Get.to(() => const addCoin());
             },
             child: Card(
@@ -305,9 +305,9 @@ class _ProfileUserState extends State<ProfileUser> {
 
   Future<void> loadData() async {
     try {
-      customer = await customerService.customer(uid: uid.toString(), email: '');
-
-      log('cussss: ${customer.data.uid}');
+      var result = await customerService.customer(uid: uid.toString(), email: '');
+      customer = result.data;
+      log('cussss: ${customer.first.uid}');
     } catch (err) {
       log('Error: $err');
     }

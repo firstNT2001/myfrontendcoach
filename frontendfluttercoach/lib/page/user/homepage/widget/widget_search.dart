@@ -31,7 +31,7 @@ class _WidgetsearchState extends State<Widgetsearch> {
   late CourseService courseService;
 
   late CustomerService customerService;
-  late HttpResponse<Customer> customer;
+ List<Customer> customer = [];
   List<Coach> coaches = [];
   List<Course> courses = [];
   TextEditingController myController = TextEditingController();
@@ -302,7 +302,8 @@ class _WidgetsearchState extends State<Widgetsearch> {
     try {
       var datacourse = await courseService.course(coID: '', cid: '', name: '');
       courses = datacourse.data;
-      customer = await customerService.customer(uid: uid.toString(), email: '');
+      var result = await customerService.customer(uid: uid.toString(), email: '');
+      customer = result.data;
     } catch (err) {
       log('Error: $err');
     }

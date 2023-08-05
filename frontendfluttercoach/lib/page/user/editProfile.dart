@@ -38,7 +38,7 @@ class _editProfileCusState extends State<editProfileCus> {
   //call service
   late Future<void> loadDataMethod;
   late CustomerService customerService;
-  late HttpResponse<Customer> customer;
+  List<Customer> customer = [];
   //late ModelRowsAffected modelRowsAffected;
   late UpdateCustomer cusUpdate;
   late ModelResult moduleResult;
@@ -114,23 +114,23 @@ class _editProfileCusState extends State<editProfileCus> {
 
   Future<void> loadData() async {
     try {
-      customer = await customerService.customer(uid: widget.uid.toString(), email: '');
-
-      _uid.text = customer.data.uid.toString();
-      _username.text = customer.data.username;
-      _fullName.text = customer.data.fullName;
-      _birthday.text = customer.data.birthday;
-      _gender.text = customer.data.gender;
-      _phone.text = customer.data.phone;
-      _email.text = customer.data.email;
-      _password.text = customer.data.password;
-      _facebookID.text = customer.data.facebookId;
-      price = customer.data.price;
-      _image = customer.data.image;
-      _weight.text = customer.data.weight.toString();
-      _height.text = customer.data.height.toString();
+      var result = await customerService.customer(uid: widget.uid.toString(), email: '');
+      customer = result.data;
+      _uid.text = customer.first.uid.toString();
+      _username.text = customer.first.username;
+      _fullName.text = customer.first.fullName;
+      _birthday.text = customer.first.birthday;
+      _gender.text = customer.first.gender;
+      _phone.text = customer.first.phone;
+      _email.text = customer.first.email;
+      _password.text = customer.first.password;
+      _facebookID.text = customer.first.facebookId;
+      price = customer.first.price;
+      _image = customer.first.image;
+      _weight.text = customer.first.weight.toString();
+      _height.text = customer.first.height.toString();
       log("b1" + _birthday.text);
-      log("b2" + customer.data.birthday);
+      log("b2" + customer.first.birthday);
       log("_IMAGE==" + _image);
       //gender show
       if (_gender.text == "1") {
@@ -213,7 +213,7 @@ class _editProfileCusState extends State<editProfileCus> {
                                 shape: BoxShape.circle,
                                 image: DecorationImage(
                                   fit: BoxFit.cover,
-                                  image: NetworkImage(customer.data.image),
+                                  image: NetworkImage(customer.first.image),
                                 )),
                           ),
                         Positioned(
@@ -426,7 +426,7 @@ class _editProfileCusState extends State<editProfileCus> {
 
                 log("va= " + value.toString());
               });
-              log(customer.data.gender);
+              log(customer.first.gender);
             },
             buttonStyleData: ButtonStyleData(
               //height: 33,

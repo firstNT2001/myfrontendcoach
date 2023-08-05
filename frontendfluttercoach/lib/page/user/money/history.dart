@@ -25,7 +25,7 @@ class HistoryWallet extends StatefulWidget {
 class _HistoryWalletState extends State<HistoryWallet> {
   late int uid;
   late CustomerService customerService;
-  late HttpResponse<Customer> customer;
+ List<Customer> customer = [];
  
   late Future<void> loadDataMethod;
   late int money = 0;
@@ -84,12 +84,13 @@ class _HistoryWalletState extends State<HistoryWallet> {
 
   Future<void> loadData() async {
     try {
-      customer = await customerService.customer(uid: uid.toString(), email: '');
+     var  result = await customerService.customer(uid: uid.toString(), email: '');
+      customer = result.data;
       log('cussss: ${uid}');
       
 
-      log('cussss: ${customer.data.price}');
-      log('cussss: ${customer.data.uid}');
+      log('cussss: ${customer.first.price}');
+      log('cussss: ${customer.first.uid}');
     } catch (err) {
       log('Error: $err');
     }
@@ -147,7 +148,7 @@ class _HistoryWalletState extends State<HistoryWallet> {
                             ),
                           ),
                           Text(
-                            customer.data.price.toString(),
+                            customer.first.price.toString(),
                             style: const TextStyle(
                                 fontSize: 35, fontWeight: FontWeight.bold),
                           ),

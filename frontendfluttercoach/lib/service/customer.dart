@@ -12,7 +12,7 @@ abstract class CustomerService {
   factory CustomerService(Dio dio, {String baseUrl}) = _CustomerService;
 
   @GET("/user")
-  Future<HttpResponse<Customer>> customer(
+  Future<HttpResponse<List<Customer>>> customer(
       {@Query("uid") required String uid,
       @Query("email") required String email});
 
