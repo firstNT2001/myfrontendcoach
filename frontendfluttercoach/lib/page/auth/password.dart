@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'dart:developer';
 
 import 'package:email_validator/email_validator.dart';
 import 'package:flutter/cupertino.dart';
@@ -214,13 +213,12 @@ class _EditPasswordPageState extends State<EditPasswordPage> {
               textErr = 'กรุณากรอกข้อมูล OTP';
             });
           } else {
-            getTotp(widget.password);
-            // if (otp.text == getTotp(widget.password)) {
-            //   setState(() {
-            //     otpVisible = false;
-            //     isVisible = true;
-            //   });
-            // }
+            if (otp.text == getTotp(widget.password)) {
+              setState(() {
+                otpVisible = false;
+                isVisible = true;
+              });
+            }
           }
         },
         child: const Text('ยืนยัน'),
