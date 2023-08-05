@@ -101,7 +101,11 @@ dependencies:
   flutter_easyloading: ^3.0.5
   loading_animation_widget: ^1.2.0+4
   custom_rating_bar: ^2.0.5
- 
+  email_validator: ^2.1.17
+  otp: ^3.1.4
+  base32: ^2.1.3
+  hex: ^0.2.0
+  syncfusion_flutter_barcodes: ^22.2.7
   # video_thumbnail: ^0.5.3
    
   

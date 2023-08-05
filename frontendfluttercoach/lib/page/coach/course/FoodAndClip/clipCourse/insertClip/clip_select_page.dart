@@ -20,7 +20,6 @@ import '../../../../../../service/listClip.dart';
 import '../../../../../../service/provider/appdata.dart';
 import '../../../../../../widget/image_video.dart';
 import '../../../../../../widget/showCilp.dart';
-import '../../course_food_clip.dart';
 
 import 'clip_insert_page.dart';
 
@@ -68,14 +67,10 @@ class _ClipSelectPageState extends State<ClipSelectPage> {
           leading: IconButton(
             icon: const Icon(
               FontAwesomeIcons.chevronLeft,
-              color: Colors.white,
+              // color: Colors.white,
             ),
             onPressed: () {
-              Get.to(() => HomeFoodAndClipPage(
-                    did: widget.did,
-                    sequence: context.read<AppData>().sequence,
-                    isVisible: widget.isVisible,
-                  ));
+              Get.back();
             },
           ),
           actions: [
@@ -122,7 +117,7 @@ class _ClipSelectPageState extends State<ClipSelectPage> {
           iconTheme: const IconThemeData(
             color: Colors.black, //change your color here
           ),
-          title: const Text('เลือกเมนูอาหาร'),
+          title: const Text('เลือกเมนูคลิปท่าออกกำลังกาย'),
           centerTitle: true,
         ),
         body: SafeArea(
@@ -144,43 +139,6 @@ class _ClipSelectPageState extends State<ClipSelectPage> {
           ),
         ));
   }
-
-  // //Image Vdieo
-  // void generateThumbnail(String url) async {
-  //   File videoTempFile = await copyAssetFile(url);
-
-  //   _thumbnailFile = await VideoThumbnail.thumbnailFile(
-  //       video: videoTempFile.path,
-  //       thumbnailPath: (await getTemporaryDirectory()).path,
-  //       imageFormat: ImageFormat.PNG);
-  //   imageURL.add(_thumbnailFile!);
-  //   // _thumbnailUrl = await VideoThumbnail.thumbnailFile(
-  //   //     video:
-  //   //         "https://flutter.github.io/assets-for-api-docs/assets/videos/butterfly.mp4",
-  //   //     thumbnailPath: (await getTemporaryDirectory()).path,
-  //   //     imageFormat: ImageFormat.WEBP);
-
-  //   // _thumbnailData = await VideoThumbnail.thumbnailData(
-  //   //   video: videoTempFile2.path,
-  //   //   imageFormat: ImageFormat.JPEG,
-  //   //   // maxHeight: 300,
-  //   //   // maxWidth: 300,
-  //   //   quality: 75,
-  //   // );
-
-  //   setState(() {});
-  // }
-
-  // Future<File> copyAssetFile(String assetFileName) async {
-  //   Directory tempDir = await getTemporaryDirectory();
-  //   final byteData = await rootBundle.load(assetFileName);
-
-  //   var videoThumbnailFile = File("${tempDir.path}/$assetFileName")
-  //     ..createSync(recursive: true)
-  //     ..writeAsBytesSync(byteData.buffer
-  //         .asUint8List(byteData.offsetInBytes, byteData.lengthInBytes));
-  //   return videoThumbnailFile;
-  // }
 
   //LoadData
   Future<void> loadListClipsData() async {

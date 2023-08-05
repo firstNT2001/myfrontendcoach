@@ -52,7 +52,7 @@ void dialogClipEditInCourse(BuildContext context, ListClip listClip, String cpID
                 child: AutoSizeText(
                   'ชื่อคลิป: ${listClip.name}',
                   maxLines: 5,
-                  //style: Theme.of(context).textTheme.bodyLarge,
+                  style: Theme.of(context).textTheme.bodyLarge,
                 ),
               ),
             ),
@@ -62,8 +62,8 @@ void dialogClipEditInCourse(BuildContext context, ListClip listClip, String cpID
                 width: MediaQuery.of(context).size.width * 0.75,
                 child: AutoSizeText(
                   'รายละเอียด: ${listClip.details}',
-                  maxLines: 5,
-                  //style: Theme.of(context).textTheme.bodyLarge,
+                  maxLines: 6,
+                  style: Theme.of(context).textTheme.bodyLarge,
                 ),
               ),
             ),
@@ -79,7 +79,7 @@ void dialogClipEditInCourse(BuildContext context, ListClip listClip, String cpID
               children: [
                 Padding(
                   padding: const EdgeInsets.only(right: 30),
-                  child: ElevatedButton(
+                  child: FilledButton(
                       onPressed: () {
                         Get.to(() =>  ClipEditSelectPage(cpID: cpID, did: did, sequence: sequence, status: status, isVisible: isVisible,));
                       },

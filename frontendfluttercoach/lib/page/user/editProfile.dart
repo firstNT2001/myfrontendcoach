@@ -5,13 +5,17 @@ import 'package:dio/dio.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:frontendfluttercoach/page/user/profileUser.dart';
 import 'package:get/get.dart';
+import 'package:hex/hex.dart';
+import 'package:otp/otp.dart';
 
 import 'package:provider/provider.dart';
 import 'package:retrofit/retrofit.dart';
+import 'package:syncfusion_flutter_barcodes/barcodes.dart';
 import '../../model/request/updateCus.dart';
-
+import 'package:base32/base32.dart';
 import '../../model/response/md_Customer_get.dart';
 import '../../model/response/md_Result.dart';
 
@@ -19,12 +23,12 @@ import '../../service/customer.dart';
 import '../../service/provider/appdata.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
 
-
+import '../auth/password.dart';
 
 // ignore: camel_case_types
 class editProfileCus extends StatefulWidget {
   //สร้างตัวแปรรับconstructure
- final int uid;
+  final int uid;
 
   const editProfileCus({super.key, required this.uid});
 
@@ -40,6 +44,7 @@ class _editProfileCusState extends State<editProfileCus> {
   //late ModelRowsAffected modelRowsAffected;
   late UpdateCustomer cusUpdate;
   late ModelResult moduleResult;
+  String GenOTP = "";
   //controller
   TextEditingController _uid = TextEditingController();
   TextEditingController _username = TextEditingController();
@@ -55,7 +60,7 @@ class _editProfileCusState extends State<editProfileCus> {
   int price = 0;
   var update;
   final List<String> genders = ['ผู้หญิง', 'ผู้ชาย'];
-
+  bool isvisible = false;
   String _image = " ";
   String profile = " ";
 
@@ -83,8 +88,6 @@ class _editProfileCusState extends State<editProfileCus> {
     final urlDownload = await snapshot.ref.getDownloadURL();
     print('link img firebase $urlDownload');
     profile = urlDownload;
-    
-    
   }
 
   @override
@@ -130,7 +133,7 @@ class _editProfileCusState extends State<editProfileCus> {
       _height.text = customer.data.height.toString();
       log("b1" + _birthday.text);
       log("b2" + customer.data.birthday);
-      log("_IMAGE=="+_image);
+      log("_IMAGE==" + _image);
       //gender show
       if (_gender.text == "1") {
         _gender.text = "ชาย";
@@ -141,6 +144,9 @@ class _editProfileCusState extends State<editProfileCus> {
       log('Error: $err');
     }
   }
+  //   Widget genQR(String valueOTP,bool isvisible){
+  //   return
+  // }
 
   txtfild(
       final TextEditingController _controller, String lbText, String txtTop) {
@@ -244,11 +250,59 @@ class _editProfileCusState extends State<editProfileCus> {
                   // ),
                   txtfild(_username, "ชื่อผู้ใช้", "ชื่อผู้ใช้"),
                   txtfild(_email, "e-mail", "e-mail"),
+                  // txtfildn(_password, "รหัสผ่าน", "รหัสผ่าน"),
+                  FilledButton(
+                      onPressed: () async {
+                        GenOTP = getGoogleAuthenticatorUri(
+                            "Coaching", _email.text, _password.text);
+                        log(GenOTP);
+                        if (GenOTP.isNotEmpty) {
+                          setState(() {
+                            isvisible = true;
+                          });
+                        }
+                      },
+                      child: Text("สร้างGoogle Authenticator")),
+                  Visibility(
+                    visible: isvisible,
+                    child: Column(
+                      children: [
+                        Container(
+                            height: 200,
+                            child: Image.network(
+                                'https://www.google.com/chart?chs=200x200&chld=M|0&cht=qr&chl=$GenOTP')),
+                        FilledButton(
+                            onPressed: () {
+                              setState(() {
+                                isvisible = false;
+                              });
+                            },
+                            child: Text("ซ่อน QR Code"))
+                      ],
+                    ),
+                  ),
+                  txtfild(_email, "e-mail", "e-mail"),
                   txtfild(_fullName, "ชื่อ-นามสกุล", "ชื่อ-นามสกุล"),
                   buildDropdownGender(),
                   txtfild(_phone, "โทรศัพท์", "โทรศัพท์"),
                   txtfild(_weight, "น้ำหนัก", "น้ำหนัก"),
                   txtfild(_height, "ส่วนสูง", "ส่วนสูง"),
+                  Row(
+                    children: [
+                      const Text('เปรียนรหัสผ่าน'),
+                      IconButton(
+                        icon: const Icon(
+                          FontAwesomeIcons.chevronRight,
+                        ),
+                        onPressed: () {
+                          Get.to(() => EditPasswordPage(
+                                password: _password.text, visible: false,
+                              ));
+                        },
+                      ),
+                    ],
+                  ),
+
                   Padding(
                     padding: const EdgeInsets.only(top: 15, bottom: 15),
                     child: ElevatedButton(
@@ -257,11 +311,11 @@ class _editProfileCusState extends State<editProfileCus> {
                           child: Text("บันทึก"),
                         ),
                         onPressed: () async {
-                          log("messageIMG="+_image);
+                          log("messageIMG=" + _image);
                           //DateTime birthday = new DateFormat("yyyy-MM-dd 'T'HH:mm:ss.SSS'Z'").parse(_birthday.text);
                           if (pickedImg != null) await uploadfile();
                           if (pickedImg == null) profile = _image;
-                          
+
                           UpdateCustomer updateCustomer = UpdateCustomer(
                               username: _username.text,
                               password: _password.text,
@@ -384,5 +438,16 @@ class _editProfileCusState extends State<editProfileCus> {
         ),
       ],
     );
+  }
+
+  String getGoogleAuthenticatorUri(String appname, String email, String key) {
+    List<int> list = utf8.encode(key);
+    String hex = HEX.encode(list);
+    String secret = base32.encodeHexString(hex);
+    log('secret $secret');
+    String uri =
+        'otpauth://totp/${Uri.encodeComponent('$appname:$email?secret=$secret&issuer=$appname')}';
+
+    return uri;
   }
 }

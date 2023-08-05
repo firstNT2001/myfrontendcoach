@@ -19,7 +19,7 @@ import '../../../../model/response/md_Result.dart';
 import '../../../../service/listClip.dart';
 import '../../../../service/provider/appdata.dart';
 import '../../../../widget/textField/wg_textField.dart';
-
+import '../../../../widget/textField/wg_textFieldLines.dart';
 
 class ClipNewCoachPage extends StatefulWidget {
   const ClipNewCoachPage({super.key});
@@ -29,6 +29,7 @@ class ClipNewCoachPage extends StatefulWidget {
 }
 
 class _ClipNewCoachPageState extends State<ClipNewCoachPage> {
+  // ignore: unused_field
   late ListClipServices _listClipServices;
   late ModelResult modelResult;
   String cid = '';
@@ -43,115 +44,279 @@ class _ClipNewCoachPageState extends State<ClipNewCoachPage> {
   late VideoPlayerController _controller;
   late CustomVideoPlayerController _customVideoPlayerController;
   String pathVdieo = '';
+
+  String textErr = '';
+
   @override
   void initState() {
     super.initState();
     cid = context.read<AppData>().cid.toString();
-    name.text = 'ท่าเลกลันจ์';
-    amountPerSet.text = '5เซ็ท เซ็ทละ20ครั้ง';
-    details.text =
-        'ท่านี้ช่วยบริหารต้นขาด้านหน้า ก้น และกล้ามเนื้อแฮมสตริง ทำให้ขาและกันกระชับ กล้ามเนื้อขาเข็งแรง';
+
     _listClipServices = context.read<AppData>().listClipServices;
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      resizeToAvoidBottomInset: false,
-      appBar: AppBar(
-        backgroundColor: Theme.of(context).colorScheme.primary,
-        title: TextButton(
-            onPressed: () {},
-            child: Text(
-              'เพิ่มคลิป',
-              style: Theme.of(context).textTheme.headlineSmall,
-            )),
-        leading: IconButton(
-          icon: const Icon(
-            FontAwesomeIcons.chevronLeft,
-          ),
-          onPressed: () {
-            Get.back();
-          },
-        ),
-      ),
+      //resizeToAvoidBottomInset: false,
       body: SafeArea(
-        child: Column(
+        child: ListView(
           children: [
-            if (pickedFile != null)
-              Expanded(
-                child: SafeArea(
-                  child: CustomVideoPlayer(
-                      customVideoPlayerController:
-                          _customVideoPlayerController),
-                ),
-              ),
-            const SizedBox(
-              height: 12,
+            Stack(
+              children: [
+                videoPlayer(context),
+                textFieldAll(context),
+              ],
             ),
-            ElevatedButton(
-              child: const Text('Select File'),
-              onPressed: selectFile,
-            ),
-            const SizedBox(
-              height: 12,
-            ),
-            const SizedBox(
-              height: 20,
-            ),
-            inputClip(),
           ],
         ),
       ),
     );
   }
 
-  Expanded inputClip() {
-    return Expanded(
-      child: ListView(
-        children: [
-          WidgetTextFieldString(
-            controller: name,
-            labelText: 'ชื่อ',
-          ),
-          WidgetTextFieldString(
-            controller: amountPerSet,
-            labelText: 'จำนวนเซ็ท',
-          ),
-          WidgetTextFieldString(
-            controller: details,
-            labelText: 'รายละเอียดท่า',
-          ),
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: ElevatedButton(
-                onPressed: () async {
-                  log(pathVdieo);
-                  ListClipCoachIdPost listClipCoachIdPost = ListClipCoachIdPost(
-                      name: name.text,
-                      amountPerSet: amountPerSet.text,
-                      video: pathVdieo,
-                      details: details.text);
-                  var insertClip = await _listClipServices
-                      .insertListClipByCoachID(cid, listClipCoachIdPost);
-                  modelResult = insertClip.data;
-                  log(jsonEncode(modelResult.result));
-                },
-                child: const Text("บันทึก")),
-          )
-        ],
-      ),
+  Positioned textFieldAll(BuildContext context) {
+    return Positioned(
+      child: Padding(
+          padding: EdgeInsets.only(top: MediaQuery.of(context).size.height / 3),
+          child: Container(
+            width: MediaQuery.of(context).size.width,
+            decoration: const BoxDecoration(
+                borderRadius: BorderRadius.only(
+                    topLeft: Radius.circular(20),
+                    topRight: Radius.circular(20)),
+                color: Colors.white),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.only(
+                      bottom: 18, top: 28, left: 20, right: 20),
+                  child: WidgetTextFieldString(
+                    controller: name,
+                    labelText: 'ชื่อ',
+                  ),
+                ),
+                Padding(
+                  padding:
+                      const EdgeInsets.only(bottom: 18, left: 20, right: 20),
+                  child: WidgetTextFieldString(
+                    controller: amountPerSet,
+                    labelText: 'จำนวนเซ็ท',
+                  ),
+                ),
+                Padding(
+                  padding:
+                      const EdgeInsets.only(bottom: 18, left: 20, right: 20),
+                  child: WidgetTextFieldLines(
+                    controller: details,
+                    labelText: 'รายละเอียดท่าออกกำลังกาย',
+                  ),
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    Padding(
+                      padding:
+                          const EdgeInsets.only(bottom: 8, left: 20, right: 23),
+                      child: Text(
+                        textErr,
+                        style: TextStyle(
+                            color: Theme.of(context).colorScheme.error),
+                      ),
+                    ),
+                  ],
+                ),
+                Center(
+                  child: Padding(
+                    padding:
+                        const EdgeInsets.only(bottom: 18, left: 20, right: 20),
+                    child: SizedBox(
+                        width: MediaQuery.of(context).size.width,
+                        child: button()),
+                  ),
+                ),
+              ],
+            ),
+          )),
     );
+  }
+
+  Stack videoPlayer(BuildContext context) {
+    return Stack(
+      children: [
+        if (pickedFile != null) ...{
+          Expanded(
+            child: SafeArea(
+              child: CustomVideoPlayer(
+                  customVideoPlayerController: _customVideoPlayerController),
+            ),
+          ),
+        } else
+          Container(
+            width: MediaQuery.of(context).size.width,
+            height: MediaQuery.of(context).size.height * 0.4,
+            decoration: BoxDecoration(
+                //borderRadius: BorderRadius.circular(20),
+                boxShadow: [
+                  BoxShadow(
+                      spreadRadius: 2,
+                      blurRadius: 10,
+                      color: Colors.black.withOpacity(0.1))
+                ],
+                //shape: BoxShape.circle,
+                image: const DecorationImage(
+                  fit: BoxFit.cover,
+                  image: NetworkImage(
+                      "https://i.pinimg.com/564x/41/1c/7d/411c7d94b0eba881182d054d56792d09.jpg"),
+                )),
+          ),
+        Positioned(
+            bottom: 60,
+            right: 8,
+            child: InkWell(
+              onTap: () {
+                log("message");
+                selectFile();
+              },
+              child: Container(
+                height: 40,
+                width: 40,
+                decoration: const BoxDecoration(
+                    shape: BoxShape.circle,
+                    //border: Border.all(width: 4, color: Colors.white),
+                    color: Colors.white),
+                child: const Icon(
+                  FontAwesomeIcons.camera,
+                  color: Colors.black,
+                ),
+              ),
+            )),
+        Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              CircleAvatar(
+                backgroundColor: Colors.white,
+                radius: 20,
+                child: IconButton(
+                  icon: const Icon(
+                    FontAwesomeIcons.chevronLeft,
+                    color: Colors.black,
+                  ),
+                  onPressed: () {
+                    Get.back();
+                  },
+                ),
+              ),
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+
+  Padding inputClip() {
+    return Padding(
+        padding: EdgeInsets.only(top: MediaQuery.of(context).size.height / 3),
+        child: Container(
+          width: MediaQuery.of(context).size.width,
+          decoration: const BoxDecoration(
+              borderRadius: BorderRadius.only(
+                  topLeft: Radius.circular(20), topRight: Radius.circular(20)),
+              color: Colors.white),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Padding(
+                padding: const EdgeInsets.only(
+                    bottom: 18, top: 28, left: 20, right: 20),
+                child: WidgetTextFieldString(
+                  controller: name,
+                  labelText: 'ชื่อ',
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.only(bottom: 18, left: 20, right: 20),
+                child: WidgetTextFieldString(
+                  controller: amountPerSet,
+                  labelText: 'จำนวนเซ็ท',
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.only(bottom: 18, left: 20, right: 20),
+                child: WidgetTextFieldLines(
+                  controller: details,
+                  labelText: 'รายละเอียดท่าออกกำลังกาย',
+                ),
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  Padding(
+                    padding:
+                        const EdgeInsets.only(bottom: 8, left: 20, right: 23),
+                    child: Text(
+                      textErr,
+                      style:
+                          TextStyle(color: Theme.of(context).colorScheme.error),
+                    ),
+                  ),
+                ],
+              ),
+              Center(
+                child: Padding(
+                  padding:
+                      const EdgeInsets.only(bottom: 18, left: 20, right: 20),
+                  child: SizedBox(
+                      width: MediaQuery.of(context).size.width,
+                      child: button()),
+                ),
+              ),
+            ],
+          ),
+        ));
+  }
+
+  FilledButton button() {
+    return FilledButton(
+        onPressed: () async {
+          log(pathVdieo);
+          if (name.text.isEmpty ||
+              amountPerSet.text.isEmpty ||
+              details.text.isEmpty) {
+            setState(() {
+              textErr = 'กรุณากรอกข้อมูลให้ครบ';
+            });
+          } else if (pathVdieo.isEmpty) {
+            setState(() {
+              textErr = 'กรุณาเพิ่มวิดิโอ';
+            });
+          } else {
+            if (pickedFile != null) await uploadFile();
+            ListClipCoachIdPost listClipCoachIdPost = ListClipCoachIdPost(
+                name: name.text,
+                amountPerSet: amountPerSet.text,
+                video: pathVdieo,
+                details: details.text);
+            var insertClip = await _listClipServices.insertListClipByCoachID(
+                cid, listClipCoachIdPost);
+            modelResult = insertClip.data;
+            log(jsonEncode(modelResult.result));
+          }
+        },
+        child: const Text("บันทึก"));
   }
 
   //Video
   Future selectFile() async {
     final result = await FilePicker.platform.pickFiles();
     if (result == null) return;
-
+    // ignore: use_build_context_synchronously
     startLoading(context);
     // setState(() {
     pickedFile = result.files.first;
+    log(pickedFile.toString());
     // });
     uploadFile();
   }
@@ -167,8 +332,8 @@ class _ClipNewCoachPageState extends State<ClipNewCoachPage> {
 
     final urlDownload = await snapshot.ref.getDownloadURL();
     pathVdieo = urlDownload;
-    print('Download Link: $urlDownload');
-    _controller = VideoPlayerController.network('$urlDownload')
+
+    _controller = VideoPlayerController.network(urlDownload)
       ..initialize().then((_) {
         // Ensure the first frame is shown after the video is initialized, even before the play button has been pressed.
         setState(() {});

@@ -210,12 +210,12 @@ class _CourseNewPageState extends State<CourseNewPage> {
     return FilledButton(
       //style: style,
       onPressed: () async {
-        if (name.text == '' ||
-            details.text == '' ||
-            lavel.toString() == '' ||
-            amount.text == '' ||
-            days.text == '' ||
-            price.text == '') {
+        if (name.text.isEmpty ||
+            details.text.isEmpty ||
+            lavel.toString().isEmpty ||
+            amount.text.isEmpty ||
+            days.text.isEmpty ||
+            price.text.isEmpty) {
           setState(() {
             textErr = 'กรุณากรอกข้อมูลให้ครบ';
           });
