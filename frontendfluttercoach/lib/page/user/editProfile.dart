@@ -247,6 +247,36 @@ class _editProfileCusState extends State<editProfileCus> {
                   // ),
                   txtfild(_username, "ชื่อผู้ใช้", "ชื่อผู้ใช้"),
                   txtfild(_email, "e-mail", "e-mail"),
+                  // txtfildn(_password, "รหัสผ่าน", "รหัสผ่าน"),
+                  FilledButton(
+                      onPressed: () async{
+                       GenOTP= getGoogleAuthenticatorUri("Coaching", _email.text, _password.text);
+                       log(GenOTP);
+                          if (GenOTP.isNotEmpty){
+                            setState(() {
+                              isvisible =true;
+                            });
+                          }
+                      },
+                      child: Text("สร้างGoogle Authenticator")),
+                  Visibility(
+                    visible: isvisible,
+                    child: Column(
+                      children: [
+                        Container(
+                          height: 200,
+                          child: Image.network(
+                'https://www.google.com/chart?chs=200x200&chld=M|0&cht=qr&chl=$GenOTP')
+                        ),
+                        FilledButton(onPressed: (){
+                          setState(() {
+                            isvisible =false;
+                          });
+                        }, child: Text("ซ่อน QR Code"))
+                      ],
+                    ),
+                  ),
+                  txtfild(_email, "e-mail", "e-mail"),
                   txtfild(_fullName, "ชื่อ-นามสกุล", "ชื่อ-นามสกุล"),
                   buildDropdownGender(),
                   txtfild(_phone, "โทรศัพท์", "โทรศัพท์"),
