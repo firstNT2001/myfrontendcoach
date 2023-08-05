@@ -182,7 +182,9 @@ class _EditPasswordPageState extends State<EditPasswordPage> {
               textErr = 'กรุณากรอกข้อมูล OTP';
             });
           } else {
-            if (otp.text == getTotp(password)) {
+            log(email.text+password);
+            log(getTotp(email.text+password));
+            if (otp.text == getTotp(email.text+password)) {
               setState(() {
                 otpVisible = false;
                 isVisible = true;
@@ -335,9 +337,9 @@ class _EditPasswordPageState extends State<EditPasswordPage> {
           await _coachService.coach(nameCoach: '', cid: '', email: '');
       modelCoach = coachDatas.data;
 
-      // var cusDatas =
-      //     await _customerService.customer(email: email.text, uid: '');
-      // modelCustomer = cusDatas.data;
+      var cusDatas =
+          await _customerService.customer(email: '', uid: '');
+      modelCustomer = cusDatas.data;
     } catch (err) {
       log('Error: $err');
     }
