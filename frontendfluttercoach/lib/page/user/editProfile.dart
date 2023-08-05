@@ -5,6 +5,7 @@ import 'package:dio/dio.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:frontendfluttercoach/page/user/profileUser.dart';
 import 'package:get/get.dart';
 import 'package:hex/hex.dart';
@@ -21,6 +22,8 @@ import '../../model/response/md_Result.dart';
 import '../../service/customer.dart';
 import '../../service/provider/appdata.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
+
+import '../auth/password.dart';
 
 // ignore: camel_case_types
 class editProfileCus extends StatefulWidget {
@@ -41,7 +44,7 @@ class _editProfileCusState extends State<editProfileCus> {
   //late ModelRowsAffected modelRowsAffected;
   late UpdateCustomer cusUpdate;
   late ModelResult moduleResult;
-  String GenOTP="";
+  String GenOTP = "";
   //controller
   TextEditingController _uid = TextEditingController();
   TextEditingController _username = TextEditingController();
@@ -249,14 +252,15 @@ class _editProfileCusState extends State<editProfileCus> {
                   txtfild(_email, "e-mail", "e-mail"),
                   // txtfildn(_password, "รหัสผ่าน", "รหัสผ่าน"),
                   FilledButton(
-                      onPressed: () async{
-                       GenOTP= getGoogleAuthenticatorUri("Coaching", _email.text, _password.text);
-                       log(GenOTP);
-                          if (GenOTP.isNotEmpty){
-                            setState(() {
-                              isvisible =true;
-                            });
-                          }
+                      onPressed: () async {
+                        GenOTP = getGoogleAuthenticatorUri(
+                            "Coaching", _email.text, _password.text);
+                        log(GenOTP);
+                        if (GenOTP.isNotEmpty) {
+                          setState(() {
+                            isvisible = true;
+                          });
+                        }
                       },
                       child: Text("สร้างGoogle Authenticator")),
                   Visibility(
@@ -264,15 +268,16 @@ class _editProfileCusState extends State<editProfileCus> {
                     child: Column(
                       children: [
                         Container(
-                          height: 200,
-                          child: Image.network(
-                'https://www.google.com/chart?chs=200x200&chld=M|0&cht=qr&chl=$GenOTP')
-                        ),
-                        FilledButton(onPressed: (){
-                          setState(() {
-                            isvisible =false;
-                          });
-                        }, child: Text("ซ่อน QR Code"))
+                            height: 200,
+                            child: Image.network(
+                                'https://www.google.com/chart?chs=200x200&chld=M|0&cht=qr&chl=$GenOTP')),
+                        FilledButton(
+                            onPressed: () {
+                              setState(() {
+                                isvisible = false;
+                              });
+                            },
+                            child: Text("ซ่อน QR Code"))
                       ],
                     ),
                   ),
@@ -282,6 +287,22 @@ class _editProfileCusState extends State<editProfileCus> {
                   txtfild(_phone, "โทรศัพท์", "โทรศัพท์"),
                   txtfild(_weight, "น้ำหนัก", "น้ำหนัก"),
                   txtfild(_height, "ส่วนสูง", "ส่วนสูง"),
+                  Row(
+                    children: [
+                      const Text('เปรียนรหัสผ่าน'),
+                      IconButton(
+                        icon: const Icon(
+                          FontAwesomeIcons.chevronRight,
+                        ),
+                        onPressed: () {
+                          Get.to(() => EditPasswordPage(
+                                password: _password.text, visible: false,
+                              ));
+                        },
+                      ),
+                    ],
+                  ),
+
                   Padding(
                     padding: const EdgeInsets.only(top: 15, bottom: 15),
                     child: ElevatedButton(
@@ -418,6 +439,7 @@ class _editProfileCusState extends State<editProfileCus> {
       ],
     );
   }
+
   String getGoogleAuthenticatorUri(String appname, String email, String key) {
     List<int> list = utf8.encode(key);
     String hex = HEX.encode(list);

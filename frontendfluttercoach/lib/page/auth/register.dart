@@ -286,7 +286,6 @@ class _RegisterPageState extends State<RegisterPage> {
         child: FilledButton(
           //style: style,
           onPressed: () async {
-            
             if (fullName.text == '' ||
                 name.text == '' ||
                 selectedValue.text == '' ||
@@ -301,11 +300,11 @@ class _RegisterPageState extends State<RegisterPage> {
               setState(() {
                 textErr = 'รหัสไม่ตรงกัน';
               });
-            } else if (validate(email.text) == false ) {
+            } else if (validate(email.text) == false) {
               setState(() {
                 textErr = 'อีมลไม่ถูกต้อง';
               });
-            }else {
+            } else {
               if (pickedImg != null) await uploadfile();
               if (pickedImg == null) {
                 profile =

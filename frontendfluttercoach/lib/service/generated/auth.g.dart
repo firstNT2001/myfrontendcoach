@@ -58,7 +58,7 @@ class _AuthService implements AuthService {
     )
             .compose(
               _dio.options,
-              '/auth//Coach',
+              '/auth/Coach',
               queryParameters: queryParameters,
               data: _data,
             )
@@ -83,7 +83,7 @@ class _AuthService implements AuthService {
     )
             .compose(
               _dio.options,
-              '/auth//Cus',
+              '/auth/Cus',
               queryParameters: queryParameters,
               data: _data,
             )
@@ -111,7 +111,63 @@ class _AuthService implements AuthService {
     )
             .compose(
               _dio.options,
-              '/auth//Coach/${cid}',
+              '/auth/Coach/${cid}',
+              queryParameters: queryParameters,
+              data: _data,
+            )
+            .copyWith(baseUrl: baseUrl ?? _dio.options.baseUrl)));
+    final value = ModelResult.fromJson(_result.data!);
+    final httpResponse = HttpResponse(value, _result);
+    return httpResponse;
+  }
+
+  @override
+  Future<HttpResponse<ModelResult>> passwordCoach(
+    cid,
+    authPassword,
+  ) async {
+    const _extra = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{};
+    final _headers = <String, dynamic>{};
+    final _data = <String, dynamic>{};
+    _data.addAll(authPassword.toJson());
+    final _result = await _dio.fetch<Map<String, dynamic>>(
+        _setStreamType<HttpResponse<ModelResult>>(Options(
+      method: 'PUT',
+      headers: _headers,
+      extra: _extra,
+    )
+            .compose(
+              _dio.options,
+              '/auth/password/Coach/${cid}',
+              queryParameters: queryParameters,
+              data: _data,
+            )
+            .copyWith(baseUrl: baseUrl ?? _dio.options.baseUrl)));
+    final value = ModelResult.fromJson(_result.data!);
+    final httpResponse = HttpResponse(value, _result);
+    return httpResponse;
+  }
+
+  @override
+  Future<HttpResponse<ModelResult>> passwordCus(
+    uid,
+    authPassword,
+  ) async {
+    const _extra = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{};
+    final _headers = <String, dynamic>{};
+    final _data = <String, dynamic>{};
+    _data.addAll(authPassword.toJson());
+    final _result = await _dio.fetch<Map<String, dynamic>>(
+        _setStreamType<HttpResponse<ModelResult>>(Options(
+      method: 'PUT',
+      headers: _headers,
+      extra: _extra,
+    )
+            .compose(
+              _dio.options,
+              '/auth/password/Cus/${uid}',
               queryParameters: queryParameters,
               data: _data,
             )
