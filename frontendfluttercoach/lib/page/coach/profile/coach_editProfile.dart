@@ -276,7 +276,7 @@ class _CoachEidtProfilePageState extends State<CoachEidtProfilePage> {
                                   FontAwesomeIcons.chevronRight,
                                 ),
                                 onPressed: () {
-                                  Get.to(() =>  EditPasswordPage(password: coachs.first.password,));
+                                  Get.to(() =>  EditPasswordPage(password: coachs.first.password, visible: true,));
                                 },
                               ),
                             ],

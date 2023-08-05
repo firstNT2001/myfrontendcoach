@@ -296,7 +296,7 @@ class _editProfileCusState extends State<editProfileCus> {
                         ),
                         onPressed: () {
                           Get.to(() => EditPasswordPage(
-                                password: _password.text,
+                                password: _password.text, visible: false,
                               ));
                         },
                       ),
