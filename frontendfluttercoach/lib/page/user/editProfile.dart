@@ -14,6 +14,7 @@ import 'package:otp/otp.dart';
 import 'package:provider/provider.dart';
 import 'package:retrofit/retrofit.dart';
 import 'package:syncfusion_flutter_barcodes/barcodes.dart';
+import 'package:url_launcher/url_launcher.dart';
 import '../../model/request/updateCus.dart';
 import 'package:base32/base32.dart';
 import '../../model/response/md_Customer_get.dart';
@@ -257,9 +258,10 @@ class _editProfileCusState extends State<editProfileCus> {
                             "Coaching", _email.text, _password.text);
                         log(GenOTP);
                         if (GenOTP.isNotEmpty) {
-                          setState(() {
-                            isvisible = true;
-                          });
+                          // setState(() {
+                          //   isvisible = true;
+                          // });
+                         // _launchUrl( Uri.parse(GenOTP));
                         }
                       },
                       child: Text("สร้างGoogle Authenticator")),
@@ -445,9 +447,16 @@ class _editProfileCusState extends State<editProfileCus> {
     String hex = HEX.encode(list);
     String secret = base32.encodeHexString(hex);
     log('secret $secret');
-    String uri =
-        'otpauth://totp/${Uri.encodeComponent('$appname:$email?secret=$secret&issuer=$appname')}';
-
-    return uri;
+    // String uri =
+    //     'otpauth://totp/${Uri.encodeComponent('$appname:$email?secret=$secret&issuer=$appname')}';
+    String url =
+        'otpauth://totp/$appname:$email?secret=$secret&issuer=$appname';
+    launchUrl(Uri.parse(url));
+    return url;
   }
+  Future<void> _launchUrl(Uri _url) async {
+  if (!await launchUrl(_url)) {
+    throw Exception('Could not launch $_url');
+  }
+}
 }
