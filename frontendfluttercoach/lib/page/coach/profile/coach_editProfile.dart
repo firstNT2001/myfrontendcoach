@@ -20,6 +20,7 @@ import '../../../widget/dropdown/wg_dropdown_string.dart';
 import '../../../widget/textField/wg_textField.dart';
 import '../../../widget/textField/wg_textFieldLines.dart';
 import '../../../widget/textField/wg_textField_int copy.dart';
+import '../../auth/password.dart';
 
 class CoachEidtProfilePage extends StatefulWidget {
   const CoachEidtProfilePage({super.key});
@@ -268,13 +269,14 @@ class _CoachEidtProfilePageState extends State<CoachEidtProfilePage> {
                             mainAxisAlignment: MainAxisAlignment.center,
                             crossAxisAlignment: CrossAxisAlignment.center,
                             children: [
+                             
                               const Text('เปรียนรหัสผ่าน'),
                               IconButton(
                                 icon: const Icon(
                                   FontAwesomeIcons.chevronRight,
                                 ),
                                 onPressed: () {
-                                  //Get.back();
+                                  Get.to(() => const EditPasswordPage());
                                 },
                               ),
                             ],
