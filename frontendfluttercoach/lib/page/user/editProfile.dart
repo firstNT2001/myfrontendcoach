@@ -9,11 +9,9 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:frontendfluttercoach/page/user/profileUser.dart';
 import 'package:get/get.dart';
 import 'package:hex/hex.dart';
-import 'package:otp/otp.dart';
 
 import 'package:provider/provider.dart';
 import 'package:retrofit/retrofit.dart';
-import 'package:syncfusion_flutter_barcodes/barcodes.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../../model/request/updateCus.dart';
 import 'package:base32/base32.dart';
@@ -24,7 +22,6 @@ import '../../service/customer.dart';
 import '../../service/provider/appdata.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
 
-import '../auth/password.dart';
 
 // ignore: camel_case_types
 class editProfileCus extends StatefulWidget {
@@ -453,7 +450,7 @@ class _editProfileCusState extends State<editProfileCus> {
   }
 
   String getGoogleAuthenticatorUri(String appname, String email, String key) {
-    List<int> list = utf8.encode(key);
+    List<int> list = utf8.encode('$email$key');
     String hex = HEX.encode(list);
     String secret = base32.encodeHexString(hex);
     log('secret $secret');
@@ -465,7 +462,7 @@ class _editProfileCusState extends State<editProfileCus> {
     return url;
   }
     String getGoogleAuthenticatorUriQR(String appname, String email, String key) {
-    List<int> list = utf8.encode(key);
+    List<int> list = utf8.encode('$email$key');
     String hex = HEX.encode(list);
     String secret = base32.encodeHexString(hex);
     log('secret $secret');
