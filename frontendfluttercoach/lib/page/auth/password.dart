@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:developer';
 
 import 'package:email_validator/email_validator.dart';
 import 'package:flutter/cupertino.dart';
@@ -6,6 +7,8 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:frontendfluttercoach/widget/textField/wg_textField.dart';
 import 'package:get/get.dart';
+import 'package:base32/base32.dart';
+
 import 'package:get/get_core/src/get_main.dart';
 import 'package:hex/hex.dart';
 import 'package:otp/otp.dart';
@@ -211,6 +214,7 @@ class _EditPasswordPageState extends State<EditPasswordPage> {
               textErr = 'กรุณากรอกข้อมูล OTP';
             });
           } else {
+            getTotp(widget.password);
             // if (otp.text == getTotp(widget.password)) {
             //   setState(() {
             //     otpVisible = false;
@@ -288,16 +292,28 @@ class _EditPasswordPageState extends State<EditPasswordPage> {
     );
   }
 
-  // String getTotp(String key) {
+  // String getGoogleAuthenticatorUri(String appname, String email, String key) {
   //   List<int> list = utf8.encode(key);
   //   String hex = HEX.encode(list);
-
   //   String secret = base32.encodeHexString(hex);
-  //   String totp = OTP.generateTOTPCodeString(
-  //       secret, DateTime.now().millisecondsSinceEpoch,
-  //       algorithm: Algorithm.SHA1, isGoogle: true);
-  //   return totp;
+  //   log('secret $secret');
+  //   String uri =
+  //       'otpauth://totp/${Uri.encodeComponent('$appname:$email?secret=$secret&issuer=$appname')}';
+
+  //   return uri;
   // }
+
+  String getTotp(String key) {
+    List<int> list = utf8.encode(key);
+    String hex = HEX.encode(list);
+
+    String secret = base32.encodeHexString(hex);
+    String totp = OTP.generateTOTPCodeString(
+        secret, DateTime.now().millisecondsSinceEpoch,
+        algorithm: Algorithm.SHA1, isGoogle: true);
+    return totp;
+  }
+
   // Method to validate the email the take
   // the user email as an input and
   // print the bool value in the console.
