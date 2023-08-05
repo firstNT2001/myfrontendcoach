@@ -1,13 +1,20 @@
+import 'dart:convert';
+
+import 'package:email_validator/email_validator.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:frontendfluttercoach/widget/textField/wg_textField.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
+import 'package:hex/hex.dart';
+import 'package:otp/otp.dart';
 
 import '../../widget/textField/wg_textField_int copy.dart';
 
 class EditPasswordPage extends StatefulWidget {
-  const EditPasswordPage({super.key});
+  const EditPasswordPage({super.key, required this.password});
+  final String password;
 
   @override
   State<EditPasswordPage> createState() => _EditPasswordPageState();
@@ -15,6 +22,7 @@ class EditPasswordPage extends StatefulWidget {
 
 class _EditPasswordPageState extends State<EditPasswordPage> {
   final otp = TextEditingController();
+  final email = TextEditingController();
   final password1 = TextEditingController();
   final password2 = TextEditingController();
 
@@ -22,7 +30,9 @@ class _EditPasswordPageState extends State<EditPasswordPage> {
 
   String textErr = '';
   bool isVisible = false;
-  bool otpVisible = true;
+  bool otpVisible = false;
+  bool emailVisible = true;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -48,6 +58,40 @@ class _EditPasswordPageState extends State<EditPasswordPage> {
           const SizedBox(
             height: 20,
           ),
+          Visibility(
+              visible: emailVisible,
+              child: Column(
+                children: [
+                  Padding(
+                    padding:
+                        const EdgeInsets.only(bottom: 8, left: 20, right: 20),
+                    child: WidgetTextFieldString(
+                      controller: email,
+                      labelText: 'Email',
+                    ),
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.only(
+                            bottom: 8, left: 20, right: 23),
+                        child: Text(
+                          textErr,
+                          style: TextStyle(
+                              color: Theme.of(context).colorScheme.error),
+                        ),
+                      ),
+                    ],
+                  ),
+                  Padding(
+                    padding:
+                        const EdgeInsets.only(bottom: 18, left: 20, right: 20),
+                    child: buttonEmail(),
+                  ),
+                  const Divider(endIndent: 20, indent: 20),
+                ],
+              )),
           Visibility(
               visible: otpVisible,
               child: Column(
@@ -127,6 +171,34 @@ class _EditPasswordPageState extends State<EditPasswordPage> {
     );
   }
 
+  Widget buttonEmail() {
+    return SizedBox(
+      width: MediaQuery.of(context).size.width,
+      // height: MediaQuery.of(context).size.height ,
+      child: FilledButton(
+        //style: style,
+        onPressed: () {
+          if (email.text.isEmpty) {
+            setState(() {
+              textErr = 'กรุณากรอกข้อมูล Email';
+            });
+          } else if (validate(email.text) == false) {
+            setState(() {
+              textErr = 'อีมลไม่ถูกต้อง';
+            });
+          } else {
+            setState(() {
+              textErr = '';
+              emailVisible = false;
+              otpVisible = true;
+            });
+          }
+        },
+        child: const Text('ยืนยัน'),
+      ),
+    );
+  }
+
   Widget buttonOTP() {
     return SizedBox(
       width: MediaQuery.of(context).size.width,
@@ -139,10 +211,12 @@ class _EditPasswordPageState extends State<EditPasswordPage> {
               textErr = 'กรุณากรอกข้อมูล OTP';
             });
           } else {
-            setState(() {
-              otpVisible = false;
-              isVisible = true;
-            });
+            // if (otp.text == getTotp(widget.password)) {
+            //   setState(() {
+            //     otpVisible = false;
+            //     isVisible = true;
+            //   });
+            // }
           }
         },
         child: const Text('ยืนยัน'),
@@ -212,5 +286,23 @@ class _EditPasswordPageState extends State<EditPasswordPage> {
         ),
       ],
     );
+  }
+
+  // String getTotp(String key) {
+  //   List<int> list = utf8.encode(key);
+  //   String hex = HEX.encode(list);
+
+  //   String secret = base32.encodeHexString(hex);
+  //   String totp = OTP.generateTOTPCodeString(
+  //       secret, DateTime.now().millisecondsSinceEpoch,
+  //       algorithm: Algorithm.SHA1, isGoogle: true);
+  //   return totp;
+  // }
+  // Method to validate the email the take
+  // the user email as an input and
+  // print the bool value in the console.
+  bool validate(String email) {
+    bool isvalid = EmailValidator.validate(email);
+    return isvalid;
   }
 }
