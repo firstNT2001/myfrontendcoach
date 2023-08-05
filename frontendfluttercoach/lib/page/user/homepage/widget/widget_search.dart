@@ -73,7 +73,7 @@ class _WidgetsearchState extends State<Widgetsearch> {
                       if (myController.text.isNotEmpty) {
                         log("logg " + myController.text);
                         coachService
-                            .coach(nameCoach: myController.text, cid: "")
+                            .coach(nameCoach: myController.text, cid: "", email: '')
                             .then((coachdata) {
                           var datacoach = coachdata.data;
                           //var checkcoaches = coaches.length;
@@ -302,7 +302,7 @@ class _WidgetsearchState extends State<Widgetsearch> {
     try {
       var datacourse = await courseService.course(coID: '', cid: '', name: '');
       courses = datacourse.data;
-      customer = await customerService.customer(uid: uid.toString());
+      customer = await customerService.customer(uid: uid.toString(), email: '');
     } catch (err) {
       log('Error: $err');
     }

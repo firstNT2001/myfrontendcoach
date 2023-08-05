@@ -128,7 +128,7 @@ class _HomePageUserState extends State<HomePageUser> {
       // Coachbycourse course = Coachbycourse();
       // log(jsonEncode(course));
       log("User ID" + uid.toString());
-      customer = await customerService.customer(uid: uid.toString());
+      customer = await customerService.customer(uid: uid.toString(), email: '');
       var datacourse = await courseService.course(coID: '', cid: '', name: '');
 
       courses = datacourse.data;

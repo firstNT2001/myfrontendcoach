@@ -473,7 +473,7 @@ Widget loadcourse() {
           cid: widget.coachID.toString(), coID: '', name: '');
       log("iddddddddd= " + widget.coachID.toString());
       var datacoach = await coachService.coach(
-          nameCoach: '', cid: widget.coachID.toString());
+          nameCoach: '', cid: widget.coachID.toString(), email: '');
       log("idddddddddcoach= " + datacoach.data.first.fullName);
       courses = datas.data;
       coach = datacoach.data;

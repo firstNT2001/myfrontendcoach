@@ -17,6 +17,8 @@ import 'package:provider/provider.dart';
 import '../../model/request/auth_password.dart';
 import '../../model/response/md_Result.dart';
 import '../../service/auth.dart';
+import '../../service/coach.dart';
+import '../../service/customer.dart';
 import '../../service/provider/appdata.dart';
 import '../../widget/textField/wg_textField_int copy.dart';
 import '../coach/profile/coach_editProfile.dart';
@@ -31,14 +33,19 @@ class EditPasswordPage extends StatefulWidget {
 }
 
 class _EditPasswordPageState extends State<EditPasswordPage> {
-   late AuthService authService;
-  late ModelResult  modelResult;
+  //Service
+  late CoachService _coachService;
+  late CustomerService _customerService;
+  
+  late AuthService authService;
+  late ModelResult modelResult;
 
   final otp = TextEditingController();
   final email = TextEditingController();
   final password1 = TextEditingController();
   final password2 = TextEditingController();
 
+  String password = '';
   bool passwordVisible = true;
 
   String textErr = '';
@@ -50,8 +57,9 @@ class _EditPasswordPageState extends State<EditPasswordPage> {
     // TODO: implement initState
     super.initState();
     authService = context.read<AppData>().authService;
-
+    password = widget.password;
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -243,10 +251,14 @@ class _EditPasswordPageState extends State<EditPasswordPage> {
               textErr = 'กรุณากรอกข้อมูล OTP';
             });
           } else {
-            if (otp.text == getTotp(widget.password)) {
+            if (otp.text == getTotp(password)) {
               setState(() {
                 otpVisible = false;
                 isVisible = true;
+              });
+            } else {
+              setState(() {
+                textErr = 'OTP ไม่ถูกต้อง';
               });
             }
           }
@@ -273,14 +285,15 @@ class _EditPasswordPageState extends State<EditPasswordPage> {
             });
           } else {
             AuthPassword request = AuthPassword(password: password1.text);
-            var response = await authService.passwordCoach(context.read<AppData>().cid.toString(), request);
+            var response = await authService.passwordCoach(
+                context.read<AppData>().cid.toString(), request);
             modelResult = response.data;
-            if(modelResult.result == '0'){
+            if (modelResult.result == '0') {
               setState(() {
                 textErr = 'บันทึกไม่สำเร็จ';
               });
-            }else{
-              Get.to(()=>const CoachEidtProfilePage());
+            } else {
+              Get.to(() => const CoachEidtProfilePage());
             }
           }
         },
@@ -288,6 +301,7 @@ class _EditPasswordPageState extends State<EditPasswordPage> {
       ),
     );
   }
+
   Widget buttonCus() {
     return SizedBox(
       width: MediaQuery.of(context).size.width,
@@ -304,15 +318,18 @@ class _EditPasswordPageState extends State<EditPasswordPage> {
               textErr = 'รหัสไม่ตรงกัน';
             });
           } else {
-             AuthPassword request = AuthPassword(password: password1.text);
-            var response = await authService.passwordCus(context.read<AppData>().uid.toString(), request);
+            AuthPassword request = AuthPassword(password: password1.text);
+            var response = await authService.passwordCus(
+                context.read<AppData>().uid.toString(), request);
             modelResult = response.data;
-            if(modelResult.result == '0'){
+            if (modelResult.result == '0') {
               setState(() {
                 textErr = 'บันทึกไม่สำเร็จ';
               });
-            }else{
-              Get.to(()=> editProfileCus(uid: context.read<AppData>().uid,));
+            } else {
+              Get.to(() => editProfileCus(
+                    uid: context.read<AppData>().uid,
+                  ));
             }
           }
         },
@@ -320,6 +337,7 @@ class _EditPasswordPageState extends State<EditPasswordPage> {
       ),
     );
   }
+
   Column textPassword(TextEditingController controller) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,

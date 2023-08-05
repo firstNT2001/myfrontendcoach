@@ -48,7 +48,7 @@ class _CoachPageState extends State<CoachPage> {
     try {
       //Courses
       var datas = await _coachService.coach(
-          nameCoach: '', cid: context.read<AppData>().cid.toString());
+          nameCoach: '', cid: context.read<AppData>().cid.toString(), email: '');
       coachs = datas.data;
     } catch (err) {
       log('Error: $err');

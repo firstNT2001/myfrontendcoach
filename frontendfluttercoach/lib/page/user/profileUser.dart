@@ -305,7 +305,7 @@ class _ProfileUserState extends State<ProfileUser> {
 
   Future<void> loadData() async {
     try {
-      customer = await customerService.customer(uid: uid.toString());
+      customer = await customerService.customer(uid: uid.toString(), email: '');
 
       log('cussss: ${customer.data.uid}');
     } catch (err) {

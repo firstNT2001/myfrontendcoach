@@ -13,6 +13,7 @@ abstract class CoachService {
   Future<HttpResponse<List<Coach>>> coach({
     @Query("username") required String nameCoach,
     @Query("cid") required String cid,
+    @Query("email") required String email
   });
 
 }
