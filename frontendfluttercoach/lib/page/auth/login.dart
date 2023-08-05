@@ -189,7 +189,7 @@ class _LoginPageState extends State<LoginPage> {
                             TextButton.icon(
                               // <-- TextButton
                               onPressed: () {
-                                resetPassword(context);
+                                Get.to(() => const EditPasswordPage());
                               },
                               icon: const Icon(
                                   FontAwesomeIcons.solidCircleQuestion),
@@ -421,83 +421,6 @@ class _LoginPageState extends State<LoginPage> {
                     onTap: () {
                       Get.to(() => const RegisterPage(
                             isVisible: true,
-                          ));
-                    },
-                    child: Column(
-                      children: [
-                        SizedBox(
-                            width: 100,
-                            height: 100,
-                            child:
-                                Image.asset("assets/images/single-person.png")),
-                        Text(
-                          'User',
-                          style: Theme.of(context).textTheme.titleMedium,
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ],
-        ),
-      );
-    });
-  }
-
-  void resetPassword(BuildContext ctx) {
-    //target widget
-    SmartDialog.show(builder: (_) {
-      return Container(
-        width: MediaQuery.of(context).size.width * 0.8,
-        height: MediaQuery.of(context).size.height * 0.4,
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(20),
-          color: Colors.white,
-        ),
-        alignment: Alignment.center,
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          //crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Padding(
-              padding: const EdgeInsets.only(
-                  left: 20, right: 20, top: 50, bottom: 16),
-              child: Text("ลืมรหัสผ่าน",
-                  style: Theme.of(context).textTheme.headlineSmall),
-            ),
-            Padding(
-              padding: const EdgeInsets.only(top: 20),
-              child: Row(
-                //mainAxisSize: MainAxisSize.max,
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  InkWell(
-                    onTap: () {
-                      Get.to(() => const EditPasswordPage(
-                            password: '',
-                            visible: true,
-                          ));
-                    },
-                    child: Column(
-                      children: [
-                        SizedBox(
-                            width: 100,
-                            height: 100,
-                            child: Image.asset("assets/images/football.png")),
-                        Text(
-                          'Coach',
-                          style: Theme.of(context).textTheme.titleMedium,
-                        ),
-                      ],
-                    ),
-                  ),
-                  InkWell(
-                    onTap: () {
-                      Get.to(() => const EditPasswordPage(
-                            password: '',
-                            visible: false,
                           ));
                     },
                     child: Column(
