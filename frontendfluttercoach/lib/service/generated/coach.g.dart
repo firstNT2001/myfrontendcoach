@@ -22,11 +22,13 @@ class _CoachService implements CoachService {
   Future<HttpResponse<List<Coach>>> coach({
     required nameCoach,
     required cid,
+    required email,
   }) async {
     const _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{
       r'username': nameCoach,
       r'cid': cid,
+      r'email': email,
     };
     final _headers = <String, dynamic>{};
     final _data = <String, dynamic>{};

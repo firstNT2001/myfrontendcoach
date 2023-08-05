@@ -5,6 +5,7 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:frontendfluttercoach/page/auth/password.dart';
 import 'package:get/get.dart';
 
 import 'package:local_session_timeout/src/session_timeout_manager.dart';
@@ -180,13 +181,20 @@ class _LoginPageState extends State<LoginPage> {
                               )),
                         ),
                       ),
-                      const Padding(
-                        padding: EdgeInsets.only(right: 20, top: 10),
+                      Padding(
+                        padding: const EdgeInsets.only(right: 20, top: 10),
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.end,
                           children: [
-                            Text("ลืมรหัสผ่าน "),
-                            Icon(FontAwesomeIcons.solidCircleQuestion)
+                            TextButton.icon(
+                              // <-- TextButton
+                              onPressed: () {
+                                resetPassword(context);
+                              },
+                              icon: const Icon(
+                                  FontAwesomeIcons.solidCircleQuestion),
+                              label: const Text('ลืมรหัสผ่าน'),
+                            ),
                           ],
                         ),
                       ),
@@ -204,7 +212,10 @@ class _LoginPageState extends State<LoginPage> {
                               },
                               label: Text(
                                 'เข้าสู่ระบบ',
-                                style: Theme.of(context).textTheme.titleMedium!.copyWith(color: Colors.white),
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .titleMedium!
+                                    .copyWith(color: Colors.white),
                               )),
                         ),
                       ),
@@ -359,6 +370,7 @@ class _LoginPageState extends State<LoginPage> {
       );
     });
   }
+
   void register(BuildContext ctx) {
     //target widget
     SmartDialog.show(builder: (_) {
@@ -388,7 +400,9 @@ class _LoginPageState extends State<LoginPage> {
                 children: [
                   InkWell(
                     onTap: () {
-                       Get.to(() =>  const RegisterPage(isVisible: false,));
+                      Get.to(() => const RegisterPage(
+                            isVisible: false,
+                          ));
                     },
                     child: Column(
                       children: [
@@ -405,7 +419,9 @@ class _LoginPageState extends State<LoginPage> {
                   ),
                   InkWell(
                     onTap: () {
-                       Get.to(() =>  const RegisterPage(isVisible: true,));
+                      Get.to(() => const RegisterPage(
+                            isVisible: true,
+                          ));
                     },
                     child: Column(
                       children: [
@@ -430,6 +446,82 @@ class _LoginPageState extends State<LoginPage> {
     });
   }
 
+  void resetPassword(BuildContext ctx) {
+    //target widget
+    SmartDialog.show(builder: (_) {
+      return Container(
+        width: MediaQuery.of(context).size.width * 0.8,
+        height: MediaQuery.of(context).size.height * 0.4,
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(20),
+          color: Colors.white,
+        ),
+        alignment: Alignment.center,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          //crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Padding(
+              padding: const EdgeInsets.only(
+                  left: 20, right: 20, top: 50, bottom: 16),
+              child: Text("ลืมรหัสผ่าน",
+                  style: Theme.of(context).textTheme.headlineSmall),
+            ),
+            Padding(
+              padding: const EdgeInsets.only(top: 20),
+              child: Row(
+                //mainAxisSize: MainAxisSize.max,
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  InkWell(
+                    onTap: () {
+                      Get.to(() => const EditPasswordPage(
+                            password: '',
+                            visible: true,
+                          ));
+                    },
+                    child: Column(
+                      children: [
+                        SizedBox(
+                            width: 100,
+                            height: 100,
+                            child: Image.asset("assets/images/football.png")),
+                        Text(
+                          'Coach',
+                          style: Theme.of(context).textTheme.titleMedium,
+                        ),
+                      ],
+                    ),
+                  ),
+                  InkWell(
+                    onTap: () {
+                      Get.to(() => const EditPasswordPage(
+                            password: '',
+                            visible: false,
+                          ));
+                    },
+                    child: Column(
+                      children: [
+                        SizedBox(
+                            width: 100,
+                            height: 100,
+                            child:
+                                Image.asset("assets/images/single-person.png")),
+                        Text(
+                          'User',
+                          style: Theme.of(context).textTheme.titleMedium,
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+      );
+    });
+  }
 }
 
 // body: Stack(

@@ -212,7 +212,7 @@ class _HomePageCoachState extends State<HomePageCoach> {
 
   Future<void> loadCoachData() async {
     try {
-      var datas = await _coachService.coach(nameCoach: '', cid: cid);
+      var datas = await _coachService.coach(nameCoach: '', cid: cid, email: '');
       coachs = datas.data;
       // ignore: use_build_context_synchronously
       context.read<AppData>().nameCoach = coachs.first.fullName;

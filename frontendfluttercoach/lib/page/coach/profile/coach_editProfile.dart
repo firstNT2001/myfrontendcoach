@@ -20,7 +20,6 @@ import '../../../widget/dropdown/wg_dropdown_string.dart';
 import '../../../widget/textField/wg_textField.dart';
 import '../../../widget/textField/wg_textFieldLines.dart';
 import '../../../widget/textField/wg_textField_int copy.dart';
-import '../../auth/password.dart';
 
 class CoachEidtProfilePage extends StatefulWidget {
   const CoachEidtProfilePage({super.key});
@@ -121,7 +120,7 @@ class _CoachEidtProfilePageState extends State<CoachEidtProfilePage> {
     try {
       //Courses
       var datas = await _coachService.coach(
-          nameCoach: '', cid: context.read<AppData>().cid.toString());
+          nameCoach: '', cid: context.read<AppData>().cid.toString(), email: '');
       coachs = datas.data;
 
       fullName.text = coachs.first.fullName;
@@ -276,7 +275,7 @@ class _CoachEidtProfilePageState extends State<CoachEidtProfilePage> {
                                   FontAwesomeIcons.chevronRight,
                                 ),
                                 onPressed: () {
-                                  Get.to(() =>  EditPasswordPage(password: coachs.first.password, visible: true,));
+                                  
                                 },
                               ),
                             ],
