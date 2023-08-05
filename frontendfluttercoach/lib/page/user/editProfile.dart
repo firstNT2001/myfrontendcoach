@@ -307,9 +307,9 @@ class _editProfileCusState extends State<editProfileCus> {
                           FontAwesomeIcons.chevronRight,
                         ),
                         onPressed: () {
-                          Get.to(() => EditPasswordPage(
-                                password: _password.text, visible: false,
-                              ));
+                          // Get.to(() => EditPasswordPage(
+                          //       password: _password.text
+                          //     ));
                         },
                       ),
                     ],

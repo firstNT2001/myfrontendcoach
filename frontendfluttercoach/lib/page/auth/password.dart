@@ -25,12 +25,11 @@ import '../../service/customer.dart';
 import '../../service/provider/appdata.dart';
 import '../../widget/textField/wg_textField_int copy.dart';
 import '../coach/profile/coach_editProfile.dart';
+import 'login.dart';
 
 class EditPasswordPage extends StatefulWidget {
-  const EditPasswordPage(
-      {super.key, required this.password, required this.visible});
-  final String password;
-  final bool visible;
+  const EditPasswordPage({super.key});
+
   @override
   State<EditPasswordPage> createState() => _EditPasswordPageState();
 }
@@ -55,12 +54,15 @@ class _EditPasswordPageState extends State<EditPasswordPage> {
   final password2 = TextEditingController();
 
   String password = '';
-  bool passwordVisible = true;
 
   String textErr = '';
+
+  bool passwordVisible = true;
   bool isVisible = false;
   bool otpVisible = false;
   bool emailVisible = true;
+  bool resetPassword = false;
+  bool resetPasswordAll = false;
   @override
   void initState() {
     // TODO: implement initState
@@ -69,7 +71,6 @@ class _EditPasswordPageState extends State<EditPasswordPage> {
     _customerService = context.read<AppData>().customerService;
     authService = context.read<AppData>().authService;
 
-    password = widget.password;
     loadDataMethod = loadData();
   }
 
@@ -127,11 +128,43 @@ class _EditPasswordPageState extends State<EditPasswordPage> {
                 }
               });
 
-              // textErr = '';
-              // emailVisible = false;
-              // otpVisible = true;
+              _customerService
+                  .customer(email: email.text, uid: '')
+                  .then((cusdata) {
+                var cusDatas = cusdata.data;
+                modelCustomer = cusDatas;
+                // if (modelCustomer.isNotEmpty) {
+                //   setState(() {});
+                //   log(modelCoach.length.toString());
+                // }
+              });
+              if (modelCoach.first.password != '' &&
+                  modelCustomer.password != '') {
+                setState(() {
+                  password = modelCoach.first.password;
+                  otpVisible = true;
+                  emailVisible = false;
+                  resetPasswordAll = true;
+                });
+              } else if (modelCoach.isNotEmpty) {
+                setState(() {
+                  password = modelCoach.first.password;
+                  otpVisible = true;
+                  emailVisible = false;
+                  resetPassword = true;
+                });
+              } else if (modelCustomer.password.isNotEmpty) {
+                setState(() {
+                  password = modelCoach.first.password;
+                  otpVisible = true;
+                  emailVisible = false;
+                });
+              } else {
+                setState(() {
+                  textErr = 'อีมลไม่ถูกต้อง';
+                });
+              }
             });
-            log(modelCoach.first.email);
           }
         },
         child: const Text('ยืนยัน'),
@@ -168,7 +201,7 @@ class _EditPasswordPageState extends State<EditPasswordPage> {
     );
   }
 
-  Widget buttonCoach() {
+  Widget buttonReset() {
     return SizedBox(
       width: MediaQuery.of(context).size.width,
       // height: MediaQuery.of(context).size.height ,
@@ -184,16 +217,24 @@ class _EditPasswordPageState extends State<EditPasswordPage> {
               textErr = 'รหัสไม่ตรงกัน';
             });
           } else {
-            AuthPassword request = AuthPassword(password: password1.text);
-            var response = await authService.passwordCoach(
-                context.read<AppData>().cid.toString(), request);
-            modelResult = response.data;
+            if (resetPassword == true) {
+              AuthPassword request = AuthPassword(password: password1.text);
+              var response = await authService.passwordCoach(
+                  modelCoach.first.cid.toString(), request);
+              modelResult = response.data;
+            } else {
+              AuthPassword request = AuthPassword(password: password1.text);
+              var response = await authService.passwordCus(
+                  modelCustomer.uid.toString(), request);
+              modelResult = response.data;
+            }
+
             if (modelResult.result == '0') {
               setState(() {
                 textErr = 'บันทึกไม่สำเร็จ';
               });
             } else {
-              Get.to(() => const CoachEidtProfilePage());
+              Get.to(() => const LoginPage());
             }
           }
         },
@@ -202,7 +243,7 @@ class _EditPasswordPageState extends State<EditPasswordPage> {
     );
   }
 
-  Widget buttonCus() {
+  Widget buttonResetAll() {
     return SizedBox(
       width: MediaQuery.of(context).size.width,
       // height: MediaQuery.of(context).size.height ,
@@ -219,21 +260,29 @@ class _EditPasswordPageState extends State<EditPasswordPage> {
             });
           } else {
             AuthPassword request = AuthPassword(password: password1.text);
-            var response = await authService.passwordCus(
-                context.read<AppData>().uid.toString(), request);
-            modelResult = response.data;
+            log( modelCoach.first.password);
+            // ignore: unused_local_variable
+            var response = await authService.passwordCoach(
+                modelCoach.first.cid.toString(), request);
+            
+            AuthPassword request2 = AuthPassword(password: password1.text);
+            log(jsonEncode(request2));
+            var response2 =
+                await authService.passwordCus(modelCustomer.uid.toString(), request2);
+            modelResult = response2.data;
+
+            log(modelResult.result);
+            log(password1.text);
             if (modelResult.result == '0') {
               setState(() {
                 textErr = 'บันทึกไม่สำเร็จ';
               });
             } else {
-              Get.to(() => editProfileCus(
-                    uid: context.read<AppData>().uid,
-                  ));
+              Get.to(() => const LoginPage());
             }
           }
         },
-        child: const Text('ยืนยัน'),
+        child: const Text('ยืนยันbuttonReset'),
       ),
     );
   }
@@ -410,23 +459,21 @@ class _EditPasswordPageState extends State<EditPasswordPage> {
                         ],
                       ),
                       Visibility(
-                        visible: widget.visible,
+                        visible: resetPassword,
                         child: Padding(
                           padding: const EdgeInsets.only(
                               bottom: 18, left: 20, right: 20),
-                          child: buttonCoach(),
+                          child: buttonReset(),
                         ),
                       ),
-                      if (widget.visible == false) ...{
-                        Visibility(
-                          visible: widget.visible,
-                          child: Padding(
-                            padding: const EdgeInsets.only(
-                                bottom: 18, left: 20, right: 20),
-                            child: buttonCus(),
-                          ),
-                        )
-                      }
+                      Visibility(
+                        visible: resetPasswordAll,
+                        child: Padding(
+                          padding: const EdgeInsets.only(
+                              bottom: 18, left: 20, right: 20),
+                          child: buttonResetAll(),
+                        ),
+                      ),
                     ],
                   ))
             ],
