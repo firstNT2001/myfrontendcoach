@@ -15,7 +15,6 @@ import '../../service/provider/appdata.dart';
 import 'chatOfCus.dart';
 import 'editProfile.dart';
 import 'mycourse.Detaildart/mycourse.dart';
-
 class ProfileUser extends StatefulWidget {
   const ProfileUser({super.key});
 
@@ -56,7 +55,7 @@ class _ProfileUserState extends State<ProfileUser> {
       ),
     );
   }
-
+  
   Widget showProfile() {
     return FutureBuilder(
         future: loadDataMethod, // 3.1 object ของ async method

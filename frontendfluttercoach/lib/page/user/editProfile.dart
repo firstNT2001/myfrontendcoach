@@ -7,9 +7,11 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:frontendfluttercoach/page/user/profileUser.dart';
 import 'package:get/get.dart';
+import 'package:otp/otp.dart';
 
 import 'package:provider/provider.dart';
 import 'package:retrofit/retrofit.dart';
+import 'package:syncfusion_flutter_barcodes/barcodes.dart';
 import '../../model/request/updateCus.dart';
 
 import '../../model/response/md_Customer_get.dart';
@@ -19,12 +21,10 @@ import '../../service/customer.dart';
 import '../../service/provider/appdata.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
 
-
-
 // ignore: camel_case_types
 class editProfileCus extends StatefulWidget {
   //สร้างตัวแปรรับconstructure
- final int uid;
+  final int uid;
 
   const editProfileCus({super.key, required this.uid});
 
@@ -40,6 +40,7 @@ class _editProfileCusState extends State<editProfileCus> {
   //late ModelRowsAffected modelRowsAffected;
   late UpdateCustomer cusUpdate;
   late ModelResult moduleResult;
+  String GenOTP="";
   //controller
   TextEditingController _uid = TextEditingController();
   TextEditingController _username = TextEditingController();
@@ -55,7 +56,7 @@ class _editProfileCusState extends State<editProfileCus> {
   int price = 0;
   var update;
   final List<String> genders = ['ผู้หญิง', 'ผู้ชาย'];
-
+  bool isvisible = false;
   String _image = " ";
   String profile = " ";
 
@@ -83,8 +84,6 @@ class _editProfileCusState extends State<editProfileCus> {
     final urlDownload = await snapshot.ref.getDownloadURL();
     print('link img firebase $urlDownload');
     profile = urlDownload;
-    
-    
   }
 
   @override
@@ -130,7 +129,7 @@ class _editProfileCusState extends State<editProfileCus> {
       _height.text = customer.data.height.toString();
       log("b1" + _birthday.text);
       log("b2" + customer.data.birthday);
-      log("_IMAGE=="+_image);
+      log("_IMAGE==" + _image);
       //gender show
       if (_gender.text == "1") {
         _gender.text = "ชาย";
@@ -141,6 +140,9 @@ class _editProfileCusState extends State<editProfileCus> {
       log('Error: $err');
     }
   }
+  //   Widget genQR(String valueOTP,bool isvisible){
+  //   return
+  // }
 
   txtfild(
       final TextEditingController _controller, String lbText, String txtTop) {
@@ -244,6 +246,35 @@ class _editProfileCusState extends State<editProfileCus> {
                   // ),
                   txtfild(_username, "ชื่อผู้ใช้", "ชื่อผู้ใช้"),
                   txtfild(_email, "e-mail", "e-mail"),
+                  // txtfildn(_password, "รหัสผ่าน", "รหัสผ่าน"),
+                  FilledButton(
+                      onPressed: () async{
+                        GenOTP =await OTP.generateHOTPCodeString(
+                            _username.text, int.parse(_password.text));
+                        log("GenOTP" + GenOTP);
+                        if(GenOTP.isNotEmpty){
+                          setState(() {
+                            isvisible = true;
+                          });
+                          
+                        }else{
+                          log("message n=not otp");
+                        }
+                        
+                      },
+                      child: Text("เปลี่ยนรหัสผ่าน")),
+                  Visibility(
+                    visible: isvisible,
+                    child: Container(
+                      height: 200,
+                      child: SfBarcodeGenerator(
+                        value: GenOTP,
+                        symbology: QRCode(),
+                        showValue: false,
+                      ),
+                    ),
+                  ),
+                  txtfild(_email, "e-mail", "e-mail"),
                   txtfild(_fullName, "ชื่อ-นามสกุล", "ชื่อ-นามสกุล"),
                   buildDropdownGender(),
                   txtfild(_phone, "โทรศัพท์", "โทรศัพท์"),
@@ -257,11 +288,11 @@ class _editProfileCusState extends State<editProfileCus> {
                           child: Text("บันทึก"),
                         ),
                         onPressed: () async {
-                          log("messageIMG="+_image);
+                          log("messageIMG=" + _image);
                           //DateTime birthday = new DateFormat("yyyy-MM-dd 'T'HH:mm:ss.SSS'Z'").parse(_birthday.text);
                           if (pickedImg != null) await uploadfile();
                           if (pickedImg == null) profile = _image;
-                          
+
                           UpdateCustomer updateCustomer = UpdateCustomer(
                               username: _username.text,
                               password: _password.text,
