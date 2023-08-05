@@ -12,7 +12,9 @@ abstract class CustomerService {
   factory CustomerService(Dio dio, {String baseUrl}) = _CustomerService;
 
   @GET("/user")
-  Future<HttpResponse<Customer>> customer({@Query("uid") required String uid});
+  Future<HttpResponse<Customer>> customer(
+      {@Query("uid") required String uid,
+      @Query("email") required String email});
 
   @PUT("/user/{uid}")
   Future<HttpResponse<ModelResult>> updateCustomer(
