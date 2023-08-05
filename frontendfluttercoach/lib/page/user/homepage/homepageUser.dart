@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:frontendfluttercoach/page/user/homepage/widget/widget_search.dart';
 
 import 'package:get/get.dart';
+import 'package:persistent_bottom_nav_bar_v2/persistent-tab-view.dart';
 import 'package:provider/provider.dart';
 import 'package:retrofit/retrofit.dart';
 import 'dart:developer';
@@ -73,30 +74,33 @@ class _HomePageUserState extends State<HomePageUser> {
                 decoration: BoxDecoration(
                     color: const Color.fromARGB(255, 243, 243, 244),
                     borderRadius: BorderRadius.circular(15)),
-                child: TextField(                 
+                child: TextField(
                   readOnly: true,
                   onTap: () {
-                    Get.to(() => const Widgetsearch());
+                    pushNewScreen(
+                      context,
+                      screen: const Widgetsearch(),
+                      withNavBar: true,
+                    );                 
                   },
-                  decoration:  InputDecoration(
-                    
+                  decoration: InputDecoration(
                       border: InputBorder.none,
-                       enabledBorder: OutlineInputBorder(
-                                borderSide: BorderSide(
-                                    width: 1,
-                                    color: Theme.of(context)
-                                        .colorScheme
-                                        .tertiary), //<-- SEE HERE
-                                borderRadius: BorderRadius.circular(20.0),
-                              ),
-                        focusedBorder: OutlineInputBorder(
-                                borderSide: BorderSide(
-                                    width: 1.5,
-                                    color: Theme.of(context)
-                                        .colorScheme
-                                        .tertiary), //<-- SEE HERE
-                                borderRadius: BorderRadius.circular(20.0),
-                              ),
+                      enabledBorder: OutlineInputBorder(
+                        borderSide: BorderSide(
+                            width: 1,
+                            color: Theme.of(context)
+                                .colorScheme
+                                .tertiary), //<-- SEE HERE
+                        borderRadius: BorderRadius.circular(20.0),
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                        borderSide: BorderSide(
+                            width: 1.5,
+                            color: Theme.of(context)
+                                .colorScheme
+                                .tertiary), //<-- SEE HERE
+                        borderRadius: BorderRadius.circular(20.0),
+                      ),
                       prefixIcon: Icon(FontAwesomeIcons.search),
                       hintText: "ค้นหา",
                       hintStyle: TextStyle(color: Colors.grey)),
@@ -160,7 +164,11 @@ class _HomePageUserState extends State<HomePageUser> {
                     log(customer.data.price.toString());
                     context.read<AppData>().idcourse = listcours.coId;
                     context.read<AppData>().money = customer.data.price;
-                    Get.to(() => const showCousePage());
+                    pushNewScreen(
+                      context,
+                      screen: const showCousePage(),
+                      withNavBar: true,
+                    );
                   },
                   child: Container(
                     alignment: Alignment.center,
@@ -212,9 +220,13 @@ class _HomePageUserState extends State<HomePageUser> {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               mainAxisAlignment: MainAxisAlignment.end,
                               children: [
-                                Text(listcours.name,
-                                    style:Theme.of(context).textTheme.titleLarge!.copyWith(color: Colors.white),
-                                        ),
+                                Text(
+                                  listcours.name,
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .titleLarge!
+                                      .copyWith(color: Colors.white),
+                                ),
                                 Row(
                                   children: [
                                     const Padding(
@@ -225,25 +237,28 @@ class _HomePageUserState extends State<HomePageUser> {
                                         color: Colors.white,
                                       ),
                                     ),
-                                    Text(listcours.coach.fullName,
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .bodyLarge!.copyWith(color: Colors.white),),
+                                    Text(
+                                      listcours.coach.fullName,
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .bodyLarge!
+                                          .copyWith(color: Colors.white),
+                                    ),
                                   ],
                                 ),
-                                 RatingBar.readOnly(
+                                RatingBar.readOnly(
                                   isHalfAllowed: false,
                                   filledIcon: FontAwesomeIcons.bolt,
                                   size: 16,
                                   emptyIcon: FontAwesomeIcons.bolt,
                                   filledColor: Theme.of(context)
-                                                  .colorScheme
-                                                  .tertiaryContainer,
-                                  emptyColor: Color.fromARGB(255, 245, 245, 245),
+                                      .colorScheme
+                                      .tertiaryContainer,
+                                  emptyColor:
+                                      Color.fromARGB(255, 245, 245, 245),
                                   initialRating: double.parse(listcours.level),
                                   maxRating: 3,
                                 ),
-                               
                               ],
                             ),
                           )

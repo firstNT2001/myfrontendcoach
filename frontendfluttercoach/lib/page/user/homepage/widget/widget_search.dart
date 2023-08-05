@@ -174,7 +174,7 @@ class _WidgetsearchState extends State<Widgetsearch> {
               visible: isVisibleCoach,
               child: Expanded(
                 child: Padding(
-                  padding: const EdgeInsets.only(left: 10, right: 10, bottom: 20),
+                  padding: const EdgeInsets.only(left: 10, right: 10),
                   child: ListView.builder(
                       shrinkWrap: true,
                       itemCount: coaches.length,
@@ -316,7 +316,7 @@ class _WidgetsearchState extends State<Widgetsearch> {
           return const Center(child: CircularProgressIndicator());
         } else {
           return Padding(
-            padding: const EdgeInsets.only(left: 10, right: 10, bottom: 20),
+            padding: const EdgeInsets.only(left: 10, right: 10,),
             child: ListView.builder(
               shrinkWrap: true,
               itemCount: courses.length,

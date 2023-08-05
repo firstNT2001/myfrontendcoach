@@ -254,13 +254,13 @@ class _editProfileCusState extends State<editProfileCus> {
                   // txtfildn(_password, "รหัสผ่าน", "รหัสผ่าน"),
                   FilledButton(
                       onPressed: () async {
-                        GenOTP = getGoogleAuthenticatorUri(
-                            "Coaching", _email.text, _password.text);
+                     GenOTP= getGoogleAuthenticatorUriQR("Coaching", _email.text, _password.text);
                         log(GenOTP);
+                 
                         if (GenOTP.isNotEmpty) {
-                          // setState(() {
-                          //   isvisible = true;
-                          // });
+                          setState(() {
+                            isvisible = true;
+                          });
                          // _launchUrl( Uri.parse(GenOTP));
                         }
                       },
@@ -273,13 +273,23 @@ class _editProfileCusState extends State<editProfileCus> {
                             height: 200,
                             child: Image.network(
                                 'https://www.google.com/chart?chs=200x200&chld=M|0&cht=qr&chl=$GenOTP')),
-                        FilledButton(
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: [
+                            FilledButton(
+                                onPressed: () {
+                                  setState(() {
+                                    isvisible = false;
+                                  });
+                                },
+                                child: Text("ซ่อน QR Code")), FilledButton(
                             onPressed: () {
-                              setState(() {
-                                isvisible = false;
-                              });
+                                 GenOTP = getGoogleAuthenticatorUri(
+                            "Coaching", _email.text, _password.text);
                             },
-                            child: Text("ซ่อน QR Code"))
+                            child: Text("เข้าสู่ Application"))
+                          ],
+                        ),
                       ],
                     ),
                   ),
@@ -454,9 +464,14 @@ class _editProfileCusState extends State<editProfileCus> {
     launchUrl(Uri.parse(url));
     return url;
   }
-  Future<void> _launchUrl(Uri _url) async {
-  if (!await launchUrl(_url)) {
-    throw Exception('Could not launch $_url');
+    String getGoogleAuthenticatorUriQR(String appname, String email, String key) {
+    List<int> list = utf8.encode(key);
+    String hex = HEX.encode(list);
+    String secret = base32.encodeHexString(hex);
+    log('secret $secret');
+    String uri =
+        'otpauth://totp/${Uri.encodeComponent('$appname:$email?secret=$secret&issuer=$appname')}';
+   
+    return uri;
   }
-}
 }
