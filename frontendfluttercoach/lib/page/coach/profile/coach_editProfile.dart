@@ -6,6 +6,7 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:frontendfluttercoach/model/response/md_Result.dart';
+import 'package:frontendfluttercoach/page/auth/GoogleAuthenticator.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:provider/provider.dart';
@@ -72,7 +73,6 @@ class _CoachEidtProfilePageState extends State<CoachEidtProfilePage> {
           child: ListView(
         children: [
           showCoach(),
-         
         ],
       )),
     );
@@ -120,7 +120,9 @@ class _CoachEidtProfilePageState extends State<CoachEidtProfilePage> {
     try {
       //Courses
       var datas = await _coachService.coach(
-          nameCoach: '', cid: context.read<AppData>().cid.toString(), email: '');
+          nameCoach: '',
+          cid: context.read<AppData>().cid.toString(),
+          email: '');
       coachs = datas.data;
 
       fullName.text = coachs.first.fullName;
@@ -151,16 +153,34 @@ class _CoachEidtProfilePageState extends State<CoachEidtProfilePage> {
               //mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: IconButton(
-                    icon: const Icon(
-                      FontAwesomeIcons.chevronLeft,
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: IconButton(
+                        icon: const Icon(
+                          FontAwesomeIcons.chevronLeft,
+                        ),
+                        onPressed: () {
+                          Get.back();
+                        },
+                      ),
                     ),
-                    onPressed: () {
-                      Get.back();
-                    },
-                  ),
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: IconButton(
+                        icon: const Icon(
+                          FontAwesomeIcons.key,
+                          // color: Colors.red,
+                        ),
+                        onPressed: () {
+                          Get.to(()=> GoogleAuthenticatorPage(email: coachs.first.email, password: coachs.first.password,));
+                        },
+                      ),
+                    ),
+                  ],
                 ),
                 Center(
                   child: Text(
@@ -240,6 +260,7 @@ class _CoachEidtProfilePageState extends State<CoachEidtProfilePage> {
                     ],
                   ),
                 ),
+                const Divider(endIndent: 20, indent: 20),
                 Padding(
                   padding:
                       const EdgeInsets.only(bottom: 8, left: 20, right: 20),
@@ -252,7 +273,7 @@ class _CoachEidtProfilePageState extends State<CoachEidtProfilePage> {
                   padding: const EdgeInsets.only(bottom: 8),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    crossAxisAlignment: CrossAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
                       SizedBox(
                         width: (width - 16 - (3 * 20)) / 2,
@@ -265,24 +286,20 @@ class _CoachEidtProfilePageState extends State<CoachEidtProfilePage> {
                       SizedBox(
                           width: (width - 16 - (3 * 20)) / 2,
                           child: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            crossAxisAlignment: CrossAxisAlignment.center,
                             children: [
-                             
                               const Text('เปรียนรหัสผ่าน'),
                               IconButton(
                                 icon: const Icon(
                                   FontAwesomeIcons.chevronRight,
                                 ),
-                                onPressed: () {
-                                  
-                                },
+                                onPressed: () {},
                               ),
                             ],
                           )),
                     ],
                   ),
                 ),
+                const Divider(endIndent: 20, indent: 20),
                 Padding(
                   padding:
                       const EdgeInsets.only(bottom: 8, left: 20, right: 20),
@@ -299,6 +316,7 @@ class _CoachEidtProfilePageState extends State<CoachEidtProfilePage> {
                     labelText: 'ประวัติส่วนตัว',
                   ),
                 ),
+                const Divider(endIndent: 20, indent: 20),
                 Padding(
                   padding:
                       const EdgeInsets.only(bottom: 18, left: 20, right: 20),

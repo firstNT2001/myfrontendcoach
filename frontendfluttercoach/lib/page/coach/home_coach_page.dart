@@ -68,7 +68,7 @@ class _HomePageCoachState extends State<HomePageCoach> {
     _courseService = context.read<AppData>().courseService;
 
     cid = context.read<AppData>().cid.toString(); //ID Course
-
+    log("CoachID:$cid");
     // 2.2 async method
     loadCourseDataMethod = loadCourseData();
 

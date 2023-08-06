@@ -42,7 +42,7 @@ class _EditPasswordPageState extends State<EditPasswordPage> {
   //Model
   List<Coach> modelCoach = [];
   List<Customer> modelCustomer = [];
- 
+
   late AuthService authService;
   late ModelResult modelResult;
 
@@ -104,7 +104,10 @@ class _EditPasswordPageState extends State<EditPasswordPage> {
       // height: MediaQuery.of(context).size.height ,
       child: FilledButton(
         //style: style,
-        onPressed: () {
+        onPressed: () async {
+          setState(() {
+            textErr = '';
+          });
           if (email.text.isEmpty) {
             setState(() {
               textErr = 'กรุณากรอกข้อมูล Email';
@@ -116,53 +119,28 @@ class _EditPasswordPageState extends State<EditPasswordPage> {
           } else {
             setState(
               () {
-                _coachService
-                    .coach(cid: '', nameCoach: '', email: email.text)
-                    .then((coachdata) {
-                  var coachDatas = coachdata.data;
-                  modelCoach = coachDatas;
-                  if (modelCoach.isNotEmpty) {
-                    setState(() {});
-                    log(modelCoach.length.toString());
-                  }
-                });
+                loadData();
+                //   _coachService
+                //     .coach(cid: '', nameCoach: '', email: email.text)
+                //     .then((coachdata) {
+                //   var coachDatas = coachdata.data;
+                //   modelCoach = coachDatas;
+                //   if (modelCoach.isNotEmpty) {
+                //     setState(() {});
+                //     log(modelCoach.length.toString());
+                //   }
+                // });
 
-                _customerService
-                    .customer(email: email.text, uid: '')
-                    .then((cusdata) {
-                  var cusDatas = cusdata.data;
-                  modelCustomer = cusDatas;
-                  if (modelCustomer.isNotEmpty) {
-                    setState(() {});
-                    log(modelCustomer.length.toString());
-                  }
-                });
-                if (modelCoach.isNotEmpty &&
-                    modelCustomer.isNotEmpty) {
-                  setState(() {
-                    password = modelCoach.first.password;
-                    otpVisible = true;
-                    emailVisible = false;
-                    resetPasswordAll = true;
-                  });
-                } else if (modelCoach.isNotEmpty) {
-                  setState(() {
-                    password = modelCoach.first.password;
-                    otpVisible = true;
-                    emailVisible = false;
-                    resetPassword = true;
-                  });
-                } else if (modelCustomer.isNotEmpty) {
-                  setState(() {
-                    password = modelCoach.first.password;
-                    otpVisible = true;
-                    emailVisible = false;
-                  });
-                } else {
-                  setState(() {
-                    textErr = 'อีมลไม่ถูกต้อง';
-                  });
-                }
+                // _customerService
+                //     .customer(email: email.text, uid: '')
+                //     .then((cusdata) {
+                //   var cusDatas = cusdata.data;
+                //   modelCustomer = cusDatas;
+                //   if (modelCustomer.isNotEmpty) {
+                //     setState(() {});
+                //     log(modelCustomer.length.toString());
+                //   }
+                // });
               },
             );
             // log("modelCoach${modelCoach.length}");
@@ -190,8 +168,8 @@ class _EditPasswordPageState extends State<EditPasswordPage> {
             });
           } else {
             log(email.text + password);
-            log(getTotp(email.text + password));
-            if (otp.text == getTotp(email.text + password)) {
+            log(getTotp(email.text));
+            if (otp.text == getTotp(email.text)) {
               setState(() {
                 otpVisible = false;
                 isVisible = true;
@@ -215,6 +193,9 @@ class _EditPasswordPageState extends State<EditPasswordPage> {
       child: FilledButton(
         //style: style,
         onPressed: () async {
+          setState(() {
+            textErr = '';
+          });
           if (password1.text.isEmpty || password2.text.isEmpty) {
             setState(() {
               textErr = 'กรุณากรอกข้อมูลให้ครบ';
@@ -347,6 +328,32 @@ class _EditPasswordPageState extends State<EditPasswordPage> {
       var cusDatas =
           await _customerService.customer(email: email.text, uid: '');
       modelCustomer = cusDatas.data;
+
+      if (modelCoach.isNotEmpty && modelCustomer.isNotEmpty) {
+        setState(() {
+          password = modelCoach.first.password;
+          otpVisible = true;
+          emailVisible = false;
+          resetPasswordAll = true;
+        });
+      } else if (modelCoach.isNotEmpty) {
+        setState(() {
+          password = modelCoach.first.password;
+          otpVisible = true;
+          emailVisible = false;
+          resetPassword = true;
+        });
+      } else if (modelCustomer.isNotEmpty) {
+        setState(() {
+          password = modelCoach.first.password;
+          otpVisible = true;
+          emailVisible = false;
+        });
+      } else {
+        setState(() {
+          textErr = 'ไม่พบอีเมลนี้ในระบบ';
+        });
+      }
     } catch (err) {
       log('Error: $err');
     }
