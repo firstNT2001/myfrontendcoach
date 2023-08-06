@@ -398,7 +398,7 @@ class _ClipEditSelectPageState extends State<ClipEditSelectPage> {
                     final message = types.TextMessage(
                       author: _user,
                       id: const Uuid().v4(),
-                      text: 'ระบบได้เปลี่ยนท่า\nชื่อท่า:${modelClip.first.listClip.name}\nเปลี่ยนเป็น: $name',
+                      text: 'โค้ชได้เปลี่ยนท่าเรียบร้อยแล้ว\nชื่อท่า:${modelClip.first.listClip.name}\nเปลี่ยนเป็น: $name',
                       createdAt: DateTime.now().millisecondsSinceEpoch,
                     );
                     FirebaseFirestore.instance
