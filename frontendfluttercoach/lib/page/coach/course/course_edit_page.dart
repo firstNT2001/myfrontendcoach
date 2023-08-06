@@ -614,7 +614,7 @@ class _CourseEditPageState extends State<CourseEditPage> {
                                 roomID: widget.coID,
                                 roomName: name.text,
                                 userID: context.read<AppData>().cid.toString(),
-                                firstName: context.read<AppData>().nameCoach,
+                                firstName: "โค้ช ${context.read<AppData>().nameCoach}",
                               ));
                         },
                         icon: const Icon(

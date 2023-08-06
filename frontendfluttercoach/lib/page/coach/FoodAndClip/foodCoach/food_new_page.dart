@@ -108,7 +108,7 @@ class _FoodNewCoachPageState extends State<FoodNewCoachPage> {
                       child: WidgetTextFieldInt(
                         controller: calories,
                         labelText: 'Calories',
-                        maxLength: 2,
+                        maxLength: 10,
                       ),
                     ),
                     Padding(
