@@ -107,6 +107,7 @@ dependencies:
   hex: ^0.2.0
   syncfusion_flutter_barcodes: ^22.2.7
   url_launcher: ^6.1.12
+  switcher_button: ^0.0.4
   # video_thumbnail: ^0.5.3
    
   
