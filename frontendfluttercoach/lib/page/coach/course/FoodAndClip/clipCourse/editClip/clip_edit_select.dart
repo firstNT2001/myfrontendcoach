@@ -4,17 +4,22 @@ import 'dart:developer';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:cherry_toast/cherry_toast.dart';
 import 'package:cherry_toast/resources/arrays.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:provider/provider.dart';
-
+import 'package:uuid/uuid.dart';
+import 'package:flutter_chat_types/flutter_chat_types.dart' as types;
 import '../../../../../../model/request/clip_clipID_put.dart';
+import '../../../../../../model/response/clip_get_res.dart';
 import '../../../../../../model/response/md_ClipList_get.dart';
 import '../../../../../../model/response/md_Result.dart';
+import '../../../../../../model/response/md_days.dart';
 import '../../../../../../service/clip.dart';
+import '../../../../../../service/days.dart';
 import '../../../../../../service/listClip.dart';
 import '../../../../../../service/provider/appdata.dart';
 import '../../../../../../service/request.dart';
@@ -45,14 +50,17 @@ class _ClipEditSelectPageState extends State<ClipEditSelectPage> {
   late Future<void> loadListClipDataMethod;
   late ListClipServices _listclipService;
   List<ListClip> clips = [];
+  List<ModelClip> modelClip = [];
   late ModelResult modelResult;
 
   late ClipServices _clipService;
-
+  late DaysService _dayService;
+  List<ModelDay> modelDay = [];
   //Request
   // ignore: non_constant_identifier_names
   late RequestService _RequestService;
 
+  String nameClip = "";
   @override
   void initState() {
     super.initState();
@@ -61,8 +69,13 @@ class _ClipEditSelectPageState extends State<ClipEditSelectPage> {
     _listclipService = context.read<AppData>().listClipServices;
     loadListClipDataMethod = loadListClipData();
 
+    _dayService = context.read<AppData>().daysService;
+
     //Request
     _RequestService = context.read<AppData>().requestService;
+
+    loadDayData();
+    loadClipData();
   }
 
   @override
@@ -110,6 +123,29 @@ class _ClipEditSelectPageState extends State<ClipEditSelectPage> {
     } catch (err) {
       log('Error: $err');
     }
+  } 
+   //LoadData
+  Future<void> loadDayData() async {
+    try {
+      // log(widget.did);
+      var datas = await _dayService.days(did: widget.did.toString(), coID: '', sequence: '');
+      modelDay = datas.data;
+      // log(foods.length.toString());
+    } catch (err) {
+      log('Error: $err');
+    }
+  }
+
+   //LoadData
+  Future<void> loadClipData() async {
+    try {
+      // log(widget.did);
+      var datas = await _clipService.clips(cpID: widget.cpID, icpID: '', did: '');
+      modelClip = datas.data;
+      // log(foods.length.toString());
+    } catch (err) {
+      log('Error: $err');
+    }
   }
 
   Widget showClip() {
@@ -138,7 +174,7 @@ class _ClipEditSelectPageState extends State<ClipEditSelectPage> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           if (listClip.video != '') ...{
-                           Padding(
+                            Padding(
                               padding: const EdgeInsets.only(
                                   left: 8, right: 8, top: 5, bottom: 5),
                               child: AspectRatio(
@@ -152,8 +188,8 @@ class _ClipEditSelectPageState extends State<ClipEditSelectPage> {
                                     ),
                                   )),
                             )
-                        } else
-                           Padding(
+                          } else
+                            Padding(
                               padding: const EdgeInsets.only(
                                   left: 8, right: 8, top: 5, bottom: 5),
                               child: AspectRatio(
@@ -338,14 +374,7 @@ class _ClipEditSelectPageState extends State<ClipEditSelectPage> {
                 modelResult = response.data;
                 log(modelResult.result);
 
-                if (modelResult.result == '1') {
-                  var response =
-                      // ignore: use_build_context_synchronously
-                      await _RequestService.updateRequestStatus(
-                          context.read<AppData>().rqID);
-                  modelResult = response.data;
-                  Get.to(() => const RequestPage());
-                } else {
+                if (modelResult.result == '0') {
                   // ignore: use_build_context_synchronously
                   CherryToast.warning(
                     title: Text('มีเมนู $name ในวันนี้แล้ว'),
@@ -355,6 +384,28 @@ class _ClipEditSelectPageState extends State<ClipEditSelectPage> {
                     animationDuration: const Duration(milliseconds: 1000),
                     autoDismiss: true,
                   ).show(context);
+                } else {
+                  var response =
+                      // ignore: use_build_context_synchronously
+                      await _RequestService.updateRequestStatus(
+                          context.read<AppData>().rqID);
+                  modelResult = response.data;
+                  if (modelResult.result == '0') {
+                  } else {
+                    types.User _user =
+                        types.User(id: context.read<AppData>().cid.toString(), firstName: "โค้ช ${context.read<AppData>().nameCoach}");
+                    //textTeam
+                    final message = types.TextMessage(
+                      author: _user,
+                      id: const Uuid().v4(),
+                      text: 'ระบบได้เปลี่ยนท่า\nชื่อท่า:${modelClip.first.listClip.name}\nเปลี่ยนเป็น: $name',
+                      createdAt: DateTime.now().millisecondsSinceEpoch,
+                    );
+                    FirebaseFirestore.instance
+                        .collection(modelDay.first.courseId.toString())
+                        .add(message.toJson());
+                  }
+                  Get.to(() => const RequestPage());
                 }
               },
               child: const Text("บันทึก")),
