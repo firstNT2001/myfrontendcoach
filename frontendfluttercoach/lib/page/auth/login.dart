@@ -14,8 +14,8 @@ import 'package:provider/provider.dart';
 import '../../model/request/auth_login_post.dart';
 import '../../model/response/auth_login_res.dart';
 import '../../service/auth.dart';
-import '../../service/provider/appdata.dart';
 
+import '../../service/provider/appdata.dart';
 import '../coach/home_coach_page.dart';
 import '../user/navigationbar.dart';
 import 'register.dart';
@@ -207,7 +207,37 @@ class _LoginPageState extends State<LoginPage> {
                                   FontAwesomeIcons.rightToBracket,
                                   size: 16),
                               onPressed: () async {
-                                await login(context);
+                                AuthLoginPost request = AuthLoginPost(
+                                    email: email.text, password: password.text);
+                                log(jsonEncode(request));
+                                var response = await authService.login(request);
+                                authLoginRes = response.data;
+                                uid = authLoginRes.uid;
+                                cid = authLoginRes.cid;
+                                // log(authLoginRes.cid);
+                                //log(authLoginRes.uid.toString());
+                                if (authLoginRes.uid > 0 &&
+                                    authLoginRes.cid > 0) {
+                                  log("go");
+                                  // ignore: use_build_context_synchronously
+                                  _bindPage(context);
+                                  setState(() => titleErr = '');
+                                } else if (authLoginRes.cid > 0) {
+                                  // ignore: use_build_context_synchronously
+                                  context.read<AppData>().cid = cid;
+                                  Get.to(() => const HomePageCoach());
+                                  setState(() => titleErr = '');
+                                } else if (authLoginRes.uid > 0) {
+                                  // ignore: use_build_context_synchronously
+                                  context.read<AppData>().uid = uid;
+                                  Get.to(() => const NavbarBottom());
+                                  setState(() => titleErr = '');
+                                } else {
+                                  log('ไม่พบ');
+
+                                  setState(() => titleErr =
+                                      'กรุณาใส่อีเมล์หรือรหัสผ่านให้ถูกต้อง');
+                                }
                               },
                               label: Text(
                                 'เข้าสู่ระบบ',
@@ -268,32 +298,6 @@ class _LoginPageState extends State<LoginPage> {
         ]),
       ),
     );
-  }
-
-  Future<void> login(context) async {
-    AuthLoginPost request =
-        AuthLoginPost(email: email.text, password: password.text);
-    log(jsonEncode(request));
-    var response = await authService.login(request);
-    authLoginRes = response.data;
-    //log(authLoginRes.uid.toString());
-    if (authLoginRes.uid > 0 && authLoginRes.cid > 0) {
-      log("go");
-      _bindPage(context);
-      setState(() => titleErr = '');
-    } else if (authLoginRes.cid > 0) {
-      Get.to(() => const HomePageCoach());
-      setState(() => titleErr = '');
-    } else if (authLoginRes.uid > 0) {
-      Get.to(() => const NavbarBottom());
-      setState(() => titleErr = '');
-    } else {
-      log('ไม่พบ');
-
-      setState(() => titleErr = 'กรุณาใส่อีเมล์หรือรหัสผ่านให้ถูกต้อง');
-    }
-    uid = authLoginRes.uid;
-    cid = authLoginRes.cid;
   }
 
   void _bindPage(BuildContext ctx) {

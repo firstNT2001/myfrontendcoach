@@ -22,7 +22,6 @@ import '../../service/customer.dart';
 import '../../service/provider/appdata.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
 
-
 // ignore: camel_case_types
 class editProfileCus extends StatefulWidget {
   //สร้างตัวแปรรับconstructure
@@ -114,7 +113,8 @@ class _editProfileCusState extends State<editProfileCus> {
 
   Future<void> loadData() async {
     try {
-      var result = await customerService.customer(uid: widget.uid.toString(), email: '');
+      var result =
+          await customerService.customer(uid: widget.uid.toString(), email: '');
       customer = result.data;
       _uid.text = customer.first.uid.toString();
       _username.text = customer.first.username;
@@ -251,14 +251,15 @@ class _editProfileCusState extends State<editProfileCus> {
                   // txtfildn(_password, "รหัสผ่าน", "รหัสผ่าน"),
                   FilledButton(
                       onPressed: () async {
-                     GenOTP= getGoogleAuthenticatorUriQR("Coaching", _email.text, _password.text);
+                        GenOTP = getGoogleAuthenticatorUriQR(
+                            "Coaching", _email.text, _password.text);
                         log(GenOTP);
-                 
+
                         if (GenOTP.isNotEmpty) {
                           setState(() {
                             isvisible = true;
                           });
-                         // _launchUrl( Uri.parse(GenOTP));
+                          // _launchUrl( Uri.parse(GenOTP));
                         }
                       },
                       child: Text("สร้างGoogle Authenticator")),
@@ -279,12 +280,13 @@ class _editProfileCusState extends State<editProfileCus> {
                                     isvisible = false;
                                   });
                                 },
-                                child: Text("ซ่อน QR Code")), FilledButton(
-                            onPressed: () {
-                                 GenOTP = getGoogleAuthenticatorUri(
-                            "Coaching", _email.text, _password.text);
-                            },
-                            child: Text("เข้าสู่ Application"))
+                                child: Text("ซ่อน QR Code")),
+                            FilledButton(
+                                onPressed: () {
+                                  GenOTP = getGoogleAuthenticatorUri(
+                                      "Coaching", _email.text, _password.text);
+                                },
+                                child: Text("เข้าสู่ Application"))
                           ],
                         ),
                       ],
@@ -450,7 +452,7 @@ class _editProfileCusState extends State<editProfileCus> {
   }
 
   String getGoogleAuthenticatorUri(String appname, String email, String key) {
-    List<int> list = utf8.encode('$email$key');
+    List<int> list = utf8.encode(email);
     String hex = HEX.encode(list);
     String secret = base32.encodeHexString(hex);
     log('secret $secret');
@@ -461,14 +463,15 @@ class _editProfileCusState extends State<editProfileCus> {
     launchUrl(Uri.parse(url));
     return url;
   }
-    String getGoogleAuthenticatorUriQR(String appname, String email, String key) {
-    List<int> list = utf8.encode('$email$key');
+
+  String getGoogleAuthenticatorUriQR(String appname, String email, String key) {
+    List<int> list = utf8.encode(email);
     String hex = HEX.encode(list);
     String secret = base32.encodeHexString(hex);
     log('secret $secret');
     String uri =
         'otpauth://totp/${Uri.encodeComponent('$appname:$email?secret=$secret&issuer=$appname')}';
-   
+
     return uri;
   }
 }
