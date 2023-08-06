@@ -1,18 +1,23 @@
 // ignore_for_file: deprecated_member_use
 
+import 'dart:convert';
 import 'dart:developer';
 import 'dart:typed_data';
 import 'package:badges/badges.dart' as badges;
 import 'package:badges/badges.dart';
+import 'package:custom_rating_bar/custom_rating_bar.dart';
 
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:frontendfluttercoach/model/response/md_Result.dart';
 import 'package:frontendfluttercoach/service/request.dart';
 import 'package:frontendfluttercoach/widget/dialogs.dart';
 import 'package:get/get.dart';
 
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:switcher_button/switcher_button.dart';
 
+import '../../model/request/course_courseID_put.dart';
 import '../../model/response/md_Coach_get.dart';
 import '../../model/response/md_coach_course_get.dart';
 import '../../model/response/md_request.dart';
@@ -37,7 +42,7 @@ class _HomePageCoachState extends State<HomePageCoach> {
   late Future<void> loadCourseDataMethod;
   late CourseService _courseService;
   List<Course> courses = [];
-
+  late ModelResult modelResult;
   //show
   bool checkBoxVal = true;
   bool isVisibles = true;
@@ -262,38 +267,116 @@ class _HomePageCoachState extends State<HomePageCoach> {
                       aspectRatio: 16 / 9,
                       child: Stack(
                         children: <Widget>[
-                          if (listcours.image != '') ...{
-                            Container(
-                              alignment: Alignment.topCenter,
-                              child: AspectRatio(
-                                  aspectRatio: 16 / 9,
-                                  child: Container(
-                                    decoration: BoxDecoration(
-                                      color: const Color(0xff7c94b6),
-                                      image: DecorationImage(
-                                          image: NetworkImage(listcours.image),
-                                          fit: BoxFit.cover),
-                                      borderRadius: BorderRadius.circular(20),
-                                    ),
-                                  )),
-                              //color: Colors.white,
-                            ),
-                          },
                           Container(
-                            padding: const EdgeInsets.all(5.0),
-                            alignment: Alignment.bottomCenter,
-                            decoration: BoxDecoration(
-                              gradient: LinearGradient(
-                                begin: Alignment.topCenter,
-                                end: Alignment.bottomCenter,
-                                colors: <Color>[
-                                  const Color.fromARGB(255, 0, 0, 0)
-                                      .withAlpha(0),
-                                  const Color.fromARGB(49, 0, 0, 0),
-                                  const Color.fromARGB(127, 0, 0, 0)
-                                ],
-                              ),
-                              borderRadius: BorderRadius.circular(20),
+                            alignment: Alignment.topCenter,
+                            child: AspectRatio(
+                                aspectRatio: 16 / 9,
+                                child: Container(
+                                  decoration: BoxDecoration(
+                                    color:
+                                        Theme.of(context).colorScheme.onPrimary,
+                                    image: DecorationImage(
+                                        image: NetworkImage(listcours.image),
+                                        fit: BoxFit.cover),
+                                    borderRadius: BorderRadius.circular(20),
+                                  ),
+                                )),
+                            //color: Colors.white,
+                          ),
+                          (listcours.status == '1')
+                              ? Container(
+                                  padding: const EdgeInsets.all(5.0),
+                                  alignment: Alignment.bottomCenter,
+                                  decoration: BoxDecoration(
+                                    gradient: LinearGradient(
+                                      begin: Alignment.topCenter,
+                                      end: Alignment.bottomCenter,
+                                      colors: <Color>[
+                                        const Color.fromARGB(255, 0, 0, 0)
+                                            .withAlpha(0),
+                                        const Color.fromARGB(49, 0, 0, 0),
+                                        const Color.fromARGB(127, 0, 0, 0)
+                                        // const Color.fromARGB(255, 255, 255, 255)
+                                        //     .withAlpha(0),
+                                        // Color.fromARGB(39, 255, 255, 255),
+                                        // Color.fromARGB(121, 255, 255, 255)
+                                      ],
+                                    ),
+                                    borderRadius: BorderRadius.circular(20),
+                                  ),
+                                )
+                              : Container(
+                                  padding: const EdgeInsets.all(5.0),
+                                  alignment: Alignment.bottomCenter,
+                                  decoration: BoxDecoration(
+                                    color: Color.fromARGB(148, 0, 0, 0),
+                                    // gradient: LinearGradient(
+                                    //   begin: Alignment.topCenter,
+                                    //   end: Alignment.bottomCenter,
+                                    //   colors: <Color>[
+                                    //     Color.fromARGB(255, 0, 0, 0)
+                                    //         .withAlpha(500),
+                                    //     Color.fromARGB(46, 0, 0, 0),
+                                    //     Color.fromARGB(124, 0, 0, 0)
+                                    //   ],
+                                    // ),
+                                    borderRadius: BorderRadius.circular(20),
+                                  ),
+                                  child: Center(
+                                    child: Text(
+                                      'ปิด',
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .headlineLarge!
+                                          .copyWith(color: Colors.white),
+                                    ),
+                                  ),
+                                ),
+                          Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.end,
+                              children: [
+                                (listcours.status == '1')
+                                    ? SwitcherButton(
+                                        value: true,
+                                        onChange: (value) async {
+                                          CourseCourseIdPut request =
+                                              CourseCourseIdPut(
+                                                  status: '0',
+                                                  amount: listcours.amount,
+                                                  days: listcours.days,
+                                                  details: listcours.details,
+                                                  image: listcours.image,
+                                                  level: listcours.level,
+                                                  name: listcours.name,
+                                                  price: listcours.price);
+
+                                          await updateStatus(request,
+                                              listcours.coId.toString());
+                                          log("1$value");
+                                        },
+                                      )
+                                    : SwitcherButton(
+                                        value: false,
+                                        onChange: (value) async {
+                                          CourseCourseIdPut request =
+                                              CourseCourseIdPut(
+                                                  status: '1',
+                                                  amount: listcours.amount,
+                                                  days: listcours.days,
+                                                  details: listcours.details,
+                                                  image: listcours.image,
+                                                  level: listcours.level,
+                                                  name: listcours.name,
+                                                  price: listcours.price);
+
+                                          await updateStatus(request,
+                                              listcours.coId.toString());
+                                          log("0$value");
+                                        },
+                                      ),
+                              ],
                             ),
                           ),
                           Padding(
@@ -302,74 +385,26 @@ class _HomePageCoachState extends State<HomePageCoach> {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               mainAxisAlignment: MainAxisAlignment.end,
                               children: [
-                                Text(listcours.name,
-                                    style:
-                                        Theme.of(context).textTheme.titleLarge),
-                                Row(
-                                  children: [
-                                    const Padding(
-                                      padding: EdgeInsets.only(right: 8),
-                                      child: Icon(
-                                        FontAwesomeIcons.solidUser,
-                                        size: 16.0,
-                                      ),
-                                    ),
-                                    Text(listcours.coach.fullName,
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .bodyLarge),
-                                  ],
+                                Text(
+                                  listcours.name,
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .titleLarge!
+                                      .copyWith(color: Colors.white),
                                 ),
-                                (listcours.level == '1')
-                                    ? Row(
-                                        children: [
-                                          Icon(FontAwesomeIcons.bolt,
-                                              size: 16,
-                                              color: Theme.of(context)
-                                                  .colorScheme
-                                                  .tertiaryContainer),
-                                          const Icon(FontAwesomeIcons.bolt,
-                                              size: 16),
-                                          const Icon(FontAwesomeIcons.bolt,
-                                              size: 16),
-                                        ],
-                                      )
-                                    : (listcours.level == '2')
-                                        ? Row(
-                                            children: [
-                                              Icon(FontAwesomeIcons.bolt,
-                                                  size: 16,
-                                                  color: Theme.of(context)
-                                                      .colorScheme
-                                                      .tertiaryContainer),
-                                              Icon(FontAwesomeIcons.bolt,
-                                                  size: 16,
-                                                  color: Theme.of(context)
-                                                      .colorScheme
-                                                      .tertiaryContainer),
-                                              const Icon(FontAwesomeIcons.bolt,
-                                                  size: 16),
-                                            ],
-                                          )
-                                        : Row(
-                                            children: [
-                                              Icon(FontAwesomeIcons.bolt,
-                                                  size: 16,
-                                                  color: Theme.of(context)
-                                                      .colorScheme
-                                                      .tertiaryContainer),
-                                              Icon(FontAwesomeIcons.bolt,
-                                                  size: 16,
-                                                  color: Theme.of(context)
-                                                      .colorScheme
-                                                      .tertiaryContainer),
-                                              Icon(FontAwesomeIcons.bolt,
-                                                  size: 16,
-                                                  color: Theme.of(context)
-                                                      .colorScheme
-                                                      .tertiaryContainer),
-                                            ],
-                                          )
+                                RatingBar.readOnly(
+                                  isHalfAllowed: false,
+                                  filledIcon: FontAwesomeIcons.bolt,
+                                  size: 16,
+                                  emptyIcon: FontAwesomeIcons.bolt,
+                                  filledColor: Theme.of(context)
+                                      .colorScheme
+                                      .tertiaryContainer,
+                                  emptyColor:
+                                      Color.fromARGB(255, 245, 245, 245),
+                                  initialRating: double.parse(listcours.level),
+                                  maxRating: 3,
+                                ),
                               ],
                             ),
                           )
@@ -431,5 +466,19 @@ class _HomePageCoachState extends State<HomePageCoach> {
             return Center(child: load(context));
           }
         });
+  }
+
+  Future<void> updateStatus(CourseCourseIdPut request, String coID) async {
+    log(jsonEncode(request));
+    var response = await _courseService.updateCourseByCourseID(coID, request);
+    modelResult = response.data;
+    log(coID);
+    log(modelResult.result);
+    if (modelResult.result == '0') {
+    } else {
+      setState(() {
+        loadCourseDataMethod = loadCourseData();
+      });
+    }
   }
 }
