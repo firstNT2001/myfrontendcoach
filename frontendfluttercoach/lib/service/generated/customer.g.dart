@@ -19,7 +19,7 @@ class _CustomerService implements CustomerService {
   String? baseUrl;
 
   @override
-  Future<HttpResponse<Customer>> customer({
+  Future<HttpResponse<List<Customer>>> customer({
     required uid,
     required email,
   }) async {
@@ -30,8 +30,8 @@ class _CustomerService implements CustomerService {
     };
     final _headers = <String, dynamic>{};
     final _data = <String, dynamic>{};
-    final _result = await _dio.fetch<Map<String, dynamic>>(
-        _setStreamType<HttpResponse<Customer>>(Options(
+    final _result = await _dio.fetch<List<dynamic>>(
+        _setStreamType<HttpResponse<List<Customer>>>(Options(
       method: 'GET',
       headers: _headers,
       extra: _extra,
@@ -43,7 +43,9 @@ class _CustomerService implements CustomerService {
               data: _data,
             )
             .copyWith(baseUrl: baseUrl ?? _dio.options.baseUrl)));
-    final value = Customer.fromJson(_result.data!);
+    var value = _result.data!
+        .map((dynamic i) => Customer.fromJson(i as Map<String, dynamic>))
+        .toList();
     final httpResponse = HttpResponse(value, _result);
     return httpResponse;
   }
