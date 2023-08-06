@@ -20,9 +20,13 @@ abstract class CourseService {
   @GET("/course/progess/{coID}")
   Future<HttpResponse<List<ModelClip>>> progess(@Path("coID") String coID);
 
-  @GET("/course/user")
+   @GET("/course/user")
   Future<HttpResponse<List<ModelCourseBuy>>> courseUser(
       @Query("cid") String cid);
+
+  @GET("/course/amount")
+  Future<HttpResponse<int>> amoutclip(
+      {@Query("coID") required String coID});
 
   @GET("/course")
   Future<HttpResponse<List<Course>>> course(
