@@ -237,15 +237,7 @@ class _HomePageCoachState extends State<HomePageCoach> {
       log('Error: $err');
     }
   }
-  Future<void> loadProgessData() async {
-    try {
-      var datas = await _RequestService.request(rqID: '', uid: '', cid: cid);
-      requests = datas.data;
-      log(requests.length.toString());
-    } catch (err) {
-      log('Error: $err');
-    }
-  }
+ 
   //Show Data
   Widget showCourse() {
     return FutureBuilder(

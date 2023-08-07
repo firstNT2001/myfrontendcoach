@@ -25,6 +25,7 @@ class MyCouses extends StatefulWidget {
 }
 
 class _MyCousesState extends State<MyCouses> {
+
   late CourseService _courseService;
   late ProgessbarService progessService;
   // late HttpResponse<ModelCourse> courses;
@@ -46,6 +47,7 @@ class _MyCousesState extends State<MyCouses> {
     progessService = ProgessbarService(Dio(), baseUrl: context.read<AppData>().baseurl);
     _courseService = context.read<AppData>().courseService;
     loadDataMethod = loadData();
+    loadProgessData();
     today = DateTime(nows.year, nows.month, nows.day);
   }
 
@@ -112,7 +114,15 @@ class _MyCousesState extends State<MyCouses> {
       log('Error: $err');
     }
   }
-
+  Future<void> loadProgessData() async {
+    try {
+      var datas = await progessService.processbar(coID: '301');
+      progess = datas.data;
+      log("percent${progess.percent}");
+    } catch (err) {
+      log('Error: $err');
+    }
+  }
   Widget loadcourse() {
     return FutureBuilder(
       future: loadDataMethod,
