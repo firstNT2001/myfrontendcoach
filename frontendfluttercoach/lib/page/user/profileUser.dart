@@ -14,7 +14,7 @@ import '../../service/customer.dart';
 import '../../service/provider/appdata.dart';
 import 'chatOfCus.dart';
 import 'editProfile.dart';
-import 'mycourse.Detaildart/mycourse.dart';
+import 'mycourse/mycourse.dart';
 class ProfileUser extends StatefulWidget {
   const ProfileUser({super.key});
 

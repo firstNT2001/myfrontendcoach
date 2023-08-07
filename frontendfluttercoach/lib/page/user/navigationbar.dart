@@ -5,7 +5,7 @@ import 'package:frontendfluttercoach/page/user/profileUser.dart';
 import 'package:persistent_bottom_nav_bar_v2/persistent-tab-view.dart';
 import 'homepage/homepageUser.dart';
 import 'money/history.dart';
-import 'mycourse.Detaildart/mycourse.dart';
+import 'mycourse/mycourse.dart';
 
 class NavbarBottom extends StatelessWidget {
   const NavbarBottom({super.key});

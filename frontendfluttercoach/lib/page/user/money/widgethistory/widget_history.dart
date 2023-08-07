@@ -53,57 +53,35 @@ class _WidgetHistoryState extends State<WidgetHistory> {
           if (snapshot.connectionState == ConnectionState.done) {
             return Padding(
               padding: const EdgeInsets.all(10.0),
-              child: Container(
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: const BorderRadius.all(
-                    Radius.circular(20),
-                  ),
-                  boxShadow: const [
-                    BoxShadow(
-                      color: Colors.grey,
-                      blurRadius: 4.0, // soften the shadow
-                      spreadRadius: 1.0, //extend the shadow
-                      offset: Offset(
-                        0.0, // Move to right 5  horizontally
-                        5.0, // Move to bottom 5 Vertically
-                      ),
-                    ),
-                  ],
-                ),
-                child: Padding(
-                  padding: const EdgeInsets.all(15.0),
-                  child: SizedBox(
-                    height: MediaQuery.of(context).size.height * 0.48,
-                    child: ListView.builder(
-                        shrinkWrap: true,
-                        itemCount: history.length,
-                        itemBuilder: (context, index) {
-                          log('llll'+history[index].date);
-                          String day = history[index].date.substring(0, 2);
+              child: Padding(
+                padding: const EdgeInsets.all(15.0),
+                child: ListView.builder(
+                    shrinkWrap: true,
+                    itemCount: history.length,
+                    itemBuilder: (context, index) {
+                      log('llll'+history[index].date);
+                      String day = history[index].date.substring(0, 2);
 
-                          String month = history[index].date.substring(2, 4);
-                          String year = history[index].date.substring(4);
+                      String month = history[index].date.substring(2, 4);
+                      String year = history[index].date.substring(4);
 
-                          DateTime dateTime =
-                              DateTime.parse("$year-$month-$day");
-                          thaiDate(dateTime.toString());
-                          log(thaiDate(dateTime.toString()));
-                          //DateTime time =  DateFormat("ddMMyyyy").parse(history[index].date);
-                          final listhis = history[index];
-                          return Card(
-                            child: ListTile(
-                              leading: Icon(FontAwesomeIcons.clockRotateLeft),
-                              title: Text(thaiDate(dateTime.toString())),
-                              subtitle: Text(
-                                "+ ${listhis.amount} บาท",
-                                style: TextStyle(color: Colors.green),
-                              ),
-                            ),
-                          );
-                        }),
-                  ),
-                ),
+                      DateTime dateTime =
+                          DateTime.parse("$year-$month-$day");
+                      thaiDate(dateTime.toString());
+                      log(thaiDate(dateTime.toString()));
+                      //DateTime time =  DateFormat("ddMMyyyy").parse(history[index].date);
+                      final listhis = history[index];
+                      return Card(
+                        child: ListTile(
+                          leading: Icon(FontAwesomeIcons.clockRotateLeft),
+                          title: Text(thaiDate(dateTime.toString())),
+                          subtitle: Text(
+                            "+ ${listhis.amount} บาท",
+                            style: TextStyle(color: Colors.green),
+                          ),
+                        ),
+                      );
+                    }),
               ),
             );
           } else {

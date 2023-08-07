@@ -25,8 +25,8 @@ class HistoryWallet extends StatefulWidget {
 class _HistoryWalletState extends State<HistoryWallet> {
   late int uid;
   late CustomerService customerService;
- List<Customer> customer = [];
- 
+  List<Customer> customer = [];
+
   late Future<void> loadDataMethod;
   late int money = 0;
   @override
@@ -50,33 +50,40 @@ class _HistoryWalletState extends State<HistoryWallet> {
             children: [
               Padding(
                 padding: const EdgeInsets.all(8.0),
-                child: IconButton(onPressed: (){
-                   pushNewScreen(
-                      context,
-                      screen: const addCoin(),
-                      withNavBar: true,
-                    );  
-                }, icon: Icon(FontAwesomeIcons.circlePlus,size: 40,color:Theme.of(context).colorScheme.primary ,)),
+                child: IconButton(
+                    onPressed: () {
+                      pushNewScreen(
+                        context,
+                        screen: const addCoin(),
+                        withNavBar: true,
+                      );
+                    },
+                    icon: Icon(
+                      FontAwesomeIcons.circlePlus,
+                      size: 40,
+                      color: Theme.of(context).colorScheme.primary,
+                    )),
               ),
             ],
           ),
           Padding(
             padding: const EdgeInsets.only(top: 12),
             child: showMoney(),
-          ),const Padding(
-            padding: EdgeInsets.only(left: 25,top: 15),
+          ),
+          const Padding(
+            padding: EdgeInsets.only(left: 25, top: 15),
             child: Row(
               children: [
-                Icon(FontAwesomeIcons.clockRotateLeft,size: 18,),
                 Padding(
                   padding: EdgeInsets.only(left: 5),
                   child: Text("ประวัติการชำระเงิน"),
                 ),
-                 
               ],
             ),
           ),
-          WidgetHistory(uid: uid,)
+          WidgetHistory(
+            uid: uid,
+          )
         ],
       ),
     );
@@ -84,10 +91,10 @@ class _HistoryWalletState extends State<HistoryWallet> {
 
   Future<void> loadData() async {
     try {
-     var  result = await customerService.customer(uid: uid.toString(), email: '');
+      var result =
+          await customerService.customer(uid: uid.toString(), email: '');
       customer = result.data;
       log('cussss: ${uid}');
-      
 
       log('cussss: ${customer.first.price}');
       log('cussss: ${customer.first.uid}');
@@ -130,8 +137,8 @@ class _HistoryWalletState extends State<HistoryWallet> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       const Padding(
-                        padding: EdgeInsets.only(
-                            left: 30, right: 15, bottom: 15),
+                        padding:
+                            EdgeInsets.only(left: 30, right: 15, bottom: 15),
                         child: Text(
                           "ยอดเงินคงเหลือ",
                           style: TextStyle(
@@ -164,5 +171,4 @@ class _HistoryWalletState extends State<HistoryWallet> {
           }
         });
   }
-
 }

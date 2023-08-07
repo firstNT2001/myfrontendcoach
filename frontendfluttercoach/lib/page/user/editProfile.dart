@@ -71,6 +71,7 @@ class _editProfileCusState extends State<editProfileCus> {
 
     setState(() {
       pickedImg = result.files.first;
+      log(pickedImg.toString());
     });
   }
 
@@ -252,7 +253,7 @@ class _editProfileCusState extends State<editProfileCus> {
                   FilledButton(
                       onPressed: () async {
                         GenOTP = getGoogleAuthenticatorUriQR(
-                            "Coaching", _email.text, _password.text);
+                            "Coaching", _email.text, _email.text+_password.text);
                         log(GenOTP);
 
                         if (GenOTP.isNotEmpty) {
@@ -284,7 +285,7 @@ class _editProfileCusState extends State<editProfileCus> {
                             FilledButton(
                                 onPressed: () {
                                   GenOTP = getGoogleAuthenticatorUri(
-                                      "Coaching", _email.text, _password.text);
+                                      "Coaching", _email.text, _email.text +_password.text);
                                 },
                                 child: Text("เข้าสู่ Application"))
                           ],
@@ -456,8 +457,6 @@ class _editProfileCusState extends State<editProfileCus> {
     String hex = HEX.encode(list);
     String secret = base32.encodeHexString(hex);
     log('secret $secret');
-    // String uri =
-    //     'otpauth://totp/${Uri.encodeComponent('$appname:$email?secret=$secret&issuer=$appname')}';
     String url =
         'otpauth://totp/$appname:$email?secret=$secret&issuer=$appname';
     launchUrl(Uri.parse(url));

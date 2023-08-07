@@ -25,10 +25,11 @@ class MyCouses extends StatefulWidget {
 }
 
 class _MyCousesState extends State<MyCouses> {
-  late CourseService _coachService;
+  late CourseService _courseService;
+  late ProgessbarService progessService;
   // late HttpResponse<ModelCourse> courses;
   late Modelprogessbar progess;
-  List<Course> mycourse=[];
+  List<Course> mycourse = [];
   List<Buying> courses = [];
   List<ModelClip> clips = [];
   late Future<void> loadDataMethod;
@@ -42,7 +43,8 @@ class _MyCousesState extends State<MyCouses> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    progessService = ProgessbarService(Dio(), baseUrl: context.read<AppData>().baseurl);
+    progessService =
+        ProgessbarService(Dio(), baseUrl: context.read<AppData>().baseurl);
     _courseService = context.read<AppData>().courseService;
     loadDataMethod = loadData();
     loadProgessData();
@@ -96,31 +98,31 @@ class _MyCousesState extends State<MyCouses> {
       log(context.read<AppData>().uid.toString());
       var datas = await _courseService.showcourseNotEx(
           uid: context.read<AppData>().uid.toString());
-      courses = datas.data;  
-      int all = 0;
-      for(int i=0;i <=courses.length-1;i++){
-        all++;
-        
+      courses = datas.data;
+      log("courseleng" + courses.length.toString());
+      for (int i = 0; i < courses.length; i++) {
+        log("i" + courses[i].courseId.toString());
+        var datas = await progessService.processbar(
+            coID: courses[i].courseId.toString());
+        progess = datas.data;
+        log("percent${progess.percent}");
       }
-      // var dataprogess = await progessService.processbar(coID:courses.first.courseId.toString());
-      // log("B");
-      // progess = dataprogess.data;
-      // // percen = dataspercen.data;
-      // log("messagepercen "+progess.toString());
       log(courses.first.bid.toString());
     } catch (err) {
       log('Error: $err');
     }
   }
+
   Future<void> loadProgessData() async {
     try {
-      var datas = await progessService.processbar(coID: '301');
+      var datas = await progessService.processbar(coID: '294');
       progess = datas.data;
       log("percent${progess.percent}");
     } catch (err) {
       log('Error: $err');
     }
   }
+
   Widget loadcourse() {
     return FutureBuilder(
       future: loadDataMethod,
@@ -237,7 +239,9 @@ class _MyCousesState extends State<MyCouses> {
                                       percent: 0.5,
                                       trailing: Text(
                                         "50.0%",
-                                        style: TextStyle(fontSize:16.0,color: Colors.white),
+                                        style: TextStyle(
+                                            fontSize: 16.0,
+                                            color: Colors.white),
                                       ),
                                       barRadius: Radius.circular(7),
                                       backgroundColor: Colors.grey,

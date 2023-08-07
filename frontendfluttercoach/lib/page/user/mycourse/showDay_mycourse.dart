@@ -7,7 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:frontendfluttercoach/page/user/chat/chat.dart';
-import 'package:frontendfluttercoach/page/user/mycourse.Detaildart/showFood_Clip.dart';
+import 'package:frontendfluttercoach/page/user/mycourse/showFood_Clip.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';

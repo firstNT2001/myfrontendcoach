@@ -35,6 +35,11 @@ abstract class CourseService {
       @Query("cid") required String cid,
       @Query("name") required String name});
 
+  @GET("/course/opensell")
+  Future<HttpResponse<List<Course>>> courseOpenSell(
+      {@Query("coID") required String coID,
+      @Query("cid") required String cid,
+      @Query("name") required String name});
  
   @GET("/course/sell/{coID}")
   Future<HttpResponse<Course>> coursebyCoID(@Path("coID") String coID);

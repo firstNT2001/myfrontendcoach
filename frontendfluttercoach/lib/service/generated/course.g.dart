@@ -129,6 +129,40 @@ class _CourseService implements CourseService {
   }
 
   @override
+  Future<HttpResponse<List<Course>>> courseOpenSell({
+    required coID,
+    required cid,
+    required name,
+  }) async {
+    const _extra = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{
+      r'coID': coID,
+      r'cid': cid,
+      r'name': name,
+    };
+    final _headers = <String, dynamic>{};
+    final _data = <String, dynamic>{};
+    final _result = await _dio.fetch<List<dynamic>>(
+        _setStreamType<HttpResponse<List<Course>>>(Options(
+      method: 'GET',
+      headers: _headers,
+      extra: _extra,
+    )
+            .compose(
+              _dio.options,
+              '/course/opensell',
+              queryParameters: queryParameters,
+              data: _data,
+            )
+            .copyWith(baseUrl: baseUrl ?? _dio.options.baseUrl)));
+    var value = _result.data!
+        .map((dynamic i) => Course.fromJson(i as Map<String, dynamic>))
+        .toList();
+    final httpResponse = HttpResponse(value, _result);
+    return httpResponse;
+  }
+
+  @override
   Future<HttpResponse<Course>> coursebyCoID(coID) async {
     const _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
