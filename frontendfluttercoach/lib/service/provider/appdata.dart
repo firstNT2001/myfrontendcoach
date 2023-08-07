@@ -56,7 +56,8 @@ class AppData with ChangeNotifier {
   //requests
   String rqID = "";
 
-  
+  int duration = 1;
+
   FoodServices get foodServices => FoodServices(Dio(), baseUrl: baseurl);
   ListFoodServices get listfoodServices =>
       ListFoodServices(Dio(), baseUrl: baseurl);

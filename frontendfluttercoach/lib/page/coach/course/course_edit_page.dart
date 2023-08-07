@@ -6,12 +6,14 @@ import 'dart:io';
 import 'package:file_picker/file_picker.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
 import 'package:frontendfluttercoach/page/coach/home_coach_page.dart';
 import 'package:frontendfluttercoach/widget/dialogs.dart';
 
 import 'package:get/get.dart';
 import 'package:provider/provider.dart';
+import 'package:quickalert/models/quickalert_type.dart';
+import 'package:quickalert/widgets/quickalert_dialog.dart';
+import 'package:skeletonizer/skeletonizer.dart';
 
 import '../../../model/request/course_courseID_put.dart';
 
@@ -19,11 +21,9 @@ import '../../../model/response/md_Result.dart';
 import '../../../model/response/md_Review_get.dart';
 import '../../../model/response/md_coach_course_get.dart';
 import '../../../model/response/md_days.dart';
-import '../../../model/response/md_process.dart';
 import '../../../service/course.dart';
 
 import '../../../service/days.dart';
-import '../../../service/progessbar.dart';
 import '../../../service/provider/appdata.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
@@ -49,8 +49,6 @@ class CourseEditPage extends StatefulWidget {
 
 class _CourseEditPageState extends State<CourseEditPage> {
   //Service
-  late ProgessbarService _progessbarService;
-  late Modelprogessbar modelprogessbar;
   //CourseService
   late CourseService _courseService;
   late Future<void> loadDataMethod;
@@ -105,6 +103,7 @@ class _CourseEditPageState extends State<CourseEditPage> {
 
   String textErr = "";
 
+  bool _enabled = true;
   @override
   void initState() {
     super.initState();
@@ -113,11 +112,14 @@ class _CourseEditPageState extends State<CourseEditPage> {
     _courseService = context.read<AppData>().courseService;
     loadDataMethod = loadDataAsync();
 
-    _progessbarService = context.read<AppData>().progessbar;
-    loadProgessData();
-
     _daysService = context.read<AppData>().daysService;
+
     loadDaysDataMethod = loadDaysDataAsync();
+    Future.delayed(Duration(seconds: context.read<AppData>().duration), () {
+      setState(() {
+        _enabled = false;
+      });
+    });
   }
 
   @override
@@ -126,6 +128,12 @@ class _CourseEditPageState extends State<CourseEditPage> {
     double width = (screenSize.width > 550) ? 550 : screenSize.width;
     //double height = (screenSize.height > 550) ? 550 : screenSize.height;
     double padding = 8;
+    return (_enabled == true)
+        ? Skeletonizer(enabled: true, child: scaffold(width, padding))
+        : scaffold(width, padding);
+  }
+
+  Scaffold scaffold(double width, double padding) {
     return Scaffold(
         resizeToAvoidBottomInset: false,
         //backgroundColor: Theme.of(context).colorScheme.primaryContainer,
@@ -134,11 +142,6 @@ class _CourseEditPageState extends State<CourseEditPage> {
             children: [
               showCourse(width, padding),
               if (widget.isVisible == false) ...{
-                const Divider(
-                  endIndent: 20,
-                  indent: 20,
-                  color: Colors.black,
-                ),
                 showDays(),
               },
             ],
@@ -159,7 +162,7 @@ class _CourseEditPageState extends State<CourseEditPage> {
               ],
             );
           } else {
-            return const Center(child: CircularProgressIndicator());
+            return Container();
           }
         });
   }
@@ -572,6 +575,10 @@ class _CourseEditPageState extends State<CourseEditPage> {
           return Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+              const Divider(
+                endIndent: 20,
+                indent: 20,
+              ),
               Padding(
                 padding: const EdgeInsets.only(left: 13),
                 child: Text('วันที่',
@@ -646,22 +653,12 @@ class _CourseEditPageState extends State<CourseEditPage> {
 
   //Image
   Future selectImg() async {
-    final result = await FilePicker.platform.pickFiles();
+    final result = await FilePicker.platform.pickFiles(type: FileType.image);
     if (result == null) return;
 
     setState(() {
       pickedImg = result.files.first;
     });
-  }
-
-  Future<void> loadProgessData() async {
-    try {
-      var datas = await _progessbarService.processbar(coID: widget.coID);
-      modelprogessbar = datas.data;
-      log("percent${modelprogessbar.percent}");
-    } catch (err) {
-      log('Error: $err');
-    }
   }
 
   //uploadfile
@@ -679,57 +676,31 @@ class _CourseEditPageState extends State<CourseEditPage> {
 
   //Dialog Delete
   void dialogDelete(BuildContext context) {
-    //target widget
-    SmartDialog.show(builder: (_) {
-      return Container(
-        width: MediaQuery.of(context).size.width * 0.8,
-        height: MediaQuery.of(context).size.height * 0.3,
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(20),
-          color: Colors.white,
-        ),
-        alignment: Alignment.center,
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          //crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Padding(
-              padding: const EdgeInsets.only(
-                  left: 20, right: 20, top: 50, bottom: 16),
-              child: Text("คุณต้องการลบหรือไม",
-                  style: Theme.of(context).textTheme.headlineSmall),
-            ),
-            Padding(
-              padding: const EdgeInsets.only(top: 20),
-              child: Row(
-                //mainAxisSize: MainAxisSize.max,
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  FilledButton(
-                      onPressed: () {
-                        SmartDialog.dismiss();
-                      },
-                      child: const Text("ยกเลิก")),
-                  FilledButton(
-                      onPressed: () async {
-                        var response =
-                            await _courseService.deleteCourse(widget.coID);
-                        modelResult = response.data;
-                        SmartDialog.dismiss();
-                        if (modelResult.result == '1') {
-                          Get.to(() => const HomePageCoach());
-                        } else {
-                          // ignore: use_build_context_synchronously
-                          warningDelete(context);
-                        }
-                      },
-                      child: const Text("ตกลง"))
-                ],
-              ),
-            ),
-          ],
-        ),
-      );
-    });
+    QuickAlert.show(
+      context: context,
+
+      type: QuickAlertType.confirm,
+      text: 'Do you want to delete?',
+      confirmBtnText: 'Yes',
+      cancelBtnText: 'No',
+      confirmBtnColor: Theme.of(context).colorScheme.primary,
+      // barrierColor: Colors.white,
+      // confirmBtnTextStyle:
+      //     const TextStyle(
+      //   color: Colors.black,
+      //   fontWeight: FontWeight.bold,
+      // ),
+      onConfirmBtnTap: () async {
+        var response = await _courseService.deleteCourse(widget.coID);
+        modelResult = response.data;
+        Navigator.of(context, rootNavigator: true).pop();
+        if (modelResult.result == '1') {
+          Get.to(() => const HomePageCoach());
+        } else {
+          // ignore: use_build_context_synchronously
+          warningDelete(context);
+        }
+      },
+    );
   }
 }

@@ -10,6 +10,7 @@ import 'package:frontendfluttercoach/page/auth/GoogleAuthenticator.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:provider/provider.dart';
+import 'package:skeletonizer/skeletonizer.dart';
 
 import '../../../model/request/registerCoachDTO.dart';
 import '../../../model/response/md_Coach_get.dart';
@@ -56,6 +57,7 @@ class _CoachEidtProfilePageState extends State<CoachEidtProfilePage> {
   // ignore: non_constant_identifier_names
   final List<String> LevelItems = ['ชาย', 'หญิง'];
   final selectedValue = TextEditingController();
+  bool _enabled = true;
 
   @override
   void initState() {
@@ -63,19 +65,33 @@ class _CoachEidtProfilePageState extends State<CoachEidtProfilePage> {
     _coachService = context.read<AppData>().coachService;
     _authService = context.read<AppData>().authService;
     loadCoachDataMethod = loadCoachData();
+      Future.delayed(Duration(seconds: context.read<AppData>().duration), () {
+      setState(() {
+        _enabled = false;
+      });
+    });
   }
 
   @override
   Widget build(BuildContext context) {
+      return (_enabled == true)
+        ? Skeletonizer(
+            enabled: true,
+            child: scaffold(context),
+          )
+        : scaffold(context);
+  }
+
+  Scaffold scaffold(BuildContext context) {
     return Scaffold(
-      resizeToAvoidBottomInset: false,
-      body: SafeArea(
-          child: ListView(
-        children: [
-          showCoach(),
-        ],
-      )),
-    );
+    resizeToAvoidBottomInset: false,
+    body: SafeArea(
+        child: ListView(
+      children: [
+        showCoach(),
+      ],
+    )),
+  );
   }
 
   Widget button() {
@@ -325,7 +341,7 @@ class _CoachEidtProfilePageState extends State<CoachEidtProfilePage> {
               ],
             );
           } else {
-            return Center(child: load(context));
+            return Container();
           }
         });
   }

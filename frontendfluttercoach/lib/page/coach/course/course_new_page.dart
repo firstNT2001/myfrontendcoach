@@ -359,7 +359,7 @@ class _CourseNewPageState extends State<CourseNewPage> {
   }
 
   Future selectImg() async {
-    final result = await FilePicker.platform.pickFiles();
+    final result = await FilePicker.platform.pickFiles(type: FileType.image);
     if (result == null) return;
 
     setState(() {

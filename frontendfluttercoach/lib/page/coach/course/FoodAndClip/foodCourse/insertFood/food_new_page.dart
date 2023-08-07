@@ -13,6 +13,7 @@ import 'package:frontendfluttercoach/service/listFood.dart';
 import 'package:frontendfluttercoach/widget/dropdown/wg_dropdown_notValue_string.dart';
 import 'package:get/get.dart';
 import 'package:provider/provider.dart';
+import 'package:skeletonizer/skeletonizer.dart';
 
 import '../../../../../../model/request/food_dayID_post.dart';
 import '../../../../../../service/provider/appdata.dart';
@@ -46,16 +47,32 @@ class _FoodNewCoursePageState extends State<FoodNewCoursePage> {
   final List<String> listhand = ['มื้อเช้า', 'มื้อเที่ยง', 'มื้อเย็น'];
 
   String textErr = '';
+  bool _enabled = true;
+
   @override
   void initState() {
     super.initState();
 
     _listFoodService = context.read<AppData>().listfoodServices;
     loadListFoodDataMethod = loadListFoodData();
+    Future.delayed(Duration(seconds: context.read<AppData>().duration), () {
+      setState(() {
+        _enabled = false;
+      });
+    });
   }
 
   @override
   Widget build(BuildContext context) {
+    return (_enabled == true)
+        ? Skeletonizer(
+            enabled: true,
+            child: scaffold(context),
+          )
+        : scaffold(context);
+  }
+
+  Scaffold scaffold(BuildContext context) {
     return Scaffold(
         resizeToAvoidBottomInset: false,
         appBar: AppBar(
@@ -163,7 +180,7 @@ class _FoodNewCoursePageState extends State<FoodNewCoursePage> {
       future: loadListFoodDataMethod,
       builder: (context, snapshot) {
         if (snapshot.connectionState != ConnectionState.done) {
-          return const Center(child: CircularProgressIndicator());
+          return Container();
         } else {
           return ListView.builder(
             shrinkWrap: true,

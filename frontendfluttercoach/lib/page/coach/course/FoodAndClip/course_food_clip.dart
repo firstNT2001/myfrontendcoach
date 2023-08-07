@@ -2,8 +2,7 @@ import 'dart:convert';
 import 'dart:developer';
 
 import 'package:auto_size_text/auto_size_text.dart';
-import 'package:cherry_toast/cherry_toast.dart';
-import 'package:cherry_toast/resources/arrays.dart';
+
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
@@ -16,6 +15,9 @@ import 'package:frontendfluttercoach/service/clip.dart';
 import 'package:get/get.dart';
 import 'package:msh_checkbox/msh_checkbox.dart';
 import 'package:provider/provider.dart';
+import 'package:quickalert/models/quickalert_type.dart';
+import 'package:quickalert/widgets/quickalert_dialog.dart';
+import 'package:skeletonizer/skeletonizer.dart';
 
 import '../../../../model/request/food_foodID_put.dart';
 import '../../../../model/response/clip_get_res.dart';
@@ -68,8 +70,13 @@ class _HomeFoodAndClipPageState extends State<HomeFoodAndClipPage> {
   ///SearchBar
   var searchName = TextEditingController();
 
+  var yesNo = TextEditingController();
+
   //Title
   String title = "";
+
+  bool isVisibleQuickAlert = true;
+  bool _enabled = true;
 
   //มืออาหาร
   final selectedValuehand = TextEditingController();
@@ -89,106 +96,120 @@ class _HomeFoodAndClipPageState extends State<HomeFoodAndClipPage> {
     loadClipDataMethod = loadClipData();
 
     title = "Day ${widget.sequence}";
+    Future.delayed(Duration(seconds: context.read<AppData>().duration), () {
+      setState(() {
+        _enabled = false;
+      });
+    });
   }
 
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
       length: 2,
-      child: Scaffold(
-          floatingActionButton: SpeedDial(
-            visible: widget.isVisible,
-            animatedIcon: AnimatedIcons.menu_close,
-            overlayOpacity: 0.4,
-            children: [
-              SpeedDialChild(
-                  child: const Icon(FontAwesomeIcons.bowlFood),
-                  label: 'เพิ่มเมนู',
-                  onTap: () {
-                    Get.to(() => FoodNewCoursePage(
-                          did: widget.did,
-                          isVisible: widget.isVisible,
-                        ));
-                  }),
-              SpeedDialChild(
-                  child: const Icon(FontAwesomeIcons.dumbbell),
-                  label: 'เพิ่มคลิป',
-                  onTap: () {
-                    Get.to(() => ClipSelectPage(
-                          did: widget.did,
-                          isVisible: widget.isVisible,
-                        ));
-                  }),
-            ],
-          ),
-          resizeToAvoidBottomInset: false,
-          appBar: AppBar(
-            backgroundColor: Theme.of(context).colorScheme.primary,
-            title: Text(
-              title,
-              style: Theme.of(context).textTheme.headlineMedium,
-            ),
-            leading: IconButton(
-              icon: const Icon(
-                FontAwesomeIcons.chevronLeft,
-              ),
-              onPressed: () {
-                Get.back();
-              },
-            ),
-            bottom: const TabBar(
-                labelColor: Colors.black, //<-- selected text color
-                unselectedLabelColor: Colors.white, //<-- Unselected text
-                tabs: [
-                  Tab(
-                    icon: Icon(
-                      FontAwesomeIcons.bowlFood,
-                    ),
-                  ),
-                  Tab(
-                    icon: Icon(
-                      FontAwesomeIcons.dumbbell,
-                    ),
-                  )
-                ]),
-            centerTitle: true,
-          ),
-          body: TabBarView(
-            children: [
-              //Food
-              Column(
-                children: [
-                  const SizedBox(
-                    height: 10,
-                  ),
-                  Expanded(
-                    child: Padding(
-                      padding: const EdgeInsets.only(
-                          left: 8, right: 8, top: 5, bottom: 5),
-                      child: showFood(),
-                    ),
-                  ),
-                ],
-              ),
-
-              //Clip
-              Column(
-                children: [
-                  const SizedBox(
-                    height: 10,
-                  ),
-                  Expanded(
-                    child: Padding(
-                      padding: const EdgeInsets.only(
-                          left: 8, right: 8, top: 5, bottom: 5),
-                      child: showClip(),
-                    ),
-                  )
-                ],
-              ),
-            ],
-          )),
+      child: (_enabled == true)
+          ? Skeletonizer(
+              enabled: true,
+              child: scaffold(context),
+            )
+          : scaffold(context),
     );
+  }
+
+  Scaffold scaffold(BuildContext context) {
+    return Scaffold(
+        floatingActionButton: SpeedDial(
+          visible: widget.isVisible,
+          animatedIcon: AnimatedIcons.menu_close,
+          overlayOpacity: 0.4,
+          children: [
+            SpeedDialChild(
+                child: const Icon(FontAwesomeIcons.bowlFood),
+                label: 'เพิ่มเมนู',
+                onTap: () {
+                  Get.to(() => FoodNewCoursePage(
+                        did: widget.did,
+                        isVisible: widget.isVisible,
+                      ));
+                }),
+            SpeedDialChild(
+                child: const Icon(FontAwesomeIcons.dumbbell),
+                label: 'เพิ่มคลิป',
+                onTap: () {
+                  Get.to(() => ClipSelectPage(
+                        did: widget.did,
+                        isVisible: widget.isVisible,
+                      ));
+                }),
+          ],
+        ),
+        resizeToAvoidBottomInset: false,
+        appBar: AppBar(
+          backgroundColor: Theme.of(context).colorScheme.primary,
+          title: Text(
+            title,
+            style: Theme.of(context).textTheme.headlineMedium,
+          ),
+          leading: IconButton(
+            icon: const Icon(
+              FontAwesomeIcons.chevronLeft,
+            ),
+            onPressed: () {
+              Get.back();
+            },
+          ),
+          bottom: const TabBar(
+              labelColor: Colors.black, //<-- selected text color
+              unselectedLabelColor: Colors.white, //<-- Unselected text
+              tabs: [
+                Tab(
+                  icon: Icon(
+                    FontAwesomeIcons.bowlFood,
+                  ),
+                ),
+                Tab(
+                  icon: Icon(
+                    FontAwesomeIcons.dumbbell,
+                  ),
+                )
+              ]),
+          centerTitle: true,
+        ),
+        body: TabBarView(
+          children: [
+            //Food
+            Column(
+              children: [
+                const SizedBox(
+                  height: 10,
+                ),
+                Expanded(
+                  child: Padding(
+                    padding: const EdgeInsets.only(
+                        left: 8, right: 8, top: 5, bottom: 5),
+                    child: showFood(),
+                  ),
+                ),
+              ],
+            ),
+
+            //Clip
+            Column(
+              children: [
+                const SizedBox(
+                  height: 10,
+                ),
+                Expanded(
+                  child: Padding(
+                    padding: const EdgeInsets.only(
+                        left: 8, right: 8, top: 5, bottom: 5),
+                    child: showClip(),
+                  ),
+                )
+              ],
+            ),
+          ],
+        ));
   }
 
   Padding searchButter(BuildContext context) {
@@ -275,7 +296,7 @@ class _HomeFoodAndClipPageState extends State<HomeFoodAndClipPage> {
       future: loadFoodDataMethod,
       builder: (context, snapshot) {
         if (snapshot.connectionState != ConnectionState.done) {
-          return const Center(child: CircularProgressIndicator());
+          return Container();
         } else {
           return ListView.builder(
             shrinkWrap: true,
@@ -441,6 +462,7 @@ class _HomeFoodAndClipPageState extends State<HomeFoodAndClipPage> {
     } else if (meal == '3') {
       selectedValuehand.text = 'มื้อเย็น';
     }
+
     SmartDialog.show(
       alignment: Alignment.bottomCenter,
       builder: (_) {
@@ -528,23 +550,19 @@ class _HomeFoodAndClipPageState extends State<HomeFoodAndClipPage> {
                           log(modelResult.result);
                           if (modelResult.result == '1') {
                             SmartDialog.dismiss();
+                            // ignore: use_build_context_synchronously
                             success(context);
                             setState(() {
                               loadFoodDataMethod = loadFoodData();
                             });
                           } else {
                             // ignore: use_build_context_synchronously
-                            CherryToast.warning(
-                              title: Text(
-                                  'เป็น ${selectedValuehand.text} อยู่แล้ว'),
-                              displayTitle: false,
-                              description: Text(
-                                  'เป็น ${selectedValuehand.text} อยู่แล้ว'),
-                              toastPosition: Position.bottom,
-                              animationDuration:
-                                  const Duration(milliseconds: 1000),
-                              autoDismiss: true,
-                            ).show(context);
+                            QuickAlert.show(
+                              context: context,
+                              type: QuickAlertType.error,
+                              title: 'Oops...',
+                              text: 'เป็น ${selectedValuehand.text} อยู่แล้ว',
+                            );
                           }
                         },
                         child: const Text("บันทึก")),
@@ -561,54 +579,26 @@ class _HomeFoodAndClipPageState extends State<HomeFoodAndClipPage> {
   //Dialog Delete
   void dialogDeleteFood(BuildContext context, String fid) {
     //target widget
-    SmartDialog.show(builder: (_) {
-      return Container(
-        width: MediaQuery.of(context).size.width * 0.8,
-        height: MediaQuery.of(context).size.height * 0.3,
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(20),
-          color: Colors.white,
-        ),
-        alignment: Alignment.center,
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          //crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Padding(
-              padding: const EdgeInsets.only(
-                  left: 20, right: 20, top: 50, bottom: 16),
-              child: Text("คุณต้องการลบหรือไม",
-                  style: Theme.of(context).textTheme.headlineSmall),
-            ),
-            Padding(
-              padding: const EdgeInsets.only(top: 20),
-              child: Row(
-                //mainAxisSize: MainAxisSize.max,
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  FilledButton(
-                      onPressed: () {
-                        SmartDialog.dismiss();
-                      },
-                      child: const Text("ยกเลิก")),
-                  FilledButton(
-                      onPressed: () async {
-                        var response = await _foodService.deleteFood(fid);
-                        modelResult = response.data;
-                        log(modelResult.result);
-                        setState(() {
-                          loadFoodDataMethod = loadFoodData();
-                        });
-                        SmartDialog.dismiss();
-                      },
-                      child: const Text("ตกลง"))
-                ],
-              ),
-            ),
-          ],
-        ),
-      );
-    });
+    QuickAlert.show(
+      context: context,
+      barrierDismissible: isVisibleQuickAlert,
+      type: QuickAlertType.confirm,
+      text: 'Do you want to delete?',
+      confirmBtnText: 'Yes',
+      cancelBtnText: 'No',
+      confirmBtnColor: Theme.of(context).colorScheme.primary,
+      onConfirmBtnTap: () async {
+        var response = await _foodService.deleteFood(fid);
+        modelResult = response.data;
+        log(modelResult.result);
+        setState(() {
+          loadFoodDataMethod = loadFoodData();
+        });
+
+        Navigator.of(context, rootNavigator: true).pop();
+        log('onConfirmBtnTap');
+      },
+    );
   }
 
   //Clip

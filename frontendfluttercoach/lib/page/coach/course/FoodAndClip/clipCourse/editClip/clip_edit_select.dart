@@ -11,6 +11,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:provider/provider.dart';
+import 'package:skeletonizer/skeletonizer.dart';
 import 'package:uuid/uuid.dart';
 import 'package:flutter_chat_types/flutter_chat_types.dart' as types;
 import '../../../../../../model/request/clip_clipID_put.dart';
@@ -61,6 +62,8 @@ class _ClipEditSelectPageState extends State<ClipEditSelectPage> {
   late RequestService _RequestService;
 
   String nameClip = "";
+  bool _enabled = true;
+
   @override
   void initState() {
     super.initState();
@@ -76,10 +79,24 @@ class _ClipEditSelectPageState extends State<ClipEditSelectPage> {
 
     loadDayData();
     loadClipData();
+    Future.delayed(Duration(seconds: context.read<AppData>().duration), () {
+      setState(() {
+        _enabled = false;
+      });
+    });
   }
 
   @override
   Widget build(BuildContext context) {
+    return (_enabled == true)
+        ? Skeletonizer(
+            enabled: true,
+            child: scaffold(context),
+          )
+        : scaffold(context);
+  }
+
+  Scaffold scaffold(BuildContext context) {
     return Scaffold(
       resizeToAvoidBottomInset: false,
       appBar: AppBar(
@@ -123,12 +140,14 @@ class _ClipEditSelectPageState extends State<ClipEditSelectPage> {
     } catch (err) {
       log('Error: $err');
     }
-  } 
-   //LoadData
+  }
+
+  //LoadData
   Future<void> loadDayData() async {
     try {
       // log(widget.did);
-      var datas = await _dayService.days(did: widget.did.toString(), coID: '', sequence: '');
+      var datas = await _dayService.days(
+          did: widget.did.toString(), coID: '', sequence: '');
       modelDay = datas.data;
       // log(foods.length.toString());
     } catch (err) {
@@ -136,11 +155,12 @@ class _ClipEditSelectPageState extends State<ClipEditSelectPage> {
     }
   }
 
-   //LoadData
+  //LoadData
   Future<void> loadClipData() async {
     try {
       // log(widget.did);
-      var datas = await _clipService.clips(cpID: widget.cpID, icpID: '', did: '');
+      var datas =
+          await _clipService.clips(cpID: widget.cpID, icpID: '', did: '');
       modelClip = datas.data;
       // log(foods.length.toString());
     } catch (err) {
@@ -153,7 +173,7 @@ class _ClipEditSelectPageState extends State<ClipEditSelectPage> {
       future: loadListClipDataMethod,
       builder: (context, snapshot) {
         if (snapshot.connectionState != ConnectionState.done) {
-          return const Center(child: CircularProgressIndicator());
+          return Container();
         } else {
           return ListView.builder(
             shrinkWrap: true,
@@ -392,13 +412,15 @@ class _ClipEditSelectPageState extends State<ClipEditSelectPage> {
                   modelResult = response.data;
                   if (modelResult.result == '0') {
                   } else {
-                    types.User _user =
-                        types.User(id: context.read<AppData>().cid.toString(), firstName: "โค้ช ${context.read<AppData>().nameCoach}");
+                    types.User _user = types.User(
+                        id: context.read<AppData>().cid.toString(),
+                        firstName: "โค้ช ${context.read<AppData>().nameCoach}");
                     //textTeam
                     final message = types.TextMessage(
                       author: _user,
                       id: const Uuid().v4(),
-                      text: 'โค้ชได้เปลี่ยนท่าเรียบร้อยแล้ว\nชื่อท่า:${modelClip.first.listClip.name}\nเปลี่ยนเป็น: $name',
+                      text:
+                          'โค้ชได้เปลี่ยนท่าเรียบร้อยแล้ว\nชื่อท่า:${modelClip.first.listClip.name}\nเปลี่ยนเป็น: $name',
                       createdAt: DateTime.now().millisecondsSinceEpoch,
                     );
                     FirebaseFirestore.instance

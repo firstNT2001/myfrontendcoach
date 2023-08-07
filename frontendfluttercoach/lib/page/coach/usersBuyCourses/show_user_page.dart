@@ -6,6 +6,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:frontendfluttercoach/page/coach/usersBuyCourses/show_course_user_page.dart';
 import 'package:get/get.dart';
 import 'package:provider/provider.dart';
+import 'package:skeletonizer/skeletonizer.dart';
 
 import '../../../model/response/md_Buying_get.dart';
 import '../../../service/buy.dart';
@@ -23,23 +24,37 @@ class _ShowUserByCoursePageState extends State<ShowUserByCoursePage> {
   late Future<void> loadCourseDataMethod;
   late BuyCourseService _BuyingService;
   List<Buying> courses = [];
-
+  bool _enabled = true;
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
     _BuyingService = context.read<AppData>().buyCourseService;
     loadCourseDataMethod = loadUserData();
+    Future.delayed(Duration(seconds: context.read<AppData>().duration), () {
+      setState(() {
+        _enabled = false;
+      });
+    });
   }
 
   @override
   Widget build(BuildContext context) {
+    return (_enabled == true)
+        ? Skeletonizer(
+            enabled: true,
+            child: scaffold(context),
+          )
+        : scaffold(context);
+  }
+
+  Scaffold scaffold(BuildContext context) {
     return Scaffold(
       resizeToAvoidBottomInset: false,
       appBar: AppBar(
         //backgroundColor: Theme.of(context).colorScheme.primary,
         title: Text(
-          "",
+          "ผู้ใช้ที่ซื้อคอร์ส",
           style: Theme.of(context).textTheme.headlineMedium,
         ),
         leading: IconButton(
@@ -97,7 +112,8 @@ class _ShowUserByCoursePageState extends State<ShowUserByCoursePage> {
                 height: MediaQuery.of(context).size.height * 0.15,
                 child: InkWell(
                   onTap: () {
-                    Get.to(() => ShowCourseUserPage(uid: course.customer.uid.toString()));
+                    Get.to(() => ShowCourseUserPage(
+                        uid: course.customer.uid.toString()));
                   },
                   child: Column(
                     // mainAxisAlignment: MainAxisAlignment.start,

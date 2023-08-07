@@ -10,11 +10,11 @@ import 'package:custom_rating_bar/custom_rating_bar.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:frontendfluttercoach/model/response/md_Result.dart';
 import 'package:frontendfluttercoach/service/request.dart';
-import 'package:frontendfluttercoach/widget/dialogs.dart';
 import 'package:get/get.dart';
 
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:skeletonizer/skeletonizer.dart';
 import 'package:switcher_button/switcher_button.dart';
 
 import '../../model/request/course_courseID_put.dart';
@@ -66,6 +66,8 @@ class _HomePageCoachState extends State<HomePageCoach> {
   late Future<void> loadRequestDataMethod;
   late RequestService _RequestService;
 
+  bool _enabled = true;
+
   @override
   void initState() {
     super.initState();
@@ -84,6 +86,11 @@ class _HomePageCoachState extends State<HomePageCoach> {
     //Request
     _RequestService = context.read<AppData>().requestService;
     loadRequestDataMethod = loadRequestData();
+    Future.delayed(Duration(seconds: context.read<AppData>().duration), () {
+      setState(() {
+        _enabled = false;
+      });
+    });
   }
 
   @override
@@ -94,113 +101,145 @@ class _HomePageCoachState extends State<HomePageCoach> {
       appBar: AppBar(
         //backgroundColor: Theme.of(context).colorScheme.primary,
         elevation: 0,
-        leading: IconButton(
-          icon: const Icon(
-            FontAwesomeIcons.barsStaggered,
-            //color: Colors.black,
-          ),
-          onPressed: () {
-            Get.to(() => SideMenu(
-                name: coachs.first.username,
-                price: coachs.first.price.toString(),
-                image: coachs.first.image));
-          },
-        ),
+        leading: (_enabled)
+            ? Skeletonizer(
+                child: IconButton(
+                  icon: const Icon(
+                    FontAwesomeIcons.barsStaggered,
+                    //color: Colors.black,
+                  ),
+                  onPressed: () {
+                    Get.to(() => SideMenu(
+                        name: coachs.first.username,
+                        price: coachs.first.price.toString(),
+                        image: coachs.first.image));
+                  },
+                ),
+              )
+            : IconButton(
+                icon: const Icon(
+                  FontAwesomeIcons.barsStaggered,
+                  //color: Colors.black,
+                ),
+                onPressed: () {
+                  Get.to(() => SideMenu(
+                      name: coachs.first.username,
+                      price: coachs.first.price.toString(),
+                      image: coachs.first.image));
+                },
+              ),
         actions: [
           Visibility(
             visible: isVisibles,
-            child: Container(
-                padding: const EdgeInsets.only(top: 10, right: 15),
-                child: showRequest()),
+            child: (_enabled)
+                ? Skeletonizer(
+                    enabled: true,
+                    child: Container(
+                        padding: const EdgeInsets.only(top: 10, right: 15),
+                        child: showRequest()),
+                  )
+                : Container(
+                    padding: const EdgeInsets.only(top: 10, right: 15),
+                    child: showRequest()),
           ),
         ],
       ),
       body: SafeArea(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const Padding(
-              padding: EdgeInsets.only(left: 15),
-              child: Text("DAILY WORKOUT",
-                  style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold)),
-            ),
-            const Padding(
-              padding: EdgeInsets.only(left: 15),
-              child: Text("COACHING",
-                  style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold)),
-            ),
-
-            //search course
-            searchButter(context),
-
-            const SizedBox(
-              height: 10,
-            ),
-            //show Course
-            if (onVisibles == true)
-              Expanded(
-                child: Visibility(
-                  visible: onVisibles,
-                  child: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: showCourse(),
-                  ),
-                ),
-              ),
-            if (offVisibles == true)
-              Expanded(
-                child: Visibility(
-                  visible: offVisibles,
-                  child: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: showCourse(),
-                  ),
-                ),
-              ),
-          ],
-        ),
+        child: (_enabled == true)
+            ? Skeletonizer(
+                enabled: true,
+                child: columnAll(context),
+              )
+            : columnAll(context),
       ),
     );
   }
 
-  Padding searchButter(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(8.0),
-      child: GestureDetector(
-        onTap: () {
-          Get.to(() => const SearchCoursePage());
-        },
-        child: Container(
-            width: MediaQuery.of(context).size.width,
-            height: 45,
-            decoration: BoxDecoration(
-                boxShadow: const <BoxShadow>[
-                  BoxShadow(
-                      color: Colors.grey,
-                      blurRadius: 5.0,
-                      offset: Offset(0.0, 0.75))
-                ],
-                color: const Color.fromRGBO(244, 243, 243, 1),
-                borderRadius: BorderRadius.circular(30)),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                TextButton.icon(
-                  onPressed: () {
-                    Get.to(() => const SearchCoursePage());
-                  },
-                  icon: const Icon(
-                    FontAwesomeIcons.magnifyingGlass,
-                    color: Colors.black,
-                  ),
-                  label: const Text(
-                    "ค้นหาคอร์สของฉัน...",
-                    style: TextStyle(color: Colors.grey),
-                  ),
-                ),
-              ],
-            )),
-      ),
+  Column columnAll(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Padding(
+              padding: EdgeInsets.only(left: 15),
+              child: Text("DAILY WORKOUT",
+                  style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold)),
+            ),
+            Padding(
+              padding: EdgeInsets.only(left: 15),
+              child: Text("COACHING",
+                  style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold)),
+            ),
+          ],
+        ),
+
+        //search course
+        Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: GestureDetector(
+            onTap: () {
+              Get.to(() => const SearchCoursePage());
+            },
+            child: Container(
+                width: MediaQuery.of(context).size.width,
+                height: 45,
+                decoration: BoxDecoration(
+                    boxShadow: const <BoxShadow>[
+                      BoxShadow(
+                          color: Colors.grey,
+                          blurRadius: 5.0,
+                          offset: Offset(0.0, 0.75))
+                    ],
+                    color: const Color.fromRGBO(244, 243, 243, 1),
+                    borderRadius: BorderRadius.circular(30)),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    TextButton.icon(
+                      onPressed: () {
+                        Get.to(() => const SearchCoursePage());
+                      },
+                      icon: const Icon(
+                        FontAwesomeIcons.magnifyingGlass,
+                        color: Colors.black,
+                      ),
+                      label: const Text(
+                        "ค้นหาคอร์สของฉัน...",
+                        style: TextStyle(color: Colors.grey),
+                      ),
+                    ),
+                  ],
+                )),
+          ),
+        ),
+
+        const SizedBox(
+          height: 10,
+        ),
+        //show Course
+        if (onVisibles == true)
+          Expanded(
+            child: Visibility(
+              visible: onVisibles,
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: showCourse(),
+              ),
+            ),
+          ),
+        if (offVisibles == true)
+          Expanded(
+            child: Visibility(
+              visible: offVisibles,
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: showCourse(),
+              ),
+            ),
+          ),
+      ],
     );
   }
 
@@ -237,14 +276,14 @@ class _HomePageCoachState extends State<HomePageCoach> {
       log('Error: $err');
     }
   }
- 
+
   //Show Data
   Widget showCourse() {
     return FutureBuilder(
       future: loadCourseDataMethod,
       builder: (context, snapshot) {
         if (snapshot.connectionState != ConnectionState.done) {
-          return Center(child: load(context));
+          return Container();
         } else {
           return ListView.builder(
             shrinkWrap: true,
@@ -267,22 +306,25 @@ class _HomePageCoachState extends State<HomePageCoach> {
                       aspectRatio: 16 / 9,
                       child: Stack(
                         children: <Widget>[
-                          Container(
-                            alignment: Alignment.topCenter,
-                            child: AspectRatio(
-                                aspectRatio: 16 / 9,
-                                child: Container(
-                                  decoration: BoxDecoration(
-                                    color:
-                                        Theme.of(context).colorScheme.onPrimary,
-                                    image: DecorationImage(
-                                        image: NetworkImage(listcours.image),
-                                        fit: BoxFit.cover),
-                                    borderRadius: BorderRadius.circular(20),
-                                  ),
-                                )),
-                            //color: Colors.white,
-                          ),
+                          if (listcours.image != '') ...{
+                            Container(
+                              alignment: Alignment.topCenter,
+                              child: AspectRatio(
+                                  aspectRatio: 16 / 9,
+                                  child: Container(
+                                    decoration: BoxDecoration(
+                                      color: Theme.of(context)
+                                          .colorScheme
+                                          .onPrimary,
+                                      image: DecorationImage(
+                                          image: NetworkImage(listcours.image),
+                                          fit: BoxFit.cover),
+                                      borderRadius: BorderRadius.circular(20),
+                                    ),
+                                  )),
+                              //color: Colors.white,
+                            ),
+                          },
                           (listcours.status == '1')
                               ? Container(
                                   padding: const EdgeInsets.all(5.0),
@@ -463,7 +505,7 @@ class _HomePageCoachState extends State<HomePageCoach> {
               ],
             );
           } else {
-            return Center(child: load(context));
+            return Container();
           }
         });
   }

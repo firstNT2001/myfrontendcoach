@@ -10,6 +10,7 @@ void warningFood(BuildContext context) {
     text: 'กรุณาเลือกมืออาหาร',
   );
 }
+
 void warning(BuildContext context) {
   QuickAlert.show(
     context: context,
@@ -18,10 +19,23 @@ void warning(BuildContext context) {
     text: 'บันทึกไม่สำเร็จ',
   );
 }
+
 void success(BuildContext context) {
   QuickAlert.show(
     context: context,
     type: QuickAlertType.success,
     text: 'บันทึกสำเร็จ',
+  );
+}
+
+
+void confirm(BuildContext context) {
+  QuickAlert.show(
+    context: context,
+    type: QuickAlertType.confirm,
+    text: 'Do you want to logout',
+    confirmBtnText: 'Yes',
+    cancelBtnText: 'No',
+    confirmBtnColor: Colors.green,
   );
 }
