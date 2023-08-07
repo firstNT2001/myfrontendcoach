@@ -19,13 +19,13 @@ class _ProgessbarService implements ProgessbarService {
   String? baseUrl;
 
   @override
-  Future<HttpResponse<Double>> processbar({required coID}) async {
+  Future<HttpResponse<Modelprogessbar>> processbar({required coID}) async {
     const _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{r'coID': coID};
     final _headers = <String, dynamic>{};
     final _data = <String, dynamic>{};
-    final _result =
-        await _dio.fetch<Double>(_setStreamType<HttpResponse<Double>>(Options(
+    final _result = await _dio.fetch<Map<String, dynamic>>(
+        _setStreamType<HttpResponse<Modelprogessbar>>(Options(
       method: 'GET',
       headers: _headers,
       extra: _extra,
@@ -37,7 +37,7 @@ class _ProgessbarService implements ProgessbarService {
               data: _data,
             )
             .copyWith(baseUrl: baseUrl ?? _dio.options.baseUrl)));
-    final value = _result.data!;
+    final value = Modelprogessbar.fromJson(_result.data!);
     final httpResponse = HttpResponse(value, _result);
     return httpResponse;
   }

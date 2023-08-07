@@ -9,6 +9,7 @@ import '../model/response/clip_get_res.dart';
 import '../model/response/md_Buying_get.dart';
 import '../model/response/md_Course_get.dart';
 import '../model/response/md_Result.dart';
+import '../model/response/md_amoutclip.dart';
 import '../model/response/md_coach_course_get.dart';
 
 part 'generated/course.g.dart';
@@ -25,7 +26,7 @@ abstract class CourseService {
       @Query("cid") String cid);
 
   @GET("/course/amount")
-  Future<HttpResponse<int>> amoutclip(
+  Future<HttpResponse<ModelAmountclip>> amoutclip(
       {@Query("coID") required String coID});
 
   @GET("/course")

@@ -71,13 +71,13 @@ class _CourseService implements CourseService {
   }
 
   @override
-  Future<HttpResponse<int>> amoutclip({required coID}) async {
+  Future<HttpResponse<ModelAmountclip>> amoutclip({required coID}) async {
     const _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{r'coID': coID};
     final _headers = <String, dynamic>{};
     final _data = <String, dynamic>{};
-    final _result =
-        await _dio.fetch<int>(_setStreamType<HttpResponse<int>>(Options(
+    final _result = await _dio.fetch<Map<String, dynamic>>(
+        _setStreamType<HttpResponse<ModelAmountclip>>(Options(
       method: 'GET',
       headers: _headers,
       extra: _extra,
@@ -89,7 +89,7 @@ class _CourseService implements CourseService {
               data: _data,
             )
             .copyWith(baseUrl: baseUrl ?? _dio.options.baseUrl)));
-    final value = _result.data!;
+    final value = ModelAmountclip.fromJson(_result.data!);
     final httpResponse = HttpResponse(value, _result);
     return httpResponse;
   }

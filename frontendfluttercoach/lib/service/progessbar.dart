@@ -1,7 +1,8 @@
-import 'dart:ffi';
 
 import 'package:retrofit/retrofit.dart';
 import 'package:dio/dio.dart';
+
+import '../model/response/md_process.dart';
 
 part 'generated/progessbar.g.dart';
 
@@ -9,7 +10,7 @@ part 'generated/progessbar.g.dart';
 abstract class ProgessbarService {
   factory ProgessbarService(Dio dio, {String baseUrl}) = _ProgessbarService;
   @GET("/course/progess")
-  Future<HttpResponse<Double>> processbar(
+  Future<HttpResponse<Modelprogessbar>> processbar(
       {@Query("coID") required String coID});
 
 }
