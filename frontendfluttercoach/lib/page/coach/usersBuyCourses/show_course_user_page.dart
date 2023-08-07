@@ -6,6 +6,7 @@ import 'package:frontendfluttercoach/model/response/md_Buying_get.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:provider/provider.dart';
+import 'package:skeletonizer/skeletonizer.dart';
 
 import '../../../service/buy.dart';
 import '../../../service/provider/appdata.dart';
@@ -23,6 +24,8 @@ class _ShowCourseUserPageState extends State<ShowCourseUserPage> {
   late Future<void> loadCourseDataMethod;
   late BuyCourseService _buyingService;
   List<Buying> courses = [];
+  bool _enabled = true;
+
   @override
   void initState() {
     // TODO: implement initState
@@ -30,10 +33,24 @@ class _ShowCourseUserPageState extends State<ShowCourseUserPage> {
     _buyingService = context.read<AppData>().buyCourseService;
     loadCourseDataMethod = loadUserData();
     log(widget.uid);
+    Future.delayed(Duration(seconds: context.read<AppData>().duration), () {
+      setState(() {
+        _enabled = false;
+      });
+    });
   }
 
   @override
   Widget build(BuildContext context) {
+    return (_enabled == true)
+        ? Skeletonizer(
+            enabled: true,
+            child: scaffold(context),
+          )
+        : scaffold(context);
+  }
+
+  Scaffold scaffold(BuildContext context) {
     return Scaffold(
         resizeToAvoidBottomInset: false,
         appBar: AppBar(
@@ -78,7 +95,7 @@ class _ShowCourseUserPageState extends State<ShowCourseUserPage> {
       future: loadCourseDataMethod,
       builder: (context, snapshot) {
         if (snapshot.connectionState != ConnectionState.done) {
-          return const Center(child: CircularProgressIndicator());
+          return Container();
         } else {
           return ListView.builder(
             shrinkWrap: true,
@@ -92,9 +109,10 @@ class _ShowCourseUserPageState extends State<ShowCourseUserPage> {
                   width: double.infinity,
                   child: InkWell(
                     onTap: () {
-                        Get.to(() => CourseEditPage(
-                          coID: listcours.course.coId.toString(), isVisible: false,
-                        ));
+                      Get.to(() => CourseEditPage(
+                            coID: listcours.course.coId.toString(),
+                            isVisible: false,
+                          ));
                       // Get.to(() => ChatPage(
                       //       roomID: listcours.course.coId.toString(),
                       //       roomName: listcours.course.name,

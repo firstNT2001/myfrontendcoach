@@ -1220,6 +1220,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.2.3"
+  quickalert:
+    dependency: "direct main"
+    description:
+      name: quickalert
+      sha256: "33a52870b2a87c55d0649d0cd228efaa2368d5df39231fdecebb71f349a9b221"
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.0.1"
   quiver:
     dependency: transitive
     description:
@@ -1228,6 +1236,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "3.2.1"
+  reorderable_grid_view:
+    dependency: "direct main"
+    description:
+      name: reorderable_grid_view
+      sha256: "26b22f3bc075719989758be1bdce605e530bde5be6c80f6e50be6afb55f04a4d"
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.2.7"
   retrofit:
     dependency: "direct main"
     description:
@@ -1348,6 +1364,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.0.4"
+  skeletonizer:
+    dependency: "direct main"
+    description:
+      name: skeletonizer
+      sha256: "73f3134773e622c3f35bee49df8b3aa601fb88861af17c74a1b94dc352a686d1"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.5.0"
   sky_engine:
     dependency: transitive
     description: flutter

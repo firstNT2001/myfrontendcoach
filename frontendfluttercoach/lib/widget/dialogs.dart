@@ -49,7 +49,7 @@ void stopLoading() {
   SmartDialog.dismiss();
 }
 
-Widget load(BuildContext context) => LoadingAnimationWidget.waveDots(
+Widget load(BuildContext context) => LoadingAnimationWidget.horizontalRotatingDots(
       color: const Color.fromARGB(255, 186, 182, 182),
       // leftDotColor: const Color(0xFF1A1A3F),
       // rightDotColor: const Color(0xFFEA3799),

@@ -13,6 +13,7 @@ import 'package:get/get.dart';
 
 import 'package:provider/provider.dart';
 import 'package:badges/badges.dart' as badges;
+import 'package:skeletonizer/skeletonizer.dart';
 
 import '../../../../../../model/request/clip_dayID_post.dart';
 import '../../../../../../model/response/md_ClipList_get.dart';
@@ -52,15 +53,30 @@ class _ClipSelectPageState extends State<ClipSelectPage> {
   // Uint8List? _thumbnailData;
 
   List<String> imageURL = [];
+  bool _enabled = true;
   @override
   void initState() {
     super.initState();
     _listClipService = context.read<AppData>().listClipServices;
     loadListClipDataMethod = loadListClipsData();
+    Future.delayed(Duration(seconds: context.read<AppData>().duration), () {
+      setState(() {
+        _enabled = false;
+      });
+    });
   }
 
   @override
   Widget build(BuildContext context) {
+    return (_enabled == true)
+        ? Skeletonizer(
+            enabled: true,
+            child: scaffold(context),
+          )
+        : scaffold(context);
+  }
+
+  Scaffold scaffold(BuildContext context) {
     return Scaffold(
         resizeToAvoidBottomInset: false,
         appBar: AppBar(
@@ -106,7 +122,8 @@ class _ClipSelectPageState extends State<ClipSelectPage> {
                     Get.to(() => ClipInsertPage(
                           did: widget.did,
                           modelClipList: increaseClips,
-                          increaseClip: increaseClipDays, isVisible: widget.isVisible,
+                          increaseClip: increaseClipDays,
+                          isVisible: widget.isVisible,
                         ));
                   }
                 },
@@ -164,7 +181,7 @@ class _ClipSelectPageState extends State<ClipSelectPage> {
       future: loadListClipDataMethod,
       builder: (context, snapshot) {
         if (snapshot.connectionState != ConnectionState.done) {
-          return const Center(child: CircularProgressIndicator());
+          return Container();
         } else {
           return ListView.builder(
             shrinkWrap: true,
@@ -210,34 +227,34 @@ class _ClipSelectPageState extends State<ClipSelectPage> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         if (listClip.video != '') ...{
-                           Padding(
-                              padding: const EdgeInsets.only(
-                                  left: 8, right: 8, top: 5, bottom: 5),
-                              child: AspectRatio(
-                                  aspectRatio: 16 / 16,
-                                  child: Container(
-                                    decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.circular(26),
-                                        color: Colors.pink),
-                                    child: VideoItem(
-                                      video: listClip.video,
-                                    ),
-                                  )),
-                            )
+                          Padding(
+                            padding: const EdgeInsets.only(
+                                left: 8, right: 8, top: 5, bottom: 5),
+                            child: AspectRatio(
+                                aspectRatio: 16 / 16,
+                                child: Container(
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(26),
+                                  ),
+                                  child: VideoItem(
+                                    video: listClip.video,
+                                  ),
+                                )),
+                          )
                         } else
-                           Padding(
-                              padding: const EdgeInsets.only(
-                                  left: 8, right: 8, top: 5, bottom: 5),
-                              child: AspectRatio(
-                                  aspectRatio: 16 / 16,
-                                  child: Container(
-                                    decoration: BoxDecoration(
-                                      color: const Color.fromARGB(
-                                          255, 207, 208, 209),
-                                      borderRadius: BorderRadius.circular(20),
-                                    ),
-                                  )),
-                            ),
+                          Padding(
+                            padding: const EdgeInsets.only(
+                                left: 8, right: 8, top: 5, bottom: 5),
+                            child: AspectRatio(
+                                aspectRatio: 16 / 16,
+                                child: Container(
+                                  decoration: BoxDecoration(
+                                    color: const Color.fromARGB(
+                                        255, 207, 208, 209),
+                                    borderRadius: BorderRadius.circular(20),
+                                  ),
+                                )),
+                          ),
                         Column(
                           mainAxisAlignment: MainAxisAlignment.center,
                           crossAxisAlignment: CrossAxisAlignment.start,
@@ -276,8 +293,8 @@ class _ClipSelectPageState extends State<ClipSelectPage> {
     );
   }
 
-  void _dialog(BuildContext ctx, ListClip listClip, List<Color> colorList,
-      int index) {
+  void _dialog(
+      BuildContext ctx, ListClip listClip, List<Color> colorList, int index) {
     //target widget
     SmartDialog.show(builder: (_) {
       return Container(

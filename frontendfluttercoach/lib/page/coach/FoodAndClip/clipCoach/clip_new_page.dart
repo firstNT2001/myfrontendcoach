@@ -18,8 +18,10 @@ import '../../../../model/request/listClip_coachID_post.dart';
 import '../../../../model/response/md_Result.dart';
 import '../../../../service/listClip.dart';
 import '../../../../service/provider/appdata.dart';
+import '../../../../widget/PopUp/popUp.dart';
 import '../../../../widget/textField/wg_textField.dart';
 import '../../../../widget/textField/wg_textFieldLines.dart';
+import '../coach_food_clip_page.dart';
 
 class ClipNewCoachPage extends StatefulWidget {
   const ClipNewCoachPage({super.key});
@@ -293,6 +295,9 @@ class _ClipNewCoachPageState extends State<ClipNewCoachPage> {
               textErr = 'กรุณาเพิ่มวิดิโอ';
             });
           } else {
+            setState(() {
+              textErr = '';
+            });
             if (pickedFile != null) await uploadFile();
             ListClipCoachIdPost listClipCoachIdPost = ListClipCoachIdPost(
                 name: name.text,
@@ -302,6 +307,14 @@ class _ClipNewCoachPageState extends State<ClipNewCoachPage> {
             var insertClip = await _listClipServices.insertListClipByCoachID(
                 cid, listClipCoachIdPost);
             modelResult = insertClip.data;
+            if (modelResult.result == '0') {
+              // ignore: use_build_context_synchronously
+              warning(context);
+            } else {
+              // ignore: use_build_context_synchronously
+              success(context);
+              Get.to(() => const FoodCoachPage());
+            }
             log(jsonEncode(modelResult.result));
           }
         },

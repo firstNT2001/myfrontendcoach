@@ -1,13 +1,15 @@
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 
 import 'package:provider/provider.dart';
+import 'package:quickalert/models/quickalert_type.dart';
+import 'package:quickalert/widgets/quickalert_dialog.dart';
+import 'package:skeletonizer/skeletonizer.dart';
 
 import '../../../model/response/md_ClipList_get.dart';
 import '../../../model/response/md_FoodList_get.dart';
@@ -45,6 +47,7 @@ class _FoodCoachPageState extends State<FoodCoachPage> {
   String cid = "";
   late ModelResult modelResult;
   bool isDelete = false;
+  bool _enabled = true;
   @override
   void initState() {
     // TODO: implement initState
@@ -57,6 +60,12 @@ class _FoodCoachPageState extends State<FoodCoachPage> {
     //LoadClipService
     _listClipService = context.read<AppData>().listClipServices;
     loadClipDataMethod = loadClipData();
+
+     Future.delayed(Duration(seconds: context.read<AppData>().duration), () {
+      setState(() {
+        _enabled = false;
+      });
+    });
   }
 
   @override
@@ -122,39 +131,45 @@ class _FoodCoachPageState extends State<FoodCoachPage> {
               ]),
           centerTitle: true,
         ),
-        body: TabBarView(
-          children: [
-            Column(
-              children: [
-                const SizedBox(
-                  height: 10,
-                ),
-                searchFood(context),
-                Expanded(
-                  child: Padding(
-                    padding: const EdgeInsets.only(
-                        left: 8, right: 8, top: 5, bottom: 5),
-                    child: showFood(),
+        body: Container(
+          child: TabBarView(
+            children: [
+              Column(
+                children: [
+                  const SizedBox(
+                    height: 10,
                   ),
-                ),
-              ],
-            ),
-            Column(
-              children: [
-                const SizedBox(
-                  height: 10,
-                ),
-                searchClip(context),
-                Expanded(
-                  child: Padding(
-                    padding: const EdgeInsets.only(
-                        left: 8, right: 8, top: 5, bottom: 5),
-                    child: showClips(),
+                  (_enabled)
+                      ? Skeletonizer(enabled: true, child: searchFood(context))
+                      : searchFood(context),
+                  Expanded(
+                    child: Padding(
+                      padding: const EdgeInsets.only(
+                          left: 8, right: 8, top: 5, bottom: 5),
+                      child: showFood(),
+                    ),
                   ),
-                ),
-              ],
-            ),
-          ],
+                ],
+              ),
+              Column(
+                children: [
+                  const SizedBox(
+                    height: 10,
+                  ),
+                  (_enabled)
+                      ? Skeletonizer(enabled: true, child: searchFood(context))
+                      : searchFood(context),
+                  Expanded(
+                    child: Padding(
+                      padding: const EdgeInsets.only(
+                          left: 8, right: 8, top: 5, bottom: 5),
+                      child: showClips(),
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
         ),
       ),
     );
@@ -247,93 +262,96 @@ class _FoodCoachPageState extends State<FoodCoachPage> {
     return FutureBuilder(
       future: loadFoodDataMethod,
       builder: (context, snapshot) {
-        if (snapshot.connectionState != ConnectionState.done) {
-          return const Center(child: CircularProgressIndicator());
-        } else {
-          return GridView.builder(
-            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 2, mainAxisExtent: 230),
-            shrinkWrap: true,
-            itemCount: foods.length,
-            itemBuilder: (context, index) {
-              final listfood = foods[index];
-              return Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: SizedBox(
-                  //height: MediaQuery.of(context).size.height * 0.4,
-                  child: InkWell(
-                    onTap: () {
-                      Get.to(() => FoodEditCoachPage(ifid: listfood.ifid));
-                    },
-                    child: Column(
-                      children: [
-                        Stack(
-                          children: [
-                            if (listfood.image != '') ...{
-                              AspectRatio(
-                                  aspectRatio: 16 / 13,
-                                  child: Container(
-                                    decoration: BoxDecoration(
-                                      color: const Color(0xff7c94b6),
-                                      image: DecorationImage(
-                                          image: NetworkImage(listfood.image),
-                                          fit: BoxFit.cover),
-                                      borderRadius: BorderRadius.circular(20),
-                                    ),
-                                  )),
-                              //color: Colors.white,
-                            } else
-                              AspectRatio(
-                                  aspectRatio: 16 / 13,
-                                  child: Container(
-                                    decoration: BoxDecoration(
-                                      color: const Color.fromARGB(
-                                          255, 207, 208, 209),
-                                      borderRadius: BorderRadius.circular(20),
-                                    ),
-                                  )),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.end,
-                              children: [
-                                IconButton(
-                                  onPressed: () {
-                                    dialogDeleteFood(
-                                        context, listfood.ifid.toString());
-                                  },
-                                  icon: const Icon(
-                                    FontAwesomeIcons.trash,
-                                    color: Color.fromARGB(255, 93, 93, 93),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ],
-                        ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Padding(
-                              padding: const EdgeInsets.only(left: 16, top: 8),
-                              child: SizedBox(
-                                width: MediaQuery.of(context).size.width * 0.35,
-                                child: Text(
-                                  listfood.name,
-                                  maxLines: 2,
-                                  style:
-                                      Theme.of(context).textTheme.titleMedium,
-                                ),
+        return (_enabled == true)
+            ? Skeletonizer(
+                enabled: true,
+                child: gridViewFood(),
+              )
+            : gridViewFood();
+      },
+    );
+  }
+
+  gridViewFood() {
+    return GridView.builder(
+      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+          crossAxisCount: 2, mainAxisExtent: 230),
+      shrinkWrap: true,
+      itemCount: foods.length,
+      itemBuilder: (context, index) {
+        final listfood = foods[index];
+        return Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: SizedBox(
+            //height: MediaQuery.of(context).size.height * 0.4,
+            child: InkWell(
+              onTap: () {
+                Get.to(() => FoodEditCoachPage(ifid: listfood.ifid));
+              },
+              child: Column(
+                children: [
+                  Stack(
+                    children: [
+                      if (listfood.image != '') ...{
+                        AspectRatio(
+                            aspectRatio: 16 / 13,
+                            child: Container(
+                              decoration: BoxDecoration(
+                                color: const Color(0xff7c94b6),
+                                // image: DecorationImage(
+                                //     image: NetworkImage(listfood.image),
+                                //     fit: BoxFit.cover),
+                                borderRadius: BorderRadius.circular(20),
                               ),
+                            )),
+                        //color: Colors.white,
+                      } else
+                        AspectRatio(
+                            aspectRatio: 16 / 13,
+                            child: Container(
+                              decoration: BoxDecoration(
+                                color: const Color.fromARGB(255, 207, 208, 209),
+                                borderRadius: BorderRadius.circular(20),
+                              ),
+                            )),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: [
+                          IconButton(
+                            onPressed: () {
+                              dialogDeleteFood(
+                                  context, listfood.ifid.toString());
+                            },
+                            icon: const Icon(
+                              FontAwesomeIcons.trash,
+                              color: Color.fromARGB(255, 93, 93, 93),
                             ),
-                          ],
-                        )
-                      ],
-                    ),
+                          ),
+                        ],
+                      ),
+                    ],
                   ),
-                ),
-              );
-            },
-          );
-        }
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.only(left: 16, top: 8),
+                        child: SizedBox(
+                          width: MediaQuery.of(context).size.width * 0.35,
+                          child: Text(
+                            listfood.name,
+                            maxLines: 2,
+                            style: Theme.of(context).textTheme.titleMedium,
+                          ),
+                        ),
+                      ),
+                    ],
+                  )
+                ],
+              ),
+            ),
+          ),
+        );
       },
     );
   }
@@ -343,87 +361,91 @@ class _FoodCoachPageState extends State<FoodCoachPage> {
     return FutureBuilder(
       future: loadClipDataMethod,
       builder: (context, snapshot) {
-        if (snapshot.connectionState != ConnectionState.done) {
-          return const Center(child: CircularProgressIndicator());
-        } else {
-          return GridView.builder(
-            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: 2,
-              mainAxisExtent: 230,
-            ),
-            shrinkWrap: true,
-            itemCount: clips.length,
-            itemBuilder: (context, index) {
-              final listClips = clips[index];
-              return Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: SizedBox(
-                  height: MediaQuery.of(context).size.height * 0.4,
-                  child: InkWell(
-                    onTap: () {
-                      Get.to(() => ClipEditCoachPage(icpId: listClips.icpId));
-                    },
-                    child: Column(
-                      children: [
-                        Stack(
-                          children: [
-                            if (listClips.video != '') ...{
-                              AspectRatio(
-                                  aspectRatio: 16 / 13,
-                                  child: Container(
-                                    decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(26),
-                                    ),
-                                    child: VideoItem(
-                                      video: listClips.video,
-                                    ),
-                                  )),
-                            } else
-                              AspectRatio(
-                                  aspectRatio: 16 / 13,
-                                  child: Container(
-                                    decoration: BoxDecoration(
-                                      color: const Color.fromARGB(
-                                          255, 207, 208, 209),
-                                      borderRadius: BorderRadius.circular(20),
-                                    ),
-                                  )),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.end,
-                              children: [
-                                IconButton(
-                                  onPressed: () {
-                                    dialogDeleteClip(
-                                        context, listClips.icpId.toString());
-                                  },
-                                  icon: const Icon(
-                                    FontAwesomeIcons.trash,
-                                    color: Color.fromARGB(255, 93, 93, 93),
-                                  ),
-                                ),
-                              ],
-                            )
-                          ],
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.only(left: 16, top: 8),
-                          child: SizedBox(
-                            width: MediaQuery.of(context).size.width * 0.35,
-                            child: Text(
-                              listClips.name,
-                              maxLines: 2,
-                              style: Theme.of(context).textTheme.titleMedium,
+        return (_enabled == true)
+            ? Skeletonizer(
+                enabled: true,
+                child: gridViewClip(),
+              )
+            : gridViewClip();
+      },
+    );
+  }
+
+  GridView gridViewClip() {
+    return GridView.builder(
+      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+        crossAxisCount: 2,
+        mainAxisExtent: 230,
+      ),
+      shrinkWrap: true,
+      itemCount: clips.length,
+      itemBuilder: (context, index) {
+        final listClips = clips[index];
+        return Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: SizedBox(
+            height: MediaQuery.of(context).size.height * 0.4,
+            child: InkWell(
+              onTap: () {
+                Get.to(() => ClipEditCoachPage(icpId: listClips.icpId));
+              },
+              child: Column(
+                children: [
+                  Stack(
+                    children: [
+                      if (listClips.video != '') ...{
+                        AspectRatio(
+                            aspectRatio: 16 / 13,
+                            child: Container(
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(26),
+                              ),
+                              child: VideoItem(
+                                video: listClips.video,
+                              ),
+                            )),
+                      } else
+                        AspectRatio(
+                            aspectRatio: 16 / 13,
+                            child: Container(
+                              decoration: BoxDecoration(
+                                color: const Color.fromARGB(255, 207, 208, 209),
+                                borderRadius: BorderRadius.circular(20),
+                              ),
+                            )),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: [
+                          IconButton(
+                            onPressed: () {
+                              dialogDeleteClip(
+                                  context, listClips.icpId.toString());
+                            },
+                            icon: const Icon(
+                              FontAwesomeIcons.trash,
+                              color: Color.fromARGB(255, 93, 93, 93),
                             ),
                           ),
-                        )
-                      ],
-                    ),
+                        ],
+                      )
+                    ],
                   ),
-                ),
-              );
-            },
-          );
-        }
+                  Padding(
+                    padding: const EdgeInsets.only(left: 16, top: 8),
+                    child: SizedBox(
+                      width: MediaQuery.of(context).size.width * 0.35,
+                      child: Text(
+                        listClips.name,
+                        maxLines: 2,
+                        style: Theme.of(context).textTheme.titleMedium,
+                      ),
+                    ),
+                  )
+                ],
+              ),
+            ),
+          ),
+        );
       },
     );
   }
@@ -454,107 +476,46 @@ class _FoodCoachPageState extends State<FoodCoachPage> {
   //Dialog Delete
   void dialogDeleteFood(BuildContext context, String ifid) {
     //target widget
-    SmartDialog.show(builder: (_) {
-      return Container(
-        width: MediaQuery.of(context).size.width * 0.8,
-        height: MediaQuery.of(context).size.height * 0.3,
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(20),
-          color: Colors.white,
-        ),
-        alignment: Alignment.center,
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          //crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Padding(
-              padding: const EdgeInsets.only(
-                  left: 20, right: 20, top: 50, bottom: 16),
-              child: Text("คุณต้องการลบหรือไม",
-                  style: Theme.of(context).textTheme.headlineSmall),
-            ),
-            Padding(
-              padding: const EdgeInsets.only(top: 20),
-              child: Row(
-                //mainAxisSize: MainAxisSize.max,
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  FilledButton(
-                      onPressed: () {
-                        SmartDialog.dismiss();
-                      },
-                      child: const Text("ยกเลิก")),
-                  FilledButton(
-                      onPressed: () async {
-                        var response =
-                            await _listfoodService.deleteListFood(ifid);
-                        modelResult = response.data;
-                        log(modelResult.result);
-                        setState(() {
-                          loadFoodDataMethod = loadFoodData();
-                        });
-                        SmartDialog.dismiss();
-                      },
-                      child: const Text("ตกลง"))
-                ],
-              ),
-            ),
-          ],
-        ),
-      );
-    });
+    QuickAlert.show(
+      context: context,
+      type: QuickAlertType.confirm,
+      text: 'Do you want to delete?',
+      confirmBtnText: 'Yes',
+      cancelBtnText: 'No',
+      confirmBtnColor: Theme.of(context).colorScheme.primary,
+      onConfirmBtnTap: () async {
+        var response = await _listfoodService.deleteListFood(ifid);
+        modelResult = response.data;
+        log(modelResult.result);
+        setState(() {
+          loadFoodDataMethod = loadFoodData();
+        });
+
+        Navigator.of(context, rootNavigator: true).pop();
+        log('onConfirmBtnTap');
+      },
+    );
   }
 
   void dialogDeleteClip(BuildContext context, String iCpid) {
-    //target widget
-    SmartDialog.show(builder: (_) {
-      return Container(
-        width: MediaQuery.of(context).size.width * 0.8,
-        height: MediaQuery.of(context).size.height * 0.3,
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(20),
-          color: Colors.white,
-        ),
-        alignment: Alignment.center,
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          //crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Padding(
-              padding: const EdgeInsets.only(
-                  left: 20, right: 20, top: 50, bottom: 16),
-              child: Text("คุณต้องการลบหรือไม",
-                  style: Theme.of(context).textTheme.headlineSmall),
-            ),
-            Padding(
-              padding: const EdgeInsets.only(top: 20),
-              child: Row(
-                //mainAxisSize: MainAxisSize.max,
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  FilledButton(
-                      onPressed: () {
-                        SmartDialog.dismiss();
-                      },
-                      child: const Text("ยกเลิก")),
-                  FilledButton(
-                      onPressed: () async {
-                        var response =
-                            await _listClipService.deleteListClip(iCpid);
-                        modelResult = response.data;
-                        log(modelResult.result);
-                        setState(() {
-                          loadClipDataMethod = loadClipData();
-                        });
-                        SmartDialog.dismiss();
-                      },
-                      child: const Text("ตกลง"))
-                ],
-              ),
-            ),
-          ],
-        ),
-      );
-    });
+    QuickAlert.show(
+      context: context,
+      type: QuickAlertType.confirm,
+      text: 'Do you want to delete?',
+      confirmBtnText: 'Yes',
+      cancelBtnText: 'No',
+      confirmBtnColor: Theme.of(context).colorScheme.primary,
+      onConfirmBtnTap: () async {
+        var response = await _listClipService.deleteListClip(iCpid);
+        modelResult = response.data;
+        log(modelResult.result);
+        setState(() {
+          loadClipDataMethod = loadClipData();
+        });
+
+        Navigator.of(context, rootNavigator: true).pop();
+        log('onConfirmBtnTap');
+      },
+    );
   }
 }

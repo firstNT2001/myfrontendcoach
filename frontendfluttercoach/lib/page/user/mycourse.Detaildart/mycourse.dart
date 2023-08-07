@@ -1,5 +1,6 @@
 import 'dart:developer';
 
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
@@ -7,7 +8,10 @@ import 'package:provider/provider.dart';
 
 import '../../../model/response/clip_get_res.dart';
 import '../../../model/response/md_Buying_get.dart';
+import '../../../model/response/md_coach_course_get.dart';
+import '../../../model/response/md_process.dart';
 import '../../../service/course.dart';
+import '../../../service/progessbar.dart';
 import '../../../service/provider/appdata.dart';
 import 'history.dart';
 import 'showDay_mycourse.dart';
@@ -21,15 +25,18 @@ class MyCouses extends StatefulWidget {
 }
 
 class _MyCousesState extends State<MyCouses> {
-  late CourseService _coachService;
+
+  late CourseService _courseService;
+  late ProgessbarService progessService;
   // late HttpResponse<ModelCourse> courses;
+  late Modelprogessbar progess;
+  List<Course> mycourse=[];
   List<Buying> courses = [];
   List<ModelClip> clips = [];
   late Future<void> loadDataMethod;
 
-  double percen = 0;
-  late int coID;
-  late int coachID;
+  double percen = 0.00;
+
   //show day not ex
   DateTime nows = DateTime.now();
   late DateTime today;
@@ -37,8 +44,10 @@ class _MyCousesState extends State<MyCouses> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    _coachService = context.read<AppData>().courseService;
+    progessService = ProgessbarService(Dio(), baseUrl: context.read<AppData>().baseurl);
+    _courseService = context.read<AppData>().courseService;
     loadDataMethod = loadData();
+    loadProgessData();
     today = DateTime(nows.year, nows.month, nows.day);
   }
 
@@ -87,16 +96,33 @@ class _MyCousesState extends State<MyCouses> {
   Future<void> loadData() async {
     try {
       log(context.read<AppData>().uid.toString());
-      var datas = await _coachService.showcourseNotEx(
+      var datas = await _courseService.showcourseNotEx(
           uid: context.read<AppData>().uid.toString());
-      courses = datas.data;
-
+      courses = datas.data;  
+      int all = 0;
+      for(int i=0;i <=courses.length-1;i++){
+        all++;
+        
+      }
+      // var dataprogess = await progessService.processbar(coID:courses.first.courseId.toString());
+      // log("B");
+      // progess = dataprogess.data;
+      // // percen = dataspercen.data;
+      // log("messagepercen "+progess.toString());
       log(courses.first.bid.toString());
     } catch (err) {
       log('Error: $err');
     }
   }
-
+  Future<void> loadProgessData() async {
+    try {
+      var datas = await progessService.processbar(coID: '301');
+      progess = datas.data;
+      log("percent${progess.percent}");
+    } catch (err) {
+      log('Error: $err');
+    }
+  }
   Widget loadcourse() {
     return FutureBuilder(
       future: loadDataMethod,

@@ -10,6 +10,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:provider/provider.dart';
+import 'package:skeletonizer/skeletonizer.dart';
 
 import '../../../../../../model/request/food_foodID_put.dart';
 import '../../../../../../model/response/md_FoodList_get.dart';
@@ -20,14 +21,13 @@ import '../../../../../../service/provider/appdata.dart';
 import '../../course_food_clip.dart';
 
 class FoodEditSelectPage extends StatefulWidget {
-  const FoodEditSelectPage({
-    super.key,
-    required this.fid,
-    required this.did,
-    required this.sequence,
-    required this.time,
-    required this.isVisible
-  });
+  const FoodEditSelectPage(
+      {super.key,
+      required this.fid,
+      required this.did,
+      required this.sequence,
+      required this.time,
+      required this.isVisible});
   final String fid;
   final String did;
   final String sequence;
@@ -47,6 +47,8 @@ class _FoodEditSelectPageState extends State<FoodEditSelectPage> {
   ///FoodCourses
   late FoodServices _foodCourseService;
 
+  bool _enabled = true;
+
   @override
   void initState() {
     super.initState();
@@ -55,10 +57,24 @@ class _FoodEditSelectPageState extends State<FoodEditSelectPage> {
 
     //FoodCourses
     _foodCourseService = context.read<AppData>().foodServices;
+    Future.delayed(Duration(seconds: context.read<AppData>().duration), () {
+      setState(() {
+        _enabled = false;
+      });
+    });
   }
 
   @override
   Widget build(BuildContext context) {
+    return (_enabled == true)
+        ? Skeletonizer(
+            enabled: true,
+            child: scaffold(context),
+          )
+        : scaffold(context);
+  }
+
+  Scaffold scaffold(BuildContext context) {
     return Scaffold(
       resizeToAvoidBottomInset: false,
       appBar: AppBar(
@@ -95,7 +111,8 @@ class _FoodEditSelectPageState extends State<FoodEditSelectPage> {
   Future<void> loadListFoodData() async {
     try {
       // log(widget.did);
-      var datas = await _listfoodService.listFoods(ifid: '', cid: context.read<AppData>().cid.toString(), name: '');
+      var datas = await _listfoodService.listFoods(
+          ifid: '', cid: context.read<AppData>().cid.toString(), name: '');
       foods = datas.data;
       // log(foods.length.toString());
     } catch (err) {
@@ -108,7 +125,7 @@ class _FoodEditSelectPageState extends State<FoodEditSelectPage> {
       future: loadListFoodDataMethod,
       builder: (context, snapshot) {
         if (snapshot.connectionState != ConnectionState.done) {
-          return const Center(child: CircularProgressIndicator());
+          return Container();
         } else {
           return ListView.builder(
             shrinkWrap: true,
@@ -245,7 +262,9 @@ class _FoodEditSelectPageState extends State<FoodEditSelectPage> {
                         onPressed: () async {
                           log(widget.time);
                           FoodFoodIdPut foodFoodIdPut = FoodFoodIdPut(
-                              listFoodId: ifid, time: widget.time, dayOfCouseId: int.parse(widget.did));
+                              listFoodId: ifid,
+                              time: widget.time,
+                              dayOfCouseId: int.parse(widget.did));
                           log(jsonEncode(foodFoodIdPut));
                           var response = await _foodCourseService
                               .updateFoodByFoodID(widget.fid, foodFoodIdPut);
@@ -254,7 +273,8 @@ class _FoodEditSelectPageState extends State<FoodEditSelectPage> {
                           if (modelResult.result == '1') {
                             Get.to(() => HomeFoodAndClipPage(
                                   did: widget.did,
-                                  sequence: widget.sequence, isVisible: widget.isVisible,
+                                  sequence: widget.sequence,
+                                  isVisible: widget.isVisible,
                                 ));
                           } else {
                             // ignore: use_build_context_synchronously

@@ -13,6 +13,7 @@ import '../customer.dart';
 import '../days.dart';
 
 import '../listFood.dart';
+import '../progessbar.dart';
 import '../request.dart';
 import '../review.dart';
 
@@ -55,7 +56,8 @@ class AppData with ChangeNotifier {
   //requests
   String rqID = "";
 
-  
+  int duration = 1;
+
   FoodServices get foodServices => FoodServices(Dio(), baseUrl: baseurl);
   ListFoodServices get listfoodServices =>
       ListFoodServices(Dio(), baseUrl: baseurl);
@@ -70,4 +72,5 @@ class AppData with ChangeNotifier {
   ReviewService get reviewService => ReviewService(Dio(), baseUrl: baseurl);
   BuyCourseService get buyCourseService => BuyCourseService(Dio(), baseUrl: baseurl);
   CustomerService get customerService => CustomerService(Dio(), baseUrl: baseurl);
+  ProgessbarService get progessbar => ProgessbarService(Dio(), baseUrl:baseurl);
 }

@@ -12,12 +12,17 @@ import 'package:frontendfluttercoach/model/response/md_days.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:provider/provider.dart';
+import 'package:quickalert/models/quickalert_type.dart';
+import 'package:quickalert/widgets/quickalert_dialog.dart';
+import 'package:reorderable_grid_view/reorderable_grid_view.dart';
+import 'package:skeletonizer/skeletonizer.dart';
 
 import '../../../model/request/course_courseID_put.dart';
 import '../../../model/response/md_coach_course_get.dart';
 import '../../../service/course.dart';
 import '../../../service/days.dart';
 import '../../../service/provider/appdata.dart';
+import '../../../widget/PopUp/popUp.dart';
 import '../../../widget/dialogs.dart';
 import '../course/FoodAndClip/course_food_clip.dart';
 
@@ -51,6 +56,9 @@ class _DaysCoursePageState extends State<DaysCoursePage> {
 
   int sequence = 0;
   int numberOfDays = 0;
+
+  bool _enabled = true;
+
   @override
   void initState() {
     super.initState();
@@ -61,6 +69,11 @@ class _DaysCoursePageState extends State<DaysCoursePage> {
 
     _courseService = context.read<AppData>().courseService;
     loadCourseDataMethod = loadCourseDataAsync();
+    Future.delayed(Duration(seconds: context.read<AppData>().duration), () {
+      setState(() {
+        _enabled = false;
+      });
+    });
   }
 
   @override
@@ -78,29 +91,15 @@ class _DaysCoursePageState extends State<DaysCoursePage> {
           },
         ),
         actions: [
-          Visibility(
-              visible: widget.isVisible,
-              child: IconButton(
-                icon: const Icon(
-                  FontAwesomeIcons.penToSquare,
-                ),
-                onPressed: () {
-                  setState(() {
-                    onVisibles = !onVisibles;
-                    offVisibles = !offVisibles;
-                  });
-                  if (offVisibles == true) {
-                    setState(() {
-                      title = 'Edit days';
-                    });
-                  } else {
-                    setState(() {
-                      title = 'Days';
-                      loadDaysDataMethod = loadDaysDataAsync();
-                    });
-                  }
-                },
-              ))
+          IconButton(
+            icon: const Icon(
+              FontAwesomeIcons.calendarPlus,
+              color: Colors.black,
+            ),
+            onPressed: () {
+              dialogInsertDay(context);
+            },
+          )
         ],
         //backgroundColor: Theme.of(context).colorScheme.primaryContainer,
         iconTheme: const IconThemeData(
@@ -110,110 +109,78 @@ class _DaysCoursePageState extends State<DaysCoursePage> {
         centerTitle: true,
       ),
       body: SafeArea(
-        child: FutureBuilder(
-            future: loadDaysDataMethod,
-            builder: (context, AsyncSnapshot snapshot) {
-              if (snapshot.connectionState == ConnectionState.done) {
-                return Column(
-                  children: [
-                    if (offVisibles == true) ...{
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.end,
-                        children: [
-                          //edit Day
-                          Padding(
-                            padding:
-                                const EdgeInsets.only(right: 16.0, top: 10),
-                            child: ElevatedButton(
-                                onPressed: () {
-                                  dialogInsertDay(context);
-                                },
-                                child: const Text("เพิ่มวัน")),
-                          ),
-                        ],
-                      ),
-                      Expanded(
-                        child: Visibility(
-                          visible: offVisibles,
-                          child: ReorderableListView.builder(
-                            shrinkWrap: false,
-                            itemCount: days.length,
-                            itemBuilder: (context, index) {
-                              final listday = days[index];
-                              return Padding(
-                                key: ValueKey(listday),
-                                padding: const EdgeInsets.only(
-                                    top: 8, left: 18, right: 18),
-                                child: Card(
-                                  key: ValueKey(listday),
-                                  child: ListTile(
-                                    key: ValueKey(listday),
-                                    title: Text(
-                                        'วันที่ ${listday.sequence.toString()}'),
-                                    subtitle: Text(
-                                        'จำนวนเมนู ${listday.foods.length.toString()} จำนวนคลิป ${listday.clips.length.toString()} '),
-                                    trailing: IconButton(
-                                        onPressed: () {
-                                          dialogDeleteDay(context, listday.did);
-                                        },
-                                        icon: const Icon(
-                                          FontAwesomeIcons.trash,
-                                        )),
-                                  ),
-                                ),
-                              );
-                            },
-                            onReorder: ((oldIndex, newIndex) =>
-                                updateDays(oldIndex, newIndex)),
-                          ),
-                        ),
-                      )
-                    },
-                    //Not Edit Day
-                    if (onVisibles == true)
-                      Expanded(
-                        child: Visibility(
-                          visible: onVisibles,
-                          child: Container(
-                            padding: const EdgeInsets.only(
-                                top: 8, left: 18, right: 18),
-                            child: ListView.builder(
-                                shrinkWrap: true,
-                                itemCount: days.length,
-                                itemBuilder: (context, index) {
-                                  final listdays = days[index];
-                                  return Padding(
-                                    padding: const EdgeInsets.only(bottom: 8),
-                                    child: Card(
-                                      elevation: 1000,
-                                      child: ListTile(
-                                        title: Text(
-                                            'วันที่ ${listdays.sequence.toString()}'),
-                                        subtitle: Text(
-                                            'จำนวนเมนู ${listdays.foods.length.toString()} จำนวนคลิป ${listdays.clips.length.toString()} '),
-                                        trailing: const Icon(Icons.more_vert),
-                                        onTap: () {
-                                          Get.to(() => HomeFoodAndClipPage(
-                                                did: listdays.did.toString(),
-                                                sequence: listdays.sequence
-                                                    .toString(),
-                                                isVisible: widget.isVisible,
-                                              ));
-                                        },
-                                      ),
-                                    ),
-                                  );
-                                }),
-                          ),
-                        ),
-                      ),
-                  ],
-                );
-              } else {
-                return const Center(child: CircularProgressIndicator());
-              }
-            }),
+        child: Column(
+          children: [
+            const SizedBox(
+              height: 20,
+            ),
+            Expanded(child: showDays()),
+          ],
+        ),
       ),
+    );
+  }
+
+  FutureBuilder<void> showDays() {
+    return FutureBuilder(
+        future: loadDaysDataMethod,
+        builder: (context, AsyncSnapshot snapshot) {
+          return (_enabled)
+              ? Skeletonizer(
+                  textBoneBorderRadius:
+                      TextBoneBorderRadius.fromHeightFactor(.10),
+                  enabled: true,
+                  ignoreContainers: false,
+                  child: gridViewDays(context),
+                )
+              : gridViewDays(context);
+        });
+  }
+
+  ReorderableGridView gridViewDays(BuildContext context) {
+    return ReorderableGridView.builder(
+      itemCount: days.length,
+      itemBuilder: (context, index) {
+        final listday = days[index];
+        index = index + 1;
+        return Card(
+          color: Colors.white,
+          key: ValueKey(index),
+          child: InkWell(
+              onTap: () {
+                Get.to(() => HomeFoodAndClipPage(
+                      did: listday.did.toString(),
+                      sequence: index.toString(),
+                      isVisible: widget.isVisible,
+                    ));
+              },
+              child: Center(child: Text(index.toString()))),
+        );
+      },
+      onReorder: (oldIndex, newIndex) {
+        startLoading(context);
+        setState(() {
+          setState(() {
+            final element = days.removeAt(oldIndex);
+            days.insert(newIndex, element);
+          });
+        });
+        updateDay(days);
+
+        //  updateDays(oldIndex, newIndex);
+        // loadDaysDataMethod = loadDaysDataAsync();
+      },
+      dragWidgetBuilder: (index, child) {
+        return Card(
+          color: Theme.of(context).colorScheme.primary,
+          child: Text(index.toString()),
+        );
+      },
+      onDragStart: (index) {
+        log("onDragStart: $index");
+      },
+      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+          crossAxisCount: 5, mainAxisExtent: 65),
     );
   }
 
@@ -223,8 +190,9 @@ class _DaysCoursePageState extends State<DaysCoursePage> {
       var res =
           await _daysService.days(did: '', coID: widget.coID, sequence: '');
       days = res.data;
-      log("did: ${days.first.foods.length.toString()}");
+      log("did: ${days.length.toString()}");
       // name.text = foods.name;
+   
     } catch (err) {
       log('Error: $err');
     }
@@ -240,22 +208,6 @@ class _DaysCoursePageState extends State<DaysCoursePage> {
     }
   }
 
-  //updateDay
-  void updateDays(int oldIndex, int newIndex) {
-    setState(() {
-      if (oldIndex < newIndex) {
-        newIndex--;
-      }
-
-      final listdays = days.removeAt(oldIndex);
-
-      days.insert(newIndex, listdays);
-      log("วันใหม่ ${newIndex.toString()}");
-
-      updateDay(days);
-    });
-  }
-
   Future<void> updateDay(List<ModelDay> days) async {
     for (int i = 0; i < days.length; i++) {
       //log(days[i].sequence.toString());
@@ -266,6 +218,8 @@ class _DaysCoursePageState extends State<DaysCoursePage> {
       modelResult = response.data;
       log("${days[i].did.toString()} : ${jsonEncode(request)}");
     }
+    stopLoading();
+    success(context);
   }
 
   //Dialog Delete
@@ -355,78 +309,48 @@ class _DaysCoursePageState extends State<DaysCoursePage> {
   }
 
   void dialogInsertDay(BuildContext context) {
-    //target widget
-    SmartDialog.show(builder: (_) {
-      return Container(
-        width: MediaQuery.of(context).size.width * 0.8,
-        height: MediaQuery.of(context).size.height * 0.3,
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(20),
-          color: Theme.of(context).colorScheme.primaryContainer,
-        ),
-        alignment: Alignment.center,
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          //crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Padding(
-              padding: const EdgeInsets.only(
-                  left: 20, right: 20, top: 50, bottom: 16),
-              child: Text("คุณต้องการเพิ่มวันหรือไม",
-                  style: Theme.of(context).textTheme.headlineSmall),
-            ),
-            Padding(
-              padding: const EdgeInsets.only(top: 20),
-              child: Row(
-                //mainAxisSize: MainAxisSize.max,
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  FilledButton(
-                      onPressed: () {
-                        SmartDialog.dismiss();
-                      },
-                      child: const Text("ยกเลิก")),
-                  FilledButton(
-                      onPressed: () async {
-                        SmartDialog.dismiss();
-                        startLoading(context);
-                        sequence = days.length + 1;
-                        log(sequence.toString());
-                        DayDayIdPut request = DayDayIdPut(sequence: sequence);
-                        log(jsonEncode(request));
-                        var response = await _daysService.insertDayByCourseID(
-                            widget.coID, request);
+    QuickAlert.show(
+      context: context,
+      type: QuickAlertType.confirm,
+      text: 'Do you want to add a day?',
+      confirmBtnText: 'Yes',
+      cancelBtnText: 'No',
+      confirmBtnColor: Theme.of(context).colorScheme.primary,
+      onConfirmBtnTap: () async {
+        Navigator.of(context, rootNavigator: true).pop();
+        startLoading(context);
+        sequence = days.length + 1;
+        log(sequence.toString());
+        DayDayIdPut request = DayDayIdPut(sequence: sequence);
+        log(jsonEncode(request));
+        var response =
+            await _daysService.insertDayByCourseID(widget.coID, request);
 
-                        modelResult = response.data;
-                        log("${modelResult.code} : ${modelResult.result}");
+        modelResult = response.data;
+        log("${modelResult.code} : ${modelResult.result}");
 
-                        CourseCourseIdPut requestCourse = CourseCourseIdPut(
-                            name: course.first.name,
-                            details: course.first.details,
-                            level: course.first.level,
-                            amount: course.first.amount,
-                            image: course.first.image,
-                            days: sequence,
-                            price: course.first.price,
-                            status: course.first.status);
-                        //log(jsonEncode(requestCourse));
-                        var respo = await _courseService.updateCourseByCourseID(
-                            widget.coID, requestCourse);
-                        modelResult = respo.data;
+        CourseCourseIdPut requestCourse = CourseCourseIdPut(
+            name: course.first.name,
+            details: course.first.details,
+            level: course.first.level,
+            amount: course.first.amount,
+            image: course.first.image,
+            days: sequence,
+            price: course.first.price,
+            status: course.first.status);
+        //log(jsonEncode(requestCourse));
+        var respo = await _courseService.updateCourseByCourseID(
+            widget.coID, requestCourse);
+        modelResult = respo.data;
 
-                        setState(() {
-                          loadDaysDataMethod = loadDaysDataAsync();
-                          sequence = 0;
-                        });
-                        stopLoading();
-                      },
-                      child: Text("ตกลง"))
-                ],
-              ),
-            ),
-          ],
-        ),
-      );
-    });
+        setState(() {
+           loadDaysDataMethod = loadDaysDataAsync();
+          sequence = 0;
+        });
+        stopLoading();
+
+        log('onConfirmBtnTap');
+      },
+    );
   }
 }

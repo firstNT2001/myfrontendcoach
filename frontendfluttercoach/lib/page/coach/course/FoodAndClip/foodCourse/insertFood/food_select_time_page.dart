@@ -9,6 +9,7 @@ import 'package:frontendfluttercoach/service/food.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:provider/provider.dart';
+import 'package:skeletonizer/skeletonizer.dart';
 
 import '../../../../../../model/request/food_dayID_post.dart';
 import '../../../../../../model/response/md_FoodList_get.dart';
@@ -40,6 +41,8 @@ class _FoodSelectTimePageState extends State<FoodSelectTimePage> {
   late Future<void> loadListFoodDataMethod;
   late FoodServices _foodCourseService;
   late ModelResult modelResult;
+  bool _enabled = true;
+
   @override
   void initState() {
     super.initState();
@@ -49,10 +52,24 @@ class _FoodSelectTimePageState extends State<FoodSelectTimePage> {
     for (var index in widget.modelFoodList) {
       caloriesSum = caloriesSum + index.calories;
     }
+    Future.delayed(Duration(seconds: context.read<AppData>().duration), () {
+      setState(() {
+        _enabled = false;
+      });
+    });
   }
 
   @override
   Widget build(BuildContext context) {
+    return (_enabled == true)
+        ? Skeletonizer(
+            enabled: true,
+            child: scaffold(context),
+          )
+        : scaffold(context);
+  }
+
+  Scaffold scaffold(BuildContext context) {
     return Scaffold(
       resizeToAvoidBottomInset: false,
       appBar: AppBar(
@@ -112,7 +129,6 @@ class _FoodSelectTimePageState extends State<FoodSelectTimePage> {
                             width: MediaQuery.of(context).size.width,
                             child: ElevatedButton(
                                 onPressed: () async {
-                                  
                                   for (var index in widget.increaseFood) {
                                     log('id :${index.listFoodId}');
                                     log(jsonEncode(index));
@@ -126,7 +142,8 @@ class _FoodSelectTimePageState extends State<FoodSelectTimePage> {
                                     Get.to(() => HomeFoodAndClipPage(
                                           did: widget.did,
                                           sequence:
-                                              context.read<AppData>().sequence, isVisible: widget.isVisible,
+                                              context.read<AppData>().sequence,
+                                          isVisible: widget.isVisible,
                                         ));
                                   } else {
                                     // ignore: use_build_context_synchronously

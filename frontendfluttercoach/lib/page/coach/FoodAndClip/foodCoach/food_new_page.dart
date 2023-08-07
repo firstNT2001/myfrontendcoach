@@ -6,7 +6,6 @@ import 'package:file_picker/file_picker.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:frontendfluttercoach/page/showDialogWidget.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 
@@ -17,6 +16,7 @@ import '../../../../model/request/listFood_coachID_post.dart';
 import '../../../../model/response/md_Result.dart';
 import '../../../../service/listFood.dart';
 import '../../../../service/provider/appdata.dart';
+import '../../../../widget/PopUp/popUp.dart';
 import '../../../../widget/textField/wg_textField.dart';
 import '../../../../widget/textField/wg_textFieldLines.dart';
 import '../../../../widget/textField/wg_textField_int copy.dart';
@@ -159,6 +159,9 @@ class _FoodNewCoachPageState extends State<FoodNewCoachPage> {
               textErr = 'กรุณาใส่รูป';
             });
           } else {
+            setState(() {
+              textErr = '';
+            });
             if (pickedImg != null) await uploadfile();
             // if (pickedImg == null) profile = courses.first.image;
             ListFoodCoachIdPost listFoodCoachIdPost = ListFoodCoachIdPost(
@@ -171,14 +174,13 @@ class _FoodNewCoachPageState extends State<FoodNewCoachPage> {
                 cid.toString(), listFoodCoachIdPost);
             modelResult = insertFood.data;
             log(jsonEncode(modelResult.result));
-            if (modelResult.result == "1") {
+             if (modelResult.result == '0') {
               // ignore: use_build_context_synchronously
-              // showDialogRowsAffected(context, "บันทึกสำเร็จ");
-              const ShowDialogWidget();
-              Get.to(() => const FoodCoachPage());
+              warning(context);
             } else {
               // ignore: use_build_context_synchronously
-              const ShowDialogWidget();
+              success(context);
+              Get.to(() => const FoodCoachPage());
             }
           }
         },
