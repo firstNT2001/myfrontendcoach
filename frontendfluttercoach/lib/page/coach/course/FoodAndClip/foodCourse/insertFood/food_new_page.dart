@@ -10,12 +10,13 @@ import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:frontendfluttercoach/model/response/md_FoodList_get.dart';
 import 'package:frontendfluttercoach/service/listFood.dart';
+import 'package:frontendfluttercoach/widget/dropdown/wg_dropdown_notValue_string.dart';
 import 'package:get/get.dart';
 import 'package:provider/provider.dart';
 
 import '../../../../../../model/request/food_dayID_post.dart';
 import '../../../../../../service/provider/appdata.dart';
-import '../../../../../../widget/dropdown/wg_dropdown_string.dart';
+import '../../../../../../widget/PopUp/popUp.dart';
 import '../../course_food_clip.dart';
 import 'food_select_time_page.dart';
 
@@ -44,10 +45,11 @@ class _FoodNewCoursePageState extends State<FoodNewCoursePage> {
   final selectedValuehand = TextEditingController();
   final List<String> listhand = ['มื้อเช้า', 'มื้อเที่ยง', 'มื้อเย็น'];
 
+  String textErr = '';
   @override
   void initState() {
     super.initState();
-    selectedValuehand.text = 'มื้อเช้า';
+
     _listFoodService = context.read<AppData>().listfoodServices;
     loadListFoodDataMethod = loadListFoodData();
   }
@@ -304,7 +306,7 @@ class _FoodNewCoursePageState extends State<FoodNewCoursePage> {
             } else ...{
               Container(
                   width: MediaQuery.of(context).size.width * 0.7,
-                    height: MediaQuery.of(context).size.height * 0.2,
+                  height: MediaQuery.of(context).size.height * 0.2,
                   decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(26),
                       color: Colors.black26)),
@@ -356,10 +358,10 @@ class _FoodNewCoursePageState extends State<FoodNewCoursePage> {
                   child: SizedBox(
                     width: MediaQuery.of(context).size.width * 0.4,
                     //height: MediaQuery.of(context).size.height * 0.2,
-                    child: WidgetDropdownString(
+                    child: WidgetDropdownStringNotValue(
                       title: 'เลือกมืออาหาร',
                       selectedValue: selectedValuehand,
-                      listItems: listhand,
+                      ListItems: listhand,
                     ),
                   ),
                 ),
@@ -372,28 +374,33 @@ class _FoodNewCoursePageState extends State<FoodNewCoursePage> {
                   padding: const EdgeInsets.only(right: 30),
                   child: FilledButton(
                       onPressed: () {
-                        setState(() {
-                          increaseFood.add(listFood);
+                        log(selectedValuehand.text);
+                        if (selectedValuehand.text.isEmpty) {
+                          warningFood(context);
+                        } else {
+                          setState(() {
+                            increaseFood.add(listFood);
 
-                          FoodDayIdPost requestFoodPost = FoodDayIdPost(
-                            listFoodId: listFood.ifid,
-                            time: selectedValuehand.text == 'มื้อเช้า'
-                                ? '1'
-                                : selectedValuehand.text == 'มื้อเที่ยง'
-                                    ? '2'
-                                    : selectedValuehand.text == 'มื้อเย็น'
-                                        ? '3'
-                                        : '',
-                          );
-                          increaseFoodDay.add(requestFoodPost);
-                          log(jsonEncode(requestFoodPost));
-                          selectedValuehand.text = 'มื้อเช้า';
-                          //เปลี่ยนสีเมือเลือกเมนู฿อาหาร
-                          colorList[index] =
-                              context.read<AppData>().colorSelect;
-                        });
+                            FoodDayIdPost requestFoodPost = FoodDayIdPost(
+                              listFoodId: listFood.ifid,
+                              time: selectedValuehand.text == 'มื้อเช้า'
+                                  ? '1'
+                                  : selectedValuehand.text == 'มื้อเที่ยง'
+                                      ? '2'
+                                      : selectedValuehand.text == 'มื้อเย็น'
+                                          ? '3'
+                                          : '',
+                            );
+                            increaseFoodDay.add(requestFoodPost);
+                            log(jsonEncode(requestFoodPost));
+                            selectedValuehand.text = 'มื้อเช้า';
+                            //เปลี่ยนสีเมือเลือกเมนู฿อาหาร
+                            colorList[index] =
+                                context.read<AppData>().colorSelect;
+                          });
 
-                        SmartDialog.dismiss();
+                          SmartDialog.dismiss();
+                        }
                       },
                       child: const Text('ยืนยัน')),
                 ),

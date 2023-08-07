@@ -24,6 +24,7 @@ import '../../../../model/response/md_Result.dart';
 import '../../../../service/food.dart';
 import '../../../../service/provider/appdata.dart';
 
+import '../../../../widget/PopUp/popUp.dart';
 import '../../../../widget/dropdown/wg_dropdown_string.dart';
 import '../../../../widget/image_video.dart';
 import '../../../../widget/wg_editClip_Dialog.dart';
@@ -157,7 +158,6 @@ class _HomeFoodAndClipPageState extends State<HomeFoodAndClipPage> {
               //Food
               Column(
                 children: [
-                  searchButter(context),
                   const SizedBox(
                     height: 10,
                   ),
@@ -528,6 +528,7 @@ class _HomeFoodAndClipPageState extends State<HomeFoodAndClipPage> {
                           log(modelResult.result);
                           if (modelResult.result == '1') {
                             SmartDialog.dismiss();
+                            success(context);
                             setState(() {
                               loadFoodDataMethod = loadFoodData();
                             });

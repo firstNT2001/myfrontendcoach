@@ -18,9 +18,11 @@ import '../../../../model/response/md_ClipList_get.dart';
 import '../../../../model/response/md_Result.dart';
 import '../../../../service/listClip.dart';
 import '../../../../service/provider/appdata.dart';
+import '../../../../widget/PopUp/popUp.dart';
 import '../../../../widget/showCilp.dart';
 import '../../../../widget/textField/wg_textField.dart';
 import '../../../../widget/textField/wg_textFieldLines.dart';
+import '../coach_food_clip_page.dart';
 
 class ClipEditCoachPage extends StatefulWidget {
   final int icpId;
@@ -155,11 +157,11 @@ class _ClipEditCoachPageState extends State<ClipEditCoachPage> {
                 ),
               ),
             } else if (listclips.first.video != '') ...{
-               WidgetShowCilp(
+              WidgetShowCilp(
                 urlVideo: listclips.first.video,
               ),
             } else
-             Container(
+              Container(
                 width: MediaQuery.of(context).size.width,
                 height: MediaQuery.of(context).size.height * 0.3,
                 decoration: BoxDecoration(
@@ -172,7 +174,6 @@ class _ClipEditCoachPageState extends State<ClipEditCoachPage> {
                   ],
                 ),
               ),
-            
             Positioned(
                 bottom: 60,
                 right: 8,
@@ -230,11 +231,10 @@ class _ClipEditCoachPageState extends State<ClipEditCoachPage> {
             setState(() {
               textErr = 'กรุณากรอกข้อมูลให้ครบ';
             });
-          } else if (pathVdieo.isEmpty) {
-            setState(() {
-              textErr = 'กรุณาเพิ่มวิดิโอ';
-            });
           } else {
+            setState(() {
+              textErr = '';
+            });
             ListClipClipIdPut listClipCoachIdPut = ListClipClipIdPut(
                 name: name.text,
                 amountPerSet: amountPerSet.text,
@@ -246,6 +246,17 @@ class _ClipEditCoachPageState extends State<ClipEditCoachPage> {
                 widget.icpId.toString(), listClipCoachIdPut);
             modelResult = insertClip.data;
             log(jsonEncode(modelResult.result));
+            if (modelResult.result == '0') {
+              // setState(() {
+              //   textErr = 'บันทึกไม่สำเร็จ';
+              // });
+              // ignore: use_build_context_synchronously
+              warning(context);
+            } else {
+              // ignore: use_build_context_synchronously
+              success(context);
+              Get.to(() => const FoodCoachPage());
+            }
           }
         },
         child: const Text('บันทึก'));

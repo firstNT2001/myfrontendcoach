@@ -27,6 +27,7 @@ import '../../../service/progessbar.dart';
 import '../../../service/provider/appdata.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
+import '../../../widget/PopUp/popUp.dart';
 import '../../../widget/dropdown/wg_dropdown_string.dart';
 
 import '../../../widget/textField/wg_textField.dart';
@@ -114,7 +115,7 @@ class _CourseEditPageState extends State<CourseEditPage> {
 
     _progessbarService = context.read<AppData>().progessbar;
     loadProgessData();
-    
+
     _daysService = context.read<AppData>().daysService;
     loadDaysDataMethod = loadDaysDataAsync();
   }
@@ -423,7 +424,6 @@ class _CourseEditPageState extends State<CourseEditPage> {
                       ),
                       onPressed: () {
                         dialogDelete(context);
-                     
                       },
                     )),
               ),
@@ -484,7 +484,11 @@ class _CourseEditPageState extends State<CourseEditPage> {
                   ));
             } else {
               // ignore: use_build_context_synchronously
-              warning(context);
+              success(context);
+              Get.to(() => DaysCoursePage(
+                    coID: widget.coID,
+                    isVisible: widget.isVisible,
+                  ));
             }
           }
         }
@@ -621,7 +625,8 @@ class _CourseEditPageState extends State<CourseEditPage> {
                                 roomID: widget.coID,
                                 roomName: name.text,
                                 userID: context.read<AppData>().cid.toString(),
-                                firstName: "โค้ช ${context.read<AppData>().nameCoach}",
+                                firstName:
+                                    "โค้ช ${context.read<AppData>().nameCoach}",
                               ));
                         },
                         icon: const Icon(
@@ -648,7 +653,8 @@ class _CourseEditPageState extends State<CourseEditPage> {
       pickedImg = result.files.first;
     });
   }
-   Future<void> loadProgessData() async {
+
+  Future<void> loadProgessData() async {
     try {
       var datas = await _progessbarService.processbar(coID: widget.coID);
       modelprogessbar = datas.data;
@@ -657,6 +663,7 @@ class _CourseEditPageState extends State<CourseEditPage> {
       log('Error: $err');
     }
   }
+
   //uploadfile
   Future uploadfile() async {
     final path = 'files/${pickedImg!.name}';
@@ -669,6 +676,7 @@ class _CourseEditPageState extends State<CourseEditPage> {
     // print('link img firebase $urlDownload');
     profile = urlDownload;
   }
+
   //Dialog Delete
   void dialogDelete(BuildContext context) {
     //target widget
@@ -704,13 +712,13 @@ class _CourseEditPageState extends State<CourseEditPage> {
                       child: const Text("ยกเลิก")),
                   FilledButton(
                       onPressed: () async {
-                          var response =
+                        var response =
                             await _courseService.deleteCourse(widget.coID);
                         modelResult = response.data;
                         SmartDialog.dismiss();
-                        if(modelResult.result == '1'){
+                        if (modelResult.result == '1') {
                           Get.to(() => const HomePageCoach());
-                        }else{
+                        } else {
                           // ignore: use_build_context_synchronously
                           warningDelete(context);
                         }

@@ -16,6 +16,7 @@ import '../../../../model/response/md_FoodList_get.dart';
 import '../../../../model/response/md_Result.dart';
 import '../../../../service/listFood.dart';
 import '../../../../service/provider/appdata.dart';
+import '../../../../widget/PopUp/popUp.dart';
 import '../../../../widget/textField/wg_textField.dart';
 import '../../../../widget/textField/wg_textFieldLines.dart';
 import '../../../../widget/textField/wg_textField_int copy.dart';
@@ -129,8 +130,9 @@ class _FoodEditCoachPageState extends State<FoodEditCoachPage> {
                                     child: Text(
                                       textErr,
                                       style: TextStyle(
-                                          color:
-                                              Theme.of(context).colorScheme.error),
+                                          color: Theme.of(context)
+                                              .colorScheme
+                                              .error),
                                     ),
                                   ),
                                 ],
@@ -161,6 +163,9 @@ class _FoodEditCoachPageState extends State<FoodEditCoachPage> {
               textErr = 'กรุณากรอกข้อมูลให้ครบ';
             });
           } else {
+            setState(() {
+              textErr = '';
+            });
             log(widget.ifid.toString());
             log(context.read<AppData>().cid.toString());
             if (pickedImg != null) await uploadfile();
@@ -170,13 +175,19 @@ class _FoodEditCoachPageState extends State<FoodEditCoachPage> {
                 image: profile,
                 details: details.text,
                 calories: int.parse(calories.text),
+                // ignore: use_build_context_synchronously
                 coachId: context.read<AppData>().cid);
             log(jsonEncode(request));
             editFood = await _listfoodService.updateListFoodByFoodID(
                 widget.ifid.toString(), request);
             modelResult = editFood.data;
             log(jsonEncode(modelResult.result));
-            if (modelResult.result == "1") {
+             if (modelResult.result == '0') {
+              // ignore: use_build_context_synchronously
+              warning(context);
+            } else {
+              // ignore: use_build_context_synchronously
+              success(context);
               Get.to(() => const FoodCoachPage());
             }
           }
@@ -245,20 +256,20 @@ class _FoodEditCoachPageState extends State<FoodEditCoachPage> {
                     ),
                     fit: BoxFit.cover)),
           ),
-          }else if (foods.first.image.isEmpty) ...{
-            Container(
-              width: MediaQuery.of(context).size.width,
-              height: MediaQuery.of(context).size.height * 0.4,
-              decoration: BoxDecoration(
-                //borderRadius: BorderRadius.circular(20),
-                boxShadow: [
-                  BoxShadow(
-                      spreadRadius: 2,
-                      blurRadius: 10,
-                      color: Colors.black.withOpacity(0.1))
-                ],
-              ),
+        } else if (foods.first.image.isEmpty) ...{
+          Container(
+            width: MediaQuery.of(context).size.width,
+            height: MediaQuery.of(context).size.height * 0.4,
+            decoration: BoxDecoration(
+              //borderRadius: BorderRadius.circular(20),
+              boxShadow: [
+                BoxShadow(
+                    spreadRadius: 2,
+                    blurRadius: 10,
+                    color: Colors.black.withOpacity(0.1))
+              ],
             ),
+          ),
         } else
           Container(
             width: MediaQuery.of(context).size.width,

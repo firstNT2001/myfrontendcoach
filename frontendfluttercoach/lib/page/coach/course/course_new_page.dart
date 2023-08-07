@@ -17,6 +17,7 @@ import '../../../model/request/course_coachID_post.dart';
 import '../../../model/response/md_Result.dart';
 import '../../../service/course.dart';
 import '../../../service/provider/appdata.dart';
+import '../../../widget/PopUp/popUp.dart';
 import '../../../widget/dropdown/wg_dropdown_notValue_string.dart';
 
 import '../../../widget/textField/wg_textField.dart';
@@ -190,7 +191,7 @@ class _CourseNewPageState extends State<CourseNewPage> {
                                   bottom: 18, left: 20, right: 20),
                               child: SizedBox(
                                   width: MediaQuery.of(context).size.width,
-                                  child: buttonNext()),
+                                  child: button()),
                             ),
                           ),
                         ],
@@ -206,7 +207,7 @@ class _CourseNewPageState extends State<CourseNewPage> {
     );
   }
 
-  FilledButton buttonNext() {
+  FilledButton button() {
     return FilledButton(
       //style: style,
       onPressed: () async {
@@ -252,12 +253,17 @@ class _CourseNewPageState extends State<CourseNewPage> {
               await courseService.insetCourseByCoachID(cid.toString(), request);
           moduleResult = response.data;
           log(moduleResult.result);
-         
+          if (moduleResult.result == '0') {
+            // ignore: use_build_context_synchronously
+            warning(context);
+          } else {
+            // ignore: use_build_context_synchronously
+            success(context);
             Get.to(() => DaysCoursePage(
                   coID: moduleResult.result,
                   isVisible: true,
                 ));
-          
+          }
         }
       },
       child: const Text('Next'),
