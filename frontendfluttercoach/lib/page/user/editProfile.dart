@@ -22,6 +22,9 @@ import '../../service/customer.dart';
 import '../../service/provider/appdata.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
 
+import '../../widget/dropdown/wg_dropdown_string.dart';
+import 'money/widgethistory/widget_history.dart';
+
 // ignore: camel_case_types
 class editProfileCus extends StatefulWidget {
   //สร้างตัวแปรรับconstructure
@@ -57,7 +60,7 @@ class _editProfileCusState extends State<editProfileCus> {
   TextEditingController _facebookID = TextEditingController();
   int price = 0;
   var update;
-  final List<String> genders = ['ผู้หญิง', 'ผู้ชาย'];
+  List<String> genders = ['หญิง', 'ชาย'];
   bool isvisible = false;
   String _image = " ";
   String profile = " ";
@@ -122,7 +125,7 @@ class _editProfileCusState extends State<editProfileCus> {
       _uid.text = customer.first.uid.toString();
       _username.text = customer.first.username;
       _fullName.text = customer.first.fullName;
-      _birthday.text = customer.first.birthday;
+      _birthday.text = thaiDate(customer.first.birthday);
       _gender.text = customer.first.gender;
       _phone.text = customer.first.phone;
       _email.text = customer.first.email;
@@ -136,10 +139,14 @@ class _editProfileCusState extends State<editProfileCus> {
       log("b2" + customer.first.birthday);
       log("_IMAGE==" + _image);
       //gender show
-      if (_gender.text == "1") {
-        _gender.text = "ชาย";
+      log('เพศ: ${customer.first.gender}');
+      if (customer.first.gender == "1") {
+        _gender.text = genders[0];
+        log('เพศใหม่1: ${_gender.text}');
+      } else if (customer.first.gender == "2") {
+        _gender.text = genders[1];
       } else {
-        _gender.text = "หญิง";
+        _gender.text = "ไม่ได้ระบุ";
       }
     } catch (err) {
       log('Error: $err');
@@ -179,6 +186,8 @@ class _editProfileCusState extends State<editProfileCus> {
           if (snapshot.connectionState != ConnectionState.done) {
             return const Center(child: CircularProgressIndicator());
           } else {
+            Size screenSize = MediaQuery.of(context).size;
+            double width = (screenSize.width > 550) ? 550 : screenSize.width;
             return Padding(
               padding: const EdgeInsets.all(20.0),
               child: Column(
@@ -263,7 +272,25 @@ class _editProfileCusState extends State<editProfileCus> {
                   txtfild(_email, "e-mail", "e-mail"),
                   // txtfildn(_password, "รหัสผ่าน", "รหัสผ่าน"),
                   txtfild(_fullName, "ชื่อ-นามสกุล", "ชื่อ-นามสกุล"),
-                  buildDropdownGender(),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    children: [
+                       SizedBox(
+                        width: (width - 16 - (3 * 30)) / 2,
+                        child: WidgetDropdownString(
+                          title: "เพศ",
+                          selectedValue: _gender,
+                          listItems: genders),
+                      ),
+                      SizedBox(
+                        width: (width - 16 - (3 * 30)) / 2,
+                        child: txtfild(_birthday, "วันเกิด", "ว/ด/ป"),
+                      ),
+                      
+                      
+                    ],
+                  ),
+
                   txtfild(_phone, "โทรศัพท์", "โทรศัพท์"),
                   txtfild(_weight, "น้ำหนัก", "น้ำหนัก"),
                   txtfild(_height, "ส่วนสูง", "ส่วนสูง"),
@@ -399,96 +426,6 @@ class _editProfileCusState extends State<editProfileCus> {
             );
           }
         });
-  }
-
-  String? selectGender;
-  List<DropdownMenuItem<String>> _addDividersAfterGender(List<String> genders) {
-    List<DropdownMenuItem<String>> _genders = [];
-    for (var gender in genders) {
-      _genders.addAll(
-        [
-          DropdownMenuItem<String>(
-            value: gender,
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 8.0),
-              child: Text(
-                gender,
-                style: Theme.of(context).textTheme.bodyLarge,
-              ),
-            ),
-          ),
-          //If it's last item, we will not add Divider after it.
-          if (gender != genders.last)
-            const DropdownMenuItem<String>(
-              enabled: false,
-              child: Divider(),
-            ),
-        ],
-      );
-    }
-    return _genders;
-  }
-
-  List<double> _getCustomGenderHeights() {
-    List<double> _gendersHeights = [];
-    for (var i = 0; i < (genders.length * 2) - 1; i++) {
-      if (i.isEven) {
-        _gendersHeights.add(40);
-      }
-      //Dividers indexes will be the odd indexes
-      if (i.isOdd) {
-        _gendersHeights.add(4);
-      }
-    }
-    return _gendersHeights;
-  }
-
-  Widget buildDropdownGender() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          'เพศ',
-          style: Theme.of(context).textTheme.bodyLarge,
-        ),
-        DropdownButtonHideUnderline(
-          child: DropdownButton2(
-            isExpanded: true,
-            hint: Text(
-              _gender.text,
-              style: Theme.of(context).textTheme.bodyLarge,
-            ),
-            items: _addDividersAfterGender(genders),
-            value: selectGender,
-            onChanged: (value) {
-              //log("5555"+selectedValue);
-
-              setState(() {
-                selectGender = value as String;
-
-                log("va= " + value.toString());
-              });
-              log(customer.first.gender);
-            },
-            buttonStyleData: ButtonStyleData(
-              //height: 33,
-              padding: const EdgeInsets.only(left: 14, right: 14),
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(4),
-                border: Border.all(width: 1),
-              ),
-            ),
-            dropdownStyleData: const DropdownStyleData(
-              maxHeight: 200,
-            ),
-            menuItemStyleData: MenuItemStyleData(
-              padding: const EdgeInsets.symmetric(horizontal: 8.0),
-              customHeights: _getCustomGenderHeights(),
-            ),
-          ),
-        ),
-      ],
-    );
   }
 
   String getGoogleAuthenticatorUri(String appname, String email, String key) {
