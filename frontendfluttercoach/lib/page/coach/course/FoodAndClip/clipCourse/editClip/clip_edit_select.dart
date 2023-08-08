@@ -165,31 +165,7 @@ class _ClipEditSelectPageState extends State<ClipEditSelectPage> {
     }
   }
 
-  //LoadData
-  Future<void> loadDayData() async {
-    try {
-      // log(widget.did);
-      var datas = await _dayService.days(
-          did: widget.did.toString(), coID: '', sequence: '');
-      modelDay = datas.data;
-      // log(foods.length.toString());
-    } catch (err) {
-      log('Error: $err');
-    }
-  }
 
-  //LoadData
-  Future<void> loadClipData() async {
-    try {
-      // log(widget.did);
-      var datas =
-          await _clipService.clips(cpID: widget.cpID, icpID: '', did: '');
-      modelClip = datas.data;
-      // log(foods.length.toString());
-    } catch (err) {
-      log('Error: $err');
-    }
-  }
 
   Widget showClip() {
     return FutureBuilder(
