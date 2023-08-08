@@ -117,7 +117,7 @@ class _CourseEditPageState extends State<CourseEditPage> {
 
     _progessbarService = context.read<AppData>().progessbar;
     loadProgessData();
-    
+
     _daysService = context.read<AppData>().daysService;
 
     loadDaysDataMethod = loadDaysDataAsync();
@@ -599,17 +599,8 @@ class _CourseEditPageState extends State<CourseEditPage> {
                   final modelDay = modelDays[index];
                   return Padding(
                     padding: const EdgeInsets.all(8.0),
-                    child: Container(
-                      decoration: const BoxDecoration(
-                        color: Colors.white,
-                        shape: BoxShape.circle,
-                        boxShadow: [
-                          BoxShadow(
-                              blurRadius: 3,
-                              color: Colors.black,
-                              spreadRadius: 0)
-                        ],
-                      ),
+                    child: Card(
+                      color: Colors.white,
                       child: InkWell(
                           onTap: () {
                             Get.to(() => HomeFoodAndClipPage(
@@ -630,7 +621,7 @@ class _CourseEditPageState extends State<CourseEditPage> {
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
                   Padding(
-                    padding: const EdgeInsets.only(right: 8),
+                    padding: const EdgeInsets.only(top: 10, bottom: 20, right: 8),
                     child: FilledButton.icon(
                         onPressed: () {
                           //roomchat= widget.namecourse+coID.toString();
@@ -638,7 +629,8 @@ class _CourseEditPageState extends State<CourseEditPage> {
                                 roomID: widget.coID,
                                 roomName: name.text,
                                 userID: context.read<AppData>().cid.toString(),
-                                firstName: "โค้ช ${context.read<AppData>().nameCoach}",
+                                firstName:
+                                    "โค้ช ${context.read<AppData>().nameCoach}",
                               ));
                         },
                         icon: const Icon(
@@ -665,7 +657,8 @@ class _CourseEditPageState extends State<CourseEditPage> {
       pickedImg = result.files.first;
     });
   }
-   Future<void> loadProgessData() async {
+
+  Future<void> loadProgessData() async {
     try {
       var datas = await _progessbarService.processbar(coID: widget.coID);
       modelprogessbar = datas.data;
@@ -674,6 +667,7 @@ class _CourseEditPageState extends State<CourseEditPage> {
       log('Error: $err');
     }
   }
+
   //uploadfile
   Future uploadfile() async {
     final path = 'files/${pickedImg!.name}';

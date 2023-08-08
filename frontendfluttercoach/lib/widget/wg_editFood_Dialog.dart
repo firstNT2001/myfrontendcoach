@@ -23,7 +23,7 @@ void dialogFoodEditInCourse(BuildContext context, String image, String name,
   SmartDialog.show(builder: (_) {
     return Container(
       width: MediaQuery.of(context).size.width * 0.8,
-      height: MediaQuery.of(context).size.height * 0.57,
+      height: 400,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(20),
         color: Colors.white,
@@ -82,10 +82,7 @@ void dialogFoodEditInCourse(BuildContext context, String image, String name,
                   style: Theme.of(context).textTheme.bodyLarge),
             ],
           ),
-          const Divider(
-            indent: 20,
-            endIndent: 20,
-          ),
+        
           Visibility(
             visible: isVisible,
             child: Row(

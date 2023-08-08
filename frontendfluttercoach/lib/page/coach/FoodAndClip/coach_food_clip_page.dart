@@ -115,7 +115,7 @@ class _FoodCoachPageState extends State<FoodCoachPage> {
               tabs: const [
                 Tab(
                   icon: Icon(
-                    FontAwesomeIcons.bowlFood,
+                    FontAwesomeIcons.utensils,
                   ),
                 ),
                 Tab(
@@ -126,45 +126,43 @@ class _FoodCoachPageState extends State<FoodCoachPage> {
               ]),
           centerTitle: true,
         ),
-        body: Container(
-          child: TabBarView(
-            children: [
-              Column(
-                children: [
-                  const SizedBox(
-                    height: 10,
+        body: TabBarView(
+          children: [
+            Column(
+              children: [
+                const SizedBox(
+                  height: 10,
+                ),
+                (_enabled)
+                    ? Skeletonizer(enabled: true, child: searchFood(context))
+                    : searchFood(context),
+                Expanded(
+                  child: Padding(
+                    padding: const EdgeInsets.only(
+                        left: 8, right: 8, top: 5, bottom: 5),
+                    child: showFood(),
                   ),
-                  (_enabled)
-                      ? Skeletonizer(enabled: true, child: searchFood(context))
-                      : searchFood(context),
-                  Expanded(
-                    child: Padding(
-                      padding: const EdgeInsets.only(
-                          left: 8, right: 8, top: 5, bottom: 5),
-                      child: showFood(),
-                    ),
+                ),
+              ],
+            ),
+            Column(
+              children: [
+                const SizedBox(
+                  height: 10,
+                ),
+                (_enabled)
+                    ? Skeletonizer(enabled: true, child: searchFood(context))
+                    : searchFood(context),
+                Expanded(
+                  child: Padding(
+                    padding: const EdgeInsets.only(
+                        left: 8, right: 8, top: 5, bottom: 5),
+                    child: showClips(),
                   ),
-                ],
-              ),
-              Column(
-                children: [
-                  const SizedBox(
-                    height: 10,
-                  ),
-                  (_enabled)
-                      ? Skeletonizer(enabled: true, child: searchFood(context))
-                      : searchFood(context),
-                  Expanded(
-                    child: Padding(
-                      padding: const EdgeInsets.only(
-                          left: 8, right: 8, top: 5, bottom: 5),
-                      child: showClips(),
-                    ),
-                  ),
-                ],
-              ),
-            ],
-          ),
+                ),
+              ],
+            ),
+          ],
         ),
       ),
     );
