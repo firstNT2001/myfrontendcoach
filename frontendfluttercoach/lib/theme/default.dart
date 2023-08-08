@@ -35,7 +35,7 @@ theme: FlexThemeData.light(
     useM2StyleDividerInM3: true,
     inputDecoratorBackgroundAlpha: 16,
     inputDecoratorBorderSchemeColor: SchemeColor.onBackground,
-    inputDecoratorRadius: 33.0,
+    inputDecoratorRadius: 20.0,
     inputDecoratorFocusedBorderWidth: 1.0,
     cardRadius: 20.0,
   ),
