@@ -16,7 +16,7 @@ import '../../model/response/auth_login_res.dart';
 import '../../service/auth.dart';
 
 import '../../service/provider/appdata.dart';
-import '../coach/home_coach_page.dart';
+import '../coach/navigationbar.dart';
 import '../user/navigationbar.dart';
 import 'register.dart';
 
@@ -225,7 +225,7 @@ class _LoginPageState extends State<LoginPage> {
                                 } else if (authLoginRes.cid > 0) {
                                   // ignore: use_build_context_synchronously
                                   context.read<AppData>().cid = cid;
-                                  Get.to(() => const HomePageCoach());
+                                  Get.to(() => const NavbarBottomCoach());
                                   setState(() => titleErr = '');
                                 } else if (authLoginRes.uid > 0) {
                                   // ignore: use_build_context_synchronously
@@ -329,7 +329,7 @@ class _LoginPageState extends State<LoginPage> {
                 children: [
                   InkWell(
                     onTap: () {
-                      Get.to(() => const HomePageCoach());
+                      Get.to(() => const NavbarBottomCoach());
 
                       context.read<AppData>().cid = cid;
                     },
