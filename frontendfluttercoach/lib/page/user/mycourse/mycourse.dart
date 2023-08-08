@@ -32,6 +32,7 @@ class _MyCousesState extends State<MyCouses> {
   List<Course> mycourse = [];
   List<Buying> courses = [];
   List<ModelClip> clips = [];
+  List<double> listpercent =[];
   late Future<void> loadDataMethod;
 
   double percen = 0.00;
@@ -47,7 +48,7 @@ class _MyCousesState extends State<MyCouses> {
         ProgessbarService(Dio(), baseUrl: context.read<AppData>().baseurl);
     _courseService = context.read<AppData>().courseService;
     loadDataMethod = loadData();
-    loadProgessData();
+    
     today = DateTime(nows.year, nows.month, nows.day);
   }
 
@@ -99,29 +100,29 @@ class _MyCousesState extends State<MyCouses> {
       var datas = await _courseService.showcourseNotEx(
           uid: context.read<AppData>().uid.toString());
       courses = datas.data;
-      log("courseleng" + courses.length.toString());
       for (int i = 0; i < courses.length; i++) {
-        log("i" + courses[i].courseId.toString());
+        log("i${courses[i].courseId}");
         var datas = await progessService.processbar(
             coID: courses[i].courseId.toString());
         progess = datas.data;
-        log("percent${progess.percent}");
+        percen=progess.percent/100;
+        listpercent.add(percen);
+        log("percent${percen.toString()}");
       }
-      log(courses.first.bid.toString());
     } catch (err) {
       log('Error: $err');
     }
   }
 
-  Future<void> loadProgessData() async {
-    try {
-      var datas = await progessService.processbar(coID: '294');
-      progess = datas.data;
-      log("percent${progess.percent}");
-    } catch (err) {
-      log('Error: $err');
-    }
-  }
+  // Future<void> loadProgessData() async {
+  //   try {
+  //     var datas = await progessService.processbar(coID: '294');
+  //     progess = datas.data;
+  //     log("percent${progess.percent}");
+  //   } catch (err) {
+  //     log('Error: $err');
+  //   }
+  // }
 
   Widget loadcourse() {
     return FutureBuilder(
@@ -135,6 +136,9 @@ class _MyCousesState extends State<MyCouses> {
             itemCount: courses.length,
             itemBuilder: (context, index) {
               final listcours = courses[index];
+              final listpercents = listpercent[index];
+              final listshowpercents = listpercent[index]*100;
+              log("listpercents"+listpercents.toString());
               return Padding(
                 padding: const EdgeInsets.only(left: 10, right: 10, bottom: 20),
                 child: InkWell(
@@ -236,9 +240,9 @@ class _MyCousesState extends State<MyCouses> {
                                       fillColor:
                                           Color.fromARGB(0, 255, 255, 255),
                                       lineHeight: 10.0,
-                                      percent: 0.5,
+                                      percent: listpercents,
                                       trailing: Text(
-                                        "50.0%",
+                                        listshowpercents.toString()+"%",
                                         style: TextStyle(
                                             fontSize: 16.0,
                                             color: Colors.white),
