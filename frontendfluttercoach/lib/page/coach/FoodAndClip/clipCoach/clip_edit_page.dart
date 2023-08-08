@@ -12,6 +12,7 @@ import 'package:get/get.dart';
 import 'package:loading_indicator/loading_indicator.dart';
 
 import 'package:provider/provider.dart';
+import 'package:skeletonizer/skeletonizer.dart';
 
 import '../../../../model/request/listClip_clipID_put.dart';
 import '../../../../model/response/md_ClipList_get.dart';
@@ -56,6 +57,8 @@ class _ClipEditCoachPageState extends State<ClipEditCoachPage> {
   late ModelResult modelResult;
 
   String textErr = '';
+  bool _enabled = true;
+
   @override
   void initState() {
     // TODO: implement initState
@@ -64,6 +67,12 @@ class _ClipEditCoachPageState extends State<ClipEditCoachPage> {
     _listClipService = context.read<AppData>().listClipServices;
     loadClipDataMethod = loadClipData();
     log(pickedFile.toString());
+
+    Future.delayed(Duration(seconds: context.read<AppData>().duration), () {
+      setState(() {
+        _enabled = false;
+      });
+    });
   }
 
   @override
@@ -84,13 +93,13 @@ class _ClipEditCoachPageState extends State<ClipEditCoachPage> {
     return FutureBuilder(
         future: loadClipDataMethod,
         builder: (context, AsyncSnapshot snapshot) {
-          if (snapshot.connectionState != ConnectionState.done) {
+          if (snapshot.connectionState == ConnectionState.done) {
+            return Column(
+              children: [video(), textFieldAll(context)],
+            );
+          } else {
             return Container();
-            //return const Center(child: CircularProgressIndicator());
           }
-          return Column(
-            children: [video(), textFieldAll(context)],
-          );
         });
   }
 
@@ -209,7 +218,7 @@ class _ClipEditCoachPageState extends State<ClipEditCoachPage> {
                         color: Colors.black,
                       ),
                       onPressed: () {
-                        Get.back();
+                        Navigator.pop(context);
                       },
                     ),
                   ),
@@ -235,6 +244,8 @@ class _ClipEditCoachPageState extends State<ClipEditCoachPage> {
             setState(() {
               textErr = '';
             });
+            if (pickedFile != null) await uploadFile();
+            if (pickedFile == null) pathVdieo = listclips.first.video;
             ListClipClipIdPut listClipCoachIdPut = ListClipClipIdPut(
                 name: name.text,
                 amountPerSet: amountPerSet.text,
@@ -282,12 +293,22 @@ class _ClipEditCoachPageState extends State<ClipEditCoachPage> {
     final result = await FilePicker.platform.pickFiles();
     if (result == null) return;
     // ignore: use_build_context_synchronously
-    startLoading(context);
+    //startLoading(context);
     // setState(() {
     pickedFile = result.files.first;
     log(pickedFile.toString());
-    // });
-    uploadFile();
+    final File fileForFirebase = File(pickedFile!.path!);
+
+    log(pickedFile.toString());
+    _videoPlayerController = VideoPlayerController.file(fileForFirebase)
+      ..initialize().then((_) {
+        // Ensure the first frame is shown after the video is initialized, even before the play button has been pressed.
+        setState(() {});
+        _customVideoPlayerController = CustomVideoPlayerController(
+          context: context,
+          videoPlayerController: _videoPlayerController,
+        );
+      });
   }
 
   Future uploadFile() async {
@@ -304,35 +325,6 @@ class _ClipEditCoachPageState extends State<ClipEditCoachPage> {
 
     final urlDownload = await snapshot.ref.getDownloadURL();
     pathVdieo = urlDownload;
-
-    _videoPlayerController = VideoPlayerController.network(urlDownload)
-      ..initialize().then((value) {
-        // Ensure the first frame is shown after the video is initialized, even before the play button has been pressed.
-        setState(() {});
-        _customVideoPlayerController = CustomVideoPlayerController(
-          context: context,
-          videoPlayerController: _videoPlayerController,
-        );
-      });
-    stopLoading();
-  }
-
-  VideoPlayerController showVideo(String urlDownload) {
-    return _videoPlayerController = VideoPlayerController.network(urlDownload)
-      ..initialize().then((value) {
-        // Ensure the first frame is shown after the video is initialized, even before the play button has been pressed.
-        setState(() {});
-        _customVideoPlayerController = CustomVideoPlayerController(
-          context: context,
-          videoPlayerController: _videoPlayerController,
-        );
-      });
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
-    _customVideoPlayerController.dispose();
   }
 
   // StartLoading And StopLoading

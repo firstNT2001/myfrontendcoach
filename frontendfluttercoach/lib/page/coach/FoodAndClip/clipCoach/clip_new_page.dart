@@ -19,6 +19,7 @@ import '../../../../model/response/md_Result.dart';
 import '../../../../service/listClip.dart';
 import '../../../../service/provider/appdata.dart';
 import '../../../../widget/PopUp/popUp.dart';
+import '../../../../widget/chewiePlayer.dart';
 import '../../../../widget/textField/wg_textField.dart';
 import '../../../../widget/textField/wg_textFieldLines.dart';
 import '../coach_food_clip_page.dart';
@@ -325,13 +326,24 @@ class _ClipNewCoachPageState extends State<ClipNewCoachPage> {
   Future selectFile() async {
     final result = await FilePicker.platform.pickFiles();
     if (result == null) return;
+
     // ignore: use_build_context_synchronously
-    startLoading(context);
+    // startLoading(context);
     // setState(() {
     pickedFile = result.files.first;
+
+    final File fileForFirebase = File(pickedFile!.path!);
+
     log(pickedFile.toString());
-    // });
-    uploadFile();
+    _controller = VideoPlayerController.file(fileForFirebase)
+      ..initialize().then((_) {
+        // Ensure the first frame is shown after the video is initialized, even before the play button has been pressed.
+        setState(() {});
+        _customVideoPlayerController = CustomVideoPlayerController(
+          context: context,
+          videoPlayerController: _controller,
+        );
+      });
   }
 
   Future uploadFile() async {
@@ -345,18 +357,6 @@ class _ClipNewCoachPageState extends State<ClipNewCoachPage> {
 
     final urlDownload = await snapshot.ref.getDownloadURL();
     pathVdieo = urlDownload;
-
-    _controller = VideoPlayerController.network(urlDownload)
-      ..initialize().then((_) {
-        // Ensure the first frame is shown after the video is initialized, even before the play button has been pressed.
-        setState(() {});
-        _customVideoPlayerController = CustomVideoPlayerController(
-          context: context,
-          videoPlayerController: _controller,
-        );
-      });
-
-    stopLoading();
   }
 
   @override

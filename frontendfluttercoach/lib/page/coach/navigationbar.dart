@@ -1,14 +1,17 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:frontendfluttercoach/page/user/profileUser.dart';
+import 'package:frontendfluttercoach/page/coach/profile/coach_page.dart';
+import 'package:frontendfluttercoach/page/coach/usersBuyCourses/show_user_page.dart';
 import 'package:persistent_bottom_nav_bar_v2/persistent-tab-view.dart';
-import 'homepage/homepageUser.dart';
-import 'money/history.dart';
-import 'mycourse/mycourse.dart';
 
-class NavbarBottom extends StatelessWidget {
-  const NavbarBottom({super.key});
+import 'FoodAndClip/coach_food_clip_page.dart';
+import 'course/course_new_page.dart';
+import 'home_coach_page.dart';
+
+
+class NavbarBottomCoach extends StatelessWidget {
+  const NavbarBottomCoach({super.key});
   
   @override
   Widget build(BuildContext context) {
@@ -17,41 +20,50 @@ class NavbarBottom extends StatelessWidget {
 _controller = PersistentTabController(initialIndex: 0);
     List<Widget> _buildScreens() {
         return [
-          const HomePageUser(),
-          const MyCouses(),
-          const HistoryWallet(),
-          const ProfileUser()
+          const HomePageCoach(),
+          const FoodCoachPage(),
+          const CourseNewPage(),
+          const ShowUserByCoursePage(),
+          const CoachPage()
         ];
     }
     List<PersistentBottomNavBarItem> _navBarsItems() {
         return [
             PersistentBottomNavBarItem(
                 icon: const Icon(FontAwesomeIcons.house),
-                title: "หน้าหลัก",
+                title: "Home",
                 activeColorPrimary:Theme.of(context).colorScheme.primary,
                 inactiveColorPrimary:  Color.fromARGB(255, 0, 0, 0),
                 // activeColorPrimary: Color.fromARGB(255, 101, 6, 255),
                 // inactiveColorPrimary:  const Color.fromARGB(255, 255, 255, 255),
             ),
             PersistentBottomNavBarItem(
-                icon: const Icon(FontAwesomeIcons.solidBookmark),
-                title: "รายการซื้อ",
+                icon: const Icon(FontAwesomeIcons.utensils),
+                title: "History",
                 activeColorPrimary:Theme.of(context).colorScheme.primary,
                 inactiveColorPrimary:  Color.fromARGB(255, 0, 0, 0),
                 // activeColorPrimary: CupertinoColors.activeBlue,
                 // inactiveColorPrimary: CupertinoColors.systemGrey,
             ),
             PersistentBottomNavBarItem(
-                icon: const Icon(FontAwesomeIcons.wallet),
-                title: "เติมเงิน",
+                icon: const Icon(FontAwesomeIcons.plus,color: Colors.black,),
+                title: "Add",
                 activeColorPrimary: Theme.of(context).colorScheme.primary,
                 inactiveColorPrimary:  Color.fromARGB(255, 0, 0, 0),
                 // activeColorPrimary: CupertinoColors.activeBlue,
                 // inactiveColorPrimary: CupertinoColors.systemGrey,
             ),
             PersistentBottomNavBarItem(
+                icon: const Icon(FontAwesomeIcons.comment),
+                title: "Chat",
+                activeColorPrimary: Theme.of(context).colorScheme.primary,
+                inactiveColorPrimary: Color.fromARGB(255, 0, 0, 0),
+                // activeColorPrimary: CupertinoColors.activeBlue,
+                // inactiveColorPrimary: CupertinoColors.systemGrey,
+            ),
+            PersistentBottomNavBarItem(
                 icon: const Icon(FontAwesomeIcons.solidUser),
-                title: "โปรไฟล์",
+                title: "Profile",
                 activeColorPrimary: Theme.of(context).colorScheme.primary,
                 inactiveColorPrimary: Color.fromARGB(255, 0, 0, 0),
                 // activeColorPrimary: CupertinoColors.activeBlue,
@@ -65,7 +77,7 @@ _controller = PersistentTabController(initialIndex: 0);
         screens: _buildScreens(),
         items: _navBarsItems(),
         confineInSafeArea: true,
-        backgroundColor: Color.fromARGB(255, 255, 255, 255), // Default is Colors.white.
+        backgroundColor: Color.fromARGB(255, 245, 245, 245), // Default is Colors.white.
         handleAndroidBackButtonPress: true, // Default is true.
         resizeToAvoidBottomInset: true, // This needs to be true if you want to move up the screen when keyboard appears. Default is true.
         stateManagement: true, // Default is true.
@@ -85,7 +97,7 @@ _controller = PersistentTabController(initialIndex: 0);
           curve: Curves.ease,
           duration: Duration(milliseconds: 200),
         ),
-        navBarStyle: NavBarStyle.style1, // Choose the nav bar style with this property.
+        navBarStyle: NavBarStyle.style15, // Choose the nav bar style with this property.
     );
   }
 
