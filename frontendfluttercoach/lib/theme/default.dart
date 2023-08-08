@@ -62,7 +62,7 @@ darkTheme: FlexThemeData.dark(
     blendOnLevel: 20,
     useTextTheme: true,
     useM2StyleDividerInM3: true,
-    inputDecoratorRadius: 33.0,
+    inputDecoratorRadius: 20.0,
     inputDecoratorFocusedBorderWidth: 1.0,
     cardRadius: 20.0,
   ),
