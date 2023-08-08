@@ -21,7 +21,7 @@ Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   GetStorage gs = GetStorage();
   final DefaultTheme defaultTheme = DefaultTheme();
-
+  
   // Screen size
   Size screenSize =
       MediaQueryData.fromWindow(WidgetsBinding.instance.window).size;
