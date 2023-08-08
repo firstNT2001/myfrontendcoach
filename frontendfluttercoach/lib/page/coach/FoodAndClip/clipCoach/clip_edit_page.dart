@@ -57,11 +57,11 @@ class _ClipEditCoachPageState extends State<ClipEditCoachPage> {
   late ModelResult modelResult;
 
   String textErr = '';
+  // ignore: unused_field
   bool _enabled = true;
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     //LoadClipService
     _listClipService = context.read<AppData>().listClipServices;

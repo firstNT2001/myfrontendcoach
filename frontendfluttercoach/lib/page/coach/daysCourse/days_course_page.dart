@@ -2,7 +2,6 @@ import 'dart:convert';
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:frontendfluttercoach/model/request/day_dayID_put.dart';
 
@@ -50,6 +49,7 @@ class _DaysCoursePageState extends State<DaysCoursePage> {
   //
   bool onVisibles = true;
   bool offVisibles = false;
+  bool isVisibleQuickAlert = true;
 
   //title
   String title = 'Days';
@@ -128,7 +128,7 @@ class _DaysCoursePageState extends State<DaysCoursePage> {
           return (_enabled)
               ? Skeletonizer(
                   textBoneBorderRadius:
-                      TextBoneBorderRadius.fromHeightFactor(.10),
+                      const TextBoneBorderRadius.fromHeightFactor(.10),
                   enabled: true,
                   ignoreContainers: false,
                   child: gridViewDays(context),
@@ -147,6 +147,9 @@ class _DaysCoursePageState extends State<DaysCoursePage> {
           color: Colors.white,
           key: ValueKey(index),
           child: InkWell(
+              onLongPress: () {
+                dialogDeleteDay(context, listday.did);
+              },
               onTap: () {
                 Get.to(() => HomeFoodAndClipPage(
                       did: listday.did.toString(),
@@ -192,7 +195,6 @@ class _DaysCoursePageState extends State<DaysCoursePage> {
       days = res.data;
       log("did: ${days.length.toString()}");
       // name.text = foods.name;
-   
     } catch (err) {
       log('Error: $err');
     }
@@ -219,93 +221,68 @@ class _DaysCoursePageState extends State<DaysCoursePage> {
       log("${days[i].did.toString()} : ${jsonEncode(request)}");
     }
     stopLoading();
+    // ignore: use_build_context_synchronously
     success(context);
   }
 
   //Dialog Delete
   void dialogDeleteDay(BuildContext context, int did) {
-    //target widget
-    SmartDialog.show(builder: (_) {
-      return Container(
-        width: MediaQuery.of(context).size.width * 0.8,
-        height: MediaQuery.of(context).size.height * 0.3,
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(20),
-          color: Theme.of(context).colorScheme.primaryContainer,
-        ),
-        alignment: Alignment.center,
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          //crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Padding(
-              padding: const EdgeInsets.only(
-                  left: 20, right: 20, top: 50, bottom: 16),
-              child: Text("คุณต้องการลบหรือไม",
-                  style: Theme.of(context).textTheme.headlineSmall),
-            ),
-            Padding(
-              padding: const EdgeInsets.only(top: 20),
-              child: Row(
-                //mainAxisSize: MainAxisSize.max,
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  FilledButton(
-                      onPressed: () {
-                        SmartDialog.dismiss();
-                      },
-                      child: const Text("ยกเลิก")),
-                  FilledButton(
-                      onPressed: () async {
-                        SmartDialog.dismiss();
-                        startLoading(context);
-                        //Delect Day
-                        var result =
-                            await _daysService.deleteDay(did.toString());
-                        modelResult = result.data;
+    QuickAlert.show(
+      context: context,
+      barrierDismissible: isVisibleQuickAlert,
+      type: QuickAlertType.confirm,
+      text: 'Do you want to delete?',
+      confirmBtnText: 'Yes',
+      cancelBtnText: 'No',
+      confirmBtnColor: Theme.of(context).colorScheme.primary,
+      onConfirmBtnTap: () async {
+        Navigator.of(context, rootNavigator: true).pop();
+        startLoading(context);
+        //Delect Day
+        var result = await _daysService.deleteDay(did.toString());
+        modelResult = result.data;
 
-                        setState(() {
-                          days.removeWhere((item) => item.did == did);
-                        });
-                        sequence = 0;
-                        log(days.length.toString());
-                        for (int i = 0; i < days.length; i++) {
-                          DayDayIdPut request = DayDayIdPut(sequence: i + 1);
-                          log(jsonEncode(request));
-                          var response = await _daysService.updateDayByDayID(
-                              days[i].did.toString(), request);
-                          modelResult = response.data;
-                          //log(modelResult.result);
-                          sequence++;
-                        }
+        setState(() {
+          days.removeWhere((item) => item.did == did);
+        });
+        sequence = 0;
+        log(days.length.toString());
+        for (int i = 0; i < days.length; i++) {
+          DayDayIdPut request = DayDayIdPut(sequence: i + 1);
+          log(jsonEncode(request));
+          var response = await _daysService.updateDayByDayID(
+              days[i].did.toString(), request);
+          modelResult = response.data;
+          //log(modelResult.result);
+          sequence++;
+        }
 
-                        CourseCourseIdPut requestCourse = CourseCourseIdPut(
-                            name: course.first.name,
-                            details: course.first.details,
-                            level: course.first.level,
-                            amount: course.first.amount,
-                            image: course.first.image,
-                            days: sequence,
-                            price: course.first.price,
-                            status: course.first.status);
-                        //log(jsonEncode(requestCourse));
-                        var respo = await _courseService.updateCourseByCourseID(
-                            widget.coID, requestCourse);
-                        modelResult = respo.data;
-
-                        setState(() {
-                          loadDaysDataMethod = loadDaysDataAsync();
-                        });
-                        stopLoading();
-                      },
-                      child: Text("ตกลง"))
-                ],
-              ),
-            ),
-          ],
-        ),
-      );
-    });
+        CourseCourseIdPut requestCourse = CourseCourseIdPut(
+            name: course.first.name,
+            details: course.first.details,
+            level: course.first.level,
+            amount: course.first.amount,
+            image: course.first.image,
+            days: sequence,
+            price: course.first.price,
+            status: course.first.status);
+        //log(jsonEncode(requestCourse));
+        var respo = await _courseService.updateCourseByCourseID(
+            widget.coID, requestCourse);
+        modelResult = respo.data;
+        stopLoading();
+        if (modelResult.result == '1') {
+          // ignore: use_build_context_synchronously
+          popUpSuccessDelete(context);
+          setState(() {
+            loadDaysDataMethod = loadDaysDataAsync();
+          });
+        }else{
+          // ignore: use_build_context_synchronously
+          popUpWarningDelete(context);
+        }
+      },
+    );
   }
 
   void dialogInsertDay(BuildContext context) {
@@ -344,7 +321,7 @@ class _DaysCoursePageState extends State<DaysCoursePage> {
         modelResult = respo.data;
 
         setState(() {
-           loadDaysDataMethod = loadDaysDataAsync();
+          loadDaysDataMethod = loadDaysDataAsync();
           sequence = 0;
         });
         stopLoading();

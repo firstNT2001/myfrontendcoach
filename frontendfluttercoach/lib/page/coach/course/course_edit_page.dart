@@ -7,7 +7,6 @@ import 'package:file_picker/file_picker.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:frontendfluttercoach/page/coach/home_coach_page.dart';
-import 'package:frontendfluttercoach/widget/dialogs.dart';
 
 import 'package:get/get.dart';
 import 'package:provider/provider.dart';
@@ -712,7 +711,7 @@ class _CourseEditPageState extends State<CourseEditPage> {
           Get.to(() => const HomePageCoach());
         } else {
           // ignore: use_build_context_synchronously
-          warningDelete(context);
+          popUpWarningDelete(context);
         }
       },
     );
