@@ -130,7 +130,7 @@ class _HomePageUserState extends State<HomePageUser> {
       log("User ID" + uid.toString());
       var result = await customerService.customer(uid: uid.toString(), email: '');
       customer = result.data;
-      var datacourse = await courseService.course(coID: '', cid: '', name: '');
+      var datacourse = await courseService.courseOpenSell(coID: '', cid: '', name: '');
 
       courses = datacourse.data;
       // log("list coachname =${courses.length}");

@@ -119,10 +119,7 @@ class _showFoodState extends State<showFood> {
                 Visibility(
                     visible: showtoday,
                     child: Expanded(
-                      child: Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: loadclipschecktoday(),
-                      ),
+                      child: loadclipschecktoday(),
                     )),
                 Visibility(
                     visible: showtomorrow,
@@ -139,22 +136,7 @@ class _showFoodState extends State<showFood> {
                         padding: const EdgeInsets.all(8.0),
                         child: loadclipscheckyesterday(),
                       ),
-                    )),
-                // Expanded(
-                //     child: Padding(
-                //       padding: const EdgeInsets.all(8.0),
-                //       child: loadclipschecktoday(),
-                //     ),
-                //   ),
-                // (caldate == 0)?Expanded(
-                //     child: Padding(
-                //   padding: const EdgeInsets.all(8.0),
-                //   child: loadclipscheck(),
-                // )) : (caldate > 0 )?Expanded(
-                //     child: Padding(
-                //   padding: const EdgeInsets.all(8.0),
-                //   child: loadclipscantcheck(),
-                // )) : const Center(child: CircularProgressIndicator())
+                    )),           
               ],
             ),
           ]),
@@ -174,8 +156,8 @@ class _showFoodState extends State<showFood> {
                 itemBuilder: (context, index) {
                   final listclip = clips[index];
                   videoUrl = listclip.listClip.video;
-                  return SizedBox(
-                    width: MediaQuery.of(context).size.width * 0.8,
+                  return Padding(
+                    padding: const EdgeInsets.only(left: 10,right: 10,bottom: 8),
                     child: Card(
                       elevation: 0,
                       child: Padding(
@@ -191,9 +173,13 @@ class _showFoodState extends State<showFood> {
                                           .textTheme
                                           .bodyLarge)),
                             ),
-                            WidgetloadCilp(
-                              urlVideo: videoUrl,
-                              nameclip: listclip.listClip.name,
+                            SizedBox(
+                              height: double.infinity,
+                              width: double.infinity,
+                              child: WidgetloadCilp(
+                                urlVideo: videoUrl,
+                                nameclip: listclip.listClip.name,
+                              ),
                             ),
                             Padding(
                               padding: const EdgeInsets.only(left: 8),

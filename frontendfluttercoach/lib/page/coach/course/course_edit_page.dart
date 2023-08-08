@@ -21,9 +21,11 @@ import '../../../model/response/md_Result.dart';
 import '../../../model/response/md_Review_get.dart';
 import '../../../model/response/md_coach_course_get.dart';
 import '../../../model/response/md_days.dart';
+import '../../../model/response/md_process.dart';
 import '../../../service/course.dart';
 
 import '../../../service/days.dart';
+import '../../../service/progessbar.dart';
 import '../../../service/provider/appdata.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
@@ -49,6 +51,8 @@ class CourseEditPage extends StatefulWidget {
 
 class _CourseEditPageState extends State<CourseEditPage> {
   //Service
+  late ProgessbarService _progessbarService;
+  late Modelprogessbar modelprogessbar;
   //CourseService
   late CourseService _courseService;
   late Future<void> loadDataMethod;
@@ -112,6 +116,9 @@ class _CourseEditPageState extends State<CourseEditPage> {
     _courseService = context.read<AppData>().courseService;
     loadDataMethod = loadDataAsync();
 
+    _progessbarService = context.read<AppData>().progessbar;
+    loadProgessData();
+    
     _daysService = context.read<AppData>().daysService;
 
     loadDaysDataMethod = loadDaysDataAsync();
@@ -632,8 +639,7 @@ class _CourseEditPageState extends State<CourseEditPage> {
                                 roomID: widget.coID,
                                 roomName: name.text,
                                 userID: context.read<AppData>().cid.toString(),
-                                firstName:
-                                    "โค้ช ${context.read<AppData>().nameCoach}",
+                                firstName: "โค้ช ${context.read<AppData>().nameCoach}",
                               ));
                         },
                         icon: const Icon(
@@ -660,7 +666,15 @@ class _CourseEditPageState extends State<CourseEditPage> {
       pickedImg = result.files.first;
     });
   }
-
+   Future<void> loadProgessData() async {
+    try {
+      var datas = await _progessbarService.processbar(coID: widget.coID);
+      modelprogessbar = datas.data;
+      log("percent${modelprogessbar.percent}");
+    } catch (err) {
+      log('Error: $err');
+    }
+  }
   //uploadfile
   Future uploadfile() async {
     final path = 'files/${pickedImg!.name}';

@@ -8,13 +8,13 @@ import 'package:provider/provider.dart';
 import 'package:retrofit/dio.dart';
 import 'package:retrofit/retrofit.dart';
 
-
 import '../../model/response/md_Customer_get.dart';
 import '../../service/customer.dart';
 import '../../service/provider/appdata.dart';
 import 'chatOfCus.dart';
 import 'editProfile.dart';
-import 'mycourse.Detaildart/mycourse.dart';
+import 'mycourse/mycourse.dart';
+
 class ProfileUser extends StatefulWidget {
   const ProfileUser({super.key});
 
@@ -33,7 +33,7 @@ class _ProfileUserState extends State<ProfileUser> {
     // TODO: implement initState
     super.initState();
     uid = context.read<AppData>().uid;
-    log("userID"+uid.toString());
+    log("userID" + uid.toString());
     customerService =
         CustomerService(Dio(), baseUrl: context.read<AppData>().baseurl);
     loadDataMethod = loadData();
@@ -42,138 +42,193 @@ class _ProfileUserState extends State<ProfileUser> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-    
       body: Column(
         children: [
-         
           Padding(
             padding: const EdgeInsets.only(top: 50),
-            child: Expanded(child: showProfile()),
+            child: showProfile(),
           ),
-          Expanded(child: showMenu()),
+          //Expanded(child: showMenu()),
         ],
       ),
     );
   }
-  
+
   Widget showProfile() {
     return FutureBuilder(
         future: loadDataMethod, // 3.1 object ของ async method
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.done) {
             return Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                // ignore: unnecessary_null_comparison
-                if (customer.first.uid != null)
-                  Padding(
-                    padding: const EdgeInsets.only(left: 25, top: 30),
-                    child: Column(
-                      children: [                    
-                        Row(
-                          children: [
-                            CircleAvatar(
-                              minRadius: 35,
-                              maxRadius: 55,
-                              backgroundImage:
-                                  NetworkImage(customer.first.image),
-                            ),
-                            Container(
-                              child: Column(
-                                children: [
-                                  Text("@ " + customer.first.username),
-                                  Padding(
-                                    padding: const EdgeInsets.only(left: 30),
-                                    child: Text(customer.first.fullName),
-                                  ),
-                                ],
-                              ),
-                            ),
-                              
-                        Padding(
-                          padding: const EdgeInsets.only(left: 50),
-                          child: InkWell(
-                                onTap: () {
-                                  //1. ส่งตัวแปรแบบconstructure
-                                  Get.to(() =>  editProfileCus(uid: uid));
-                                },
-                                child: Icon(
-                                  Icons.edit_outlined,
-                                  color: Colors.black,
-                                  size: 28,
-                                ),
-                              ),
-                        ), 
-                          ],
+                Stack(
+                  children: [
+                    Container(
+                      color: Theme.of(context).colorScheme.secondaryContainer,
+                      height: 300,
+                    ),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        SizedBox(
+                          height: 10,
                         ),
-                        Container(
+                        Center(
+                          child: CircleAvatar(
+                            minRadius: 55,
+                            maxRadius: 75,
+                            backgroundImage: NetworkImage("https://scontent.fbkk10-1.fna.fbcdn.net/v/t39.30808-6/320015008_539949321388588_5215162980436939967_n.jpg?_nc_cat=107&cb=99be929b-3346023f&ccb=1-7&_nc_sid=09cbfe&_nc_eui2=AeEmRRui6SBTV0_sx5fP9fV93QHKGfyj_h_dAcoZ_KP-HwHM3_K1OxfVLAW2vdUTImuYAdjdaQv6MUTzfk-TXTVJ&_nc_ohc=_09hySOjhlkAX8jqol1&_nc_ht=scontent.fbkk10-1.fna&oh=00_AfC0OLIthlfLpGHgjZTWWkGiTG9SYXa4QrtzdIC16vpJbA&oe=64D5B8F0"),
+                            
+                            //backgroundImage: NetworkImage(customer.first.image),
+                          ),
+                        ),
+                        
+                        Center(
+                          child: Container(
                           child: Column(
                             children: [
-                              Padding(
-                                padding: const EdgeInsets.only(top: 20),
-                                child: Row(
-                                  children: [
-                                    Icon(
-                                      Icons.email,
-                                      color: Colors.green,
-                                      size: 24.0,
-                                    ),
-                                    Padding(
-                                      padding: const EdgeInsets.only(left: 18),
-                                      child: Text(customer.first.fullName),
-                                    )
-                                  ],
-                                ),
-                              ),
-                              Padding(
-                                padding: const EdgeInsets.only(top: 20),
-                                child: Row(
-                                  children: [
-                                    const Icon(
-                                      Icons.phone,
-                                      color: Colors.green,
-                                      size: 24.0,
-                                    ),
-                                    Padding(
-                                      padding: const EdgeInsets.only(left: 18),
-                                      child: Text(customer.first.phone),
-                                    ),
-                                  ],
-                                ),
-                              ),
+                          Padding(
+                            padding: const EdgeInsets.only(top: 15),
+                            child: Text("@ " + customer.first.username,style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                          ),
+                          Padding(
+                            padding:const EdgeInsets.only(top: 8),
+                            child: Text(customer.first.fullName),
+                          ),
                             ],
                           ),
-                        ),
-                        Card(
-                          child: SizedBox(
-                            height: 100,
-                            width: 200,
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Text("ยอดคงเหลือ"),
-                                Text(customer.first.price.toString())
-                              ],
-                            ),
                           ),
-                        )
-                      ],
+                        ),
+                          ],
                     ),
-                  )
+                   
+                  //   Positioned(
+                  //     top: 200,
+                  // child: Padding(
+                  //     padding: EdgeInsets.only(
+                  //         top: MediaQuery.of(context).size.height / 3),
+                  //     child: Container(
+                  //         width: MediaQuery.of(context).size.width,
+                  //         decoration: const BoxDecoration(
+                  //             borderRadius: BorderRadius.only(
+                  //                 topLeft: Radius.circular(20),
+                  //                 topRight: Radius.circular(20)),
+                  //             color: Color.fromARGB(255, 238, 20, 20)),)))
 
-                // Card(
-                //   child: ListTile(
-                //       leading: CircleAvatar(
-                //     radius: 30,
-                //     backgroundImage: NetworkImage(customer.data.image),
-                //   ),
-                //   title: Text("@ "+customer.data.username),
-                //   subtitle: Text(customer.data.fullName),
-                //   trailing: const Icon(Icons.mode_edit_outline_outlined),
-                //   onTap: (){
+                        // ignore: unnecessary_null_comparison
+                        // if (customer.first.uid != null)
+                        //   Padding(
+                        //     padding: const EdgeInsets.only(left: 25, top: 30),
+                        //     child: Column(
+                        //       children: [
+                        //         Row(
+                        //           children: [
+                        //             CircleAvatar(
+                        //               minRadius: 35,
+                        //               maxRadius: 55,
+                        //               backgroundImage:
+                        //                   NetworkImage(customer.first.image),
+                        //             ),
+                        //             Container(
+                        //               child: Column(
+                        //                 children: [
+                        //                   Text("@ " + customer.first.username),
+                        //                   Padding(
+                        //                     padding: const EdgeInsets.only(left: 30),
+                        //                     child: Text(customer.first.fullName),
+                        //                   ),
+                        //                 ],
+                        //               ),
+                        //             ),
 
-                //   },),
-                // ),
+                        //         Padding(
+                        //           padding: const EdgeInsets.only(left: 50),
+                        //           child: InkWell(
+                        //                 onTap: () {
+                        //                   //1. ส่งตัวแปรแบบconstructure
+                        //                   Get.to(() =>  editProfileCus(uid: uid));
+                        //                 },
+                        //                 child: Icon(
+                        //                   Icons.edit_outlined,
+                        //                   color: Colors.black,
+                        //                   size: 28,
+                        //                 ),
+                        //               ),
+                        //         ),
+                        //           ],
+                        //         ),
+                        //         Container(
+                        //           child: Column(
+                        //             children: [
+                        //               Padding(
+                        //                 padding: const EdgeInsets.only(top: 20),
+                        //                 child: Row(
+                        //                   children: [
+                        //                     Icon(
+                        //                       Icons.email,
+                        //                       color: Colors.green,
+                        //                       size: 24.0,
+                        //                     ),
+                        //                     Padding(
+                        //                       padding: const EdgeInsets.only(left: 18),
+                        //                       child: Text(customer.first.fullName),
+                        //                     )
+                        //                   ],
+                        //                 ),
+                        //               ),
+                        //               Padding(
+                        //                 padding: const EdgeInsets.only(top: 20),
+                        //                 child: Row(
+                        //                   children: [
+                        //                     const Icon(
+                        //                       Icons.phone,
+                        //                       color: Colors.green,
+                        //                       size: 24.0,
+                        //                     ),
+                        //                     Padding(
+                        //                       padding: const EdgeInsets.only(left: 18),
+                        //                       child: Text(customer.first.phone),
+                        //                     ),
+                        //                   ],
+                        //                 ),
+                        //               ),
+                        //             ],
+                        //           ),
+                        //         ),
+                        //         Card(
+                        //           child: SizedBox(
+                        //             height: 100,
+                        //             width: 200,
+                        //             child: Column(
+                        //               mainAxisAlignment: MainAxisAlignment.center,
+                        //               children: [
+                        //                 Text("ยอดคงเหลือ"),
+                        //                 Text(customer.first.price.toString())
+                        //               ],
+                        //             ),
+                        //           ),
+                        //         )
+                        //       ],
+                        //     ),
+                        //   )
+
+                        // Card(
+                        //   child: ListTile(
+                        //       leading: CircleAvatar(
+                        //     radius: 30,
+                        //     backgroundImage: NetworkImage(customer.data.image),
+                        //   ),
+                        //   title: Text("@ "+customer.data.username),
+                        //   subtitle: Text(customer.data.fullName),
+                        //   trailing: const Icon(Icons.mode_edit_outline_outlined),
+                        //   onTap: (){
+
+                        //   },),
+                        // ),
+                    
+                  ],
+                ),
               ],
             );
           } else {
@@ -182,130 +237,131 @@ class _ProfileUserState extends State<ProfileUser> {
         });
   }
 
-  Widget showMenu() {
-    return Container(
-      child: Column(
-        children: [
-          InkWell(
-            onTap: () {
-              log(customer.first.uid.toString());
-              context.read<AppData>().uid = customer.first.uid;
-              Get.to(() =>  MyCouses());
-            },
-            child: Card(
-              elevation: 0,
-              shape: RoundedRectangleBorder(
-                side: BorderSide(
-                  color: Theme.of(context).colorScheme.outline,
-                ),
-                borderRadius: const BorderRadius.all(Radius.circular(12)),
-              ),
-              child: Row(
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.all(18.0),
-                    child: Icon(
-                      Icons.list_alt_rounded,
-                      color: Colors.green,
-                      size: 24.0,
-                    ),
-                  ),
-                  Text("รายการซื้อของฉัน"),
-                ],
-              ),
-            ),
-          ),
-          InkWell(
-            onTap: () {
-              log(customer.first.uid.toString());
-              context.read<AppData>().uid = customer.first.uid;
-              Get.to(() => const chatOfCustomer());
-            },
-            child: Card(
-              elevation: 0,
-              shape: RoundedRectangleBorder(
-                side: BorderSide(
-                  color: Theme.of(context).colorScheme.outline,
-                ),
-                borderRadius: const BorderRadius.all(Radius.circular(12)),
-              ),
-              child: Row(
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.all(18.0),
-                    child: Icon(
-                      Icons.message_outlined,
-                      color: Colors.green,
-                      size: 24.0,
-                    ),
-                  ),
-                  Text("ข้อมความ"),
-                ],
-              ),
-            ),
-          ),
-          InkWell(
-            onTap: () {
-              log(customer.first.uid.toString());
-              context.read<AppData>().uid = customer.first.uid;
-              Get.to(() => const addCoin());
-            },
-            child: Card(
-              elevation: 0,
-              shape: RoundedRectangleBorder(
-                side: BorderSide(
-                  color: Theme.of(context).colorScheme.outline,
-                ),
-                borderRadius: const BorderRadius.all(Radius.circular(12)),
-              ),
-              child: Row(
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.all(18.0),
-                    child: Icon(
-                      Icons.account_balance_wallet_outlined,
-                      color: Colors.green,
-                      size: 24.0,
-                    ),
-                  ),
-                  Text("เติมเงิน"),
-                ],
-              ),
-            ),
-          ),
-          InkWell(
-            onLongPress: () {},
-            child: Card(
-              elevation: 0,
-              shape: RoundedRectangleBorder(
-                side: BorderSide(
-                  color: Theme.of(context).colorScheme.outline,
-                ),
-                borderRadius: const BorderRadius.all(Radius.circular(12)),
-              ),
-              child: Row(
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.all(18.0),
-                    child: Icon(
-                      Icons.logout,
-                      color: Colors.redAccent,
-                      size: 24.0,
-                    ),
-                  ),
-                  Text("ออกจากระบบ"),
-                ],
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
+  // Widget showMenu() {
+  //   return Container(
+  //     child: Column(
+  //       children: [
+  //         InkWell(
+  //           onTap: () {
+  //             log(customer.first.uid.toString());
+  //             context.read<AppData>().uid = customer.first.uid;
+  //             Get.to(() =>  MyCouses());
+  //           },
+  //           child: Card(
+  //             elevation: 0,
+  //             shape: RoundedRectangleBorder(
+  //               side: BorderSide(
+  //                 color: Theme.of(context).colorScheme.outline,
+  //               ),
+  //               borderRadius: const BorderRadius.all(Radius.circular(12)),
+  //             ),
+  //             child: Row(
+  //               children: [
+  //                 Padding(
+  //                   padding: const EdgeInsets.all(18.0),
+  //                   child: Icon(
+  //                     Icons.list_alt_rounded,
+  //                     color: Colors.green,
+  //                     size: 24.0,
+  //                   ),
+  //                 ),
+  //                 Text("รายการซื้อของฉัน"),
+  //               ],
+  //             ),
+  //           ),
+  //         ),
+  //         InkWell(
+  //           onTap: () {
+  //             log(customer.first.uid.toString());
+  //             context.read<AppData>().uid = customer.first.uid;
+  //             Get.to(() => const chatOfCustomer());
+  //           },
+  //           child: Card(
+  //             elevation: 0,
+  //             shape: RoundedRectangleBorder(
+  //               side: BorderSide(
+  //                 color: Theme.of(context).colorScheme.outline,
+  //               ),
+  //               borderRadius: const BorderRadius.all(Radius.circular(12)),
+  //             ),
+  //             child: Row(
+  //               children: [
+  //                 Padding(
+  //                   padding: const EdgeInsets.all(18.0),
+  //                   child: Icon(
+  //                     Icons.message_outlined,
+  //                     color: Colors.green,
+  //                     size: 24.0,
+  //                   ),
+  //                 ),
+  //                 Text("ข้อมความ"),
+  //               ],
+  //             ),
+  //           ),
+  //         ),
+  //         InkWell(
+  //           onTap: () {
+  //             log(customer.first.uid.toString());
+  //             context.read<AppData>().uid = customer.first.uid;
+  //             Get.to(() => const addCoin());
+  //           },
+  //           child: Card(
+  //             elevation: 0,
+  //             shape: RoundedRectangleBorder(
+  //               side: BorderSide(
+  //                 color: Theme.of(context).colorScheme.outline,
+  //               ),
+  //               borderRadius: const BorderRadius.all(Radius.circular(12)),
+  //             ),
+  //             child: Row(
+  //               children: [
+  //                 Padding(
+  //                   padding: const EdgeInsets.all(18.0),
+  //                   child: Icon(
+  //                     Icons.account_balance_wallet_outlined,
+  //                     color: Colors.green,
+  //                     size: 24.0,
+  //                   ),
+  //                 ),
+  //                 Text("เติมเงิน"),
+  //               ],
+  //             ),
+  //           ),
+  //         ),
+  //         InkWell(
+  //           onLongPress: () {},
+  //           child: Card(
+  //             elevation: 0,
+  //             shape: RoundedRectangleBorder(
+  //               side: BorderSide(
+  //                 color: Theme.of(context).colorScheme.outline,
+  //               ),
+  //               borderRadius: const BorderRadius.all(Radius.circular(12)),
+  //             ),
+  //             child: Row(
+  //               children: [
+  //                 Padding(
+  //                   padding: const EdgeInsets.all(18.0),
+  //                   child: Icon(
+  //                     Icons.logout,
+  //                     color: Colors.redAccent,
+  //                     size: 24.0,
+  //                   ),
+  //                 ),
+  //                 Text("ออกจากระบบ"),
+  //               ],
+  //             ),
+  //           ),
+  //         ),
+  //       ],
+  //     ),
+  //   );
+  // }
 
   Future<void> loadData() async {
     try {
-      var result = await customerService.customer(uid: uid.toString(), email: '');
+      var result =
+          await customerService.customer(uid: uid.toString(), email: '');
       customer = result.data;
       log('cussss: ${customer.first.uid}');
     } catch (err) {

@@ -22,8 +22,8 @@ import '../../service/course.dart';
 import '../../service/day.dart';
 import '../../service/provider/appdata.dart';
 import '../../widget/dialogs.dart';
-import 'mycourse.Detaildart/Widget/widget_loadreview.dart';
-import 'mycourse.Detaildart/mycourse.dart';
+import 'mycourse/Widget/widget_loadreview.dart';
+import 'mycourse/mycourse.dart';
 
 class showCousePage extends StatefulWidget {
   const showCousePage({super.key});

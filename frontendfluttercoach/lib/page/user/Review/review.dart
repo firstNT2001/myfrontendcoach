@@ -4,7 +4,7 @@ import 'dart:developer';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_stars/flutter_rating_stars.dart';
-import 'package:frontendfluttercoach/page/user/mycourse.Detaildart/mycourse.dart';
+import 'package:frontendfluttercoach/page/user/mycourse/mycourse.dart';
 import 'package:frontendfluttercoach/service/provider/appdata.dart';
 import 'package:frontendfluttercoach/service/review.dart';
 import 'package:get/get.dart';

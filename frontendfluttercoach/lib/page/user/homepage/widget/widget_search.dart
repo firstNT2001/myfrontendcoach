@@ -300,7 +300,7 @@ class _WidgetsearchState extends State<Widgetsearch> {
 
   Future<void> loadData() async {
     try {
-      var datacourse = await courseService.course(coID: '', cid: '', name: '');
+      var datacourse = await courseService.courseOpenSell(coID: '', cid: '', name: '');
       courses = datacourse.data;
       var result = await customerService.customer(uid: uid.toString(), email: '');
       customer = result.data;
