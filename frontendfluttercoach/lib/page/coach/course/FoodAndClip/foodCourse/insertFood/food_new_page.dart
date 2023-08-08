@@ -79,7 +79,7 @@ class _FoodNewCoursePageState extends State<FoodNewCoursePage> {
           leading: IconButton(
             icon: const Icon(
               FontAwesomeIcons.chevronLeft,
-              color: Colors.white,
+              color: Colors.black,
             ),
             onPressed: () {
               Get.to(() => HomeFoodAndClipPage(
@@ -115,7 +115,7 @@ class _FoodNewCoursePageState extends State<FoodNewCoursePage> {
               ),
               child: IconButton(
                 icon: const Icon(
-                  FontAwesomeIcons.angleRight,
+                  FontAwesomeIcons.cartShopping,
                 ),
                 onPressed: () {
                   if (increaseFood.isNotEmpty) {
@@ -131,7 +131,7 @@ class _FoodNewCoursePageState extends State<FoodNewCoursePage> {
               ),
             )
           ],
-          backgroundColor: Theme.of(context).colorScheme.primary,
+          backgroundColor: Colors.white,
           iconTheme: const IconThemeData(
             color: Colors.black, //change your color here
           ),
@@ -224,14 +224,14 @@ class _FoodNewCoursePageState extends State<FoodNewCoursePage> {
                       }
                     },
                     child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         if (listFood.image != '') ...{
                           SizedBox(
-                            width: MediaQuery.of(context).size.width * 0.35,
-                            height: MediaQuery.of(context).size.height,
+                            width: MediaQuery.of(context).size.width * 0.4,
+                            height: MediaQuery.of(context).size.height * 0.2,
                             child: Padding(
-                              padding: const EdgeInsets.all(8.0),
+                              padding: const EdgeInsets.all(20.0),
                               child: ClipRRect(
                                 borderRadius: BorderRadius.circular(8.0),
                                 child: Image.network(
@@ -242,41 +242,33 @@ class _FoodNewCoursePageState extends State<FoodNewCoursePage> {
                             ),
                           ),
                         } else
-                          Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Container(
-                                width: MediaQuery.of(context).size.width * 0.3,
-                                height: MediaQuery.of(context).size.height,
-                                decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(8),
-                                    color: Colors.pink)),
-                          ),
+                          Container(
+                              width: MediaQuery.of(context).size.width * 0.4,
+                              height: MediaQuery.of(context).size.height * 0.2,
+                              padding: const EdgeInsets.all(8.0),
+                              decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(8),
+                                  color: Colors.white)),
+                        const SizedBox(width: 10),
                         Column(
                           mainAxisAlignment: MainAxisAlignment.center,
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             SizedBox(
-                              width: MediaQuery.of(context).size.width * 0.4,
+                              width: MediaQuery.of(context).size.width * 0.5,
                               child: AutoSizeText(
                                 listFood.name,
                                 maxLines: 5,
-                                style: Theme.of(context).textTheme.bodyLarge,
+                                style: Theme.of(context).textTheme.titleMedium,
                               ),
                             ),
-                            const SizedBox(height: 8),
-                            SizedBox(
-                              width: MediaQuery.of(context).size.width * 0.4,
-                              child: AutoSizeText(
-                                'Calories: ${listFood.calories.toString()}',
-                                maxLines: 5,
-                                style: Theme.of(context).textTheme.bodyLarge,
-                              ),
-                            ),
+                            const SizedBox(height: 10),
+                            Text(
+                              "Calories : ${listFood.calories}",
+                              style: Theme.of(context).textTheme.titleMedium,
+                            )
                           ],
                         ),
-                        const SizedBox(
-                          width: 50,
-                        )
                       ],
                     ),
                   ),
@@ -295,7 +287,7 @@ class _FoodNewCoursePageState extends State<FoodNewCoursePage> {
     SmartDialog.show(builder: (_) {
       return Container(
         width: MediaQuery.of(context).size.width * 0.9,
-        height: MediaQuery.of(context).size.height * 0.75,
+        height:550,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(20),
           color: Colors.white,
@@ -333,24 +325,18 @@ class _FoodNewCoursePageState extends State<FoodNewCoursePage> {
             },
             Padding(
               padding: const EdgeInsets.only(top: 10, bottom: 8),
-              child: SizedBox(
-                width: MediaQuery.of(context).size.width * 0.7,
-                child: Text(
-                  'ชื่อเมนู: ${listFood.name}',
-                  maxLines: 5,
-                  //style: Theme.of(context).textTheme.bodyLarge,
-                ),
+              child: Text(
+                'ชื่อเมนู: ${listFood.name}',
+                maxLines: 5,
+                style: Theme.of(context).textTheme.bodyLarge,
               ),
             ),
             Padding(
-              padding: const EdgeInsets.only(bottom: 8),
-              child: SizedBox(
-                width: MediaQuery.of(context).size.width * 0.7,
-                child: AutoSizeText(
-                  'รายละเอียด: ${listFood.details}',
-                  maxLines: 5,
-                  //style: Theme.of(context).textTheme.bodyLarge,
-                ),
+              padding: const EdgeInsets.only(bottom: 8, right: 20, left: 20),
+              child: Text(
+                'รายละเอียด: ${listFood.details}',
+                maxLines: 5,
+                style: Theme.of(context).textTheme.bodyLarge,
               ),
             ),
             Row(
@@ -368,7 +354,8 @@ class _FoodNewCoursePageState extends State<FoodNewCoursePage> {
               ],
             ),
             Row(
-              mainAxisAlignment: MainAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Padding(
                   padding: const EdgeInsets.only(left: 30),
@@ -382,13 +369,9 @@ class _FoodNewCoursePageState extends State<FoodNewCoursePage> {
                     ),
                   ),
                 ),
-              ],
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [
+
                 Padding(
-                  padding: const EdgeInsets.only(right: 30),
+                  padding: const EdgeInsets.only(top: 15,right: 30),
                   child: FilledButton(
                       onPressed: () {
                         log(selectedValuehand.text);
@@ -414,6 +397,7 @@ class _FoodNewCoursePageState extends State<FoodNewCoursePage> {
                             //เปลี่ยนสีเมือเลือกเมนู฿อาหาร
                             colorList[index] =
                                 context.read<AppData>().colorSelect;
+                            selectedValuehand.text = '';
                           });
 
                           SmartDialog.dismiss();
