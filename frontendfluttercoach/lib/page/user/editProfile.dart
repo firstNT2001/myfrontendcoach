@@ -25,9 +25,8 @@ import 'package:dropdown_button2/dropdown_button2.dart';
 // ignore: camel_case_types
 class editProfileCus extends StatefulWidget {
   //สร้างตัวแปรรับconstructure
-  final int uid;
 
-  const editProfileCus({super.key, required this.uid});
+  const editProfileCus({super.key});
 
   @override
   State<editProfileCus> createState() => _editProfileCusState();
@@ -42,6 +41,8 @@ class _editProfileCusState extends State<editProfileCus> {
   late UpdateCustomer cusUpdate;
   late ModelResult moduleResult;
   String GenOTP = "";
+  late int uid;
+  bool _isvisible = false;
   //controller
   TextEditingController _uid = TextEditingController();
   TextEditingController _username = TextEditingController();
@@ -92,6 +93,7 @@ class _editProfileCusState extends State<editProfileCus> {
   void initState() {
     // TODO: implement initState
     super.initState();
+    uid = context.read<AppData>().uid;
     customerService =
         CustomerService(Dio(), baseUrl: context.read<AppData>().baseurl);
 
@@ -115,7 +117,7 @@ class _editProfileCusState extends State<editProfileCus> {
   Future<void> loadData() async {
     try {
       var result =
-          await customerService.customer(uid: widget.uid.toString(), email: '');
+          await customerService.customer(uid: uid.toString(), email: '');
       customer = result.data;
       _uid.text = customer.first.uid.toString();
       _username.text = customer.first.username;
@@ -130,7 +132,7 @@ class _editProfileCusState extends State<editProfileCus> {
       _image = customer.first.image;
       _weight.text = customer.first.weight.toString();
       _height.text = customer.first.height.toString();
-      log("b1" + _birthday.text);
+      log("b1" + _password.text);
       log("b2" + customer.first.birthday);
       log("_IMAGE==" + _image);
       //gender show
@@ -149,19 +151,25 @@ class _editProfileCusState extends State<editProfileCus> {
 
   txtfild(
       final TextEditingController _controller, String lbText, String txtTop) {
-    return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-      Text(
-        txtTop,
-        style: Theme.of(context).textTheme.bodyLarge,
-      ),
-      TextField(
-        controller: _controller,
-        decoration: InputDecoration(
-          border: OutlineInputBorder(),
-          hintText: lbText,
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 10, left: 15, right: 15),
+      child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+        Padding(
+          padding: const EdgeInsets.only(left: 5, bottom: 3),
+          child: Text(
+            txtTop,
+            style: Theme.of(context).textTheme.bodyLarge,
+          ),
         ),
-      ),
-    ]);
+        TextField(
+          controller: _controller,
+          decoration: InputDecoration(
+            contentPadding: EdgeInsets.symmetric(vertical: 10, horizontal: 12),
+            border: OutlineInputBorder(),
+          ),
+        ),
+      ]),
+    );
   }
 
   Widget showProfile() {
@@ -203,14 +211,15 @@ class _editProfileCusState extends State<editProfileCus> {
                             width: 130,
                             height: 130,
                             decoration: BoxDecoration(
-                                border:
-                                    Border.all(width: 3, color: Colors.cyan),
-                                boxShadow: [
-                                  BoxShadow(
-                                      spreadRadius: 2,
-                                      blurRadius: 10,
-                                      color: Colors.black.withOpacity(0.1))
-                                ],
+                                border: Border.all(
+                                    width: 4,
+                                    color: Color.fromARGB(255, 255, 151, 33)),
+                                // boxShadow: [
+                                //   BoxShadow(
+                                //       spreadRadius: 2,
+                                //       blurRadius: 10,
+                                //       color: Colors.black.withOpacity(0.1))
+                                // ],
                                 shape: BoxShape.circle,
                                 image: DecorationImage(
                                   fit: BoxFit.cover,
@@ -232,9 +241,9 @@ class _editProfileCusState extends State<editProfileCus> {
                                     shape: BoxShape.circle,
                                     border: Border.all(
                                         width: 4, color: Colors.white),
-                                    color: Colors.amber),
+                                    color: Color.fromARGB(255, 255, 151, 33)),
                                 child: Icon(
-                                  Icons.edit,
+                                  Icons.camera_alt,
                                   color: Colors.white,
                                 ),
                               ),
@@ -247,13 +256,38 @@ class _editProfileCusState extends State<editProfileCus> {
                   //   maxRadius: 55,
                   //   backgroundImage: NetworkImage(customer.data.image),
                   // ),
+                  SizedBox(
+                    height: 20,
+                  ),
                   txtfild(_username, "ชื่อผู้ใช้", "ชื่อผู้ใช้"),
                   txtfild(_email, "e-mail", "e-mail"),
                   // txtfildn(_password, "รหัสผ่าน", "รหัสผ่าน"),
+                  txtfild(_fullName, "ชื่อ-นามสกุล", "ชื่อ-นามสกุล"),
+                  buildDropdownGender(),
+                  txtfild(_phone, "โทรศัพท์", "โทรศัพท์"),
+                  txtfild(_weight, "น้ำหนัก", "น้ำหนัก"),
+                  txtfild(_height, "ส่วนสูง", "ส่วนสูง"),
+                  Visibility(
+                    visible: _isvisible,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.only(
+                              bottom: 8, left: 20, right: 23),
+                          child: Text(
+                            "กรุณากรอกข้อความในช่องว่างให้ครบ",
+                            style: TextStyle(
+                                color: Theme.of(context).colorScheme.error),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
                   FilledButton(
                       onPressed: () async {
-                        GenOTP = getGoogleAuthenticatorUriQR(
-                            "Coaching", _email.text, _email.text+_password.text);
+                        GenOTP = getGoogleAuthenticatorUriQR("Coaching",
+                            _email.text, _email.text + _password.text);
                         log(GenOTP);
 
                         if (GenOTP.isNotEmpty) {
@@ -285,7 +319,9 @@ class _editProfileCusState extends State<editProfileCus> {
                             FilledButton(
                                 onPressed: () {
                                   GenOTP = getGoogleAuthenticatorUri(
-                                      "Coaching", _email.text, _email.text +_password.text);
+                                      "Coaching",
+                                      _email.text,
+                                      _email.text + _password.text);
                                 },
                                 child: Text("เข้าสู่ Application"))
                           ],
@@ -293,12 +329,6 @@ class _editProfileCusState extends State<editProfileCus> {
                       ],
                     ),
                   ),
-                  txtfild(_email, "e-mail", "e-mail"),
-                  txtfild(_fullName, "ชื่อ-นามสกุล", "ชื่อ-นามสกุล"),
-                  buildDropdownGender(),
-                  txtfild(_phone, "โทรศัพท์", "โทรศัพท์"),
-                  txtfild(_weight, "น้ำหนัก", "น้ำหนัก"),
-                  txtfild(_height, "ส่วนสูง", "ส่วนสูง"),
                   Row(
                     children: [
                       const Text('เปรียนรหัสผ่าน'),
@@ -328,33 +358,42 @@ class _editProfileCusState extends State<editProfileCus> {
                           if (pickedImg != null) await uploadfile();
                           if (pickedImg == null) profile = _image;
 
-                          UpdateCustomer updateCustomer = UpdateCustomer(
-                              username: _username.text,
-                              password: _password.text,
-                              email: _email.text,
-                              fullName: _fullName.text,
-                              birthday: _birthday.text,
-                              gender: _gender.text,
-                              phone: _phone.text,
-                              image: profile,
-                              weight: int.parse(_weight.text),
-                              height: int.parse(_height.text));
-                          log(jsonEncode(updateCustomer));
-                          log("log" + widget.uid.toString());
-                          log(_birthday.text);
-                          //log(_image.toString());
-                          update = await customerService.updateCustomer(
-                              widget.uid.toString(), updateCustomer);
-                          moduleResult = update.data;
-                          log(moduleResult.result);
-                          Get.to(() => const ProfileUser());
+                          if (_username.text.isEmpty ||
+                              _email.text.isEmpty ||
+                              _fullName.text.isEmpty ||
+                              _phone.text.isEmpty ||
+                              _weight.text.isEmpty ||
+                              _height.text.isEmpty) {
+                            setState(() {
+                              _isvisible = true;
+                            });
+
+                            log('Text Field is empty, Please Fill All Data');
+                          } else {
+                            // Put your code here, which you want to execute when Text Field is NOT Empty.
+                            UpdateCustomer updateCustomer = UpdateCustomer(
+                                username: _username.text,
+                                password: _password.text,
+                                email: _email.text,
+                                fullName: _fullName.text,
+                                birthday: _birthday.text,
+                                gender: _gender.text,
+                                phone: _phone.text,
+                                image: profile,
+                                weight: int.parse(_weight.text),
+                                height: int.parse(_height.text));
+                            log(jsonEncode(updateCustomer));
+                            log("log" + uid.toString());
+                            log(_birthday.text);
+                            //log(_image.toString());
+                            update = await customerService.updateCustomer(
+                                uid.toString(), updateCustomer);
+                            moduleResult = update.data;
+                            log(moduleResult.result);
+                            Get.to(() => const ProfileUser());
+                          }
                         }),
                   ),
-                  ElevatedButton(
-                      onPressed: () {
-                        uploadfile();
-                      },
-                      child: Text("upload"))
                 ],
               ),
             );
