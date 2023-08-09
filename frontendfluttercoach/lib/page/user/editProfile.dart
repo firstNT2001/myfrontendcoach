@@ -5,32 +5,25 @@ import 'package:dio/dio.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_rounded_date_picker/flutter_rounded_date_picker.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:frontendfluttercoach/page/user/profileUser.dart';
-import 'package:get/get.dart';
 import 'package:hex/hex.dart';
-
+import 'package:persistent_bottom_nav_bar_v2/persistent-tab-view.dart';
 import 'package:provider/provider.dart';
-import 'package:retrofit/retrofit.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../../model/request/updateCus.dart';
 import 'package:base32/base32.dart';
 import '../../model/response/md_Customer_get.dart';
 import '../../model/response/md_Result.dart';
-
 import '../../service/customer.dart';
 import '../../service/provider/appdata.dart';
-import 'package:dropdown_button2/dropdown_button2.dart';
-
 import '../../widget/dropdown/wg_dropdown_string.dart';
 import 'money/widgethistory/widget_history.dart';
 
 // ignore: camel_case_types
 class editProfileCus extends StatefulWidget {
   //สร้างตัวแปรรับconstructure
-
   const editProfileCus({super.key});
-
   @override
   State<editProfileCus> createState() => _editProfileCusState();
 }
@@ -64,7 +57,8 @@ class _editProfileCusState extends State<editProfileCus> {
   bool isvisible = false;
   String _image = " ";
   String profile = " ";
-
+  String newbirht='';
+  String oldbirht='';
   //selectimg
   PlatformFile? pickedImg;
   UploadTask? uploadTask;
@@ -91,7 +85,6 @@ class _editProfileCusState extends State<editProfileCus> {
     print('link img firebase $urlDownload');
     profile = urlDownload;
   }
-
   @override
   void initState() {
     // TODO: implement initState
@@ -106,9 +99,7 @@ class _editProfileCusState extends State<editProfileCus> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text("แก้ไข"),
-      ),
+      
       body: ListView(children: [
         Column(
           children: [showProfile()],
@@ -126,6 +117,7 @@ class _editProfileCusState extends State<editProfileCus> {
       _username.text = customer.first.username;
       _fullName.text = customer.first.fullName;
       _birthday.text = thaiDate(customer.first.birthday);
+      oldbirht =customer.first.birthday;
       _gender.text = customer.first.gender;
       _phone.text = customer.first.phone;
       _email.text = customer.first.email;
@@ -135,9 +127,9 @@ class _editProfileCusState extends State<editProfileCus> {
       _image = customer.first.image;
       _weight.text = customer.first.weight.toString();
       _height.text = customer.first.height.toString();
-      log("b1" + _password.text);
-      log("b2" + customer.first.birthday);
-      log("_IMAGE==" + _image);
+      log("b1${_password.text}");
+      log("b2${customer.first.birthday}");
+      log("_IMAGE==$_image");
       //gender show
       log('เพศ: ${customer.first.gender}');
       if (customer.first.gender == "1") {
@@ -152,10 +144,6 @@ class _editProfileCusState extends State<editProfileCus> {
       log('Error: $err');
     }
   }
-  //   Widget genQR(String valueOTP,bool isvisible){
-  //   return
-  // }
-
   txtfild(
       final TextEditingController _controller, String lbText, String txtTop) {
     return Padding(
@@ -170,7 +158,30 @@ class _editProfileCusState extends State<editProfileCus> {
         ),
         TextField(
           controller: _controller,
-          decoration: InputDecoration(
+          decoration: const InputDecoration(
+            contentPadding: EdgeInsets.symmetric(vertical: 10, horizontal: 12),
+            border: OutlineInputBorder(),
+          ),
+        ),
+      ]),
+    );
+  }
+  txtfildBirth(
+      final TextEditingController _controller, String lbText, String txtTop) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 10, left: 15, right: 15),
+      child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+        Padding(
+          padding: const EdgeInsets.only(left: 5, bottom: 3),
+          child: Text(
+            txtTop,
+            style: Theme.of(context).textTheme.bodyLarge,
+          ),
+        ),
+        TextField(
+          readOnly: true,
+          controller: _controller,
+          decoration: const InputDecoration(
             contentPadding: EdgeInsets.symmetric(vertical: 10, horizontal: 12),
             border: OutlineInputBorder(),
           ),
@@ -222,13 +233,7 @@ class _editProfileCusState extends State<editProfileCus> {
                             decoration: BoxDecoration(
                                 border: Border.all(
                                     width: 4,
-                                    color: Color.fromARGB(255, 255, 151, 33)),
-                                // boxShadow: [
-                                //   BoxShadow(
-                                //       spreadRadius: 2,
-                                //       blurRadius: 10,
-                                //       color: Colors.black.withOpacity(0.1))
-                                // ],
+                                    color: const Color.fromARGB(255, 255, 151, 33)),                              
                                 shape: BoxShape.circle,
                                 image: DecorationImage(
                                   fit: BoxFit.cover,
@@ -250,8 +255,8 @@ class _editProfileCusState extends State<editProfileCus> {
                                     shape: BoxShape.circle,
                                     border: Border.all(
                                         width: 4, color: Colors.white),
-                                    color: Color.fromARGB(255, 255, 151, 33)),
-                                child: Icon(
+                                    color: const Color.fromARGB(255, 255, 151, 33)),
+                                child: const Icon(
                                   Icons.camera_alt,
                                   color: Colors.white,
                                 ),
@@ -260,12 +265,7 @@ class _editProfileCusState extends State<editProfileCus> {
                       ],
                     ),
                   ),
-                  // CircleAvatar(
-                  //   minRadius: 35,
-                  //   maxRadius: 55,
-                  //   backgroundImage: NetworkImage(customer.data.image),
-                  // ),
-                  SizedBox(
+                  const SizedBox(
                     height: 20,
                   ),
                   txtfild(_username, "ชื่อผู้ใช้", "ชื่อผู้ใช้"),
@@ -275,25 +275,74 @@ class _editProfileCusState extends State<editProfileCus> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children: [
-                       SizedBox(
+                      SizedBox(
                         width: (width - 16 - (3 * 30)) / 2,
-                        child: WidgetDropdownString(
-                          title: "เพศ",
-                          selectedValue: _gender,
-                          listItems: genders),
+                        child: Padding(
+                          padding: const EdgeInsets.only(bottom: 10),
+                          child: WidgetDropdownString(
+                              title: "เพศ",
+                              selectedValue: _gender,
+                              listItems: genders),
+                        ),
                       ),
                       SizedBox(
                         width: (width - 16 - (3 * 30)) / 2,
-                        child: txtfild(_birthday, "วันเกิด", "ว/ด/ป"),
+                        child: txtfild(_phone, "โทรศัพท์", "โทรศัพท์"),
                       ),
-                      
-                      
                     ],
                   ),
-
-                  txtfild(_phone, "โทรศัพท์", "โทรศัพท์"),
-                  txtfild(_weight, "น้ำหนัก", "น้ำหนัก"),
-                  txtfild(_height, "ส่วนสูง", "ส่วนสูง"),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    children: [
+                      Expanded(
+                        child: txtfildBirth(_birthday, "วันเกิด", "ว/ด/ป"),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(right: 15, top: 8),
+                        child: IconButton(
+                            onPressed: () async {
+                              
+                              DateTime? newDateTime =
+                                  await showRoundedDatePicker(
+                                      context: context,
+                                      locale: const Locale("th", "TH"),
+                                      theme: ThemeData(
+                                          primarySwatch: Colors.orange),
+                                      era: EraMode.BUDDHIST_YEAR,
+                                      initialDate: DateTime.now(),
+                                      firstDate:
+                                          DateTime(DateTime.now().year - 40),
+                                      lastDate:
+                                          DateTime(DateTime.now().year + 1),
+                                          
+                                      styleDatePicker:
+                                          MaterialRoundedDatePickerStyle(
+                                              paddingMonthHeader:
+                                                  const EdgeInsets.all(80)));
+                              if (newDateTime != null) {
+                                var dateFormat = '${newDateTime.toIso8601String()}Z';
+                                newbirht = dateFormat.toString();
+                                log("newDateTime$newbirht");
+                                String newBirthday =thaiDate(newDateTime.toString());
+                                 log("newDateTimethai$newBirthday");
+                                 setState(() => _birthday.text = newBirthday);
+                              }
+                            },
+                            icon: const Icon(FontAwesomeIcons.calendarDay)),
+                      ),
+                    ],
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    children: [
+                      Expanded(
+                        child: txtfild(_weight, "น้ำหนัก", "น้ำหนัก"),
+                      ),
+                      Expanded(
+                        child: txtfild(_height, "ส่วนสูง", "ส่วนสูง"),
+                      ),
+                    ],
+                  ),
                   Visibility(
                     visible: _isvisible,
                     child: Row(
@@ -324,7 +373,7 @@ class _editProfileCusState extends State<editProfileCus> {
                           // _launchUrl( Uri.parse(GenOTP));
                         }
                       },
-                      child: Text("สร้างGoogle Authenticator")),
+                      child: const Text("สร้างGoogle Authenticator")),
                   Visibility(
                     visible: isvisible,
                     child: Column(
@@ -342,7 +391,7 @@ class _editProfileCusState extends State<editProfileCus> {
                                     isvisible = false;
                                   });
                                 },
-                                child: Text("ซ่อน QR Code")),
+                                child: const Text("ซ่อน QR Code")),
                             FilledButton(
                                 onPressed: () {
                                   GenOTP = getGoogleAuthenticatorUri(
@@ -350,7 +399,7 @@ class _editProfileCusState extends State<editProfileCus> {
                                       _email.text,
                                       _email.text + _password.text);
                                 },
-                                child: Text("เข้าสู่ Application"))
+                                child: const Text("เข้าสู่ Application"))
                           ],
                         ),
                       ],
@@ -375,13 +424,13 @@ class _editProfileCusState extends State<editProfileCus> {
                   Padding(
                     padding: const EdgeInsets.only(top: 15, bottom: 15),
                     child: ElevatedButton(
-                        child: Padding(
-                          padding: const EdgeInsets.all(10.0),
+                        child: const Padding(
+                          padding: EdgeInsets.all(10.0),
                           child: Text("บันทึก"),
                         ),
                         onPressed: () async {
-                          log("messageIMG=" + _image);
-                          //DateTime birthday = new DateFormat("yyyy-MM-dd 'T'HH:mm:ss.SSS'Z'").parse(_birthday.text);
+                          log("messageIMG=$_image");
+                          
                           if (pickedImg != null) await uploadfile();
                           if (pickedImg == null) profile = _image;
 
@@ -397,13 +446,21 @@ class _editProfileCusState extends State<editProfileCus> {
 
                             log('Text Field is empty, Please Fill All Data');
                           } else {
-                            // Put your code here, which you want to execute when Text Field is NOT Empty.
-                            UpdateCustomer updateCustomer = UpdateCustomer(
+                            log('trueeeeee');
+                            // var formatter = DateFormat.yMMMd( _birthday.text);
+                            // log("formatter"+formatter.toString());
+                            if(newbirht.isEmpty){
+                              
+                              newbirht = oldbirht;
+                              log("old$newbirht");
+                            }else{
+                              log("new"+newbirht.toString());
+                              UpdateCustomer updateCustomer = UpdateCustomer(
                                 username: _username.text,
                                 password: _password.text,
                                 email: _email.text,
                                 fullName: _fullName.text,
-                                birthday: _birthday.text,
+                                birthday: newbirht,
                                 gender: _gender.text,
                                 phone: _phone.text,
                                 image: profile,
@@ -417,7 +474,15 @@ class _editProfileCusState extends State<editProfileCus> {
                                 uid.toString(), updateCustomer);
                             moduleResult = update.data;
                             log(moduleResult.result);
-                            Get.to(() => const ProfileUser());
+                           pushNewScreen(
+                context,
+                screen: const editProfileCus(),
+                withNavBar: true,
+              );
+                            }
+                            
+                            // Put your code here, which you want to execute when Text Field is NOT Empty.
+                            
                           }
                         }),
                   ),
