@@ -13,6 +13,7 @@ import 'package:frontendfluttercoach/service/request.dart';
 import 'package:get/get.dart';
 
 import 'package:flutter/material.dart';
+import 'package:persistent_bottom_nav_bar_v2/persistent-tab-view.dart';
 import 'package:provider/provider.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 import 'package:switcher_button/switcher_button.dart';
@@ -199,7 +200,11 @@ class _HomePageCoachState extends State<HomePageCoach> {
                   children: [
                     TextButton.icon(
                       onPressed: () {
-                        Get.to(() => const SearchCoursePage());
+                        pushNewScreen(
+                          context,
+                          screen: const SearchCoursePage(),
+                          withNavBar: true,
+                        );
                       },
                       icon: const Icon(
                         FontAwesomeIcons.magnifyingGlass,
@@ -276,7 +281,7 @@ class _HomePageCoachState extends State<HomePageCoach> {
       log('Error: $err');
     }
   }
- 
+
   //Show Data
   Widget showCourse() {
     return FutureBuilder(
@@ -351,17 +356,7 @@ class _HomePageCoachState extends State<HomePageCoach> {
                                   padding: const EdgeInsets.all(5.0),
                                   alignment: Alignment.bottomCenter,
                                   decoration: BoxDecoration(
-                                    color: Color.fromARGB(148, 0, 0, 0),
-                                    // gradient: LinearGradient(
-                                    //   begin: Alignment.topCenter,
-                                    //   end: Alignment.bottomCenter,
-                                    //   colors: <Color>[
-                                    //     Color.fromARGB(255, 0, 0, 0)
-                                    //         .withAlpha(500),
-                                    //     Color.fromARGB(46, 0, 0, 0),
-                                    //     Color.fromARGB(124, 0, 0, 0)
-                                    //   ],
-                                    // ),
+                                    color: const Color.fromARGB(148, 0, 0, 0),
                                     borderRadius: BorderRadius.circular(20),
                                   ),
                                   child: Center(

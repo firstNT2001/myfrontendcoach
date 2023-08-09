@@ -111,6 +111,7 @@ dependencies:
   quickalert: ^1.0.1
   skeletonizer: ^0.5.0
   reorderable_grid_view: ^2.2.7
+  chewie: ^1.7.0
   # video_thumbnail: ^0.5.3
    
   

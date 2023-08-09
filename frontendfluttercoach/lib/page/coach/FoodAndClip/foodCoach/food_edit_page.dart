@@ -323,7 +323,7 @@ class _FoodEditCoachPageState extends State<FoodEditCoachPage> {
                     color: Colors.black,
                   ),
                   onPressed: () {
-                    Get.back();
+                    Navigator.pop(context);
                   },
                 ),
               ),

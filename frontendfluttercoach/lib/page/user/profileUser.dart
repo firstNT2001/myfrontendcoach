@@ -1,9 +1,12 @@
 import 'dart:developer';
 
+import 'package:buddhist_datetime_dateformat/buddhist_datetime_dateformat.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:frontendfluttercoach/page/user/money/money.dart';
 import 'package:get/get.dart';
+import 'package:intl/intl.dart';
+import 'package:persistent_bottom_nav_bar_v2/persistent-tab-view.dart';
 import 'package:provider/provider.dart';
 import 'package:retrofit/dio.dart';
 import 'package:retrofit/retrofit.dart';
@@ -13,6 +16,7 @@ import '../../service/customer.dart';
 import '../../service/provider/appdata.dart';
 import 'chatOfCus.dart';
 import 'editProfile.dart';
+import 'money/widgethistory/widget_history.dart';
 import 'mycourse/mycourse.dart';
 
 class ProfileUser extends StatefulWidget {
@@ -28,6 +32,14 @@ class _ProfileUserState extends State<ProfileUser> {
   List<Customer> customer = [];
   late int uid;
 
+  TextEditingController email = TextEditingController();
+  TextEditingController birthday = TextEditingController();
+  TextEditingController gender = TextEditingController();
+  TextEditingController phone = TextEditingController();
+  TextEditingController weight = TextEditingController();
+  TextEditingController height = TextEditingController();
+  TextEditingController fullName = TextEditingController();
+
   @override
   void initState() {
     // TODO: implement initState
@@ -42,12 +54,30 @@ class _ProfileUserState extends State<ProfileUser> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Column(
-        children: [
-          Padding(
-            padding: const EdgeInsets.only(top: 50),
-            child: showProfile(),
+      floatingActionButtonLocation: FloatingActionButtonLocation.miniEndTop,
+      floatingActionButton: Padding(
+        padding: const EdgeInsets.only(top: 20, right: 8),
+        child: SizedBox(
+          height: 55,
+          width: 55,
+          child: FloatingActionButton(
+            backgroundColor: Theme.of(context).colorScheme.primary,
+            foregroundColor: Colors.white,
+            onPressed: () {
+              pushNewScreen(
+                context,
+                screen: const editProfileCus(),
+                withNavBar: true,
+              );
+            },
+            shape: const CircleBorder(),
+            child: const Icon(Icons.edit_outlined),
           ),
+        ),
+      ),
+      body: ListView(
+        children: [
+          showProfile(),
           //Expanded(child: showMenu()),
         ],
       ),
@@ -65,168 +95,83 @@ class _ProfileUserState extends State<ProfileUser> {
                   children: [
                     Container(
                       color: Theme.of(context).colorScheme.secondaryContainer,
-                      height: 300,
+                      height: 170,
                     ),
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.center,
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         SizedBox(
-                          height: 10,
+                          height: 65,
                         ),
                         Center(
                           child: CircleAvatar(
                             minRadius: 55,
                             maxRadius: 75,
-                            backgroundImage: NetworkImage("https://scontent.fbkk10-1.fna.fbcdn.net/v/t39.30808-6/320015008_539949321388588_5215162980436939967_n.jpg?_nc_cat=107&cb=99be929b-3346023f&ccb=1-7&_nc_sid=09cbfe&_nc_eui2=AeEmRRui6SBTV0_sx5fP9fV93QHKGfyj_h_dAcoZ_KP-HwHM3_K1OxfVLAW2vdUTImuYAdjdaQv6MUTzfk-TXTVJ&_nc_ohc=_09hySOjhlkAX8jqol1&_nc_ht=scontent.fbkk10-1.fna&oh=00_AfC0OLIthlfLpGHgjZTWWkGiTG9SYXa4QrtzdIC16vpJbA&oe=64D5B8F0"),
-                            
+                            backgroundImage: NetworkImage(customer.first.image),
+
                             //backgroundImage: NetworkImage(customer.first.image),
                           ),
                         ),
-                        
                         Center(
                           child: Container(
-                          child: Column(
-                            children: [
-                          Padding(
-                            padding: const EdgeInsets.only(top: 15),
-                            child: Text("@ " + customer.first.username,style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
-                          ),
-                          Padding(
-                            padding:const EdgeInsets.only(top: 8),
-                            child: Text(customer.first.fullName),
-                          ),
-                            ],
-                          ),
+                            child: Column(
+                              children: [
+                                Padding(
+                                  padding: const EdgeInsets.only(top: 15),
+                                  child: Text("@ " + customer.first.username,
+                                      style: TextStyle(
+                                          fontSize: 18,
+                                          fontWeight: FontWeight.bold)),
+                                ),
+                                Padding(
+                                  padding:
+                                      const EdgeInsets.only(top: 8, bottom: 20),
+                                  child: Text(customer.first.fullName),
+                                ),
+                                txtfild(fullName, "ชื่อ-นามสกุล"),
+                                txtfild(email, "E-mail"),
+                                txtfild(phone, "เบอร์โทรศัพท์"),
+                                Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceAround,
+                                  children: [
+                                    Expanded(child: txtfild(gender, "เพศ")),
+                                    Expanded(
+                                        child: txtfild(birthday, "วันเกิด"))
+                                    
+                                  ],
+                                ),
+                                Row(
+                                  // mainAxisAlignment: MainAxisAlignment.spaceAround,
+                                  children: [
+                                    Expanded(child: txtfild(weight, "น้ำหนัก")),
+                                    Expanded(child: txtfild(height, "ส่วนสูง"))
+                                  ],
+                                ),
+
+                                //txtfild(weight, "เพศ"),
+                                // Row(
+                                //   children: [
+                                //     SizedBox(width: 20,),
+                                //      Icon(
+                                //       Icons.phone,
+                                //       color:
+                                //           Theme.of(context).colorScheme.primary,
+                                //       size: 24.0,
+                                //     ),
+                                //     Padding(
+                                //       padding: const EdgeInsets.only(left: 18),
+                                //       child: Text(customer.first.phone),
+                                //     ),
+                                //   ],
+                                // ),
+                              ],
+                            ),
                           ),
                         ),
-                          ],
+                      ],
                     ),
-                   
-                  //   Positioned(
-                  //     top: 200,
-                  // child: Padding(
-                  //     padding: EdgeInsets.only(
-                  //         top: MediaQuery.of(context).size.height / 3),
-                  //     child: Container(
-                  //         width: MediaQuery.of(context).size.width,
-                  //         decoration: const BoxDecoration(
-                  //             borderRadius: BorderRadius.only(
-                  //                 topLeft: Radius.circular(20),
-                  //                 topRight: Radius.circular(20)),
-                  //             color: Color.fromARGB(255, 238, 20, 20)),)))
-
-                        // ignore: unnecessary_null_comparison
-                        // if (customer.first.uid != null)
-                        //   Padding(
-                        //     padding: const EdgeInsets.only(left: 25, top: 30),
-                        //     child: Column(
-                        //       children: [
-                        //         Row(
-                        //           children: [
-                        //             CircleAvatar(
-                        //               minRadius: 35,
-                        //               maxRadius: 55,
-                        //               backgroundImage:
-                        //                   NetworkImage(customer.first.image),
-                        //             ),
-                        //             Container(
-                        //               child: Column(
-                        //                 children: [
-                        //                   Text("@ " + customer.first.username),
-                        //                   Padding(
-                        //                     padding: const EdgeInsets.only(left: 30),
-                        //                     child: Text(customer.first.fullName),
-                        //                   ),
-                        //                 ],
-                        //               ),
-                        //             ),
-
-                        //         Padding(
-                        //           padding: const EdgeInsets.only(left: 50),
-                        //           child: InkWell(
-                        //                 onTap: () {
-                        //                   //1. ส่งตัวแปรแบบconstructure
-                        //                   Get.to(() =>  editProfileCus(uid: uid));
-                        //                 },
-                        //                 child: Icon(
-                        //                   Icons.edit_outlined,
-                        //                   color: Colors.black,
-                        //                   size: 28,
-                        //                 ),
-                        //               ),
-                        //         ),
-                        //           ],
-                        //         ),
-                        //         Container(
-                        //           child: Column(
-                        //             children: [
-                        //               Padding(
-                        //                 padding: const EdgeInsets.only(top: 20),
-                        //                 child: Row(
-                        //                   children: [
-                        //                     Icon(
-                        //                       Icons.email,
-                        //                       color: Colors.green,
-                        //                       size: 24.0,
-                        //                     ),
-                        //                     Padding(
-                        //                       padding: const EdgeInsets.only(left: 18),
-                        //                       child: Text(customer.first.fullName),
-                        //                     )
-                        //                   ],
-                        //                 ),
-                        //               ),
-                        //               Padding(
-                        //                 padding: const EdgeInsets.only(top: 20),
-                        //                 child: Row(
-                        //                   children: [
-                        //                     const Icon(
-                        //                       Icons.phone,
-                        //                       color: Colors.green,
-                        //                       size: 24.0,
-                        //                     ),
-                        //                     Padding(
-                        //                       padding: const EdgeInsets.only(left: 18),
-                        //                       child: Text(customer.first.phone),
-                        //                     ),
-                        //                   ],
-                        //                 ),
-                        //               ),
-                        //             ],
-                        //           ),
-                        //         ),
-                        //         Card(
-                        //           child: SizedBox(
-                        //             height: 100,
-                        //             width: 200,
-                        //             child: Column(
-                        //               mainAxisAlignment: MainAxisAlignment.center,
-                        //               children: [
-                        //                 Text("ยอดคงเหลือ"),
-                        //                 Text(customer.first.price.toString())
-                        //               ],
-                        //             ),
-                        //           ),
-                        //         )
-                        //       ],
-                        //     ),
-                        //   )
-
-                        // Card(
-                        //   child: ListTile(
-                        //       leading: CircleAvatar(
-                        //     radius: 30,
-                        //     backgroundImage: NetworkImage(customer.data.image),
-                        //   ),
-                        //   title: Text("@ "+customer.data.username),
-                        //   subtitle: Text(customer.data.fullName),
-                        //   trailing: const Icon(Icons.mode_edit_outline_outlined),
-                        //   onTap: (){
-
-                        //   },),
-                        // ),
-                    
                   ],
                 ),
               ],
@@ -237,135 +182,52 @@ class _ProfileUserState extends State<ProfileUser> {
         });
   }
 
-  // Widget showMenu() {
-  //   return Container(
-  //     child: Column(
-  //       children: [
-  //         InkWell(
-  //           onTap: () {
-  //             log(customer.first.uid.toString());
-  //             context.read<AppData>().uid = customer.first.uid;
-  //             Get.to(() =>  MyCouses());
-  //           },
-  //           child: Card(
-  //             elevation: 0,
-  //             shape: RoundedRectangleBorder(
-  //               side: BorderSide(
-  //                 color: Theme.of(context).colorScheme.outline,
-  //               ),
-  //               borderRadius: const BorderRadius.all(Radius.circular(12)),
-  //             ),
-  //             child: Row(
-  //               children: [
-  //                 Padding(
-  //                   padding: const EdgeInsets.all(18.0),
-  //                   child: Icon(
-  //                     Icons.list_alt_rounded,
-  //                     color: Colors.green,
-  //                     size: 24.0,
-  //                   ),
-  //                 ),
-  //                 Text("รายการซื้อของฉัน"),
-  //               ],
-  //             ),
-  //           ),
-  //         ),
-  //         InkWell(
-  //           onTap: () {
-  //             log(customer.first.uid.toString());
-  //             context.read<AppData>().uid = customer.first.uid;
-  //             Get.to(() => const chatOfCustomer());
-  //           },
-  //           child: Card(
-  //             elevation: 0,
-  //             shape: RoundedRectangleBorder(
-  //               side: BorderSide(
-  //                 color: Theme.of(context).colorScheme.outline,
-  //               ),
-  //               borderRadius: const BorderRadius.all(Radius.circular(12)),
-  //             ),
-  //             child: Row(
-  //               children: [
-  //                 Padding(
-  //                   padding: const EdgeInsets.all(18.0),
-  //                   child: Icon(
-  //                     Icons.message_outlined,
-  //                     color: Colors.green,
-  //                     size: 24.0,
-  //                   ),
-  //                 ),
-  //                 Text("ข้อมความ"),
-  //               ],
-  //             ),
-  //           ),
-  //         ),
-  //         InkWell(
-  //           onTap: () {
-  //             log(customer.first.uid.toString());
-  //             context.read<AppData>().uid = customer.first.uid;
-  //             Get.to(() => const addCoin());
-  //           },
-  //           child: Card(
-  //             elevation: 0,
-  //             shape: RoundedRectangleBorder(
-  //               side: BorderSide(
-  //                 color: Theme.of(context).colorScheme.outline,
-  //               ),
-  //               borderRadius: const BorderRadius.all(Radius.circular(12)),
-  //             ),
-  //             child: Row(
-  //               children: [
-  //                 Padding(
-  //                   padding: const EdgeInsets.all(18.0),
-  //                   child: Icon(
-  //                     Icons.account_balance_wallet_outlined,
-  //                     color: Colors.green,
-  //                     size: 24.0,
-  //                   ),
-  //                 ),
-  //                 Text("เติมเงิน"),
-  //               ],
-  //             ),
-  //           ),
-  //         ),
-  //         InkWell(
-  //           onLongPress: () {},
-  //           child: Card(
-  //             elevation: 0,
-  //             shape: RoundedRectangleBorder(
-  //               side: BorderSide(
-  //                 color: Theme.of(context).colorScheme.outline,
-  //               ),
-  //               borderRadius: const BorderRadius.all(Radius.circular(12)),
-  //             ),
-  //             child: Row(
-  //               children: [
-  //                 Padding(
-  //                   padding: const EdgeInsets.all(18.0),
-  //                   child: Icon(
-  //                     Icons.logout,
-  //                     color: Colors.redAccent,
-  //                     size: 24.0,
-  //                   ),
-  //                 ),
-  //                 Text("ออกจากระบบ"),
-  //               ],
-  //             ),
-  //           ),
-  //         ),
-  //       ],
-  //     ),
-  //   );
-  // }
-
   Future<void> loadData() async {
     try {
       var result =
           await customerService.customer(uid: uid.toString(), email: '');
       customer = result.data;
-      log('cussss: ${customer.first.uid}');
+      fullName.text = customer.first.fullName;
+      birthday.text = thaiDate(customer.first.birthday);
+      log('เพศ: ${customer.first.gender}');
+      if (customer.first.gender == "1") {
+        gender.text = "ผู้หญิง";
+        log('เพศใหม่1: ${gender.text}');
+      } else if (customer.first.gender == "2") {
+        gender.text = "ผู้ชาย";
+      } else {
+        gender.text = "ไม่ได้ระบุ";
+      }
+      //gender.text = customer.first.gender;
+      phone.text = customer.first.phone;
+      email.text = customer.first.email;
+      weight.text = customer.first.weight.toString();
+      height.text = customer.first.height.toString();
     } catch (err) {
       log('Error: $err');
     }
+  }
+
+  txtfild(final TextEditingController _controller, String txtTop) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 10, left: 15, right: 15),
+      child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+        Padding(
+          padding: const EdgeInsets.only(left: 5, bottom: 3),
+          child: Text(
+            txtTop,
+            style: Theme.of(context).textTheme.bodyLarge,
+          ),
+        ),
+        TextField(
+          readOnly: true,
+          controller: _controller,
+          decoration: InputDecoration(
+            contentPadding: EdgeInsets.symmetric(vertical: 10, horizontal: 12),
+            border: OutlineInputBorder(),
+          ),
+        ),
+      ]),
+    );
   }
 }

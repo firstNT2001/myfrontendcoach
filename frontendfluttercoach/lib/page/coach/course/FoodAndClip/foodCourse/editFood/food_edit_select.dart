@@ -87,7 +87,7 @@ class _FoodEditSelectPageState extends State<FoodEditSelectPage> {
             Get.back();
           },
         ),
-        backgroundColor: Theme.of(context).colorScheme.primary,
+        backgroundColor: Colors.white,
         iconTheme: const IconThemeData(
           color: Colors.black, //change your color here
         ),

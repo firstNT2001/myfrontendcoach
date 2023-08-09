@@ -17,6 +17,7 @@ import '../../../model/response/md_Coach_get.dart';
 import '../../../service/auth.dart';
 import '../../../service/coach.dart';
 import '../../../service/provider/appdata.dart';
+import '../../../widget/PopUp/popUp.dart';
 import '../../../widget/dropdown/wg_dropdown_string.dart';
 import '../../../widget/textField/wg_textField.dart';
 import '../../../widget/textField/wg_textFieldLines.dart';
@@ -58,13 +59,15 @@ class _CoachEidtProfilePageState extends State<CoachEidtProfilePage> {
   final selectedValue = TextEditingController();
   bool _enabled = true;
 
+  String textErr = '';
+
   @override
   void initState() {
     super.initState();
     _coachService = context.read<AppData>().coachService;
     _authService = context.read<AppData>().authService;
     loadCoachDataMethod = loadCoachData();
-      Future.delayed(Duration(seconds: context.read<AppData>().duration), () {
+    Future.delayed(Duration(seconds: context.read<AppData>().duration), () {
       setState(() {
         _enabled = false;
       });
@@ -73,7 +76,7 @@ class _CoachEidtProfilePageState extends State<CoachEidtProfilePage> {
 
   @override
   Widget build(BuildContext context) {
-      return (_enabled == true)
+    return (_enabled == true)
         ? Skeletonizer(
             enabled: true,
             child: scaffold(context),
@@ -83,14 +86,14 @@ class _CoachEidtProfilePageState extends State<CoachEidtProfilePage> {
 
   Scaffold scaffold(BuildContext context) {
     return Scaffold(
-    resizeToAvoidBottomInset: false,
-    body: SafeArea(
-        child: ListView(
-      children: [
-        showCoach(),
-      ],
-    )),
-  );
+      resizeToAvoidBottomInset: false,
+      body: SafeArea(
+          child: ListView(
+        children: [
+          showCoach(),
+        ],
+      )),
+    );
   }
 
   Widget button() {
@@ -100,30 +103,49 @@ class _CoachEidtProfilePageState extends State<CoachEidtProfilePage> {
       child: FilledButton(
         //style: style,
         onPressed: () async {
-          if (pickedImg != null) await uploadfile();
-          if (pickedImg == null) profile = coachs.first.image;
-          RegisterCoachDto request = RegisterCoachDto(
-              fullName: fullName.text,
-              username: name.text,
-              email: email.text,
-              password: coachs.first.password,
-              image: profile,
-              gender: (selectedValue.text) == 'ชาย'
-                  ? '2'
-                  : (selectedValue.text == 'หญิง')
-                      ? '1'
-                      : '1',
-              phone: phone.text,
-              birthday: coachs.first.birthday,
-              property: property.text,
-              qualification: qualification.text,
-              facebookId: coachs.first.facebookId);
-          var result = await _authService.updateCoach(
+          if (fullName.text.isEmpty ||
+              name.text.isEmpty ||
+              selectedValue.text.isEmpty ||
+              phone.text.isEmpty ||
+              email.text.isEmpty ||
+              qualification.text.isEmpty ||
+              property.text.isEmpty) {
+            setState(() {
+              textErr = 'กรุณากรอกข้อมูลให้ครบ';
+            });
+          } else {
+            if (pickedImg != null) await uploadfile();
+            if (pickedImg == null) profile = coachs.first.image;
+            RegisterCoachDto request = RegisterCoachDto(
+                fullName: fullName.text,
+                username: name.text,
+                email: email.text,
+                password: coachs.first.password,
+                image: profile,
+                gender: (selectedValue.text) == 'ชาย'
+                    ? '2'
+                    : (selectedValue.text == 'หญิง')
+                        ? '1'
+                        : '1',
+                phone: phone.text,
+                birthday: coachs.first.birthday,
+                property: property.text,
+                qualification: qualification.text,
+                facebookId: coachs.first.facebookId);
+            var result = await _authService.updateCoach(
+                // ignore: use_build_context_synchronously
+                context.read<AppData>().cid.toString(),
+                request);
+            modelResult = result.data;
+            if (modelResult.result == '0') {
               // ignore: use_build_context_synchronously
-              context.read<AppData>().cid.toString(),
-              request);
-          modelResult = result.data;
-          log(modelResult.result);
+              warning(context);
+            } else {
+              // ignore: use_build_context_synchronously
+              success(context);
+            }
+            log(modelResult.result);
+          }
         },
         child: const Text('บันทึก'),
       ),
@@ -191,7 +213,10 @@ class _CoachEidtProfilePageState extends State<CoachEidtProfilePage> {
                           // color: Colors.red,
                         ),
                         onPressed: () {
-                          Get.to(()=> GoogleAuthenticatorPage(email: coachs.first.email, password: coachs.first.password,));
+                          Get.to(() => GoogleAuthenticatorPage(
+                                email: coachs.first.email,
+                                password: coachs.first.password,
+                              ));
                         },
                       ),
                     ),
@@ -206,43 +231,7 @@ class _CoachEidtProfilePageState extends State<CoachEidtProfilePage> {
                 const SizedBox(
                   height: 8,
                 ),
-                if (pickedImg != null) ...{
-                  Center(
-                    child: ClipOval(
-                      child: Material(
-                        child: InkWell(
-                          onTap: () {
-                            selectImg();
-                          },
-                          child: SizedBox.fromSize(
-                            size: const Size.fromRadius(60), // Image radius
-                            child: Image(
-                                image: FileImage(
-                                  File(pickedImg!.path!),
-                                ),
-                                fit: BoxFit.cover),
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-                } else
-                  Center(
-                    child: ClipOval(
-                      child: Material(
-                        child: InkWell(
-                          onTap: () {
-                            selectImg();
-                          },
-                          child: SizedBox.fromSize(
-                            size: const Size.fromRadius(60), // Image radius
-                            child: Image.network(coachs.first.image,
-                                fit: BoxFit.cover),
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
+                image(),
                 Padding(
                   padding: const EdgeInsets.only(
                       bottom: 8, top: 10, left: 20, right: 20),
@@ -325,13 +314,26 @@ class _CoachEidtProfilePageState extends State<CoachEidtProfilePage> {
                 ),
                 Padding(
                   padding:
-                      const EdgeInsets.only(bottom: 18, left: 20, right: 20),
+                      const EdgeInsets.only(bottom: 8, left: 20, right: 20),
                   child: WidgetTextFieldLines(
                     controller: property,
                     labelText: 'ประวัติส่วนตัว',
                   ),
                 ),
-                const Divider(endIndent: 20, indent: 20),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    Padding(
+                      padding:
+                          const EdgeInsets.only(bottom: 8, left: 20, right: 23),
+                      child: Text(
+                        textErr,
+                        style: TextStyle(
+                            color: Theme.of(context).colorScheme.error),
+                      ),
+                    ),
+                  ],
+                ),
                 Padding(
                   padding:
                       const EdgeInsets.only(bottom: 18, left: 20, right: 20),
@@ -343,6 +345,68 @@ class _CoachEidtProfilePageState extends State<CoachEidtProfilePage> {
             return Container();
           }
         });
+  }
+
+  Center image() {
+    return Center(
+      child: Stack(
+        children: [
+          if (pickedImg != null) ...{
+            Container(
+              width: 130,
+              height: 130,
+              decoration: BoxDecoration(
+                  border: Border.all(width: 3, color: Colors.cyan),
+                  boxShadow: [
+                    BoxShadow(
+                        spreadRadius: 2,
+                        blurRadius: 10,
+                        color: Colors.black.withOpacity(0.1))
+                  ],
+                  shape: BoxShape.circle,
+                  image: DecorationImage(
+                      image: FileImage(
+                        File(pickedImg!.path!),
+                      ),
+                      fit: BoxFit.cover)),
+            ),
+          } else
+            Container(
+              width: 130,
+              height: 130,
+              decoration: BoxDecoration(
+                  border: Border.all(
+                      width: 4, color: const Color.fromARGB(255, 255, 151, 33)),
+                  shape: BoxShape.circle,
+                  image: DecorationImage(
+                    fit: BoxFit.cover,
+                    image: NetworkImage(coachs.first.image),
+                  )),
+            ),
+          Positioned(
+              bottom: 0,
+              right: 0,
+              child: InkWell(
+                onTap: () {
+                  log("message");
+                  selectImg();
+                },
+                child: Container(
+                  height: 40,
+                  width: 40,
+                  decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      border: Border.all(width: 4, color: Colors.white),
+                      color: const Color.fromARGB(255, 255, 151, 33)),
+                  child: const Icon(
+                    Icons.camera_alt,
+                    color: Colors.white,
+                  ),
+                ),
+              ))
+        ],
+      ),
+    );
   }
 
   //

@@ -119,6 +119,7 @@ class _HomeFoodAndClipPageState extends State<HomeFoodAndClipPage> {
   Scaffold scaffold(BuildContext context) {
     return Scaffold(
         floatingActionButton: SpeedDial(
+          backgroundColor: Theme.of(context).colorScheme.primary,
           visible: widget.isVisible,
           animatedIcon: AnimatedIcons.menu_close,
           overlayOpacity: 0.4,
@@ -145,7 +146,7 @@ class _HomeFoodAndClipPageState extends State<HomeFoodAndClipPage> {
         ),
         resizeToAvoidBottomInset: false,
         appBar: AppBar(
-          backgroundColor: Theme.of(context).colorScheme.primary,
+          backgroundColor: Colors.white,
           title: Text(
             title,
             style: Theme.of(context).textTheme.headlineMedium,
@@ -158,13 +159,17 @@ class _HomeFoodAndClipPageState extends State<HomeFoodAndClipPage> {
               Get.back();
             },
           ),
-          bottom: const TabBar(
-              labelColor: Colors.black, //<-- selected text color
-              unselectedLabelColor: Colors.white, //<-- Unselected text
-              tabs: [
+          bottom: TabBar(
+              labelColor: Theme.of(context)
+                  .colorScheme
+                  .primary, //<-- selected text color
+              unselectedLabelColor: Theme.of(context)
+                  .colorScheme
+                  .primaryContainer, //<-- Unselected text
+              tabs: const [
                 Tab(
                   icon: Icon(
-                    FontAwesomeIcons.bowlFood,
+                    FontAwesomeIcons.utensils,
                   ),
                 ),
                 Tab(
@@ -305,144 +310,167 @@ class _HomeFoodAndClipPageState extends State<HomeFoodAndClipPage> {
               final listfood = foods[index];
               return SizedBox(
                 height: MediaQuery.of(context).size.height * 0.2,
-                child: Card(
-                  color: Colors.white,
-                  child: InkWell(
-                    onTap: () {
-                      dialogFoodEditInCourse(
-                          context,
-                          listfood.listFood.image,
-                          listfood.listFood.name,
-                          listfood.time,
-                          listfood.fid.toString(),
-                          listfood.dayOfCouseId.toString(),
-                          widget.sequence,
-                          widget.isVisible);
-                    },
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        // ignore: unnecessary_null_comparison
-                        if (listfood.listFood.image != '') ...{
-                          Padding(
-                              padding: const EdgeInsets.only(
-                                  left: 8, right: 8, top: 5, bottom: 5),
-                              child: Center(
-                                child: ClipRRect(
-                                  borderRadius:
-                                      BorderRadius.circular(20), // Image border
-                                  child: SizedBox.fromSize(
-                                    size: const Size.fromRadius(
-                                        48), // Image radius
-                                    child: Image.network(
-                                        listfood.listFood.image,
-                                        fit: BoxFit.cover),
-                                  ),
-                                ),
-                              )),
-                        } else
-                          Padding(
-                              padding: const EdgeInsets.only(
-                                  left: 8, right: 8, top: 5, bottom: 5),
-                              child: Center(
-                                child: ClipRRect(
-                                  borderRadius:
-                                      BorderRadius.circular(20), // Image border
-                                  child: SizedBox.fromSize(
-                                      size: const Size.fromRadius(
-                                          48), // Image radius
-                                      child: Container(
-                                        decoration: BoxDecoration(
-                                          color: const Color(0xff7c94b6),
-                                          borderRadius:
-                                              BorderRadius.circular(20),
-                                        ),
-                                      )),
-                                ),
-                              )),
-                        Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            SizedBox(
-                              width: MediaQuery.of(context).size.width * 0.4,
-                              child: AutoSizeText(
-                                listfood.listFood.name,
-                                maxLines: 5,
-                                style: Theme.of(context).textTheme.titleMedium,
-                              ),
-                            ),
-                            const SizedBox(height: 10),
-                            Row(
-                              children: [
-                                Container(
-                                  width:
-                                      MediaQuery.of(context).size.width * 0.4,
-                                  height: 40,
-                                  decoration: BoxDecoration(
-                                      boxShadow: const <BoxShadow>[
-                                        BoxShadow(
-                                            color: Colors.grey,
-                                            blurRadius: 5.0,
-                                            offset: Offset(0.0, 0.75))
-                                      ],
-                                      color: const Color.fromRGBO(
-                                          244, 243, 243, 1),
-                                      borderRadius: BorderRadius.circular(30)),
-                                  child: TextButton(
-                                    onPressed: () {
-                                      if (widget.isVisible == true) {
-                                        dialogFoodEditMealInCourse(
-                                            context,
-                                            listfood.listFood.ifid,
-                                            listfood.listFood.name,
-                                            listfood.listFood.image,
-                                            listfood.listFood.calories,
-                                            listfood.time,
-                                            listfood.fid.toString());
-                                      }
-                                    },
-                                    child: Text(
-                                      listfood.time == '1'
-                                          ? 'มื้อเช้า'
-                                          : listfood.time == '2'
-                                              ? 'มื้อเที่ยง'
-                                              : listfood.time == '3'
-                                                  ? 'มื้อเย็น'
-                                                  : 'มื้อใดก็ได้',
-                                      style: Theme.of(context)
-                                          .textTheme
-                                          .bodyMedium,
-                                    ),
-                                  ),
-                                ),
-                                if (widget.isVisible == false) ...{
-                                  const SizedBox(width: 60)
-                                },
-                                Visibility(
-                                  visible: widget.isVisible,
-                                  child: Column(
-                                    children: [
-                                      const SizedBox(width: 20),
-                                      IconButton(
-                                        onPressed: () {
-                                          dialogDeleteFood(
-                                              context, listfood.fid.toString());
-                                        },
-                                        icon: const Icon(
-                                          FontAwesomeIcons.trash,
+                child: InkWell(
+                  onTap: () {
+                    dialogFoodEditInCourse(
+                        context,
+                        listfood.listFood.image,
+                        listfood.listFood.name,
+                        listfood.time,
+                        listfood.fid.toString(),
+                        listfood.dayOfCouseId.toString(),
+                        widget.sequence,
+                        widget.isVisible);
+                  },
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const SizedBox(height: 20),
+                      Stack(
+                        children: [
+                          Row(
+                            children: [
+                              // ignore: unnecessary_null_comparison
+                              if (listfood.listFood.image != '') ...{
+                                Padding(
+                                    padding: const EdgeInsets.only(
+                                        left: 8, right: 8, top: 5, bottom: 5),
+                                    child: Center(
+                                      child: ClipRRect(
+                                        borderRadius: BorderRadius.circular(
+                                            20), // Image border
+                                        child: SizedBox.fromSize(
+                                          size: const Size.fromRadius(
+                                              48), // Image radius
+                                          child: Image.network(
+                                              listfood.listFood.image,
+                                              fit: BoxFit.cover),
                                         ),
                                       ),
+                                    )),
+                              } else
+                                Padding(
+                                    padding: const EdgeInsets.only(
+                                        left: 8, right: 8, top: 5, bottom: 5),
+                                    child: Center(
+                                      child: ClipRRect(
+                                        borderRadius: BorderRadius.circular(
+                                            20), // Image border
+                                        child: SizedBox.fromSize(
+                                            size: const Size.fromRadius(
+                                                48), // Image radius
+                                            child: Container(
+                                              decoration: BoxDecoration(
+                                                color: const Color(0xff7c94b6),
+                                                borderRadius:
+                                                    BorderRadius.circular(20),
+                                              ),
+                                            )),
+                                      ),
+                                    )),
+
+                              const SizedBox(width: 20),
+
+                              Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  SizedBox(
+                                    width:
+                                        MediaQuery.of(context).size.width * 0.4,
+                                    child: AutoSizeText(
+                                      listfood.listFood.name,
+                                      maxLines: 5,
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .titleMedium,
+                                    ),
+                                  ),
+                                  const SizedBox(height: 10),
+                                  Row(
+                                    children: [
+                                      Container(
+                                        width:
+                                            MediaQuery.of(context).size.width *
+                                                0.4,
+                                        height: 40,
+                                        decoration: BoxDecoration(
+                                            boxShadow: const <BoxShadow>[
+                                              BoxShadow(
+                                                  color: Colors.grey,
+                                                  blurRadius: 2.0,
+                                                  offset: Offset(0.0, 0.75))
+                                            ],
+                                            color: const Color.fromRGBO(
+                                                244, 243, 243, 1),
+                                            borderRadius:
+                                                BorderRadius.circular(30)),
+                                        child: TextButton(
+                                          onPressed: () {
+                                            if (widget.isVisible == true) {
+                                              dialogFoodEditMealInCourse(
+                                                  context,
+                                                  listfood.listFood.ifid,
+                                                  listfood.listFood.name,
+                                                  listfood.listFood.image,
+                                                  listfood.listFood.calories,
+                                                  listfood.time,
+                                                  listfood.fid.toString());
+                                            }
+                                          },
+                                          child: Text(
+                                            listfood.time == '1'
+                                                ? 'มื้อเช้า'
+                                                : listfood.time == '2'
+                                                    ? 'มื้อเที่ยง'
+                                                    : listfood.time == '3'
+                                                        ? 'มื้อเย็น'
+                                                        : 'มื้อใดก็ได้',
+                                            style: Theme.of(context)
+                                                .textTheme
+                                                .bodyMedium,
+                                          ),
+                                        ),
+                                      ),
+                                      if (widget.isVisible == false) ...{
+                                        const SizedBox(width: 60)
+                                      },
                                     ],
                                   ),
+                                ],
+                              ),
+                            ],
+                          ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.end,
+                            children: [
+                              Visibility(
+                                visible: widget.isVisible,
+                                child: Column(
+                                  children: [
+                                    const SizedBox(width: 20),
+                                    IconButton(
+                                      onPressed: () {
+                                        dialogDeleteFood(
+                                            context, listfood.fid.toString());
+                                      },
+                                      icon: const Icon(
+                                        FontAwesomeIcons.trash,
+                                      ),
+                                    ),
+                                  ],
                                 ),
-                              ],
-                            ),
-                          ],
-                        ),
-                      ],
-                    ),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 10),
+                      const Divider(
+                        endIndent: 20,
+                        indent: 20,
+                      ),
+                    ],
                   ),
                 ),
               );
@@ -468,7 +496,7 @@ class _HomeFoodAndClipPageState extends State<HomeFoodAndClipPage> {
       builder: (_) {
         return Container(
           width: MediaQuery.of(context).size.width,
-          height: MediaQuery.of(context).size.height * 0.43,
+          height: 300,
           decoration: const BoxDecoration(
             borderRadius: BorderRadius.only(
                 topLeft: Radius.circular(20), topRight: Radius.circular(20)),
@@ -517,19 +545,12 @@ class _HomeFoodAndClipPageState extends State<HomeFoodAndClipPage> {
               const SizedBox(
                 height: 10,
               ),
-              const Divider(
-                indent: 20,
-                endIndent: 20,
-              ),
-              const SizedBox(
-                height: 10,
-              ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
                   Padding(
                     padding: const EdgeInsets.only(left: 20, right: 20),
-                    child: ElevatedButton(
+                    child: FilledButton(
                         onPressed: () async {
                           log(fid.toString());
                           FoodFoodIdPut foodFoodIdPut = FoodFoodIdPut(
@@ -595,6 +616,7 @@ class _HomeFoodAndClipPageState extends State<HomeFoodAndClipPage> {
           loadFoodDataMethod = loadFoodData();
         });
 
+        // ignore: use_build_context_synchronously
         Navigator.of(context, rootNavigator: true).pop();
         log('onConfirmBtnTap');
       },

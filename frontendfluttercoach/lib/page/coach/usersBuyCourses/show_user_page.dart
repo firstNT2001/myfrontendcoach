@@ -2,7 +2,6 @@ import 'dart:developer';
 
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:frontendfluttercoach/page/coach/usersBuyCourses/show_course_user_page.dart';
 import 'package:get/get.dart';
 import 'package:provider/provider.dart';
@@ -53,18 +52,13 @@ class _ShowUserByCoursePageState extends State<ShowUserByCoursePage> {
       resizeToAvoidBottomInset: false,
       appBar: AppBar(
         //backgroundColor: Theme.of(context).colorScheme.primary,
-        title: Text(
-          "ผู้ใช้ที่ซื้อคอร์ส",
-          style: Theme.of(context).textTheme.headlineMedium,
-        ),
-        leading: IconButton(
-          icon: const Icon(
-            FontAwesomeIcons.chevronLeft,
+        title: Center(
+          child: Text(
+            "ผู้ใช้ที่ซื้อคอร์ส",
+            style: Theme.of(context).textTheme.headlineMedium,
           ),
-          onPressed: () {
-            Get.back();
-          },
         ),
+        
       ),
       body: Column(
         children: [

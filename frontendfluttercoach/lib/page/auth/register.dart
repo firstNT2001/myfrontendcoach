@@ -105,44 +105,67 @@ class _RegisterPageState extends State<RegisterPage> {
     Size screenSize = MediaQuery.of(context).size;
     double width = (screenSize.width > 550) ? 550 : screenSize.width;
     return Column(children: [
-      if (pickedImg != null) ...{
-        Center(
-          child: ClipOval(
-            child: Material(
-              child: InkWell(
-                onTap: () {
-                  selectImg();
-                },
-                child: SizedBox.fromSize(
-                  size: const Size.fromRadius(60), // Image radius
-                  child: Image(
-                      image: FileImage(
-                        File(pickedImg!.path!),
-                      ),
-                      fit: BoxFit.cover),
-                ),
+      Center(
+        child: Stack(
+          children: [
+            if (pickedImg != null) ...{
+              Container(
+                width: 130,
+                height: 130,
+                decoration: BoxDecoration(
+                    border: Border.all(width: 3, color: Colors.cyan),
+                    boxShadow: const [
+                      BoxShadow(
+                          spreadRadius: 2,
+                          blurRadius: 10,
+                          color:  Color.fromARGB(255, 255, 151, 33))
+                    ],
+                    shape: BoxShape.circle,
+                    image: DecorationImage(
+                        image: FileImage(
+                          File(pickedImg!.path!),
+                        ),
+                        fit: BoxFit.cover)),
               ),
-            ),
-          ),
-        ),
-      } else
-        Center(
-          child: ClipOval(
-            child: Material(
-              child: InkWell(
-                onTap: () {
-                  selectImg();
-                },
-                child: SizedBox.fromSize(
-                  size: const Size.fromRadius(60), // Image radius
-                  child: Image.network(
-                      'https://t3.ftcdn.net/jpg/03/46/83/96/360_F_346839683_6nAPzbhpSkIpb8pmAwufkC7c5eD7wYws.jpg',
-                      fit: BoxFit.cover),
-                ),
+            } else
+              Container(
+                width: 130,
+                height: 130,
+                decoration: BoxDecoration(
+                    border: Border.all(
+                        width: 4,
+                        color: const Color.fromARGB(255, 255, 151, 33)),
+                    shape: BoxShape.circle,
+                    image: const DecorationImage(
+                      fit: BoxFit.cover,
+                      image: NetworkImage(
+                          'https://t3.ftcdn.net/jpg/03/46/83/96/360_F_346839683_6nAPzbhpSkIpb8pmAwufkC7c5eD7wYws.jpg'),
+                    )),
               ),
-            ),
-          ),
+            Positioned(
+                bottom: 0,
+                right: 0,
+                child: InkWell(
+                  onTap: () {
+                    log("message");
+                    selectImg();
+                  },
+                  child: Container(
+                    height: 40,
+                    width: 40,
+                    decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        border: Border.all(width: 4, color: Colors.white),
+                        color: const Color.fromARGB(255, 255, 151, 33)),
+                    child: const Icon(
+                      Icons.camera_alt,
+                      color: Colors.white,
+                    ),
+                  ),
+                ))
+          ],
         ),
+      ),
       Padding(
         padding: const EdgeInsets.only(bottom: 8, top: 10, left: 20, right: 20),
         child: WidgetTextFieldString(
