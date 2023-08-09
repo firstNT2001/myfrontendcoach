@@ -5,6 +5,7 @@ import 'package:auto_size_text/auto_size_text.dart';
 import 'package:cherry_toast/cherry_toast.dart';
 import 'package:cherry_toast/resources/arrays.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:frontendfluttercoach/service/food.dart';
 import 'package:get/get.dart';
@@ -73,18 +74,19 @@ class _FoodSelectTimePageState extends State<FoodSelectTimePage>
 
   @override
   Widget build(BuildContext context) {
-    return (_enabled == true)
-        ? Skeletonizer(
-            enabled: true,
-            child: scaffold(context),
-          )
-        : scaffold(context);
+    return WillPopScope(
+        onWillPop: () async => false,
+        child: (_enabled == true)
+            ? Skeletonizer(
+                enabled: true,
+                child: scaffold(context),
+              )
+            : scaffold(context));
   }
 
-  Scaffold scaffold(BuildContext context) {
+  Scaffold scaffold(BuildContext contexts) {
     return Scaffold(
       resizeToAvoidBottomInset: false,
-     
       appBar: AppBar(
         backgroundColor: Colors.white,
         leading: IconButton(
@@ -93,13 +95,13 @@ class _FoodSelectTimePageState extends State<FoodSelectTimePage>
             color: Colors.black,
           ),
           onPressed: () {
-            Navigator.pop(context);
+            Navigator.of(context).pop();
           },
         ),
         iconTheme: const IconThemeData(
           color: Colors.black, //change your color here
         ),
-        title: const Text('เลือกมื้ออาหาร'),
+        title: const Text('เพิ่มมื้ออาหาร'),
         centerTitle: true,
       ),
       body: SafeArea(
@@ -149,45 +151,57 @@ class _FoodSelectTimePageState extends State<FoodSelectTimePage>
                         padding: const EdgeInsets.only(left: 18, right: 18),
                         child: SizedBox(
                             width: MediaQuery.of(context).size.width,
-                            child: FilledButton(
-                                onPressed: () async {
-                                  for (var index in widget.increaseFood) {
-                                    log('id :${index.listFoodId}');
-                                    log(jsonEncode(index));
-                                    var response = await _foodCourseService
-                                        .insertFoodByDayID(widget.did, index);
-                                    modelResult = response.data;
-                                  }
-                                  log("result:${modelResult.result}");
-                                  if (modelResult.result == '1') {
-                                    widget.increaseFood.clear();
-                                    Get.to(() => HomeFoodAndClipPage(
-                                          did: widget.did,
-                                          sequence:
-                                              context.read<AppData>().sequence,
-                                          isVisible: widget.isVisible,
-                                        ));
-                                  } else {
-                                    // ignore: use_build_context_synchronously
-                                    CherryToast.warning(
-                                      title: const Text('บันทึกไม่สำเร็จ'),
-                                      displayTitle: false,
-                                      description:
-                                          const Text('บันทึกไม่สำเร็จ'),
-                                      toastPosition: Position.bottom,
-                                      animationDuration:
-                                          const Duration(milliseconds: 1000),
-                                      autoDismiss: true,
-                                    ).show(context);
-                                  }
-                                },
-                                child: const Text('บันทึก'))),
+                            child: button(context)),
                       )
                     ])),
           )
         ],
       )),
     );
+  }
+
+  FilledButton button(BuildContext context) {
+    return FilledButton(
+        onPressed: () async {
+          for (var index in widget.increaseFood) {
+            log('id :${index.listFoodId}');
+            log(jsonEncode(index));
+            var response =
+                await _foodCourseService.insertFoodByDayID(widget.did, index);
+            modelResult = response.data;
+          }
+          log("result:${modelResult.result}");
+          if (modelResult.result == '1') {
+            widget.increaseFood.clear();
+
+            Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(
+                    builder: (BuildContext context) => HomeFoodAndClipPage(
+                          did: widget.did,
+                          sequence: context.read<AppData>().sequence,
+                          isVisible: widget.isVisible,
+                        )));
+
+            // Get.to(() => HomeFoodAndClipPage(
+            //       did: widget.did,
+            //       sequence:
+            //           context.read<AppData>().sequence,
+            //       isVisible: widget.isVisible,
+            //     ));
+          } else {
+            // ignore: use_build_context_synchronously
+            CherryToast.warning(
+              title: const Text('บันทึกไม่สำเร็จ'),
+              displayTitle: false,
+              description: const Text('บันทึกไม่สำเร็จ'),
+              toastPosition: Position.bottom,
+              animationDuration: const Duration(milliseconds: 1000),
+              autoDismiss: true,
+            ).show(context);
+          }
+        },
+        child: const Text('บันทึก'));
   }
 
   showFood() {
@@ -200,14 +214,33 @@ class _FoodSelectTimePageState extends State<FoodSelectTimePage>
           var foods = widget.modelFoodList[index];
           return SizedBox(
             height: MediaQuery.of(context).size.height * 0.2,
-            child: Food(foods, context, index),
+            child: Slidable(
+              endActionPane:
+                  ActionPane(motion: const StretchMotion(), children: [
+                SlidableAction(
+                  onPressed: (context) {
+                    setState(() {
+                      widget.modelFoodList
+                          .removeWhere((item) => item.ifid == foods.ifid);
+
+                      widget.increaseFood
+                          .removeWhere((item) => item.listFoodId == foods.ifid);
+                    });
+                  },
+                  backgroundColor: Theme.of(context).colorScheme.error,
+                  icon: Icons.delete,
+                  label: 'Delete',
+                )
+              ]),
+              child: food(foods, context, index),
+            ),
           );
         },
       ),
     );
   }
 
-  Card Food(ModelFoodList foods, BuildContext context, int index) {
+  Card food(ModelFoodList foods, BuildContext context, int index) {
     return Card(
       //color: colorFood[index],
       child: InkWell(

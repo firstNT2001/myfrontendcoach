@@ -109,13 +109,13 @@ class _ClipSelectPageState extends State<ClipSelectPage> {
               ),
               badgeStyle: badges.BadgeStyle(
                 //shape: badges.BadgeShape.square,
-                badgeColor: Theme.of(context).colorScheme.error,
+                badgeColor: Theme.of(context).colorScheme.primary,
                 borderSide: const BorderSide(color: Colors.white, width: 2),
                 elevation: 0,
               ),
               child: IconButton(
                 icon: const Icon(
-                  FontAwesomeIcons.angleRight,
+                  FontAwesomeIcons.cartShopping,
                 ),
                 onPressed: () {
                   if (increaseClips.isNotEmpty) {
@@ -130,11 +130,11 @@ class _ClipSelectPageState extends State<ClipSelectPage> {
               ),
             )
           ],
-          backgroundColor: Theme.of(context).colorScheme.primary,
+          backgroundColor: Colors.white,
           iconTheme: const IconThemeData(
             color: Colors.black, //change your color here
           ),
-          title: const Text('เลือกเมนูคลิปท่าออกกำลังกาย'),
+          title: const Text('เลือกคลิปท่าออกกำลังกาย'),
           centerTitle: true,
         ),
         body: SafeArea(

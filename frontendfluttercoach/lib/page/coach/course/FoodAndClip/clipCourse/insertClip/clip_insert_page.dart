@@ -6,6 +6,7 @@ import 'package:cherry_toast/cherry_toast.dart';
 import 'package:cherry_toast/resources/arrays.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
@@ -69,11 +70,17 @@ class _ClipInsertPageState extends State<ClipInsertPage> {
     return Scaffold(
       resizeToAvoidBottomInset: false,
       appBar: AppBar(
-        backgroundColor: Theme.of(context).colorScheme.primary,
-        iconTheme: const IconThemeData(
-          color: Colors.white, //change your color here
+        backgroundColor: Colors.white,
+          leading: IconButton(
+          icon: const Icon(
+            FontAwesomeIcons.chevronLeft,
+            color: Colors.black,
+          ),
+          onPressed: () {
+            Get.back();
+          },
         ),
-        title: const Text('เลือกมื้ออาหาร'),
+        title: const Text('เพิ่มคลิป'),
         centerTitle: true,
       ),
       body: SafeArea(
@@ -82,8 +89,8 @@ class _ClipInsertPageState extends State<ClipInsertPage> {
           Expanded(child: showClips()),
           Container(
             height: MediaQuery.of(context).size.height * 0.2,
-            decoration: BoxDecoration(
-                boxShadow: const [
+            decoration: const BoxDecoration(
+                boxShadow: [
                   BoxShadow(
                     color: Colors.grey,
                     blurRadius: 5.0, // Soften the shaodw
@@ -91,10 +98,10 @@ class _ClipInsertPageState extends State<ClipInsertPage> {
                     offset: Offset(0.0, 0.0),
                   )
                 ],
-                borderRadius: const BorderRadius.only(
+                borderRadius: BorderRadius.only(
                     topLeft: Radius.circular(15),
                     topRight: Radius.circular(15)),
-                color: Theme.of(context).colorScheme.primary),
+                color: Colors.white),
             child: SizedBox(
                 width: MediaQuery.of(context).size.width,
                 height: MediaQuery.of(context).size.height,
@@ -124,7 +131,7 @@ class _ClipInsertPageState extends State<ClipInsertPage> {
                         padding: const EdgeInsets.only(left: 18, right: 18),
                         child: SizedBox(
                             width: MediaQuery.of(context).size.width,
-                            child: ElevatedButton(
+                            child: FilledButton(
                                 onPressed: () async {
                                   log(jsonEncode(widget.increaseClip));
 
