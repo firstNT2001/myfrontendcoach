@@ -39,3 +39,20 @@ void confirm(BuildContext context) {
     confirmBtnColor: Colors.green,
   );
 }
+
+void popUpWarningDelete(BuildContext context) {
+  QuickAlert.show(
+    context: context,
+    type: QuickAlertType.warning,
+    title: 'Oops...',
+    text: 'ลบไม่สำเร็จ',
+  );
+}
+
+void popUpSuccessDelete(BuildContext context) {
+  QuickAlert.show(
+    context: context,
+    type: QuickAlertType.success,
+    text: 'ลบสำเร็จ',
+  );
+}

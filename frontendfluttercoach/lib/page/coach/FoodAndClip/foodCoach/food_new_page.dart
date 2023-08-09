@@ -297,7 +297,7 @@ class _FoodNewCoachPageState extends State<FoodNewCoachPage> {
                     color: Colors.black,
                   ),
                   onPressed: () {
-                    Get.back();
+                    Navigator.pop(context);
                   },
                 ),
               ),

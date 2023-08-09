@@ -5,6 +5,7 @@ import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
+import 'package:persistent_bottom_nav_bar_v2/persistent-tab-view.dart';
 
 import 'package:provider/provider.dart';
 import 'package:quickalert/models/quickalert_type.dart';
@@ -61,7 +62,7 @@ class _FoodCoachPageState extends State<FoodCoachPage> {
     _listClipService = context.read<AppData>().listClipServices;
     loadClipDataMethod = loadClipData();
 
-     Future.delayed(Duration(seconds: context.read<AppData>().duration), () {
+    Future.delayed(Duration(seconds: context.read<AppData>().duration), () {
       setState(() {
         _enabled = false;
       });
@@ -96,20 +97,14 @@ class _FoodCoachPageState extends State<FoodCoachPage> {
         appBar: AppBar(
           automaticallyImplyLeading: false,
           backgroundColor: Colors.transparent,
-          leading: IconButton(
-            icon: const Icon(
-              FontAwesomeIcons.chevronLeft,
-            ),
-            onPressed: () {
-              Get.back();
-            },
+          title: Center(
+            child: TextButton(
+                onPressed: () {},
+                child: Text(
+                  'อาหารและคลิป',
+                  style: Theme.of(context).textTheme.headlineSmall,
+                )),
           ),
-          title: TextButton(
-              onPressed: () {},
-              child: Text(
-                'อาหารและคลิป',
-                style: Theme.of(context).textTheme.headlineSmall,
-              )),
           bottom: TabBar(
               labelColor: Theme.of(context)
                   .colorScheme
@@ -120,7 +115,7 @@ class _FoodCoachPageState extends State<FoodCoachPage> {
               tabs: const [
                 Tab(
                   icon: Icon(
-                    FontAwesomeIcons.bowlFood,
+                    FontAwesomeIcons.utensils,
                   ),
                 ),
                 Tab(
@@ -131,45 +126,43 @@ class _FoodCoachPageState extends State<FoodCoachPage> {
               ]),
           centerTitle: true,
         ),
-        body: Container(
-          child: TabBarView(
-            children: [
-              Column(
-                children: [
-                  const SizedBox(
-                    height: 10,
+        body: TabBarView(
+          children: [
+            Column(
+              children: [
+                const SizedBox(
+                  height: 10,
+                ),
+                (_enabled)
+                    ? Skeletonizer(enabled: true, child: searchFood(context))
+                    : searchFood(context),
+                Expanded(
+                  child: Padding(
+                    padding: const EdgeInsets.only(
+                        left: 8, right: 8, top: 5, bottom: 5),
+                    child: showFood(),
                   ),
-                  (_enabled)
-                      ? Skeletonizer(enabled: true, child: searchFood(context))
-                      : searchFood(context),
-                  Expanded(
-                    child: Padding(
-                      padding: const EdgeInsets.only(
-                          left: 8, right: 8, top: 5, bottom: 5),
-                      child: showFood(),
-                    ),
+                ),
+              ],
+            ),
+            Column(
+              children: [
+                const SizedBox(
+                  height: 10,
+                ),
+                (_enabled)
+                    ? Skeletonizer(enabled: true, child: searchFood(context))
+                    : searchFood(context),
+                Expanded(
+                  child: Padding(
+                    padding: const EdgeInsets.only(
+                        left: 8, right: 8, top: 5, bottom: 5),
+                    child: showClips(),
                   ),
-                ],
-              ),
-              Column(
-                children: [
-                  const SizedBox(
-                    height: 10,
-                  ),
-                  (_enabled)
-                      ? Skeletonizer(enabled: true, child: searchFood(context))
-                      : searchFood(context),
-                  Expanded(
-                    child: Padding(
-                      padding: const EdgeInsets.only(
-                          left: 8, right: 8, top: 5, bottom: 5),
-                      child: showClips(),
-                    ),
-                  ),
-                ],
-              ),
-            ],
-          ),
+                ),
+              ],
+            ),
+          ],
         ),
       ),
     );
@@ -286,7 +279,11 @@ class _FoodCoachPageState extends State<FoodCoachPage> {
             //height: MediaQuery.of(context).size.height * 0.4,
             child: InkWell(
               onTap: () {
-                Get.to(() => FoodEditCoachPage(ifid: listfood.ifid));
+                pushNewScreen(
+                  context,
+                  screen: FoodEditCoachPage(ifid: listfood.ifid),
+                  withNavBar: true,
+                );
               },
               child: Column(
                 children: [
@@ -297,10 +294,10 @@ class _FoodCoachPageState extends State<FoodCoachPage> {
                             aspectRatio: 16 / 13,
                             child: Container(
                               decoration: BoxDecoration(
-                                color: const Color(0xff7c94b6),
-                                // image: DecorationImage(
-                                //     image: NetworkImage(listfood.image),
-                                //     fit: BoxFit.cover),
+                                color: const Color.fromARGB(255, 207, 208, 209),
+                                image: DecorationImage(
+                                    image: NetworkImage(listfood.image),
+                                    fit: BoxFit.cover),
                                 borderRadius: BorderRadius.circular(20),
                               ),
                             )),
@@ -387,7 +384,12 @@ class _FoodCoachPageState extends State<FoodCoachPage> {
             height: MediaQuery.of(context).size.height * 0.4,
             child: InkWell(
               onTap: () {
-                Get.to(() => ClipEditCoachPage(icpId: listClips.icpId));
+                pushNewScreen(
+                  context,
+                  screen: ClipEditCoachPage(icpId: listClips.icpId),
+                  withNavBar: true,
+                );
+             
               },
               child: Column(
                 children: [

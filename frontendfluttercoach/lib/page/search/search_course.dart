@@ -44,25 +44,24 @@ class _SearchCoursePageState extends State<SearchCoursePage> {
 
   @override
   Widget build(BuildContext context) {
+    return (_enabled)
+        ? Skeletonizer(
+            enabled: true,
+            child: scaffold(context),
+          )
+        : scaffold(context);
+  }
+
+  Scaffold scaffold(BuildContext context) {
     return Scaffold(
       body: SafeArea(
           child: Column(
         children: [
-          // (_enabled)
-          //     ? Skeletonizer(enabled: true, child: searchBar(context))
-          //     : searchBar(context),
           searchBar(context),
           const SizedBox(height: 20),
-          (_enabled == true)
-              ? Skeletonizer(
-                  enabled: true,
-                  child: Expanded(
-                    child: showCourse(),
-                  ),
-                )
-              : Expanded(
-                  child: showCourse(),
-                ),
+          Expanded(
+            child: showCourse(),
+          ),
         ],
       )),
     );
@@ -79,7 +78,7 @@ class _SearchCoursePageState extends State<SearchCoursePage> {
               FontAwesomeIcons.chevronLeft,
             ),
             onPressed: () {
-              Get.back();
+              Navigator.pop(context);
             },
           ),
           Container(

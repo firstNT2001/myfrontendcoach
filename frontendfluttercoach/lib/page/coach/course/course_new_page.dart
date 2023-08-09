@@ -333,27 +333,7 @@ class _CourseNewPageState extends State<CourseNewPage> {
                 ),
               ),
             )),
-        Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              CircleAvatar(
-                backgroundColor: Colors.white,
-                radius: 20,
-                child: IconButton(
-                  icon: const Icon(
-                    FontAwesomeIcons.chevronLeft,
-                    color: Colors.black,
-                  ),
-                  onPressed: () {
-                    Get.back();
-                  },
-                ),
-              ),
-            ],
-          ),
-        ),
+       
       ],
     );
   }

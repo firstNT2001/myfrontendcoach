@@ -5,10 +5,13 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:frontendfluttercoach/model/response/md_Buying_get.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
+import 'package:percent_indicator/linear_percent_indicator.dart';
 import 'package:provider/provider.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 
+import '../../../model/response/md_process.dart';
 import '../../../service/buy.dart';
+import '../../../service/progessbar.dart';
 import '../../../service/provider/appdata.dart';
 import '../course/course_edit_page.dart';
 
@@ -23,16 +26,22 @@ class _ShowCourseUserPageState extends State<ShowCourseUserPage> {
   // Courses
   late Future<void> loadCourseDataMethod;
   late BuyCourseService _buyingService;
+  late ProgessbarService _progessService;
+  late Modelprogessbar progess;
+
   List<Buying> courses = [];
   bool _enabled = true;
-
+  List<double> lisetProgessbar = [];
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
+
+    _progessService = context.read<AppData>().progessbar;
     _buyingService = context.read<AppData>().buyCourseService;
+
     loadCourseDataMethod = loadUserData();
-    log(widget.uid);
+
     Future.delayed(Duration(seconds: context.read<AppData>().duration), () {
       setState(() {
         _enabled = false;
@@ -85,10 +94,22 @@ class _ShowCourseUserPageState extends State<ShowCourseUserPage> {
           cid: context.read<AppData>().cid.toString(),
           coID: '');
       courses = datacouse.data;
+
+      log(courses.length.toString());
+      for (int i = 0; i < courses.length; i++) {
+        log("i${courses[i].courseId}");
+        var datas = await _progessService.processbar(
+            coID: courses[i].courseId.toString());
+        progess = datas.data;
+        lisetProgessbar.add(progess.percent / 100);
+        log("percent${lisetProgessbar[i].toString()}");
+      }
     } catch (err) {
       log('Error: $err');
     }
   }
+
+ 
 
   Widget showCourse() {
     return FutureBuilder(
@@ -102,24 +123,20 @@ class _ShowCourseUserPageState extends State<ShowCourseUserPage> {
             itemCount: courses.length,
             itemBuilder: (context, index) {
               final listcours = courses[index];
+              final listpercents = lisetProgessbar[index];
+              final listshowpercents = lisetProgessbar[index] * 100;
               return Padding(
                 padding: const EdgeInsets.only(left: 10, right: 10, bottom: 20),
-                child: Container(
-                  alignment: Alignment.center,
-                  width: double.infinity,
-                  child: InkWell(
-                    onTap: () {
-                      Get.to(() => CourseEditPage(
-                            coID: listcours.course.coId.toString(),
-                            isVisible: false,
-                          ));
-                      // Get.to(() => ChatPage(
-                      //       roomID: listcours.course.coId.toString(),
-                      //       roomName: listcours.course.name,
-                      //       userID: context.read<AppData>().cid.toString(),
-                      //       firstName: context.read<AppData>().nameCoach,
-                      //     ));
-                    },
+                child: InkWell(
+                  onTap: () {
+                    Get.to(() => CourseEditPage(
+                          coID: listcours.course.coId.toString(),
+                          isVisible: false,
+                        ));
+                  },
+                  child: Container(
+                    alignment: Alignment.center,
+                    width: double.infinity,
                     child: AspectRatio(
                       aspectRatio: 16 / 9,
                       child: Stack(
@@ -148,13 +165,10 @@ class _ShowCourseUserPageState extends State<ShowCourseUserPage> {
                                 begin: Alignment.topCenter,
                                 end: Alignment.bottomCenter,
                                 colors: <Color>[
-                                  // const Color.fromARGB(255, 0, 0, 0).withAlpha(0),
-                                  // const Color.fromARGB(49, 0, 0, 0),
-                                  // const Color.fromARGB(127, 0, 0, 0)
-                                  const Color.fromARGB(255, 255, 255, 255)
+                                  const Color.fromARGB(255, 0, 0, 0)
                                       .withAlpha(0),
-                                  const Color.fromARGB(39, 255, 255, 255),
-                                  const Color.fromARGB(121, 255, 255, 255)
+                                  const Color.fromARGB(49, 0, 0, 0),
+                                  const Color.fromARGB(127, 0, 0, 0)
                                 ],
                               ),
                               borderRadius: BorderRadius.circular(20),
@@ -166,9 +180,13 @@ class _ShowCourseUserPageState extends State<ShowCourseUserPage> {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               mainAxisAlignment: MainAxisAlignment.end,
                               children: [
-                                Text(listcours.course.name,
-                                    style:
-                                        Theme.of(context).textTheme.titleLarge),
+                                Text(
+                                  listcours.course.name,
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .titleLarge!
+                                      .copyWith(color: Colors.white),
+                                ),
                                 Row(
                                   children: [
                                     const Padding(
@@ -176,17 +194,45 @@ class _ShowCourseUserPageState extends State<ShowCourseUserPage> {
                                       child: Icon(
                                         FontAwesomeIcons.solidUser,
                                         size: 16.0,
+                                        color: Colors.white,
                                       ),
                                     ),
-                                    Text(listcours.customer.fullName,
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .bodyLarge),
+                                    Text(
+                                      listcours.course.coach.fullName,
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .bodyLarge!
+                                          .copyWith(color: Colors.white),
+                                    ),
                                   ],
+                                ),
+                                Padding(
+                                  padding: const EdgeInsets.only(
+                                      bottom: 4.0, top: 4.0),
+                                  child: FittedBox(
+                                    child: LinearPercentIndicator(
+                                      width: MediaQuery.of(context).size.width *
+                                          0.65,
+                                      fillColor: const Color.fromARGB(
+                                          0, 255, 255, 255),
+                                      lineHeight: 10.0,
+                                      percent: listpercents,
+                                      trailing: Text(
+                                        "$listshowpercents%",
+                                        style: const TextStyle(
+                                            fontSize: 16.0,
+                                            color: Colors.white),
+                                      ),
+                                      barRadius: const Radius.circular(7),
+                                      backgroundColor: Colors.grey,
+                                      progressColor:
+                                          Theme.of(context).colorScheme.primary,
+                                    ),
+                                  ),
                                 ),
                               ],
                             ),
-                          ),
+                          )
                         ],
                       ),
                     ),
