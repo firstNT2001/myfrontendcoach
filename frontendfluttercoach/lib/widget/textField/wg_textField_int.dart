@@ -1,33 +1,37 @@
 import 'package:flutter/material.dart';
 
-class WidgetTextFieldInt extends StatefulWidget {
+class WidgetTextFieldIntnotmax extends StatefulWidget {
   final TextEditingController controller;
   final String labelText;
-  const WidgetTextFieldInt(
+  const WidgetTextFieldIntnotmax(
       {super.key, required this.controller, required this.labelText});
 
   @override
-  State<WidgetTextFieldInt> createState() => _WidgetTextFieldIntState();
+  State<WidgetTextFieldIntnotmax> createState() => _WidgetTextFieldIntnotmax();
 }
 
-class _WidgetTextFieldIntState extends State<WidgetTextFieldInt> {
+class _WidgetTextFieldIntnotmax extends State<WidgetTextFieldIntnotmax> {
   @override
   Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(widget.labelText),
-        TextField(
-          keyboardType: TextInputType.number,
-            controller: widget.controller,
-            
-            textAlignVertical: TextAlignVertical.center,
-            textAlign: TextAlign.center,
-            decoration: InputDecoration(
-                //labelText: widget.labelText,
-                filled: true,
-                fillColor: Theme.of(context).colorScheme.background)),
-      ],
+    return Padding(
+      padding:  const EdgeInsets.only(bottom: 10, left: 15, right: 15),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(widget.labelText, style: Theme.of(context).textTheme.bodyLarge,),
+          TextField(
+            keyboardType: TextInputType.number,
+              controller: widget.controller, style: Theme.of(context).textTheme.bodyLarge,
+              
+              textAlignVertical: TextAlignVertical.center,
+              textAlign: TextAlign.center,
+              decoration: InputDecoration(
+                contentPadding: EdgeInsets.symmetric(vertical: 9, horizontal: 12),
+                  //labelText: widget.labelText,
+                  filled: true,
+                  fillColor: Theme.of(context).colorScheme.background)),
+        ],
+      ),
     );
   }
 }

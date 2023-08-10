@@ -64,11 +64,12 @@ class _ProfileUserState extends State<ProfileUser> {
             backgroundColor: Theme.of(context).colorScheme.primary,
             foregroundColor: Colors.white,
             onPressed: () {
-              pushNewScreen(
-                context,
-                screen: const editProfileCus(),
-                withNavBar: true,
-              );
+              Get.to(() =>  const editProfileCus());
+              // pushNewScreen(
+              //   context,
+              //   screen: const editProfileCus(),
+              //   withNavBar: true,
+              // );
             },
             shape: const CircleBorder(),
             child: const Icon(Icons.edit_outlined),

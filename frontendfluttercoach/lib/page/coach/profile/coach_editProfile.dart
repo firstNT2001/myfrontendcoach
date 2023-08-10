@@ -58,8 +58,8 @@ class _CoachEidtProfilePageState extends State<CoachEidtProfilePage> {
   final List<String> LevelItems = ['ชาย', 'หญิง'];
   final selectedValue = TextEditingController();
   bool _enabled = true;
+    bool _isvisible = false;
 
-  String textErr = '';
 
   @override
   void initState() {
@@ -111,7 +111,7 @@ class _CoachEidtProfilePageState extends State<CoachEidtProfilePage> {
               qualification.text.isEmpty ||
               property.text.isEmpty) {
             setState(() {
-              textErr = 'กรุณากรอกข้อมูลให้ครบ';
+             _isvisible = true;
             });
           } else {
             if (pickedImg != null) await uploadfile();
@@ -269,13 +269,14 @@ class _CoachEidtProfilePageState extends State<CoachEidtProfilePage> {
                           padding: const EdgeInsets.only(bottom: 10, left: 15, right: 15),
                           child: WidgetTextFieldInt(
                               controller: phone,
-                              labelText: 'เบอร์โทร',
+                              labelText: 'เบอร์โทรศัพท์',
                               maxLength: 10,
                             ),
                         ),
                       ),
                     ],
                   ),
+                  
                   const Divider(endIndent: 20, indent: 20),
 
                   Padding(
@@ -294,23 +295,42 @@ class _CoachEidtProfilePageState extends State<CoachEidtProfilePage> {
                       labelText: 'ประวัติส่วนตัว',
                     ),
                   ),
+                  Visibility(
+                    visible: _isvisible,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.only(
+                              bottom: 8, left: 20, right: 23),
+                          child: Text(
+                            "กรุณากรอกข้อความในช่องว่างให้ครบ",
+                            style: TextStyle(
+                                color: Theme.of(context).colorScheme.error),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: [
-                      Padding(
-                        padding:
-                            const EdgeInsets.only(bottom: 8, left: 20, right: 23),
-                        child: Text(
-                          textErr,
-                          style: TextStyle(
-                              color: Theme.of(context).colorScheme.error),
+                      const Text('เปลี่ยนรหัสผ่าน'),
+                      IconButton(
+                        icon: const Icon(
+                          FontAwesomeIcons.chevronRight,
                         ),
+                        onPressed: () {
+                          // Get.to(() => EditPasswordPage(
+                          //       password: _password.text
+                          //     ));
+                        },
                       ),
                     ],
                   ),
                   Padding(
                     padding:
-                        const EdgeInsets.only(bottom: 18, left: 20, right: 20),
+                        const EdgeInsets.only(left: 15, right: 15, top: 10),
                     child: button(),
                   ),
                 ],
