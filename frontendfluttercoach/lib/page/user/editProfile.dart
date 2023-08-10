@@ -24,6 +24,8 @@ import '../../service/provider/appdata.dart';
 import '../../widget/PopUp/popUp.dart';
 import '../../widget/dropdown/wg_dropdown_string.dart';
 import '../../widget/textField/wg_textField.dart';
+import '../../widget/textField/wg_textField_int copy.dart';
+import '../../widget/textField/wg_textField_int.dart';
 import '../auth/GoogleAuthenticator.dart';
 import 'money/widgethistory/widget_history.dart';
 
@@ -150,30 +152,7 @@ class _editProfileCusState extends State<editProfileCus> {
     }
   }
 
-  txtfild(
-      final TextEditingController _controller, String txtTop) {
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 10, left: 15, right: 15),
-      child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-        Padding(
-          padding: const EdgeInsets.only(left: 5, bottom: 3),
-          child: Text(
-            txtTop,
-            style: Theme.of(context).textTheme.bodyLarge,
-          ),
-        ),
-        TextField(
-          controller: _controller,
-          textAlignVertical: TextAlignVertical.center,
-            textAlign: TextAlign.center,
-          decoration: const InputDecoration(
-            contentPadding: EdgeInsets.symmetric(vertical: 10, horizontal: 12),
-            border: OutlineInputBorder(),
-          ),
-        ),
-      ]),
-    );
-  }
+
 
   txtfildBirth(
       final TextEditingController _controller, String txtTop) {
@@ -368,26 +347,29 @@ class _editProfileCusState extends State<editProfileCus> {
                               listItems: genders),
                         ),
                       ),
-
-                      Expanded(
-                        child: txtfild(phone, "โทรศัพท์"),
+                        Expanded(
+                        child: Padding(
+                          padding: const EdgeInsets.only(bottom: 10, left: 15, right: 15),
+                          child: WidgetTextFieldInt(
+                              controller: phone,
+                              labelText: 'เบอร์โทรศัพท์',
+                              maxLength: 10,
+                            ),
+                        ),
                       ),
-                      // SizedBox(
-                      //   width: (width - 16 - (3 * 30)) / 2,
-                      //   child: txtfild(phone, "โทรศัพท์", "โทรศัพท์"),
-                      // ),
                     ],
                   ),
+                  
                   txtfildBirth(birthday, "วันเกิด"),
 
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children: [
                       Expanded(
-                        child: txtfild(weight, "น้ำหนัก"),
+                        child: WidgetTextFieldIntnotmax(controller: weight, labelText: 'น้ำหนัก'),                   
                       ),
                       Expanded(
-                        child: txtfild(height, "ส่วนสูง"),
+                        child: WidgetTextFieldIntnotmax(controller: height, labelText: 'ส่วนสูง'),                       
                       ),
                     ],
                   ),
@@ -425,61 +407,10 @@ class _editProfileCusState extends State<editProfileCus> {
                       ],
                     ),
                   ),
-                  //"สร้างGoogle Authenticator"
-                  // Padding(
-                  //   padding:
-                  //       const EdgeInsets.only(left: 15, right: 15, top: 10),
-                  //   child: SizedBox(
-                  //     width: 350,
-                  //     child: FilledButton(
-                  //         onPressed: () async {
-                  //           GenOTP = getGoogleAuthenticatorUriQR("Coaching",
-                  //               email.text, email.text + password.text);
-                  //           log(GenOTP);
-
-                  //           if (GenOTP.isNotEmpty) {
-                  //             setState(() {
-                  //               isvisible = true;
-                  //             });
-                  //             // _launchUrl( Uri.parse(GenOTP));
-                  //           }
-                  //         },
-                  //         child: const Text("สร้างGoogle Authenticator")),
-                  //   ),
-                  // ),
-                  Visibility(
-                    visible: isvisible,
-                    child: Column(
-                      children: [
-                        Container(
-                            height: 200,
-                            child: Image.network(
-                                'https://www.google.com/chart?chs=200x200&chld=M|0&cht=qr&chl=$GenOTP')),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                          children: [
-                            FilledButton(
-                                onPressed: () {
-                                  setState(() {
-                                    isvisible = false;
-                                  });
-                                },
-                                child: const Text("ซ่อน QR Code")),
-                            FilledButton(
-                                onPressed: () {
-                                  GenOTP = getGoogleAuthenticatorUri("Coaching",
-                                      email.text, email.text + password.text);
-                                },
-                                child: const Text("เข้าสู่ Application"))
-                          ],
-                        ),
-                      ],
-                    ),
-                  ),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: [
-                      const Text('เปรียนรหัสผ่าน'),
+                      const Text('เปลี่ยนรหัสผ่าน'),
                       IconButton(
                         icon: const Icon(
                           FontAwesomeIcons.chevronRight,
@@ -492,27 +423,6 @@ class _editProfileCusState extends State<editProfileCus> {
                       ),
                     ],
                   ),
-                  // Padding(
-                  //   padding:
-                  //       const EdgeInsets.only(left: 15, right: 15, top: 10),
-                  //   child: SizedBox(
-                  //     width: 350,
-                  //     child: FilledButton(
-                  //         onPressed: () async {
-                  //           GenOTP = getGoogleAuthenticatorUriQR("Coaching",
-                  //               email.text, email.text + password.text);
-                  //           log(GenOTP);
-
-                  //           if (GenOTP.isNotEmpty) {
-                  //             setState(() {
-                  //               isvisible = true;
-                  //             });
-                  //             // _launchUrl( Uri.parse(GenOTP));
-                  //           }
-                  //         },
-                  //         child: const Text("สร้างGoogle Authenticator")),
-                  //   ),
-                  // ),
                   Padding(
                     padding:
                         const EdgeInsets.only(left: 15, right: 15, top: 10),
@@ -554,39 +464,35 @@ class _editProfileCusState extends State<editProfileCus> {
                                 log("Erorphone");
                               }
 
-                              // UpdateCustomer updateCustomer = UpdateCustomer(
-                              //     username: username.text,
-                              //     password: password.text,
-                              //     email: email.text,
-                              //     fullName: fullName.text,
-                              //     birthday: newbirht,
-                              //     gender: tt,
-                              //     phone: phone.text,
-                              //     image: profile,
-                              //     weight: int.parse(weight.text),
-                              //     height: int.parse(height.text));
-                              // log("Update");
-                              // log(jsonEncode(updateCustomer));
-                              // log("log" + uid.toString());
-                              // log(birthday.text);
-                              // //log(_image.toString());
-                              // update = await customerService.updateCustomer(
-                              //     uid.toString(), updateCustomer);
-                              // moduleResult = update.data;
-                              // log(moduleResult.result);
-                              // modelResult = update.data;
-                              // if (modelResult.result == '0') {
-                              //   // ignore: use_build_context_synchronously
-                              //   warning(context);
-                              // } else {
-                              //   // ignore: use_build_context_synchronously
-                              //   success(context);
-                              // }
-                              // pushNewScreen(
-                              //   context,
-                              //   screen: const ProfileUser(),
-                              //   withNavBar: true,
-                              // );
+                              UpdateCustomer updateCustomer = UpdateCustomer(
+                                  username: username.text,
+                                  password: password.text,
+                                  email: email.text,
+                                  fullName: fullName.text,
+                                  birthday: newbirht,
+                                  gender: tt,
+                                  phone: phone.text,
+                                  image: profile,
+                                  weight: int.parse(weight.text),
+                                  height: int.parse(height.text));
+                              log("Update");
+                              log(jsonEncode(updateCustomer));
+                              log("log" + uid.toString());
+                              log(birthday.text);
+                              //log(_image.toString());
+                              update = await customerService.updateCustomer(
+                                  uid.toString(), updateCustomer);
+                              moduleResult = update.data;
+                              log(moduleResult.result);
+                              modelResult = update.data;
+                              if (modelResult.result == '0') {
+                                // ignore: use_build_context_synchronously
+                                warning(context);
+                              } else {
+                                // ignore: use_build_context_synchronously
+                                success(context);
+                              }
+                             
                             }
 
                             // Put your code here, which you want to execute when Text Field is NOT Empty.
