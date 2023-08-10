@@ -48,7 +48,10 @@ class _FoodCoachPageState extends State<FoodCoachPage> {
   String cid = "";
   late ModelResult modelResult;
   bool isDelete = false;
-  bool _enabled = true;
+  bool _enabledFood = true;
+  // ignore: unused_field
+  bool _enabledClip = true;
+
   @override
   void initState() {
     // TODO: implement initState
@@ -61,12 +64,6 @@ class _FoodCoachPageState extends State<FoodCoachPage> {
     //LoadClipService
     _listClipService = context.read<AppData>().listClipServices;
     loadClipDataMethod = loadClipData();
-
-    Future.delayed(Duration(seconds: context.read<AppData>().duration), () {
-      setState(() {
-        _enabled = false;
-      });
-    });
   }
 
   @override
@@ -133,7 +130,7 @@ class _FoodCoachPageState extends State<FoodCoachPage> {
                 const SizedBox(
                   height: 10,
                 ),
-                (_enabled)
+                (_enabledFood)
                     ? Skeletonizer(enabled: true, child: searchFood(context))
                     : searchFood(context),
                 Expanded(
@@ -150,9 +147,9 @@ class _FoodCoachPageState extends State<FoodCoachPage> {
                 const SizedBox(
                   height: 10,
                 ),
-                (_enabled)
-                    ? Skeletonizer(enabled: true, child: searchFood(context))
-                    : searchFood(context),
+                (_enabledFood)
+                    ? Skeletonizer(enabled: true, child: searchClip(context))
+                    : searchClip(context),
                 Expanded(
                   child: Padding(
                     padding: const EdgeInsets.only(
@@ -192,7 +189,7 @@ class _FoodCoachPageState extends State<FoodCoachPage> {
               children: [
                 TextButton.icon(
                   onPressed: () {
-                    Get.to(() => const SearchFoodCoachPage());
+                    Get.to(() => SearchClipCoachPage());
                   },
                   icon: const Icon(
                     FontAwesomeIcons.magnifyingGlass,
@@ -233,7 +230,7 @@ class _FoodCoachPageState extends State<FoodCoachPage> {
               children: [
                 TextButton.icon(
                   onPressed: () {
-                    Get.to(() => const SearchFoodCoachPage());
+                    Get.to(() => SearchFoodCoachPage());
                   },
                   icon: const Icon(
                     FontAwesomeIcons.magnifyingGlass,
@@ -255,12 +252,23 @@ class _FoodCoachPageState extends State<FoodCoachPage> {
     return FutureBuilder(
       future: loadFoodDataMethod,
       builder: (context, snapshot) {
-        return (_enabled == true)
-            ? Skeletonizer(
-                enabled: true,
-                child: gridViewFood(),
-              )
-            : gridViewFood();
+        if (snapshot.connectionState == ConnectionState.done) {
+          return Skeletonizer(
+            enabled: _enabledFood,
+            child: gridViewFood(),
+          );
+        } else {
+          return Skeletonizer(
+            enabled: _enabledFood,
+            child: gridViewFood(),
+          );
+        }
+        // return (_enabled == true)
+        //     ? Skeletonizer(
+        //         enabled: true,
+        //         child: gridViewFood(),
+        //       )
+        //     : gridViewFood();
       },
     );
   }
@@ -358,12 +366,24 @@ class _FoodCoachPageState extends State<FoodCoachPage> {
     return FutureBuilder(
       future: loadClipDataMethod,
       builder: (context, snapshot) {
-        return (_enabled == true)
-            ? Skeletonizer(
-                enabled: true,
-                child: gridViewClip(),
-              )
-            : gridViewClip();
+        if (snapshot.connectionState == ConnectionState.done) {
+          return Skeletonizer(
+            enabled: _enabledFood,
+            child: gridViewClip(),
+          );
+        } else {
+          return Skeletonizer(
+            enabled: _enabledFood,
+            child: gridViewClip(),
+          );
+        }
+
+        // return (snapshot.hasData)
+        //     ? Skeletonizer(
+        //         enabled: true,
+        //         child: gridViewClip(),
+        //       )
+        //     : gridViewClip();
       },
     );
   }
@@ -387,9 +407,8 @@ class _FoodCoachPageState extends State<FoodCoachPage> {
                 pushNewScreen(
                   context,
                   screen: ClipEditCoachPage(icpId: listClips.icpId),
-                  withNavBar: false,
+                  withNavBar: true,
                 );
-             
               },
               child: Column(
                 children: [
@@ -460,6 +479,11 @@ class _FoodCoachPageState extends State<FoodCoachPage> {
         name: '',
       );
       foods = datas.data;
+      Future.delayed(Duration(seconds: context.read<AppData>().duration), () {
+        setState(() {
+          _enabledFood = false;
+        });
+      });
     } catch (err) {
       log('Error: $err');
     }
@@ -470,6 +494,11 @@ class _FoodCoachPageState extends State<FoodCoachPage> {
       var datas =
           await _listClipService.listClips(icpID: '', cid: cid, name: '');
       clips = datas.data;
+      Future.delayed(Duration(seconds: context.read<AppData>().duration), () {
+        setState(() {
+          _enabledFood = false;
+        });
+      });
     } catch (err) {
       log('Error: $err');
     }
