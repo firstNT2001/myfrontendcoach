@@ -9,6 +9,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_rounded_date_picker/flutter_rounded_date_picker.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:frontendfluttercoach/page/user/profileUser.dart';
+import 'package:get/get.dart';
+import 'package:get/get_core/src/get_main.dart';
 import 'package:hex/hex.dart';
 import 'package:persistent_bottom_nav_bar_v2/persistent-tab-view.dart';
 import 'package:provider/provider.dart';
@@ -21,6 +23,8 @@ import '../../service/customer.dart';
 import '../../service/provider/appdata.dart';
 import '../../widget/PopUp/popUp.dart';
 import '../../widget/dropdown/wg_dropdown_string.dart';
+import '../../widget/textField/wg_textField.dart';
+import '../auth/GoogleAuthenticator.dart';
 import 'money/widgethistory/widget_history.dart';
 
 // ignore: camel_case_types
@@ -147,7 +151,7 @@ class _editProfileCusState extends State<editProfileCus> {
   }
 
   txtfild(
-      final TextEditingController _controller, String lbText, String txtTop) {
+      final TextEditingController _controller, String txtTop) {
     return Padding(
       padding: const EdgeInsets.only(bottom: 10, left: 15, right: 15),
       child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
@@ -160,6 +164,8 @@ class _editProfileCusState extends State<editProfileCus> {
         ),
         TextField(
           controller: _controller,
+          textAlignVertical: TextAlignVertical.center,
+            textAlign: TextAlign.center,
           decoration: const InputDecoration(
             contentPadding: EdgeInsets.symmetric(vertical: 10, horizontal: 12),
             border: OutlineInputBorder(),
@@ -170,7 +176,7 @@ class _editProfileCusState extends State<editProfileCus> {
   }
 
   txtfildBirth(
-      final TextEditingController _controller, String lbText, String txtTop) {
+      final TextEditingController _controller, String txtTop) {
     return Padding(
       padding: const EdgeInsets.only(bottom: 10, left: 15, right: 15),
       child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
@@ -224,9 +230,53 @@ class _editProfileCusState extends State<editProfileCus> {
             Size screenSize = MediaQuery.of(context).size;
             double width = (screenSize.width > 550) ? 550 : screenSize.width;
             return Padding(
-              padding: const EdgeInsets.all(20.0),
+              padding: const EdgeInsets.all(5.0),
               child: Column(
                 children: [
+                  Padding(
+                    padding: const EdgeInsets.only(bottom: 10),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        IconButton(
+                          icon: const Icon(
+                            FontAwesomeIcons.chevronLeft,
+                          ),
+                          onPressed: () {
+                            Get.back();
+                          },
+                        ),
+                        const Center(
+                          child: Padding(
+                            padding: EdgeInsets.only(top: 5),
+                            child: Text(
+                              'แก้ไขโปรไฟล์',
+                              style: TextStyle(
+                                  fontSize: 28, fontWeight: FontWeight.w500),
+                            ),
+                          ),
+                        ),
+                        IconButton(
+                          icon: const Icon(
+                            FontAwesomeIcons.key,
+                            // color: Colors.red,
+                          ),
+                          // pushNewScreen(
+                          //   context,
+                          //   screen: const ProfileUser(),
+                          //   withNavBar: true,
+                          // );
+                          onPressed: () {
+                            Get.to(() => GoogleAuthenticatorPage(
+                                  email: customer.first.email,
+                                  password: customer.first.password,
+                                ));
+                          },
+                        ),
+                      ],
+                    ),
+                  ),
                   Center(
                     child: Stack(
                       children: [
@@ -291,12 +341,20 @@ class _editProfileCusState extends State<editProfileCus> {
                     ),
                   ),
                   const SizedBox(
-                    height: 20,
+                    height: 10,
                   ),
-                  txtfild(username, "ชื่อผู้ใช้", "ชื่อผู้ใช้"),
-                  txtfild(email, "e-mail", "e-mail"),
-                  // txtfildn(_password, "รหัสผ่าน", "รหัสผ่าน"),
-                  txtfild(fullName, "ชื่อ-นามสกุล", "ชื่อ-นามสกุล"),
+                  WidgetTextFieldString(
+                            controller: username,
+                            labelText: 'ชื่อผู้ใช้',
+                          ),
+                          WidgetTextFieldString(
+                      controller: email,
+                      labelText: 'Email',
+                    ),
+                  WidgetTextFieldString(
+                    controller: fullName,
+                    labelText: 'ชื่อ-นามสกุล',
+                  ),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children: [
@@ -312,7 +370,7 @@ class _editProfileCusState extends State<editProfileCus> {
                       ),
 
                       Expanded(
-                        child: txtfild(phone, "โทรศัพท์", "โทรศัพท์"),
+                        child: txtfild(phone, "โทรศัพท์"),
                       ),
                       // SizedBox(
                       //   width: (width - 16 - (3 * 30)) / 2,
@@ -320,16 +378,16 @@ class _editProfileCusState extends State<editProfileCus> {
                       // ),
                     ],
                   ),
-                  txtfildBirth(birthday, "วันเกิด", "ว/ด/ป"),
+                  txtfildBirth(birthday, "วันเกิด"),
 
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children: [
                       Expanded(
-                        child: txtfild(weight, "น้ำหนัก", "น้ำหนัก"),
+                        child: txtfild(weight, "น้ำหนัก"),
                       ),
                       Expanded(
-                        child: txtfild(height, "ส่วนสูง", "ส่วนสูง"),
+                        child: txtfild(height, "ส่วนสูง"),
                       ),
                     ],
                   ),
@@ -434,7 +492,7 @@ class _editProfileCusState extends State<editProfileCus> {
                       ),
                     ],
                   ),
- // Padding(
+                  // Padding(
                   //   padding:
                   //       const EdgeInsets.only(left: 15, right: 15, top: 10),
                   //   child: SizedBox(
@@ -456,18 +514,18 @@ class _editProfileCusState extends State<editProfileCus> {
                   //   ),
                   // ),
                   Padding(
-                    padding:  const EdgeInsets.only(left: 15, right: 15, top: 10),
+                    padding:
+                        const EdgeInsets.only(left: 15, right: 15, top: 10),
                     child: SizedBox(
                       width: 350,
                       child: FilledButton(
-                          child: const Padding(
-                            padding: EdgeInsets.all(10.0),
+                  
                             child: Text("บันทึก"),
-                          ),
+                         
                           onPressed: () async {
                             if (pickedImg != null) await uploadfile();
                             if (pickedImg == null) profile = _image;
-                    
+
                             if (username.text.isEmpty ||
                                 email.text.isEmpty ||
                                 fullName.text.isEmpty ||
@@ -495,7 +553,7 @@ class _editProfileCusState extends State<editProfileCus> {
                               if (phone.text.length != 10) {
                                 log("Erorphone");
                               }
-                    
+
                               // UpdateCustomer updateCustomer = UpdateCustomer(
                               //     username: username.text,
                               //     password: password.text,
@@ -530,7 +588,7 @@ class _editProfileCusState extends State<editProfileCus> {
                               //   withNavBar: true,
                               // );
                             }
-                    
+
                             // Put your code here, which you want to execute when Text Field is NOT Empty.
                           }),
                     ),

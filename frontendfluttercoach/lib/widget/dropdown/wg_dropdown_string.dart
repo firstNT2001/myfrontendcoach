@@ -17,7 +17,10 @@ class _WidgetDropdownStringState extends State<WidgetDropdownString> {
     return  Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(widget.title,style: Theme.of(context).textTheme.bodyLarge),
+        Padding(
+          padding: const EdgeInsets.only(left: 5, bottom: 3),
+          child: Text(widget.title,style: Theme.of(context).textTheme.bodyLarge),
+        ),
         DropdownLavel(),
       ],
     );
