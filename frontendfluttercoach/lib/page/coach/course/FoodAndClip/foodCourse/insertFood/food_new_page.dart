@@ -18,7 +18,6 @@ import 'package:skeletonizer/skeletonizer.dart';
 import '../../../../../../model/request/food_dayID_post.dart';
 import '../../../../../../service/provider/appdata.dart';
 import '../../../../../../widget/PopUp/popUp.dart';
-import '../../course_food_clip.dart';
 import 'food_select_time_page.dart';
 
 class FoodNewCoursePage extends StatefulWidget {
@@ -64,12 +63,14 @@ class _FoodNewCoursePageState extends State<FoodNewCoursePage> {
 
   @override
   Widget build(BuildContext context) {
-    return (_enabled == true)
-        ? Skeletonizer(
-            enabled: true,
-            child: scaffold(context),
-          )
-        : scaffold(context);
+    return WillPopScope(
+        onWillPop: () async => false,
+        child: (_enabled == true)
+            ? Skeletonizer(
+                enabled: true,
+                child: scaffold(context),
+              )
+            : scaffold(context));
   }
 
   Scaffold scaffold(BuildContext context) {
@@ -82,11 +83,12 @@ class _FoodNewCoursePageState extends State<FoodNewCoursePage> {
               color: Colors.black,
             ),
             onPressed: () {
-              Get.to(() => HomeFoodAndClipPage(
-                    did: widget.did,
-                    sequence: context.read<AppData>().sequence,
-                    isVisible: widget.isVisible,
-                  ));
+              // Get.to(() => HomeFoodAndClipPage(
+              //       did: widget.did,
+              //       sequence: context.read<AppData>().sequence,
+              //       isVisible: widget.isVisible,
+              //     ));
+              Get.back();
             },
           ),
           actions: [
@@ -109,7 +111,7 @@ class _FoodNewCoursePageState extends State<FoodNewCoursePage> {
               ),
               badgeStyle: badges.BadgeStyle(
                 //shape: badges.BadgeShape.square,
-                badgeColor: Theme.of(context).colorScheme.error,
+                badgeColor: Theme.of(context).colorScheme.primary,
                 borderSide: const BorderSide(color: Colors.white, width: 2),
                 elevation: 0,
               ),
@@ -182,101 +184,103 @@ class _FoodNewCoursePageState extends State<FoodNewCoursePage> {
         if (snapshot.connectionState != ConnectionState.done) {
           return Container();
         } else {
-          return ListView.builder(
-            shrinkWrap: true,
-            itemCount: listFoods.length,
-            itemBuilder: (context, index) {
-              final listFood = listFoods[index];
-              return SizedBox(
-                height: MediaQuery.of(context).size.height * 0.2,
-                child: Card(
-                  color: colorFood[index],
-                  child: InkWell(
-                    onTap: () {
-                      if (colorFood[index] !=
-                          context.read<AppData>().colorSelect) {
-                        setState(() {
-                          // เพิ่มเมนูอาหารนั้นเมือกกดเลือก
-                          ModelFoodList request = ModelFoodList(
-                              ifid: listFood.ifid,
-                              name: listFood.name,
-                              image: listFood.image,
-                              details: listFood.details,
-                              calories: listFood.calories);
-
-                          _dialog(context, request, colorFood, index);
-                          //เปลี่ยนสีเมือเลือกเมนู฿อาหาร
-                          // colorFood[index] = Colors.black12;
-                        });
-                      } else {
-                        setState(() {
-                          //กลับเป็นสีเดิมเมือเลือกเมนูอาหารซํ้า
-                          colorFood[index] =
-                              context.read<AppData>().colorNotSelect;
-
-                          //เอาเมนูอาหารที่เลือกออกจาก list model
-                          increaseFoodDay.removeWhere(
-                              (item) => item.listFoodId == listFood.ifid);
-
-                          increaseFood.removeWhere(
-                              (item) => item.ifid == listFood.ifid);
-                        });
-                      }
-                    },
-                    child: Row(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        if (listFood.image != '') ...{
-                          SizedBox(
-                            width: MediaQuery.of(context).size.width * 0.4,
-                            height: MediaQuery.of(context).size.height * 0.2,
-                            child: Padding(
-                              padding: const EdgeInsets.all(20.0),
-                              child: ClipRRect(
-                                borderRadius: BorderRadius.circular(8.0),
-                                child: Image.network(
-                                  listFood.image,
-                                  fit: BoxFit.fill,
-                                ),
-                              ),
-                            ),
-                          ),
-                        } else
-                          Container(
-                              width: MediaQuery.of(context).size.width * 0.4,
-                              height: MediaQuery.of(context).size.height * 0.2,
-                              padding: const EdgeInsets.all(8.0),
-                              decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(8),
-                                  color: Colors.white)),
-                        const SizedBox(width: 10),
-                        Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            SizedBox(
-                              width: MediaQuery.of(context).size.width * 0.5,
-                              child: AutoSizeText(
-                                listFood.name,
-                                maxLines: 5,
-                                style: Theme.of(context).textTheme.titleMedium,
-                              ),
-                            ),
-                            const SizedBox(height: 10),
-                            Text(
-                              "Calories : ${listFood.calories}",
-                              style: Theme.of(context).textTheme.titleMedium,
-                            )
-                          ],
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-              );
-            },
-          );
+          return listViewFood();
         }
+      },
+    );
+  }
+
+  ListView listViewFood() {
+    return ListView.builder(
+      shrinkWrap: true,
+      itemCount: listFoods.length,
+      itemBuilder: (context, index) {
+        final listFood = listFoods[index];
+        return SizedBox(
+          height: MediaQuery.of(context).size.height * 0.2,
+          child: Card(
+            color: colorFood[index],
+            child: InkWell(
+              onTap: () {
+                if (colorFood[index] != context.read<AppData>().colorSelect) {
+                  setState(() {
+                    // เพิ่มเมนูอาหารนั้นเมือกกดเลือก
+                    ModelFoodList request = ModelFoodList(
+                        ifid: listFood.ifid,
+                        name: listFood.name,
+                        image: listFood.image,
+                        details: listFood.details,
+                        calories: listFood.calories);
+
+                    _dialog(context, request, colorFood, index);
+                    //เปลี่ยนสีเมือเลือกเมนู฿อาหาร
+                    // colorFood[index] = Colors.black12;
+                  });
+                } else {
+                  setState(() {
+                    //กลับเป็นสีเดิมเมือเลือกเมนูอาหารซํ้า
+                    colorFood[index] = context.read<AppData>().colorNotSelect;
+
+                    //เอาเมนูอาหารที่เลือกออกจาก list model
+                    increaseFoodDay.removeWhere(
+                        (item) => item.listFoodId == listFood.ifid);
+
+                    increaseFood
+                        .removeWhere((item) => item.ifid == listFood.ifid);
+                  });
+                }
+              },
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  if (listFood.image != '') ...{
+                    SizedBox(
+                      width: MediaQuery.of(context).size.width * 0.4,
+                      height: MediaQuery.of(context).size.height * 0.2,
+                      child: Padding(
+                        padding: const EdgeInsets.all(20.0),
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(8.0),
+                          child: Image.network(
+                            listFood.image,
+                            fit: BoxFit.fill,
+                          ),
+                        ),
+                      ),
+                    ),
+                  } else
+                    Container(
+                        width: MediaQuery.of(context).size.width * 0.4,
+                        height: MediaQuery.of(context).size.height * 0.2,
+                        padding: const EdgeInsets.all(8.0),
+                        decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(8),
+                            color: Colors.white)),
+                  const SizedBox(width: 10),
+                  Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      SizedBox(
+                        width: MediaQuery.of(context).size.width * 0.5,
+                        child: AutoSizeText(
+                          listFood.name,
+                          maxLines: 5,
+                          style: Theme.of(context).textTheme.titleMedium,
+                        ),
+                      ),
+                      const SizedBox(height: 10),
+                      Text(
+                        "Calories : ${listFood.calories}",
+                        style: Theme.of(context).textTheme.titleMedium,
+                      )
+                    ],
+                  ),
+                ],
+              ),
+            ),
+          ),
+        );
       },
     );
   }
@@ -287,7 +291,7 @@ class _FoodNewCoursePageState extends State<FoodNewCoursePage> {
     SmartDialog.show(builder: (_) {
       return Container(
         width: MediaQuery.of(context).size.width * 0.9,
-        height:550,
+        height: 550,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(20),
           color: Colors.white,
@@ -369,9 +373,8 @@ class _FoodNewCoursePageState extends State<FoodNewCoursePage> {
                     ),
                   ),
                 ),
-
                 Padding(
-                  padding: const EdgeInsets.only(top: 15,right: 30),
+                  padding: const EdgeInsets.only(top: 15, right: 30),
                   child: FilledButton(
                       onPressed: () {
                         log(selectedValuehand.text);
