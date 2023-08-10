@@ -58,6 +58,8 @@ class _CoachEidtProfilePageState extends State<CoachEidtProfilePage> {
   final List<String> LevelItems = ['ชาย', 'หญิง'];
   final selectedValue = TextEditingController();
   bool _enabled = true;
+    bool _isvisible = false;
+
 
   String textErr = '';
 
@@ -111,7 +113,7 @@ class _CoachEidtProfilePageState extends State<CoachEidtProfilePage> {
               qualification.text.isEmpty ||
               property.text.isEmpty) {
             setState(() {
-              textErr = 'กรุณากรอกข้อมูลให้ครบ';
+             _isvisible = true;
             });
           } else {
             if (pickedImg != null) await uploadfile();
@@ -186,160 +188,155 @@ class _CoachEidtProfilePageState extends State<CoachEidtProfilePage> {
         future: loadCoachDataMethod, // 3.1 object ของ async method
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.done) {
-            return Column(
-              //mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: IconButton(
-                        icon: const Icon(
-                          FontAwesomeIcons.chevronLeft,
+            return Padding(
+              padding: const EdgeInsets.all(5.0),
+              child: Column(
+                //mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        IconButton(
+                          icon: const Icon(
+                            FontAwesomeIcons.chevronLeft,
+                          ),
+                          onPressed: () {
+                            Get.back();
+                          },
                         ),
-                        onPressed: () {
-                          Get.back();
-                        },
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: IconButton(
-                        icon: const Icon(
-                          FontAwesomeIcons.key,
-                          // color: Colors.red,
+                        const Center(
+                          child: Padding(
+                            padding: EdgeInsets.only(top: 5),
+                            child: Text(
+                              'แก้ไขโปรไฟล์',
+                              style: TextStyle(
+                                  fontSize: 28, fontWeight: FontWeight.w500),
+                            ),
+                          ),
                         ),
-                        onPressed: () {
-                          Get.to(() => GoogleAuthenticatorPage(
-                                email: coachs.first.email,
-                                password: coachs.first.password,
-                              ));
-                        },
-                      ),
+                        IconButton(
+                          icon: const Icon(
+                            FontAwesomeIcons.key,
+                            // color: Colors.red,
+                          ),
+                          // pushNewScreen(
+                          //   context,
+                          //   screen: const ProfileUser(),
+                          //   withNavBar: true,
+                          // );
+                          onPressed: () {
+                            Get.to(() => GoogleAuthenticatorPage(
+                                  email: coachs.first.email,
+                                  password: coachs.first.password,
+                                ));
+                          },
+                        ),
+                      ],
                     ),
-                  ],
-                ),
-                Center(
-                  child: Text(
-                    'Edit Profile',
-                    style: Theme.of(context).textTheme.headlineMedium,
+                  const SizedBox(
+                    height: 10,
                   ),
-                ),
-                const SizedBox(
-                  height: 8,
-                ),
-                image(),
-                Padding(
-                  padding: const EdgeInsets.only(
-                      bottom: 8, top: 10, left: 20, right: 20),
-                  child: WidgetTextFieldString(
+                  image(),
+                  const SizedBox(
+                    height: 10,
+                  ),WidgetTextFieldString(
+                            controller: name,
+                            labelText: 'ชื่อผู้ใช้',
+                          ),
+                          WidgetTextFieldString(
+                      controller: email,
+                      labelText: 'Email',
+                    ),
+                  WidgetTextFieldString(
                     controller: fullName,
-                    labelText: 'ชื่อ',
+                    labelText: 'ชื่อ-นามสกุล',
                   ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(bottom: 8),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    crossAxisAlignment: CrossAxisAlignment.start,
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children: [
                       SizedBox(
-                        width: (width - 16 - (3 * 20)) / 2,
-                        child: WidgetTextFieldString(
-                          controller: name,
-                          labelText: 'ชื่อเล่น',
-                        ),
-                      ),
-                      SizedBox(
-                        width: (width - 16 - (3 * 20)) / 2,
-                        child: WidgetDropdownString(
+                        width: (width - 16 - (3 * 30)) / 2,
+                        child: Padding(
+                          padding: const EdgeInsets.only(bottom: 10, left: 15),
+                          child: WidgetDropdownString(
                           title: 'เพศ',
                           selectedValue: selectedValue,
                           listItems: LevelItems,
                         ),
-                      ),
-                    ],
-                  ),
-                ),
-                const Divider(endIndent: 20, indent: 20),
-                Padding(
-                  padding:
-                      const EdgeInsets.only(bottom: 8, left: 20, right: 20),
-                  child: WidgetTextFieldString(
-                    controller: email,
-                    labelText: 'Email',
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(bottom: 8),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      SizedBox(
-                        width: (width - 16 - (3 * 20)) / 2,
-                        child: WidgetTextFieldInt(
-                          controller: phone,
-                          labelText: 'เบอร์โทร',
-                          maxLength: 10,
+                      ),),
+                      Expanded(
+                        child: Padding(
+                          padding: const EdgeInsets.only(bottom: 10, left: 15, right: 15),
+                          child: WidgetTextFieldInt(
+                              controller: phone,
+                              labelText: 'เบอร์โทรศัพท์',
+                              maxLength: 10,
+                            ),
                         ),
                       ),
-                      SizedBox(
-                          width: (width - 16 - (3 * 20)) / 2,
-                          child: Row(
-                            children: [
-                              const Text('เปรียนรหัสผ่าน'),
-                              IconButton(
-                                icon: const Icon(
-                                  FontAwesomeIcons.chevronRight,
-                                ),
-                                onPressed: () {},
-                              ),
-                            ],
-                          )),
                     ],
                   ),
-                ),
-                const Divider(endIndent: 20, indent: 20),
-                Padding(
-                  padding:
-                      const EdgeInsets.only(bottom: 8, left: 20, right: 20),
-                  child: WidgetTextFieldLines(
-                    controller: qualification,
-                    labelText: 'วุฒิการศึกษา',
-                  ),
-                ),
-                Padding(
-                  padding:
-                      const EdgeInsets.only(bottom: 8, left: 20, right: 20),
-                  child: WidgetTextFieldLines(
-                    controller: property,
-                    labelText: 'ประวัติส่วนตัว',
-                  ),
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
-                    Padding(
-                      padding:
-                          const EdgeInsets.only(bottom: 8, left: 20, right: 23),
-                      child: Text(
-                        textErr,
-                        style: TextStyle(
-                            color: Theme.of(context).colorScheme.error),
-                      ),
+                  
+                  const Divider(endIndent: 20, indent: 20),
+
+                  Padding(
+                    padding:
+                        const EdgeInsets.only(bottom: 8, left: 20, right: 20),
+                    child: WidgetTextFieldLines(
+                      controller: qualification,
+                      labelText: 'วุฒิการศึกษา',
                     ),
-                  ],
-                ),
-                Padding(
-                  padding:
-                      const EdgeInsets.only(bottom: 18, left: 20, right: 20),
-                  child: button(),
-                ),
-              ],
+                  ),
+                  Padding(
+                    padding:
+                        const EdgeInsets.only(bottom: 8, left: 20, right: 20),
+                    child: WidgetTextFieldLines(
+                      controller: property,
+                      labelText: 'ประวัติส่วนตัว',
+                    ),
+                  ),
+                  Visibility(
+                    visible: _isvisible,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.only(
+                              bottom: 8, left: 20, right: 23),
+                          child: Text(
+                            "กรุณากรอกข้อความในช่องว่างให้ครบ",
+                            style: TextStyle(
+                                color: Theme.of(context).colorScheme.error),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      const Text('เปลี่ยนรหัสผ่าน'),
+                      IconButton(
+                        icon: const Icon(
+                          FontAwesomeIcons.chevronRight,
+                        ),
+                        onPressed: () {
+                          // Get.to(() => EditPasswordPage(
+                          //       password: _password.text
+                          //     ));
+                        },
+                      ),
+                    ],
+                  ),
+                  Padding(
+                    padding:
+                        const EdgeInsets.only(left: 15, right: 15, top: 10),
+                    child: button(),
+                  ),
+                ],
+              ),
             );
           } else {
             return Container();

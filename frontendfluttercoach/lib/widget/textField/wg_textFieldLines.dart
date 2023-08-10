@@ -13,16 +13,19 @@ class WidgetTextFieldLines extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(labelText),
+        Padding(
+          padding: const EdgeInsets.only(left: 5, bottom: 3),
+          child: Text(labelText,style: Theme.of(context).textTheme.bodyLarge,),
+        ),
         TextField(
-            controller: controller,
+            controller: controller,style: Theme.of(context).textTheme.bodyLarge,
             textAlignVertical: TextAlignVertical.center,
             textAlign: TextAlign.center,
             minLines: 1,
             maxLines: 20,
             decoration: InputDecoration(
                 border: const OutlineInputBorder(),
-                //labelText: labelText,
+                contentPadding: EdgeInsets.symmetric(vertical: 10, horizontal: 12),
                 filled: true,
                 fillColor: Theme.of(context).colorScheme.background)),
       ],

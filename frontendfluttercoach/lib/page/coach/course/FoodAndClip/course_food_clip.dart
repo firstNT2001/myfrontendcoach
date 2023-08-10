@@ -5,6 +5,7 @@ import 'package:auto_size_text/auto_size_text.dart';
 
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
 
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
@@ -32,6 +33,7 @@ import '../../../../widget/image_video.dart';
 import '../../../../widget/wg_editClip_Dialog.dart';
 import '../../../../widget/wg_editFood_Dialog.dart';
 import '../../../../widget/wg_search_food.dart';
+import '../../daysCourse/days_course_page.dart';
 import 'clipCourse/insertClip/clip_select_page.dart';
 import 'foodCourse/insertFood/food_new_page.dart';
 
@@ -128,6 +130,7 @@ class _HomeFoodAndClipPageState extends State<HomeFoodAndClipPage> {
                 child: const Icon(FontAwesomeIcons.bowlFood),
                 label: 'เพิ่มเมนู',
                 onTap: () {
+                  
                   Get.to(() => FoodNewCoursePage(
                         did: widget.did,
                         isVisible: widget.isVisible,
@@ -156,6 +159,10 @@ class _HomeFoodAndClipPageState extends State<HomeFoodAndClipPage> {
               FontAwesomeIcons.chevronLeft,
             ),
             onPressed: () {
+              // Get.to(() => DaysCoursePage(
+              //       coID: context.read<AppData>().coID.toString(),
+              //       isVisible: widget.isVisible,
+              //     ));
               Get.back();
             },
           ),
@@ -612,13 +619,13 @@ class _HomeFoodAndClipPageState extends State<HomeFoodAndClipPage> {
         var response = await _foodService.deleteFood(fid);
         modelResult = response.data;
         log(modelResult.result);
+
         setState(() {
           loadFoodDataMethod = loadFoodData();
         });
 
         // ignore: use_build_context_synchronously
         Navigator.of(context, rootNavigator: true).pop();
-        log('onConfirmBtnTap');
       },
     );
   }

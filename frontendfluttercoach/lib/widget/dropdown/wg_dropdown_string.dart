@@ -17,7 +17,10 @@ class _WidgetDropdownStringState extends State<WidgetDropdownString> {
     return  Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(widget.title),
+        Padding(
+          padding: const EdgeInsets.only(left: 5, bottom: 3),
+          child: Text(widget.title,style: Theme.of(context).textTheme.bodyLarge),
+        ),
         DropdownLavel(),
       ],
     );
@@ -29,7 +32,7 @@ class _WidgetDropdownStringState extends State<WidgetDropdownString> {
         //Add isDense true and zero Padding.
         //Add Horizontal padding using buttonPadding and Vertical padding by increasing buttonHeight instead of add Padding here so that The whole TextField Button become clickable, and also the dropdown menu open under The whole TextField Button.
         isDense: true,
-        contentPadding: EdgeInsets.zero,
+        contentPadding: EdgeInsets.symmetric(vertical: 2),
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(15),
         ),
@@ -39,16 +42,14 @@ class _WidgetDropdownStringState extends State<WidgetDropdownString> {
       isExpanded: true,
       hint:  Text(
         widget.title,
-        style: const TextStyle(fontSize: 14),
+        style:Theme.of(context).textTheme.bodyLarge,
       ),
-      value: widget.selectedValue.text,
+      value: widget.selectedValue.text,style: Theme.of(context).textTheme.bodyLarge,
       items: widget.listItems.map((item) => DropdownMenuItem<String>(
             value: item,
             child: Text(
               item,
-              style: const TextStyle(
-                fontSize: 14,
-              ),
+              style: Theme.of(context).textTheme.bodyLarge
             ),
           )).toList(),
       validator: (value) {

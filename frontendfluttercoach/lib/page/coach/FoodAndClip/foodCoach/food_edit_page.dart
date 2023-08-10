@@ -61,12 +61,15 @@ class _FoodEditCoachPageState extends State<FoodEditCoachPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: SafeArea(
-        child: ListView(
-          children: [
-            inputTextFood(),
-          ],
+    return WillPopScope(
+      onWillPop: () async {return false;} ,
+      child: Scaffold(
+        body: SafeArea(
+          child: ListView(
+            children: [
+              inputTextFood(),
+            ],
+          ),
         ),
       ),
     );
@@ -111,7 +114,7 @@ class _FoodEditCoachPageState extends State<FoodEditCoachPage> {
                                 child: WidgetTextFieldInt(
                                   controller: calories,
                                   labelText: 'Calories',
-                                  maxLength: 2,
+                                  maxLength: 4,
                                 ),
                               ),
                               Padding(
@@ -182,7 +185,7 @@ class _FoodEditCoachPageState extends State<FoodEditCoachPage> {
                 widget.ifid.toString(), request);
             modelResult = editFood.data;
             log(jsonEncode(modelResult.result));
-             if (modelResult.result == '0') {
+            if (modelResult.result == '0') {
               // ignore: use_build_context_synchronously
               warning(context);
             } else {
@@ -323,7 +326,7 @@ class _FoodEditCoachPageState extends State<FoodEditCoachPage> {
                     color: Colors.black,
                   ),
                   onPressed: () {
-                    Navigator.pop(context);
+                    Navigator.of(context).pop();
                   },
                 ),
               ),

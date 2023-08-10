@@ -21,16 +21,21 @@ class _WidgetTextFieldIntState extends State<WidgetTextFieldInt> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(widget.labelText),
+        Padding(
+          padding: const EdgeInsets.only(left: 5, bottom: 3),
+          child: Text(widget.labelText, style: Theme.of(context).textTheme.bodyLarge,),
+        ),
         TextField(
             keyboardType: TextInputType.number,
             controller: widget.controller,
+            style: Theme.of(context).textTheme.bodyLarge,
             maxLength: widget.maxLength,
     
             //inputFormatters: [LengthLimitingTextInputFormatter(widget.maxLength)],
             textAlignVertical: TextAlignVertical.center,
             textAlign: TextAlign.center,
             decoration: InputDecoration(
+              contentPadding: EdgeInsets.symmetric(vertical: 9, horizontal: 12),
                  counterText: "",
                 filled: true,
                 fillColor: Theme.of(context).colorScheme.background)),

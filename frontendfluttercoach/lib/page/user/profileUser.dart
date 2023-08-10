@@ -54,28 +54,7 @@ class _ProfileUserState extends State<ProfileUser> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      floatingActionButtonLocation: FloatingActionButtonLocation.miniEndTop,
-      floatingActionButton: Padding(
-        padding: const EdgeInsets.only(top: 20, right: 8),
-        child: SizedBox(
-          height: 55,
-          width: 55,
-          child: FloatingActionButton(
-            backgroundColor: Theme.of(context).colorScheme.primary,
-            foregroundColor: Colors.white,
-            onPressed: () {
-              pushNewScreen(
-                context,
-                screen: const editProfileCus(),
-                withNavBar: true,
-              );
-            },
-            shape: const CircleBorder(),
-            child: const Icon(Icons.edit_outlined),
-          ),
-        ),
-      ),
-      body: ListView(
+      body: Column(
         children: [
           showProfile(),
           //Expanded(child: showMenu()),

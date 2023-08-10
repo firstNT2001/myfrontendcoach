@@ -18,7 +18,10 @@ class _WidgetDropdownStringNotValueState extends State<WidgetDropdownStringNotVa
     return  Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(widget.title),
+        Padding(
+          padding: const EdgeInsets.only(left: 5, bottom: 3),
+          child: Text(widget.title,style: Theme.of(context).textTheme.bodyLarge,),
+        ),
         DropdownLavel(),
       ],
     );
@@ -46,9 +49,7 @@ class _WidgetDropdownStringNotValueState extends State<WidgetDropdownStringNotVa
             value: item,
             child: Text(
               item,
-              style: const TextStyle(
-                fontSize: 14,
-              ),
+              style: Theme.of(context).textTheme.bodyLarge,
             ),
           )).toList(),
       validator: (value) {
