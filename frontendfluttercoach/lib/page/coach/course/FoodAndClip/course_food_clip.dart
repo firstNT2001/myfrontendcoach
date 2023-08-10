@@ -33,7 +33,6 @@ import '../../../../widget/image_video.dart';
 import '../../../../widget/wg_editClip_Dialog.dart';
 import '../../../../widget/wg_editFood_Dialog.dart';
 import '../../../../widget/wg_search_food.dart';
-import '../../daysCourse/days_course_page.dart';
 import 'clipCourse/insertClip/clip_select_page.dart';
 import 'foodCourse/insertFood/food_new_page.dart';
 

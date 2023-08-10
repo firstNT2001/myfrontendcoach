@@ -140,12 +140,14 @@ class _ClipEditSelectPageState extends State<ClipEditSelectPage> {
     } catch (err) {
       log('Error: $err');
     }
-  } 
-   //LoadData
+  }
+
+  //LoadData
   Future<void> loadDayData() async {
     try {
       // log(widget.did);
-      var datas = await _dayService.days(did: widget.did.toString(), coID: '', sequence: '');
+      var datas = await _dayService.days(
+          did: widget.did.toString(), coID: '', sequence: '');
       modelDay = datas.data;
       // log(foods.length.toString());
     } catch (err) {
@@ -153,19 +155,18 @@ class _ClipEditSelectPageState extends State<ClipEditSelectPage> {
     }
   }
 
-   //LoadData
+  //LoadData
   Future<void> loadClipData() async {
     try {
       // log(widget.did);
-      var datas = await _clipService.clips(cpID: widget.cpID, icpID: '', did: '');
+      var datas =
+          await _clipService.clips(cpID: widget.cpID, icpID: '', did: '');
       modelClip = datas.data;
       // log(foods.length.toString());
     } catch (err) {
       log('Error: $err');
     }
   }
-
-
 
   Widget showClip() {
     return FutureBuilder(
@@ -185,8 +186,7 @@ class _ClipEditSelectPageState extends State<ClipEditSelectPage> {
                     height: MediaQuery.of(context).size.height * 0.2,
                     child: InkWell(
                       onTap: () {
-                        dialog(context, listClip.icpId, listClip.name,
-                            listClip.amountPerSet, listClip.video);
+                        dialog(context, listClip);
                       },
                       child: Row(
                         //mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -261,70 +261,79 @@ class _ClipEditSelectPageState extends State<ClipEditSelectPage> {
   }
 
   void dialog(
-      BuildContext context, int icpID, String name, String set, String video) {
+      BuildContext context, ListClip clips) {
     SmartDialog.show(
       alignment: Alignment.bottomCenter,
       builder: (_) {
         return Container(
           width: MediaQuery.of(context).size.width,
-          height: MediaQuery.of(context).size.height * 0.7,
+          height: MediaQuery.of(context).size.height * 0.6,
           decoration: const BoxDecoration(
             borderRadius: BorderRadius.only(
                 topRight: Radius.circular(20), topLeft: Radius.circular(20)),
             color: Colors.white,
           ),
-          child: Column(
-            children: [
-              const SizedBox(
-                height: 20,
-              ),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.only(left: 20),
-                    child: Text(name,
-                        style: Theme.of(context).textTheme.titleLarge),
-                  ),
-                  if (video != '') ...{
-                    WidgetShowCilp(urlVideo: video),
-                  } else ...{
-                    Container(
-                        width: MediaQuery.of(context).size.width * 0.7,
-                        height: MediaQuery.of(context).size.height * 0.3,
-                        decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(26),
-                            color: Theme.of(context).colorScheme.primary)),
-                    const SizedBox(
-                      height: 8,
+          child: SingleChildScrollView(
+            child: Column(
+              children: [
+                const SizedBox(
+                  height: 20,
+                ),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.only(left: 20),
+                      child: Text(clips.name,
+                          style: Theme.of(context).textTheme.titleLarge),
                     ),
-                  },
-                  Padding(
-                    padding: const EdgeInsets.only(left: 20, bottom: 10),
-                    child: Text("จำนวนเซต",
-                        style: Theme.of(context).textTheme.titleMedium),
-                  ),
-                  Padding(
-                    padding:
-                        const EdgeInsets.only(left: 20, right: 20, bottom: 20),
-                    child: SizedBox(
-                      width: MediaQuery.of(context).size.width,
-                      child: AutoSizeText(
-                        "   $set",
-                        maxLines: 8,
-                        style: Theme.of(context).textTheme.titleMedium,
+                    if (clips.video != '') ...{
+                      WidgetShowCilp(urlVideo: clips.video),
+                    } else ...{
+                      Container(
+                          width: MediaQuery.of(context).size.width * 0.7,
+                          height: MediaQuery.of(context).size.height * 0.3,
+                          decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(26),
+                              color: Theme.of(context).colorScheme.primary)),
+                      const SizedBox(
+                        height: 8,
+                      ),
+                    },
+                     Padding(
+                padding: const EdgeInsets.only(top: 20,bottom: 8, right: 20, left: 20),
+                child: Text(
+                  'รายละเอียด ${clips.details}',
+                  style: Theme.of(context).textTheme.bodyLarge,
+                ),
+              ),
+                    Padding(
+                      padding: const EdgeInsets.only(left: 20, bottom: 10),
+                      child: Text("จำนวนเซต",
+                          style: Theme.of(context).textTheme.titleMedium),
+                    ),
+                    Padding(
+                      padding:
+                          const EdgeInsets.only(left: 20, right: 20, bottom: 20),
+                      child: SizedBox(
+                        width: MediaQuery.of(context).size.width,
+                        child: AutoSizeText(
+                          "   ${clips.amountPerSet}",
+                          maxLines: 8,
+                          style: Theme.of(context).textTheme.bodyLarge,
+                        ),
                       ),
                     ),
-                  ),
-                ],
-              ),
-              Visibility(
-                  visible: widget.isVisible,
-                  child: buttonEditClip(icpID, name, context)),
-              if (widget.isVisible == false) ...{
-                buttonRequest(icpID, name, context)
-              }
-            ],
+                  ],
+                ),
+                Visibility(
+                    visible: widget.isVisible,
+                    child: buttonEditClip(clips.icpId, clips.name, context)),
+                if (widget.isVisible == false) ...{
+                  buttonRequest(clips.icpId, clips.name, context)
+                }
+              ],
+            ),
           ),
         );
       },
@@ -337,7 +346,7 @@ class _ClipEditSelectPageState extends State<ClipEditSelectPage> {
       children: [
         Padding(
           padding: const EdgeInsets.only(left: 20, right: 20),
-          child: ElevatedButton(
+          child: FilledButton(
               onPressed: () async {
                 log(widget.cpID);
                 ClipClipIdPut request = ClipClipIdPut(
@@ -351,11 +360,17 @@ class _ClipEditSelectPageState extends State<ClipEditSelectPage> {
                 log(modelResult.result);
 
                 if (modelResult.result == '1') {
-                  Get.to(() => HomeFoodAndClipPage(
-                        did: widget.did,
-                        sequence: widget.sequence,
-                        isVisible: widget.isVisible,
-                      ));
+                  // ignore: use_build_context_synchronously
+                  Navigator.pushAndRemoveUntil<void>(
+                    context,
+                    MaterialPageRoute<void>(
+                        builder: (BuildContext context) => HomeFoodAndClipPage(
+                              did: widget.did,
+                              sequence: context.read<AppData>().sequence,
+                              isVisible: widget.isVisible,
+                            )),
+                    ModalRoute.withName('/DaysCoursePage'),
+                  );
                 } else {
                   // ignore: use_build_context_synchronously
                   CherryToast.warning(
@@ -380,7 +395,7 @@ class _ClipEditSelectPageState extends State<ClipEditSelectPage> {
       children: [
         Padding(
           padding: const EdgeInsets.only(left: 20, right: 20),
-          child: ElevatedButton(
+          child: FilledButton(
               onPressed: () async {
                 log(widget.cpID);
                 ClipClipIdPut request = ClipClipIdPut(

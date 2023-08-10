@@ -271,11 +271,19 @@ class _FoodEditSelectPageState extends State<FoodEditSelectPage> {
                           modelResult = response.data;
                           log(modelResult.result);
                           if (modelResult.result == '1') {
-                            Get.to(() => HomeFoodAndClipPage(
-                                  did: widget.did,
-                                  sequence: widget.sequence,
-                                  isVisible: widget.isVisible,
-                                ));
+                            // ignore: use_build_context_synchronously
+                            Navigator.pushAndRemoveUntil<void>(
+                              context,
+                              MaterialPageRoute<void>(
+                                  builder: (BuildContext context) =>
+                                      HomeFoodAndClipPage(
+                                        did: widget.did,
+                                        sequence:
+                                            context.read<AppData>().sequence,
+                                        isVisible: widget.isVisible,
+                                      )),
+                              ModalRoute.withName('/DaysCoursePage'),
+                            );
                           } else {
                             // ignore: use_build_context_synchronously
                             CherryToast.warning(

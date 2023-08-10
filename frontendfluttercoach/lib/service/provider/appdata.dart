@@ -64,13 +64,17 @@ class AppData with ChangeNotifier {
   ClipServices get clipServices => ClipServices(Dio(), baseUrl: baseurl);
   ListClipServices get listClipServices =>
       ListClipServices(Dio(), baseUrl: baseurl);
+
   AuthService get authService => AuthService(Dio(), baseUrl: baseurl);
   CourseService get courseService => CourseService(Dio(), baseUrl: baseurl);
   CoachService get coachService => CoachService(Dio(), baseUrl: baseurl);
   RequestService get requestService => RequestService(Dio(), baseUrl: baseurl);
   DaysService get daysService => DaysService(Dio(), baseUrl: baseurl);
   ReviewService get reviewService => ReviewService(Dio(), baseUrl: baseurl);
-  BuyCourseService get buyCourseService => BuyCourseService(Dio(), baseUrl: baseurl);
-  CustomerService get customerService => CustomerService(Dio(), baseUrl: baseurl);
-  ProgessbarService get progessbar => ProgessbarService(Dio(), baseUrl:baseurl);
+  BuyCourseService get buyCourseService =>
+      BuyCourseService(Dio(), baseUrl: baseurl);
+  CustomerService get customerService =>
+      CustomerService(Dio(), baseUrl: baseurl);
+  ProgessbarService get progessbar =>
+      ProgessbarService(Dio(), baseUrl: baseurl);
 }

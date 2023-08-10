@@ -39,7 +39,7 @@ class _SearchClipCoachPageState extends State<SearchClipCoachPage> {
 
   @override
   Widget build(BuildContext context) {
-     return Scaffold(
+    return Scaffold(
       body: SafeArea(
           child: Column(
         children: [
@@ -79,7 +79,11 @@ class _SearchClipCoachPageState extends State<SearchClipCoachPage> {
               onChanged: (value) {
                 setState(() {
                   //isVisibles = true;
-                  _listClipService.listClips(icpID: '', cid: context.read<AppData>().cid.toString(), name: searchName.text)
+                  _listClipService
+                      .listClips(
+                          icpID: '',
+                          cid: context.read<AppData>().cid.toString(),
+                          name: searchName.text)
                       .then((fooddata) {
                     var datafoods = fooddata.data;
                     clips = datafoods;
@@ -108,7 +112,7 @@ class _SearchClipCoachPageState extends State<SearchClipCoachPage> {
     );
   }
 
- //Dialog Delete
+  //Dialog Delete
   void dialogDeleteClip(BuildContext context, String icpID) {
     //target widget
     SmartDialog.show(builder: (_) {
@@ -166,8 +170,10 @@ class _SearchClipCoachPageState extends State<SearchClipCoachPage> {
   Future<void> loadClipData() async {
     try {
       // log(widget.did);
-      var datas =
-          await _listClipService.listClips(icpID: '', cid: context.read<AppData>().cid.toString(), name: searchName.text);
+      var datas = await _listClipService.listClips(
+          icpID: '',
+          cid: context.read<AppData>().cid.toString(),
+          name: searchName.text);
       clips = datas.data;
       // log(foods.length.toString());
     } catch (err) {
@@ -175,7 +181,6 @@ class _SearchClipCoachPageState extends State<SearchClipCoachPage> {
     }
   }
 
-  
   Widget showClips() {
     return FutureBuilder(
       future: loadClipDataMethod,
@@ -194,23 +199,21 @@ class _SearchClipCoachPageState extends State<SearchClipCoachPage> {
                     height: MediaQuery.of(context).size.height * 0.2,
                     child: InkWell(
                       onTap: () {
-                       //Get.to(() => FoodEditCoachPage(ifid: listClips.ifid));
+                        //Get.to(() => FoodEditCoachPage(ifid: listClips.ifid));
                       },
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                      
-                            Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: Container(
-                                  width:
-                                      MediaQuery.of(context).size.width * 0.3,
-                                  height: MediaQuery.of(context).size.height,
-                                  decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(8),
-                                      color: Colors.pink)),
-                            ),
+                          Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Container(
+                                width: MediaQuery.of(context).size.width * 0.3,
+                                height: MediaQuery.of(context).size.height,
+                                decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(8),
+                                    color: Colors.pink)),
+                          ),
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             crossAxisAlignment: CrossAxisAlignment.start,
@@ -239,7 +242,8 @@ class _SearchClipCoachPageState extends State<SearchClipCoachPage> {
                                 children: [
                                   IconButton(
                                     onPressed: () {
-                                      dialogDeleteClip(context, listClips.icpId.toString());
+                                      dialogDeleteClip(
+                                          context, listClips.icpId.toString());
                                     },
                                     icon: const Icon(
                                       FontAwesomeIcons.trash,

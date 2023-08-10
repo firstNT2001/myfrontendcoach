@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:frontendfluttercoach/widget/dialogs.dart';
+import 'package:get/get_connect/http/src/utils/utils.dart';
+import 'package:skeletonizer/skeletonizer.dart';
 import 'package:video_player/video_player.dart';
 
 class VideoItem extends StatefulWidget {
@@ -32,10 +34,9 @@ class _VideoItemState extends State<VideoItem> {
   @override
   Widget build(BuildContext context) {
     return ClipRRect(
-      borderRadius: BorderRadius.circular(15),
-      child: _controller.value.isInitialized
-          ? VideoPlayer(_controller)
-          : Center(child: load(context)),
-    );
+        borderRadius: BorderRadius.circular(15),
+        child: _controller.value.isInitialized
+            ? VideoPlayer(_controller)
+            :  Center(child: load(context)));
   }
 }

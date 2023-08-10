@@ -10,7 +10,9 @@ import 'package:frontendfluttercoach/model/response/md_Result.dart';
 import 'package:frontendfluttercoach/service/listFood.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
+import 'package:persistent_bottom_nav_bar_v2/persistent-tab-view.dart';
 import 'package:provider/provider.dart';
+import 'package:skeletonizer/skeletonizer.dart';
 
 import '../../service/provider/appdata.dart';
 import '../coach/FoodAndClip/foodCoach/food_edit_page.dart';
@@ -29,6 +31,7 @@ class _SearchFoodCoachPageState extends State<SearchFoodCoachPage> {
   List<ModelFoodList> foods = [];
   late ModelResult modelResult;
 
+  bool _enabledFood = true;
   TextEditingController searchName = TextEditingController();
   @override
   void initState() {
@@ -80,7 +83,10 @@ class _SearchFoodCoachPageState extends State<SearchFoodCoachPage> {
                 setState(() {
                   //isVisibles = true;
                   _foodService
-                      .listFoods(ifid: '', cid: context.read<AppData>().cid.toString(), name: searchName.text)
+                      .listFoods(
+                          ifid: '',
+                          cid: context.read<AppData>().cid.toString(),
+                          name: searchName.text)
                       .then((fooddata) {
                     var datafoods = fooddata.data;
                     foods = datafoods;
@@ -114,9 +120,15 @@ class _SearchFoodCoachPageState extends State<SearchFoodCoachPage> {
     try {
       // log(widget.did);
       var datas = await _foodService.listFoods(
-          ifid: '', cid: context.read<AppData>().cid.toString(), name: searchName.text);
+          ifid: '',
+          cid: context.read<AppData>().cid.toString(),
+          name: searchName.text);
       foods = datas.data;
-      // log(foods.length.toString());
+      Future.delayed(Duration(seconds: context.read<AppData>().duration), () {
+        setState(() {
+          _enabledFood = false;
+        });
+      });
     } catch (err) {
       log('Error: $err');
     }
@@ -126,97 +138,104 @@ class _SearchFoodCoachPageState extends State<SearchFoodCoachPage> {
     return FutureBuilder(
       future: loadFoodDataMethod,
       builder: (context, snapshot) {
-        if (snapshot.connectionState != ConnectionState.done) {
-          return const Center(child: CircularProgressIndicator());
+        if (snapshot.connectionState == ConnectionState.done) {
+          return Skeletonizer(
+            enabled: _enabledFood,
+            child: listView(),
+          );
         } else {
-          return ListView.builder(
-            shrinkWrap: true,
-            itemCount: foods.length,
-            itemBuilder: (context, index) {
-              final listfood = foods[index];
-              return Column(
-                children: [
-                  SizedBox(
-                    height: MediaQuery.of(context).size.height * 0.2,
-                    width: MediaQuery.of(context).size.width,
-                    child: InkWell(
-                      onTap: () {
-                       Get.to(() => FoodEditCoachPage(ifid: listfood.ifid));
-                      },
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          if (listfood.image != '' ) ...{
-                           Padding(
-                              padding: const EdgeInsets.only(
-                                  left: 8, right: 8, top: 5, bottom: 5),
-                              child: Center(
-                                child: ClipRRect(
-                                  borderRadius:
-                                      BorderRadius.circular(20), // Image border
-                                  child: SizedBox.fromSize(
-                                    size: const Size.fromRadius(
-                                        55), // Image radius
-                                    child: Image.network(
-                                        listfood.image,
-                                        fit: BoxFit.cover),
-                                  ),
-                                ),
-                              )),
-                          } else
-                            Padding(
-                              padding: const EdgeInsets.all(10.0),
-                              child: Container(
-                                  width:
-                                      MediaQuery.of(context).size.width * 0.3,
-                                  height: MediaQuery.of(context).size.height,
-                                  decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(8),
-                                      color: Colors.pink)),
-                            ),
-                          Center(
-                            child: SizedBox(
-                              width:
-                                  MediaQuery.of(context).size.width * 0.4,
-                              child: AutoSizeText(
-                                listfood.name,
-                                maxLines: 5,
-                                style: Theme.of(context)
-                                    .textTheme
-                                    .titleMedium,
-                              ),
-                            ),
-                          ),
-                          const SizedBox(height: 20),
-                          Column(
-                            mainAxisAlignment: MainAxisAlignment.end,
-                            crossAxisAlignment: CrossAxisAlignment.end,
-                            children: [
-                              IconButton(
-                                onPressed: () {
-                                  dialogDeleteFood(context, listfood.ifid.toString());
-                                },
-                                icon: const Icon(
-                                  FontAwesomeIcons.trash,
-                                ),
-                              ),
-                            ],
-                          ),
-                        
-                        ],
-                      ),
-                    ),
-                  ),
-                  const Padding(
-                    padding: EdgeInsets.all(16),
-                    child: Divider(),
-                  ),
-                ],
-              );
-            },
+          return Skeletonizer(
+            enabled: _enabledFood,
+            child: listView(),
           );
         }
+      },
+    );
+  }
+
+  ListView listView() {
+    return ListView.builder(
+      shrinkWrap: true,
+      itemCount: foods.length,
+      itemBuilder: (context, index) {
+        final listfood = foods[index];
+        return Column(
+          children: [
+            SizedBox(
+              height: MediaQuery.of(context).size.height * 0.2,
+              width: MediaQuery.of(context).size.width,
+              child: InkWell(
+                onTap: () {
+                  pushNewScreen(
+                    context,
+                    screen: FoodEditCoachPage(ifid: listfood.ifid),
+                    withNavBar: true,
+                  );
+                },
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    if (listfood.image != '') ...{
+                      Padding(
+                          padding: const EdgeInsets.only(
+                              left: 8, right: 8, top: 5, bottom: 5),
+                          child: Center(
+                            child: ClipRRect(
+                              borderRadius:
+                                  BorderRadius.circular(20), // Image border
+                              child: SizedBox.fromSize(
+                                size: const Size.fromRadius(55), // Image radius
+                                child: Image.network(listfood.image,
+                                    fit: BoxFit.cover),
+                              ),
+                            ),
+                          )),
+                    } else
+                      Padding(
+                        padding: const EdgeInsets.all(10.0),
+                        child: Container(
+                            width: MediaQuery.of(context).size.width * 0.3,
+                            height: MediaQuery.of(context).size.height,
+                            decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(8),
+                                color: Colors.pink)),
+                      ),
+                    Center(
+                      child: SizedBox(
+                        width: MediaQuery.of(context).size.width * 0.4,
+                        child: AutoSizeText(
+                          listfood.name,
+                          maxLines: 5,
+                          style: Theme.of(context).textTheme.titleMedium,
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 20),
+                    Column(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      crossAxisAlignment: CrossAxisAlignment.end,
+                      children: [
+                        IconButton(
+                          onPressed: () {
+                            dialogDeleteFood(context, listfood.ifid.toString());
+                          },
+                          icon: const Icon(
+                            FontAwesomeIcons.trash,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+            ),
+            const Padding(
+              padding: EdgeInsets.all(16),
+              child: Divider(),
+            ),
+          ],
+        );
       },
     );
   }
@@ -256,8 +275,7 @@ class _SearchFoodCoachPageState extends State<SearchFoodCoachPage> {
                       child: const Text("ยกเลิก")),
                   FilledButton(
                       onPressed: () async {
-                        var response =
-                            await _foodService.deleteListFood(ifid);
+                        var response = await _foodService.deleteListFood(ifid);
                         modelResult = response.data;
                         log(modelResult.result);
                         setState(() {

@@ -8,8 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:frontendfluttercoach/service/food.dart';
-import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
+
 import 'package:provider/provider.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 
@@ -173,22 +172,17 @@ class _FoodSelectTimePageState extends State<FoodSelectTimePage>
           log("result:${modelResult.result}");
           if (modelResult.result == '1') {
             widget.increaseFood.clear();
-
-            Navigator.pushReplacement(
-                context,
-                MaterialPageRoute(
-                    builder: (BuildContext context) => HomeFoodAndClipPage(
-                          did: widget.did,
-                          sequence: context.read<AppData>().sequence,
-                          isVisible: widget.isVisible,
-                        )));
-
-            // Get.to(() => HomeFoodAndClipPage(
-            //       did: widget.did,
-            //       sequence:
-            //           context.read<AppData>().sequence,
-            //       isVisible: widget.isVisible,
-            //     ));
+            // ignore: use_build_context_synchronously
+            Navigator.pushAndRemoveUntil<void>(
+              context,
+              MaterialPageRoute<void>(
+                  builder: (BuildContext context) => HomeFoodAndClipPage(
+                        did: widget.did,
+                        sequence: context.read<AppData>().sequence,
+                        isVisible: widget.isVisible,
+                      )),
+              ModalRoute.withName('/DaysCoursePage'),
+            );
           } else {
             // ignore: use_build_context_synchronously
             CherryToast.warning(

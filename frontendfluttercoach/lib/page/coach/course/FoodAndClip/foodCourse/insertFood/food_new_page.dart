@@ -54,11 +54,7 @@ class _FoodNewCoursePageState extends State<FoodNewCoursePage> {
 
     _listFoodService = context.read<AppData>().listfoodServices;
     loadListFoodDataMethod = loadListFoodData();
-    Future.delayed(Duration(seconds: context.read<AppData>().duration), () {
-      setState(() {
-        _enabled = false;
-      });
-    });
+    
   }
 
   @override
@@ -172,6 +168,11 @@ class _FoodNewCoursePageState extends State<FoodNewCoursePage> {
         colorFood.add(context.read<AppData>().colorNotSelect);
       }
       log("image${listFoods[2].image}");
+      Future.delayed(Duration(seconds: context.read<AppData>().duration), () {
+      setState(() {
+        _enabled = false;
+      });
+    });
     } catch (err) {
       log('Error: $err');
     }
