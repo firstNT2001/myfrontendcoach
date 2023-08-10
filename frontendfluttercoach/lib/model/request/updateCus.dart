@@ -2,11 +2,12 @@
 //
 //     final updateCustomer = updateCustomerFromJson(jsonString);
 
+import 'package:meta/meta.dart';
 import 'dart:convert';
 
-List<UpdateCustomer> updateCustomerFromJson(String str) => List<UpdateCustomer>.from(json.decode(str).map((x) => UpdateCustomer.fromJson(x)));
+UpdateCustomer updateCustomerFromJson(String str) => UpdateCustomer.fromJson(json.decode(str));
 
-String updateCustomerToJson(List<UpdateCustomer> data) => json.encode(List<dynamic>.from(data.map((x) => x.toJson())));
+String updateCustomerToJson(UpdateCustomer data) => json.encode(data.toJson());
 
 class UpdateCustomer {
     String username;
@@ -52,6 +53,7 @@ class UpdateCustomer {
         "Email": email,
         "FullName": fullName,
         "Birthday": birthday,
+        "Gender": gender,
         "Phone": phone,
         "Image": image,
         "Weight": weight,

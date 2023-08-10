@@ -4,9 +4,11 @@ import 'dart:io';
 import 'package:dio/dio.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rounded_date_picker/flutter_rounded_date_picker.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:frontendfluttercoach/page/user/profileUser.dart';
 import 'package:hex/hex.dart';
 import 'package:persistent_bottom_nav_bar_v2/persistent-tab-view.dart';
 import 'package:provider/provider.dart';
@@ -17,6 +19,7 @@ import '../../model/response/md_Customer_get.dart';
 import '../../model/response/md_Result.dart';
 import '../../service/customer.dart';
 import '../../service/provider/appdata.dart';
+import '../../widget/PopUp/popUp.dart';
 import '../../widget/dropdown/wg_dropdown_string.dart';
 import 'money/widgethistory/widget_history.dart';
 
@@ -33,12 +36,15 @@ class _editProfileCusState extends State<editProfileCus> {
   late Future<void> loadDataMethod;
   late CustomerService customerService;
   List<Customer> customer = [];
+  late ModelResult modelResult;
   //late ModelRowsAffected modelRowsAffected;
   late UpdateCustomer cusUpdate;
   late ModelResult moduleResult;
   String GenOTP = "";
   late int uid;
   bool _isvisible = false;
+  bool _isvisiblephone = false;
+  String tt = '';
   //controller
 
   TextEditingController username = TextEditingController();
@@ -177,8 +183,29 @@ class _editProfileCusState extends State<editProfileCus> {
         ),
         TextField(
           readOnly: true,
+          onTap: () {
+            log("message");
+            CupertinoRoundedDatePicker.show(
+              context,
+              fontFamily: "Mali",
+              textColor: Colors.white,
+              era: EraMode.BUDDHIST_YEAR,
+              background: Colors.orangeAccent,
+              borderRadius: 16,
+              minimumYear: DateTime.now().year - 40,
+              initialDatePickerMode: CupertinoDatePickerMode.date,
+              onDateTimeChanged: (newDateTime) {
+                var dateFormat = '${newDateTime.toIso8601String()}Z';
+                newbirht = dateFormat.toString();
+                String newBirthday = thaiDate(newDateTime.toString());
+                setState(() => birthday.text = newBirthday);
+              },
+            );
+          },
           controller: _controller,
           decoration: const InputDecoration(
+            suffixIcon: Icon(FontAwesomeIcons.calendarDay,
+                color: Color.fromARGB(255, 37, 37, 37)),
             contentPadding: EdgeInsets.symmetric(vertical: 10, horizontal: 12),
             border: OutlineInputBorder(),
           ),
@@ -276,58 +303,25 @@ class _editProfileCusState extends State<editProfileCus> {
                       SizedBox(
                         width: (width - 16 - (3 * 30)) / 2,
                         child: Padding(
-                          padding: const EdgeInsets.only(bottom: 10),
+                          padding: const EdgeInsets.only(bottom: 10, left: 15),
                           child: WidgetDropdownString(
                               title: "เพศ",
                               selectedValue: gender,
                               listItems: genders),
                         ),
                       ),
-                      SizedBox(
-                        width: (width - 16 - (3 * 30)) / 2,
+
+                      Expanded(
                         child: txtfild(phone, "โทรศัพท์", "โทรศัพท์"),
                       ),
+                      // SizedBox(
+                      //   width: (width - 16 - (3 * 30)) / 2,
+                      //   child: txtfild(phone, "โทรศัพท์", "โทรศัพท์"),
+                      // ),
                     ],
                   ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    children: [
-                      Expanded(
-                        child: txtfildBirth(birthday, "วันเกิด", "ว/ด/ป"),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.only(right: 15, top: 8),
-                        child: IconButton(
-                            onPressed: () async {
-                              DateTime? newDateTime =
-                                  await showRoundedDatePicker(
-                                      context: context,
-                                      locale: const Locale("th", "TH"),
-                                      theme: ThemeData(
-                                          primarySwatch: Colors.orange),
-                                      era: EraMode.BUDDHIST_YEAR,
-                                      initialDate: DateTime.now(),
-                                      firstDate:
-                                          DateTime(DateTime.now().year - 40),
-                                      lastDate:
-                                          DateTime(DateTime.now().year + 1),
-                                      styleDatePicker:
-                                          MaterialRoundedDatePickerStyle(
-                                              paddingMonthHeader:
-                                                  const EdgeInsets.all(80)));
-                              if (newDateTime != null) {
-                                var dateFormat =
-                                    '${newDateTime.toIso8601String()}Z';
-                                newbirht = dateFormat.toString();
-                                String newBirthday =
-                                    thaiDate(newDateTime.toString());
-                                setState(() => birthday.text = newBirthday);
-                              }
-                            },
-                            icon: const Icon(FontAwesomeIcons.calendarDay)),
-                      ),
-                    ],
-                  ),
+                  txtfildBirth(birthday, "วันเกิด", "ว/ด/ป"),
+
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children: [
@@ -356,20 +350,45 @@ class _editProfileCusState extends State<editProfileCus> {
                       ],
                     ),
                   ),
-                  FilledButton(
-                      onPressed: () async {
-                        GenOTP = getGoogleAuthenticatorUriQR(
-                            "Coaching", email.text, email.text + password.text);
-                        log(GenOTP);
+                  Visibility(
+                    visible: _isvisiblephone,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.only(
+                              bottom: 8, left: 20, right: 23),
+                          child: Text(
+                            "กรุณากรอกเบอร์โทรศัพให้ถูกต้อง",
+                            style: TextStyle(
+                                color: Theme.of(context).colorScheme.error),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  //"สร้างGoogle Authenticator"
+                  // Padding(
+                  //   padding:
+                  //       const EdgeInsets.only(left: 15, right: 15, top: 10),
+                  //   child: SizedBox(
+                  //     width: 350,
+                  //     child: FilledButton(
+                  //         onPressed: () async {
+                  //           GenOTP = getGoogleAuthenticatorUriQR("Coaching",
+                  //               email.text, email.text + password.text);
+                  //           log(GenOTP);
 
-                        if (GenOTP.isNotEmpty) {
-                          setState(() {
-                            isvisible = true;
-                          });
-                          // _launchUrl( Uri.parse(GenOTP));
-                        }
-                      },
-                      child: const Text("สร้างGoogle Authenticator")),
+                  //           if (GenOTP.isNotEmpty) {
+                  //             setState(() {
+                  //               isvisible = true;
+                  //             });
+                  //             // _launchUrl( Uri.parse(GenOTP));
+                  //           }
+                  //         },
+                  //         child: const Text("สร้างGoogle Authenticator")),
+                  //   ),
+                  // ),
                   Visibility(
                     visible: isvisible,
                     child: Column(
@@ -400,6 +419,7 @@ class _editProfileCusState extends State<editProfileCus> {
                     ),
                   ),
                   Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
                     children: [
                       const Text('เปรียนรหัสผ่าน'),
                       IconButton(
@@ -414,80 +434,106 @@ class _editProfileCusState extends State<editProfileCus> {
                       ),
                     ],
                   ),
+ // Padding(
+                  //   padding:
+                  //       const EdgeInsets.only(left: 15, right: 15, top: 10),
+                  //   child: SizedBox(
+                  //     width: 350,
+                  //     child: FilledButton(
+                  //         onPressed: () async {
+                  //           GenOTP = getGoogleAuthenticatorUriQR("Coaching",
+                  //               email.text, email.text + password.text);
+                  //           log(GenOTP);
 
+                  //           if (GenOTP.isNotEmpty) {
+                  //             setState(() {
+                  //               isvisible = true;
+                  //             });
+                  //             // _launchUrl( Uri.parse(GenOTP));
+                  //           }
+                  //         },
+                  //         child: const Text("สร้างGoogle Authenticator")),
+                  //   ),
+                  // ),
                   Padding(
-                    padding: const EdgeInsets.only(top: 15, bottom: 15),
-                    child: ElevatedButton(
-                        child: const Padding(
-                          padding: EdgeInsets.all(10.0),
-                          child: Text("บันทึก"),
-                        ),
-                        onPressed: () async {
-                          if (pickedImg != null) await uploadfile();
-                          if (pickedImg == null) profile = _image;
-
-                          if (username.text.isEmpty ||
-                              email.text.isEmpty ||
-                              fullName.text.isEmpty ||
-                              phone.text.isEmpty ||
-                              weight.text.isEmpty ||
-                              gender.text.isEmpty ||
-                              height.text.isEmpty) {
-                            setState(() {
-                              _isvisible = true;
-                            });
-                          } else {
-                            log("newg3" + gender.text);
-                            // var formatter = DateFormat.yMMMd( _birthday.text);
-                            // log("formatter"+formatter.toString());
-                            if (newbirht.isEmpty) {
-                              newbirht = oldbirht;
+                    padding:  const EdgeInsets.only(left: 15, right: 15, top: 10),
+                    child: SizedBox(
+                      width: 350,
+                      child: FilledButton(
+                          child: const Padding(
+                            padding: EdgeInsets.all(10.0),
+                            child: Text("บันทึก"),
+                          ),
+                          onPressed: () async {
+                            if (pickedImg != null) await uploadfile();
+                            if (pickedImg == null) profile = _image;
+                    
+                            if (username.text.isEmpty ||
+                                email.text.isEmpty ||
+                                fullName.text.isEmpty ||
+                                phone.text.isEmpty ||
+                                weight.text.isEmpty ||
+                                gender.text.isEmpty ||
+                                height.text.isEmpty) {
+                              setState(() {
+                                _isvisible = true;
+                              });
+                            } else {
+                              // var formatter = DateFormat.yMMMd( _birthday.text);
+                              // log("formatter"+formatter.toString());
+                              if (newbirht.isEmpty) {
+                                newbirht = oldbirht;
+                              }
+                              if (gender.text == 'ชาย') {
+                                log("newg3" + gender.text);
+                                tt = '2';
+                                log("newg1=" + tt);
+                              } else {
+                                tt = '1';
+                                log("newg2=" + tt);
+                              }
+                              if (phone.text.length != 10) {
+                                log("Erorphone");
+                              }
+                    
+                              // UpdateCustomer updateCustomer = UpdateCustomer(
+                              //     username: username.text,
+                              //     password: password.text,
+                              //     email: email.text,
+                              //     fullName: fullName.text,
+                              //     birthday: newbirht,
+                              //     gender: tt,
+                              //     phone: phone.text,
+                              //     image: profile,
+                              //     weight: int.parse(weight.text),
+                              //     height: int.parse(height.text));
+                              // log("Update");
+                              // log(jsonEncode(updateCustomer));
+                              // log("log" + uid.toString());
+                              // log(birthday.text);
+                              // //log(_image.toString());
+                              // update = await customerService.updateCustomer(
+                              //     uid.toString(), updateCustomer);
+                              // moduleResult = update.data;
+                              // log(moduleResult.result);
+                              // modelResult = update.data;
+                              // if (modelResult.result == '0') {
+                              //   // ignore: use_build_context_synchronously
+                              //   warning(context);
+                              // } else {
+                              //   // ignore: use_build_context_synchronously
+                              //   success(context);
+                              // }
+                              // pushNewScreen(
+                              //   context,
+                              //   screen: const ProfileUser(),
+                              //   withNavBar: true,
+                              // );
                             }
-                            // if(gender.text== 'ชาย') {
-                            //   setState(() {
-                            //     gender.text='2';
-                            //   });
-                            //   log("newg1=" +  gender.text);
-                            // }
-                            // else{
-                            //   setState(() {
-                            //     gender.text='1';
-                            //   });
-                            //   log("newg2=" +  gender.text);
-                            // }
-
-                            UpdateCustomer updateCustomer = UpdateCustomer(
-                                username: username.text,
-                                password: password.text,
-                                email: email.text,
-                                fullName: fullName.text,
-                                birthday: newbirht,
-                                gender: (gender.text) == 'ชาย'
-                                    ? '2'
-                                    : (gender.text == 'หญิง')
-                                        ? '1'
-                                        : '1',
-                                phone: phone.text,
-                                image: profile,
-                                weight: int.parse(weight.text),
-                                height: int.parse(height.text));
-                            log(jsonEncode(updateCustomer));
-                            log("log" + uid.toString());
-                            log(birthday.text);
-                            //log(_image.toString());
-                            update = await customerService.updateCustomer(
-                                uid.toString(), updateCustomer);
-                            moduleResult = update.data;
-                            // log(moduleResult.result);
-                            // pushNewScreen(
-                            //   context,
-                            //   screen: const editProfileCus(),
-                            //   withNavBar: true,
-                            // );
-                          }
-
-                          // Put your code here, which you want to execute when Text Field is NOT Empty.
-                        }),
+                    
+                            // Put your code here, which you want to execute when Text Field is NOT Empty.
+                          }),
+                    ),
                   ),
                 ],
               ),
