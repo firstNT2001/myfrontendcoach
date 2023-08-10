@@ -24,6 +24,7 @@ import '../../../service/provider/appdata.dart';
 import '../../../widget/PopUp/popUp.dart';
 import '../../../widget/dialogs.dart';
 import '../course/FoodAndClip/course_food_clip.dart';
+import '../course/course_edit_page.dart';
 
 class DaysCoursePage extends StatefulWidget {
   const DaysCoursePage(
@@ -78,44 +79,60 @@ class _DaysCoursePageState extends State<DaysCoursePage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      resizeToAvoidBottomInset: false,
-      appBar: AppBar(
-        leading: IconButton(
-          icon: const Icon(
-            FontAwesomeIcons.chevronLeft,
-            color: Colors.black,
-          ),
-          onPressed: () {
-            Get.back();
-          },
-        ),
-        actions: [
-          IconButton(
+    return WillPopScope(
+      onWillPop: () async => false,
+      child: Scaffold(
+        resizeToAvoidBottomInset: false,
+        appBar: AppBar(
+          leading: IconButton(
             icon: const Icon(
-              FontAwesomeIcons.calendarPlus,
+              FontAwesomeIcons.chevronLeft,
               color: Colors.black,
             ),
             onPressed: () {
-              dialogInsertDay(context);
+              // log(widget.coID);
+              Navigator.pushAndRemoveUntil<void>(
+                context,
+                MaterialPageRoute<void>(
+                    builder: (BuildContext context) => CourseEditPage(
+                        coID: widget.coID, isVisible: widget.isVisible)),
+                ModalRoute.withName('/NavbarBottomCoach'),
+              );
+             
+              
+              // MaterialPageRoute<void>(
+              //       builder: (BuildContext context) => CourseEditPage(coID: widget.coID, isVisible: widget.isVisible));
+              //   ModalRoute.withName('/');
+             // Get.back();
             },
-          )
-        ],
-        //backgroundColor: Theme.of(context).colorScheme.primaryContainer,
-        iconTheme: const IconThemeData(
-          color: Colors.black, //change your color here
-        ),
-        title: Text(title),
-        centerTitle: true,
-      ),
-      body: SafeArea(
-        child: Column(
-          children: [
-            const SizedBox(
-              height: 20,
-            ),
-            Expanded(child: showDays()),
+          ),
+          actions: [
+            IconButton(
+              icon: const Icon(
+                FontAwesomeIcons.calendarPlus,
+                color: Colors.black,
+              ),
+              onPressed: () {
+                dialogInsertDay(context);
+              },
+            )
           ],
+          //backgroundColor: Theme.of(context).colorScheme.primaryContainer,
+          iconTheme: const IconThemeData(
+            color: Colors.black, //change your color here
+          ),
+          title: Text(title),
+          centerTitle: true,
+        ),
+        body: SafeArea(
+          child: Column(
+            children: [
+              const SizedBox(
+                height: 20,
+              ),
+              Expanded(child: showDays()),
+            ],
+          ),
         ),
       ),
     );
@@ -277,7 +294,7 @@ class _DaysCoursePageState extends State<DaysCoursePage> {
           setState(() {
             loadDaysDataMethod = loadDaysDataAsync();
           });
-        }else{
+        } else {
           // ignore: use_build_context_synchronously
           popUpWarningDelete(context);
         }
@@ -296,6 +313,7 @@ class _DaysCoursePageState extends State<DaysCoursePage> {
       onConfirmBtnTap: () async {
         Navigator.of(context, rootNavigator: true).pop();
         startLoading(context);
+
         sequence = days.length + 1;
         log(sequence.toString());
         DayDayIdPut request = DayDayIdPut(sequence: sequence);
@@ -324,6 +342,7 @@ class _DaysCoursePageState extends State<DaysCoursePage> {
           loadDaysDataMethod = loadDaysDataAsync();
           sequence = 0;
         });
+
         stopLoading();
 
         log('onConfirmBtnTap');

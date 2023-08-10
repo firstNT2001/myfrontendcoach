@@ -6,7 +6,6 @@ import 'package:file_picker/file_picker.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:get/get.dart';
 
 import 'package:provider/provider.dart';
 
@@ -62,7 +61,9 @@ class _FoodEditCoachPageState extends State<FoodEditCoachPage> {
   @override
   Widget build(BuildContext context) {
     return WillPopScope(
-      onWillPop: () async {return false;} ,
+      onWillPop: () async {
+        return false;
+      },
       child: Scaffold(
         body: SafeArea(
           child: ListView(
@@ -191,7 +192,14 @@ class _FoodEditCoachPageState extends State<FoodEditCoachPage> {
             } else {
               // ignore: use_build_context_synchronously
               success(context);
-              Get.to(() => const FoodCoachPage());
+              // ignore: use_build_context_synchronously
+              Navigator.pushAndRemoveUntil<void>(
+                context,
+                MaterialPageRoute<void>(
+                    builder: (BuildContext context) => FoodCoachPage()),
+                ModalRoute.withName('/NavbarBottomCoach'),
+              );
+              //Get.to(() => const FoodCoachPage());
             }
           }
         },

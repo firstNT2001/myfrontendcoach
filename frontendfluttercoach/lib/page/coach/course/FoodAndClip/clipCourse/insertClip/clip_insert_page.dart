@@ -71,7 +71,7 @@ class _ClipInsertPageState extends State<ClipInsertPage> {
       resizeToAvoidBottomInset: false,
       appBar: AppBar(
         backgroundColor: Colors.white,
-          leading: IconButton(
+        leading: IconButton(
           icon: const Icon(
             FontAwesomeIcons.chevronLeft,
             color: Colors.black,
@@ -109,7 +109,6 @@ class _ClipInsertPageState extends State<ClipInsertPage> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      
                       Padding(
                         padding: const EdgeInsets.only(
                             left: 18, right: 18, bottom: 8),
@@ -145,12 +144,20 @@ class _ClipInsertPageState extends State<ClipInsertPage> {
                                   log("result:${modelResult.result}");
                                   if (modelResult.result == '1') {
                                     widget.increaseClip.clear();
-                                    Get.to(() => HomeFoodAndClipPage(
-                                          did: widget.did,
-                                          sequence:
-                                              context.read<AppData>().sequence,
-                                          isVisible: widget.isVisible,
-                                        ));
+                                    // ignore: use_build_context_synchronously
+                                    Navigator.pushAndRemoveUntil<void>(
+                                      context,
+                                      MaterialPageRoute<void>(
+                                          builder: (BuildContext context) =>
+                                              HomeFoodAndClipPage(
+                                                did: widget.did,
+                                                sequence: context
+                                                    .read<AppData>()
+                                                    .sequence,
+                                                isVisible: widget.isVisible,
+                                              )),
+                                      ModalRoute.withName('/DaysCoursePage'),
+                                    );
                                   } else {
                                     // ignore: use_build_context_synchronously
                                     CherryToast.warning(
@@ -193,34 +200,33 @@ class _ClipInsertPageState extends State<ClipInsertPage> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   if (clips.video != '') ...{
-                          Padding(
-                            padding: const EdgeInsets.only(
-                                left: 8, right: 8, top: 5, bottom: 5),
-                            child: AspectRatio(
-                                aspectRatio: 16 / 16,
-                                child: Container(
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(26),
-                                  ),
-                                  child: VideoItem(
-                                    video: clips.video,
-                                  ),
-                                )),
-                          )
-                        } else
-                          Padding(
-                            padding: const EdgeInsets.only(
-                                left: 8, right: 8, top: 5, bottom: 5),
-                            child: AspectRatio(
-                                aspectRatio: 16 / 16,
-                                child: Container(
-                                  decoration: BoxDecoration(
-                                    color: const Color.fromARGB(
-                                        255, 207, 208, 209),
-                                    borderRadius: BorderRadius.circular(20),
-                                  ),
-                                )),
-                          ),
+                    Padding(
+                      padding: const EdgeInsets.only(
+                          left: 8, right: 8, top: 5, bottom: 5),
+                      child: AspectRatio(
+                          aspectRatio: 16 / 16,
+                          child: Container(
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(26),
+                            ),
+                            child: VideoItem(
+                              video: clips.video,
+                            ),
+                          )),
+                    )
+                  } else
+                    Padding(
+                      padding: const EdgeInsets.only(
+                          left: 8, right: 8, top: 5, bottom: 5),
+                      child: AspectRatio(
+                          aspectRatio: 16 / 16,
+                          child: Container(
+                            decoration: BoxDecoration(
+                              color: const Color.fromARGB(255, 207, 208, 209),
+                              borderRadius: BorderRadius.circular(20),
+                            ),
+                          )),
+                    ),
                   Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     crossAxisAlignment: CrossAxisAlignment.start,

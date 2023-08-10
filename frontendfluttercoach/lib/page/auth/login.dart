@@ -330,6 +330,7 @@ class _LoginPageState extends State<LoginPage> {
                   InkWell(
                     onTap: () {
                       Get.to(() => const NavbarBottomCoach());
+                      //Navigator.of(context).pushReplacementNamed(context, '/NavbarBottomCoach');
 
                       context.read<AppData>().cid = cid;
                     },

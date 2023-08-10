@@ -304,88 +304,87 @@ class _ClipSelectPageState extends State<ClipSelectPage> {
           borderRadius: BorderRadius.circular(20),
           color: Colors.white,
         ),
-        alignment: Alignment.center,
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          //crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Padding(
-              padding: const EdgeInsets.only(
-                  left: 20, right: 20, top: 50, bottom: 0),
-              child: Text("คลิปท่าออกกำลังกาย",
-                  style: Theme.of(context).textTheme.headlineSmall),
-            ),
-            if (listClip.video != '') ...{
-              WidgetShowCilp(urlVideo: listClip.video),
-            } else ...{
-              Container(
-                  width: MediaQuery.of(context).size.width * 0.7,
-                  height: MediaQuery.of(context).size.height * 0.3,
-                  decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(26),
-                      color: Theme.of(context).colorScheme.primary)),
+        child: SingleChildScrollView(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Center(
+                child: Padding(
+                  padding: const EdgeInsets.only(
+                      left: 20, right: 20, top: 50, bottom: 0),
+                  child: Text("คลิปท่าออกกำลังกาย",
+                      style: Theme.of(context).textTheme.headlineSmall),
+                ),
+              ),
+              if (listClip.video != '') ...{
+                WidgetShowCilp(urlVideo: listClip.video),
+              } else ...{
+                Container(
+                    width: MediaQuery.of(context).size.width * 0.7,
+                    height: MediaQuery.of(context).size.height * 0.3,
+                    decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(26),
+                        color: Theme.of(context).colorScheme.primary)),
+                const SizedBox(
+                  height: 8,
+                ),
+              },
               const SizedBox(
-                height: 8,
+                height: 16,
               ),
-            },
-            const SizedBox(
-              height: 16,
-            ),
-            Padding(
-              padding: const EdgeInsets.only(bottom: 8),
-              child: SizedBox(
-                width: MediaQuery.of(context).size.width * 0.7,
-                child: AutoSizeText(
-                  'ชื่อคลิป: ${listClip.name}',
-                  maxLines: 5,
-                  //style: Theme.of(context).textTheme.bodyLarge,
+              Center(
+                child: Padding(
+                  padding: const EdgeInsets.only(
+                      top: 20, bottom: 8, right: 20, left: 20),
+                  child: Text(
+                    'ชื่อคลิป ${listClip.name}',
+                    style: Theme.of(context).textTheme.bodyLarge,
+                  ),
                 ),
               ),
-            ),
-            Padding(
-              padding: const EdgeInsets.only(bottom: 8),
-              child: SizedBox(
-                width: MediaQuery.of(context).size.width * 0.7,
-                child: AutoSizeText(
-                  'รายละเอียด: ${listClip.details}',
-                  maxLines: 5,
-                  //style: Theme.of(context).textTheme.bodyLarge,
-                ),
-              ),
-            ),
-            SizedBox(
-                width: MediaQuery.of(context).size.width * 0.7,
+              Padding(
+                padding: const EdgeInsets.only(bottom: 8, right: 20, left: 20),
                 child: Text(
-                  'จำนวนเซ็ท: ${listClip.amountPerSet.toString()}',
+                  'รายละเอียด ${listClip.details}',
                   style: Theme.of(context).textTheme.bodyLarge,
-                )),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.end,
-              //MainAxisAlignment.end,
-              children: [
-                Padding(
-                  padding: const EdgeInsets.only(right: 30),
-                  child: ElevatedButton(
-                      onPressed: () {
-                        setState(() {
-                          increaseClips.add(listClip);
-
-                          ClipDayIdPost requestFoodPost =
-                              ClipDayIdPost(listClipId: listClip.icpId);
-                          increaseClipDays.add(requestFoodPost);
-                          log(jsonEncode(requestFoodPost));
-
-                          colorList[index] =
-                              context.read<AppData>().colorSelect;
-                        });
-
-                        SmartDialog.dismiss();
-                      },
-                      child: const Text('ยืนยัน')),
                 ),
-              ],
-            )
-          ],
+              ),
+              Padding(
+                padding: const EdgeInsets.only(bottom: 8, right: 20, left: 20),
+                child: Text(
+                  'จำนวนเซ็ท ${listClip.amountPerSet.toString()}',
+                  style: Theme.of(context).textTheme.bodyLarge,
+                ),
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                //MainAxisAlignment.end,
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.only(right: 30),
+                    child: FilledButton(
+                        onPressed: () {
+                          setState(() {
+                            increaseClips.add(listClip);
+
+                            ClipDayIdPost requestFoodPost =
+                                ClipDayIdPost(listClipId: listClip.icpId);
+                            increaseClipDays.add(requestFoodPost);
+                            log(jsonEncode(requestFoodPost));
+
+                            colorList[index] =
+                                context.read<AppData>().colorSelect;
+                          });
+
+                          SmartDialog.dismiss();
+                        },
+                        child: const Text('ยืนยัน')),
+                  ),
+                ],
+              )
+            ],
+          ),
         ),
       );
     });

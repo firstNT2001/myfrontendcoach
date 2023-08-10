@@ -9,10 +9,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
+import 'package:get/get_core/src/get_main.dart';
 import 'package:loading_indicator/loading_indicator.dart';
-
 import 'package:provider/provider.dart';
-import 'package:skeletonizer/skeletonizer.dart';
+import 'package:video_player/video_player.dart';
 
 import '../../../../model/request/listClip_clipID_put.dart';
 import '../../../../model/response/md_ClipList_get.dart';
@@ -58,32 +58,27 @@ class _ClipEditCoachPageState extends State<ClipEditCoachPage> {
 
   String textErr = '';
   // ignore: unused_field
-  bool _enabled = true;
+  // bool _enabled = true;
 
   @override
   void initState() {
     super.initState();
+    log(widget.icpId.toString());
+
     //LoadClipService
     _listClipService = context.read<AppData>().listClipServices;
     loadClipDataMethod = loadClipData();
-    log(pickedFile.toString());
 
-    Future.delayed(Duration(seconds: context.read<AppData>().duration), () {
-      setState(() {
-        _enabled = false;
-      });
-    });
+    log(pickedFile.toString());
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: SafeArea(
-        child: ListView(
-          children: [
-            inputTextClips(),
-          ],
-        ),
+      body: ListView(
+        children: [
+          inputTextClips(),
+        ],
       ),
     );
   }
@@ -95,61 +90,62 @@ class _ClipEditCoachPageState extends State<ClipEditCoachPage> {
         builder: (context, AsyncSnapshot snapshot) {
           if (snapshot.connectionState == ConnectionState.done) {
             return Column(
-              children: [video(), textFieldAll(context)],
+              children: [
+                video(),
+
+                Padding(
+                  padding: const EdgeInsets.only(
+                      bottom: 18, top: 28, left: 20, right: 20),
+                  child: WidgetTextFieldString(
+                    controller: name,
+                    labelText: 'ชื่อ',
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(
+                      bottom: 18, left: 20, right: 20),
+                  child: WidgetTextFieldString(
+                    controller: amountPerSet,
+                    labelText: 'จำนวนเซ็ท',
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(
+                      bottom: 18, left: 20, right: 20),
+                  child: WidgetTextFieldLines(
+                    controller: details,
+                    labelText: 'รายละเอียดท่าออกกำลังกาย',
+                  ),
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.only(
+                          bottom: 8, left: 20, right: 23),
+                      child: Text(
+                        textErr,
+                        style: TextStyle(
+                            color: Theme.of(context).colorScheme.error),
+                      ),
+                    ),
+                  ],
+                ),
+                Center(
+                  child: Padding(
+                    padding: const EdgeInsets.only(
+                        bottom: 18, left: 20, right: 20),
+                    child: SizedBox(
+                        width: MediaQuery.of(context).size.width,
+                        child: button(context)),
+                  ),
+                )
+              ],
             );
           } else {
             return Container();
           }
         });
-  }
-
-  Column textFieldAll(BuildContext context) {
-    return Column(
-      children: [
-        Padding(
-          padding:
-              const EdgeInsets.only(bottom: 18, top: 28, left: 20, right: 20),
-          child: WidgetTextFieldString(
-            controller: name,
-            labelText: 'ชื่อ',
-          ),
-        ),
-        Padding(
-          padding: const EdgeInsets.only(bottom: 18, left: 20, right: 20),
-          child: WidgetTextFieldString(
-            controller: amountPerSet,
-            labelText: 'จำนวนเซ็ท',
-          ),
-        ),
-        Padding(
-          padding: const EdgeInsets.only(bottom: 18, left: 20, right: 20),
-          child: WidgetTextFieldLines(
-            controller: details,
-            labelText: 'รายละเอียดท่าออกกำลังกาย',
-          ),
-        ),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.end,
-          children: [
-            Padding(
-              padding: const EdgeInsets.only(bottom: 8, left: 20, right: 23),
-              child: Text(
-                textErr,
-                style: TextStyle(color: Theme.of(context).colorScheme.error),
-              ),
-            ),
-          ],
-        ),
-        Center(
-          child: Padding(
-            padding: const EdgeInsets.only(bottom: 18, left: 20, right: 20),
-            child: SizedBox(
-                width: MediaQuery.of(context).size.width,
-                child: button(context)),
-          ),
-        ),
-      ],
-    );
   }
 
   Column video() {
@@ -279,6 +275,7 @@ class _ClipEditCoachPageState extends State<ClipEditCoachPage> {
       var datas = await _listClipService.listClips(
           icpID: widget.icpId.toString(), cid: '', name: '');
       listclips = datas.data;
+
       log(listclips.first.video);
       name.text = listclips.first.name;
       details.text = listclips.first.details;
