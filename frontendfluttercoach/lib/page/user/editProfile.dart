@@ -40,25 +40,24 @@ class _editProfileCusState extends State<editProfileCus> {
   late int uid;
   bool _isvisible = false;
   //controller
-  TextEditingController _uid = TextEditingController();
-  TextEditingController _username = TextEditingController();
-  TextEditingController _password = TextEditingController();
-  TextEditingController _email = TextEditingController();
-  TextEditingController _fullName = TextEditingController();
-  TextEditingController _birthday = TextEditingController();
-  TextEditingController _gender = TextEditingController();
-  TextEditingController _phone = TextEditingController();
-  TextEditingController _weight = TextEditingController();
-  TextEditingController _height = TextEditingController();
-  TextEditingController _facebookID = TextEditingController();
+
+  TextEditingController username = TextEditingController();
+  TextEditingController password = TextEditingController();
+  TextEditingController email = TextEditingController();
+  TextEditingController fullName = TextEditingController();
+  TextEditingController birthday = TextEditingController();
+  TextEditingController gender = TextEditingController();
+  TextEditingController phone = TextEditingController();
+  TextEditingController weight = TextEditingController();
+  TextEditingController height = TextEditingController();
   int price = 0;
   var update;
   List<String> genders = ['หญิง', 'ชาย'];
   bool isvisible = false;
   String _image = " ";
   String profile = " ";
-  String newbirht='';
-  String oldbirht='';
+  String newbirht = '';
+  String oldbirht = '';
   //selectimg
   PlatformFile? pickedImg;
   UploadTask? uploadTask;
@@ -69,7 +68,7 @@ class _editProfileCusState extends State<editProfileCus> {
 
     setState(() {
       pickedImg = result.files.first;
-      log(pickedImg.toString());
+      // log(pickedImg.toString());
     });
   }
 
@@ -85,6 +84,7 @@ class _editProfileCusState extends State<editProfileCus> {
     print('link img firebase $urlDownload');
     profile = urlDownload;
   }
+
   @override
   void initState() {
     // TODO: implement initState
@@ -99,12 +99,13 @@ class _editProfileCusState extends State<editProfileCus> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      
-      body: ListView(children: [
-        Column(
-          children: [showProfile()],
-        ),
-      ]),
+      body: SafeArea(
+        child: ListView(children: [
+          Column(
+            children: [showProfile()],
+          ),
+        ]),
+      ),
     );
   }
 
@@ -113,37 +114,32 @@ class _editProfileCusState extends State<editProfileCus> {
       var result =
           await customerService.customer(uid: uid.toString(), email: '');
       customer = result.data;
-      _uid.text = customer.first.uid.toString();
-      _username.text = customer.first.username;
-      _fullName.text = customer.first.fullName;
-      _birthday.text = thaiDate(customer.first.birthday);
-      oldbirht =customer.first.birthday;
-      _gender.text = customer.first.gender;
-      _phone.text = customer.first.phone;
-      _email.text = customer.first.email;
-      _password.text = customer.first.password;
-      _facebookID.text = customer.first.facebookId;
+      username.text = customer.first.username;
+      fullName.text = customer.first.fullName;
+      birthday.text = thaiDate(customer.first.birthday);
+      oldbirht = customer.first.birthday;
+      gender.text = customer.first.gender;
+      phone.text = customer.first.phone;
+      email.text = customer.first.email;
+      password.text = customer.first.password;
       price = customer.first.price;
       _image = customer.first.image;
-      _weight.text = customer.first.weight.toString();
-      _height.text = customer.first.height.toString();
-      log("b1${_password.text}");
-      log("b2${customer.first.birthday}");
-      log("_IMAGE==$_image");
+      weight.text = customer.first.weight.toString();
+      height.text = customer.first.height.toString();
       //gender show
       log('เพศ: ${customer.first.gender}');
       if (customer.first.gender == "1") {
-        _gender.text = genders[0];
-        log('เพศใหม่1: ${_gender.text}');
-      } else if (customer.first.gender == "2") {
-        _gender.text = genders[1];
+        gender.text = genders[0];
+        log('เพศใหม่genders[0]: ${gender.text}');
       } else {
-        _gender.text = "ไม่ได้ระบุ";
+        gender.text = genders[1];
+        log('เพศใหม่genders[1]: ${gender.text}');
       }
     } catch (err) {
       log('Error: $err');
     }
   }
+
   txtfild(
       final TextEditingController _controller, String lbText, String txtTop) {
     return Padding(
@@ -166,6 +162,7 @@ class _editProfileCusState extends State<editProfileCus> {
       ]),
     );
   }
+
   txtfildBirth(
       final TextEditingController _controller, String lbText, String txtTop) {
     return Padding(
@@ -233,7 +230,8 @@ class _editProfileCusState extends State<editProfileCus> {
                             decoration: BoxDecoration(
                                 border: Border.all(
                                     width: 4,
-                                    color: const Color.fromARGB(255, 255, 151, 33)),                              
+                                    color: const Color.fromARGB(
+                                        255, 255, 151, 33)),
                                 shape: BoxShape.circle,
                                 image: DecorationImage(
                                   fit: BoxFit.cover,
@@ -245,7 +243,6 @@ class _editProfileCusState extends State<editProfileCus> {
                             right: 0,
                             child: InkWell(
                               onTap: () {
-                                log("message");
                                 selectImg();
                               },
                               child: Container(
@@ -255,7 +252,8 @@ class _editProfileCusState extends State<editProfileCus> {
                                     shape: BoxShape.circle,
                                     border: Border.all(
                                         width: 4, color: Colors.white),
-                                    color: const Color.fromARGB(255, 255, 151, 33)),
+                                    color: const Color.fromARGB(
+                                        255, 255, 151, 33)),
                                 child: const Icon(
                                   Icons.camera_alt,
                                   color: Colors.white,
@@ -268,10 +266,10 @@ class _editProfileCusState extends State<editProfileCus> {
                   const SizedBox(
                     height: 20,
                   ),
-                  txtfild(_username, "ชื่อผู้ใช้", "ชื่อผู้ใช้"),
-                  txtfild(_email, "e-mail", "e-mail"),
+                  txtfild(username, "ชื่อผู้ใช้", "ชื่อผู้ใช้"),
+                  txtfild(email, "e-mail", "e-mail"),
                   // txtfildn(_password, "รหัสผ่าน", "รหัสผ่าน"),
-                  txtfild(_fullName, "ชื่อ-นามสกุล", "ชื่อ-นามสกุล"),
+                  txtfild(fullName, "ชื่อ-นามสกุล", "ชื่อ-นามสกุล"),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children: [
@@ -281,13 +279,13 @@ class _editProfileCusState extends State<editProfileCus> {
                           padding: const EdgeInsets.only(bottom: 10),
                           child: WidgetDropdownString(
                               title: "เพศ",
-                              selectedValue: _gender,
+                              selectedValue: gender,
                               listItems: genders),
                         ),
                       ),
                       SizedBox(
                         width: (width - 16 - (3 * 30)) / 2,
-                        child: txtfild(_phone, "โทรศัพท์", "โทรศัพท์"),
+                        child: txtfild(phone, "โทรศัพท์", "โทรศัพท์"),
                       ),
                     ],
                   ),
@@ -295,13 +293,12 @@ class _editProfileCusState extends State<editProfileCus> {
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children: [
                       Expanded(
-                        child: txtfildBirth(_birthday, "วันเกิด", "ว/ด/ป"),
+                        child: txtfildBirth(birthday, "วันเกิด", "ว/ด/ป"),
                       ),
                       Padding(
                         padding: const EdgeInsets.only(right: 15, top: 8),
                         child: IconButton(
                             onPressed: () async {
-                              
                               DateTime? newDateTime =
                                   await showRoundedDatePicker(
                                       context: context,
@@ -314,18 +311,17 @@ class _editProfileCusState extends State<editProfileCus> {
                                           DateTime(DateTime.now().year - 40),
                                       lastDate:
                                           DateTime(DateTime.now().year + 1),
-                                          
                                       styleDatePicker:
                                           MaterialRoundedDatePickerStyle(
                                               paddingMonthHeader:
                                                   const EdgeInsets.all(80)));
                               if (newDateTime != null) {
-                                var dateFormat = '${newDateTime.toIso8601String()}Z';
+                                var dateFormat =
+                                    '${newDateTime.toIso8601String()}Z';
                                 newbirht = dateFormat.toString();
-                                log("newDateTime$newbirht");
-                                String newBirthday =thaiDate(newDateTime.toString());
-                                 log("newDateTimethai$newBirthday");
-                                 setState(() => _birthday.text = newBirthday);
+                                String newBirthday =
+                                    thaiDate(newDateTime.toString());
+                                setState(() => birthday.text = newBirthday);
                               }
                             },
                             icon: const Icon(FontAwesomeIcons.calendarDay)),
@@ -336,10 +332,10 @@ class _editProfileCusState extends State<editProfileCus> {
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children: [
                       Expanded(
-                        child: txtfild(_weight, "น้ำหนัก", "น้ำหนัก"),
+                        child: txtfild(weight, "น้ำหนัก", "น้ำหนัก"),
                       ),
                       Expanded(
-                        child: txtfild(_height, "ส่วนสูง", "ส่วนสูง"),
+                        child: txtfild(height, "ส่วนสูง", "ส่วนสูง"),
                       ),
                     ],
                   ),
@@ -362,8 +358,8 @@ class _editProfileCusState extends State<editProfileCus> {
                   ),
                   FilledButton(
                       onPressed: () async {
-                        GenOTP = getGoogleAuthenticatorUriQR("Coaching",
-                            _email.text, _email.text + _password.text);
+                        GenOTP = getGoogleAuthenticatorUriQR(
+                            "Coaching", email.text, email.text + password.text);
                         log(GenOTP);
 
                         if (GenOTP.isNotEmpty) {
@@ -394,10 +390,8 @@ class _editProfileCusState extends State<editProfileCus> {
                                 child: const Text("ซ่อน QR Code")),
                             FilledButton(
                                 onPressed: () {
-                                  GenOTP = getGoogleAuthenticatorUri(
-                                      "Coaching",
-                                      _email.text,
-                                      _email.text + _password.text);
+                                  GenOTP = getGoogleAuthenticatorUri("Coaching",
+                                      email.text, email.text + password.text);
                                 },
                                 child: const Text("เข้าสู่ Application"))
                           ],
@@ -429,61 +423,70 @@ class _editProfileCusState extends State<editProfileCus> {
                           child: Text("บันทึก"),
                         ),
                         onPressed: () async {
-                          log("messageIMG=$_image");
-                          
                           if (pickedImg != null) await uploadfile();
                           if (pickedImg == null) profile = _image;
 
-                          if (_username.text.isEmpty ||
-                              _email.text.isEmpty ||
-                              _fullName.text.isEmpty ||
-                              _phone.text.isEmpty ||
-                              _weight.text.isEmpty ||
-                              _height.text.isEmpty) {
+                          if (username.text.isEmpty ||
+                              email.text.isEmpty ||
+                              fullName.text.isEmpty ||
+                              phone.text.isEmpty ||
+                              weight.text.isEmpty ||
+                              gender.text.isEmpty ||
+                              height.text.isEmpty) {
                             setState(() {
                               _isvisible = true;
                             });
-
-                            log('Text Field is empty, Please Fill All Data');
                           } else {
-                            log('trueeeeee');
+                            log("newg3" + gender.text);
                             // var formatter = DateFormat.yMMMd( _birthday.text);
                             // log("formatter"+formatter.toString());
-                            if(newbirht.isEmpty){
-                              
+                            if (newbirht.isEmpty) {
                               newbirht = oldbirht;
-                              log("old$newbirht");
-                            }else{
-                              log("new"+newbirht.toString());
-                              UpdateCustomer updateCustomer = UpdateCustomer(
-                                username: _username.text,
-                                password: _password.text,
-                                email: _email.text,
-                                fullName: _fullName.text,
+                            }
+                            // if(gender.text== 'ชาย') {
+                            //   setState(() {
+                            //     gender.text='2';
+                            //   });
+                            //   log("newg1=" +  gender.text);
+                            // }
+                            // else{
+                            //   setState(() {
+                            //     gender.text='1';
+                            //   });
+                            //   log("newg2=" +  gender.text);
+                            // }
+
+                            UpdateCustomer updateCustomer = UpdateCustomer(
+                                username: username.text,
+                                password: password.text,
+                                email: email.text,
+                                fullName: fullName.text,
                                 birthday: newbirht,
-                                gender: _gender.text,
-                                phone: _phone.text,
+                                gender: (gender.text) == 'ชาย'
+                                    ? '2'
+                                    : (gender.text == 'หญิง')
+                                        ? '1'
+                                        : '1',
+                                phone: phone.text,
                                 image: profile,
-                                weight: int.parse(_weight.text),
-                                height: int.parse(_height.text));
+                                weight: int.parse(weight.text),
+                                height: int.parse(height.text));
                             log(jsonEncode(updateCustomer));
                             log("log" + uid.toString());
-                            log(_birthday.text);
+                            log(birthday.text);
                             //log(_image.toString());
                             update = await customerService.updateCustomer(
                                 uid.toString(), updateCustomer);
                             moduleResult = update.data;
-                            log(moduleResult.result);
-                           pushNewScreen(
-                context,
-                screen: const editProfileCus(),
-                withNavBar: true,
-              );
-                            }
-                            
-                            // Put your code here, which you want to execute when Text Field is NOT Empty.
-                            
+                            // log(moduleResult.result);
+                            // pushNewScreen(
+                            //   context,
+                            //   screen: const editProfileCus(),
+                            //   withNavBar: true,
+                            // );
                           }
+
+                          // Put your code here, which you want to execute when Text Field is NOT Empty.
                         }),
                   ),
                 ],

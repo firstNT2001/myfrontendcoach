@@ -29,7 +29,7 @@ class _WidgetDropdownStringState extends State<WidgetDropdownString> {
         //Add isDense true and zero Padding.
         //Add Horizontal padding using buttonPadding and Vertical padding by increasing buttonHeight instead of add Padding here so that The whole TextField Button become clickable, and also the dropdown menu open under The whole TextField Button.
         isDense: true,
-        contentPadding: EdgeInsets.symmetric(vertical: 2.5, horizontal: 1),
+        contentPadding: EdgeInsets.symmetric(vertical: 2),
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(15),
         ),
