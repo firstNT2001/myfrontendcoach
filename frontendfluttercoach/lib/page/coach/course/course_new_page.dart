@@ -104,13 +104,10 @@ class _CourseNewPageState extends State<CourseNewPage> {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Padding(
-                            padding: const EdgeInsets.only(
-                                bottom: 8, top: 28, left: 20, right: 20),
-                            child: WidgetTextFieldString(
-                              controller: name,
-                              labelText: 'ชื่อ',
-                            ),
+                          SizedBox(height: 28,),
+                          WidgetTextFieldString(
+                            controller: name,
+                            labelText: 'ชื่อ',
                           ),
                           Padding(
                             padding: const EdgeInsets.only(bottom: 8),

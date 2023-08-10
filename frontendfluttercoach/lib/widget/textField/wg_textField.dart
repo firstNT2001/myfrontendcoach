@@ -23,7 +23,7 @@ class _WidgetTextFieldStringState extends State<WidgetTextFieldString> {
             child: Text(widget.labelText,style: Theme.of(context).textTheme.bodyLarge,),
           ),
           TextField(
-              controller: widget.controller,
+              controller: widget.controller,style: Theme.of(context).textTheme.bodyLarge,
               //autofocus: true,
               // onChanged: (String value) {
               //   setState(() => chackNameAndPassword = "");
