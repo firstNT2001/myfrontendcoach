@@ -68,10 +68,10 @@ class _CoachPageState extends State<CoachPage> {
       property.text = coachs.first.property.toString();
       qualification.text = coachs.first.qualification.toString();
       if (coachs.first.gender == "1") {
-        gender.text = "ผู้หญิง";
+        gender.text = "หญิง";
         log('เพศใหม่1: ${gender.text}');
       } else {
-        gender.text = "ผู้ชาย";
+        gender.text = "ชาย";
       }
     } catch (err) {
       log('Error: $err');

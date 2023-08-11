@@ -179,13 +179,11 @@ class _ProfileUserState extends State<ProfileUser> {
       birthday.text = thaiDate(customer.first.birthday);
       log('เพศ: ${customer.first.gender}');
       if (customer.first.gender == "1") {
-        gender.text = "ผู้หญิง";
+        gender.text = "หญิง";
         log('เพศใหม่1: ${gender.text}');
-      } else if (customer.first.gender == "2") {
-        gender.text = "ผู้ชาย";
-      } else {
-        gender.text = "ไม่ได้ระบุ";
-      }
+      } else{
+        gender.text = "ชาย";
+      } 
       //gender.text = customer.first.gender;
       phone.text = customer.first.phone;
       email.text = customer.first.email;
