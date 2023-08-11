@@ -189,13 +189,10 @@ class _CourseEditPageState extends State<CourseEditPage> {
               visible: widget.isVisible,
               child: Column(
                 children: [
-                  Padding(
-                    padding: const EdgeInsets.only(
-                        bottom: 8, top: 28, left: 13, right: 13),
-                    child: WidgetTextFieldString(
-                      controller: name,
-                      labelText: 'ชื่อ',
-                    ),
+                  SizedBox(height: 28,),
+                  WidgetTextFieldString(
+                    controller: name,
+                    labelText: 'ชื่อ',
                   ),
                   Padding(
                     padding: const EdgeInsets.only(bottom: 8),
