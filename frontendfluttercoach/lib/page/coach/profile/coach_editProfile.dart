@@ -3,7 +3,9 @@ import 'dart:io';
 
 import 'package:file_picker/file_picker.dart';
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_rounded_date_picker/flutter_rounded_date_picker.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:frontendfluttercoach/model/response/md_Result.dart';
 import 'package:frontendfluttercoach/page/auth/GoogleAuthenticator.dart';
@@ -22,6 +24,7 @@ import '../../../widget/dropdown/wg_dropdown_string.dart';
 import '../../../widget/textField/wg_textField.dart';
 import '../../../widget/textField/wg_textFieldLines.dart';
 import '../../../widget/textField/wg_textField_int copy.dart';
+import '../../user/money/widgethistory/widget_history.dart';
 
 class CoachEidtProfilePage extends StatefulWidget {
   const CoachEidtProfilePage({super.key});
@@ -52,7 +55,10 @@ class _CoachEidtProfilePageState extends State<CoachEidtProfilePage> {
   final phone = TextEditingController();
   final qualification = TextEditingController();
   final property = TextEditingController();
+  final birthday = TextEditingController();
 
+  String newbirht = '';
+  String oldbirht = '';
   //selectLevel
   // ignore: non_constant_identifier_names
   final List<String> LevelItems = ['ชาย', 'หญิง'];
@@ -118,6 +124,10 @@ class _CoachEidtProfilePageState extends State<CoachEidtProfilePage> {
           } else {
             if (pickedImg != null) await uploadfile();
             if (pickedImg == null) profile = coachs.first.image;
+            if (newbirht.isEmpty) {
+                                newbirht = oldbirht;
+                              }
+                              log("newbirht"+newbirht);
             RegisterCoachDto request = RegisterCoachDto(
                 fullName: fullName.text,
                 username: name.text,
@@ -130,7 +140,7 @@ class _CoachEidtProfilePageState extends State<CoachEidtProfilePage> {
                         ? '1'
                         : '1',
                 phone: phone.text,
-                birthday: coachs.first.birthday,
+                birthday: newbirht,
                 property: property.text,
                 qualification: qualification.text,
                 facebookId: coachs.first.facebookId);
@@ -170,7 +180,8 @@ class _CoachEidtProfilePageState extends State<CoachEidtProfilePage> {
       phone.text = coachs.first.phone;
       qualification.text = coachs.first.qualification;
       property.text = coachs.first.property;
-
+      birthday.text = thaiDate(coachs.first.birthday);
+      oldbirht = coachs.first.birthday;
       if (coachs.first.gender == '2') {
         selectedValue.text = LevelItems[0];
       } else {
@@ -267,35 +278,24 @@ class _CoachEidtProfilePageState extends State<CoachEidtProfilePage> {
                         ),
                       ),),
                       Expanded(
-                        child: Padding(
-                          padding: const EdgeInsets.only(bottom: 10, left: 15, right: 15),
-                          child: WidgetTextFieldInt(
-                              controller: phone,
-                              labelText: 'เบอร์โทรศัพท์',
-                              maxLength: 10,
-                            ),
-                        ),
+                        child: WidgetTextFieldInt(
+                            controller: phone,
+                            labelText: 'เบอร์โทรศัพท์',
+                            maxLength: 10,
+                          ),
                       ),
                     ],
                   ),
-                  
+                  txtfildBirth(birthday, "วันเกิด"),
                   const Divider(endIndent: 20, indent: 20),
 
-                  Padding(
-                    padding:
-                        const EdgeInsets.only(bottom: 8, left: 20, right: 20),
-                    child: WidgetTextFieldLines(
-                      controller: qualification,
-                      labelText: 'วุฒิการศึกษา',
-                    ),
+                  WidgetTextFieldLines(
+                    controller: qualification,
+                    labelText: 'วุฒิการศึกษา',
                   ),
-                  Padding(
-                    padding:
-                        const EdgeInsets.only(bottom: 8, left: 20, right: 20),
-                    child: WidgetTextFieldLines(
-                      controller: property,
-                      labelText: 'ประวัติส่วนตัว',
-                    ),
+                  WidgetTextFieldLines(
+                    controller: property,
+                    labelText: 'ประวัติส่วนตัว',
                   ),
                   Visibility(
                     visible: _isvisible,
@@ -405,7 +405,50 @@ class _CoachEidtProfilePageState extends State<CoachEidtProfilePage> {
       ),
     );
   }
-
+txtfildBirth(
+      final TextEditingController _controller, String txtTop) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 10, left: 15, right: 15),
+      child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+        Padding(
+          padding: const EdgeInsets.only(left: 5, bottom: 3),
+          child: Text(
+            txtTop,
+            style: Theme.of(context).textTheme.bodyLarge,
+          ),
+        ),
+        TextField(
+          readOnly: true,
+          onTap: () {
+            log("message");
+            CupertinoRoundedDatePicker.show(
+              context,
+              fontFamily: "Mali",
+              textColor: Colors.white,
+              era: EraMode.BUDDHIST_YEAR,
+              background: Colors.orangeAccent,
+              borderRadius: 16,
+              minimumYear: DateTime.now().year - 40,
+              initialDatePickerMode: CupertinoDatePickerMode.date,
+              onDateTimeChanged: (newDateTime) {
+                var dateFormat = '${newDateTime.toIso8601String()}Z';
+                newbirht = dateFormat.toString();
+                String newBirthday = thaiDate(newDateTime.toString());
+                setState(() => birthday.text = newBirthday);
+              },
+            );
+          },
+          controller: _controller,
+          decoration: const InputDecoration(
+            suffixIcon: Icon(FontAwesomeIcons.calendarDay,
+                color: Color.fromARGB(255, 37, 37, 37)),
+            contentPadding: EdgeInsets.symmetric(vertical: 10, horizontal: 12),
+            border: OutlineInputBorder(),
+          ),
+        ),
+      ]),
+    );
+  }
   //
   //Image
   Future selectImg() async {
