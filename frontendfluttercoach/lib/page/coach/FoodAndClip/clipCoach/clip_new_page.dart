@@ -90,29 +90,18 @@ class _ClipNewCoachPageState extends State<ClipNewCoachPage> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Padding(
-                  padding: const EdgeInsets.only(
-                      bottom: 18, top: 28, left: 20, right: 20),
-                  child: WidgetTextFieldString(
-                    controller: name,
-                    labelText: 'ชื่อ',
-                  ),
+                SizedBox(height: 28,),
+                WidgetTextFieldString(
+                  controller: name,
+                  labelText: 'ชื่อ',
                 ),
-                Padding(
-                  padding:
-                      const EdgeInsets.only(bottom: 18, left: 20, right: 20),
-                  child: WidgetTextFieldString(
-                    controller: amountPerSet,
-                    labelText: 'จำนวนเซ็ท',
-                  ),
+                WidgetTextFieldString(
+                  controller: amountPerSet,
+                  labelText: 'จำนวนเซ็ท',
                 ),
-                Padding(
-                  padding:
-                      const EdgeInsets.only(bottom: 18, left: 20, right: 20),
-                  child: WidgetTextFieldLines(
-                    controller: details,
-                    labelText: 'รายละเอียดท่าออกกำลังกาย',
-                  ),
+                WidgetTextFieldLines(
+                  controller: details,
+                  labelText: 'รายละเอียดท่าออกกำลังกาย',
                 ),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.end,
