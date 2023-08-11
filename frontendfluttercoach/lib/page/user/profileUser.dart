@@ -1,23 +1,15 @@
 import 'dart:developer';
-
-import 'package:buddhist_datetime_dateformat/buddhist_datetime_dateformat.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
-import 'package:frontendfluttercoach/page/user/money/money.dart';
 import 'package:get/get.dart';
-import 'package:intl/intl.dart';
-import 'package:persistent_bottom_nav_bar_v2/persistent-tab-view.dart';
 import 'package:provider/provider.dart';
-import 'package:retrofit/dio.dart';
-import 'package:retrofit/retrofit.dart';
 
 import '../../model/response/md_Customer_get.dart';
 import '../../service/customer.dart';
 import '../../service/provider/appdata.dart';
-import 'chatOfCus.dart';
+import '../../widget/textField/wg_textfile_show.dart';
 import 'editProfile.dart';
 import 'money/widgethistory/widget_history.dart';
-import 'mycourse/mycourse.dart';
 
 class ProfileUser extends StatefulWidget {
   const ProfileUser({super.key});
@@ -54,7 +46,7 @@ class _ProfileUserState extends State<ProfileUser> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Column(
+      body: ListView(
         children: [
           showProfile(),
           //Expanded(child: showMenu()),
@@ -80,7 +72,7 @@ class _ProfileUserState extends State<ProfileUser> {
                       crossAxisAlignment: CrossAxisAlignment.center,
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        SizedBox(
+                        const SizedBox(
                           height: 65,
                         ),
                         Center(
@@ -93,60 +85,77 @@ class _ProfileUserState extends State<ProfileUser> {
                           ),
                         ),
                         Center(
-                          child: Container(
-                            child: Column(
-                              children: [
-                                Padding(
-                                  padding: const EdgeInsets.only(top: 15),
-                                  child: Text("@ " + customer.first.username,
-                                      style: TextStyle(
-                                          fontSize: 18,
-                                          fontWeight: FontWeight.bold)),
+                          child: Column(
+                            children: [
+                              Padding(
+                                padding: const EdgeInsets.only(top: 15),
+                                child: Text("@ " + customer.first.username,
+                                    style: const TextStyle(
+                                        fontSize: 18,
+                                        fontWeight: FontWeight.bold)),
+                              ),
+                              Padding(
+                                padding:
+                                    const EdgeInsets.only(top: 8, bottom: 20),
+                                child: Text(customer.first.fullName),
+                              ),
+                              WidgetTextFieldStringShow(
+                                controller: fullName,
+                                labelText: 'ชื่อ-นามสกุล',
+                              ),
+                              WidgetTextFieldStringShow(
+                                controller: email,
+                                labelText: 'Email',
+                              ),
+                              WidgetTextFieldStringShow(
+                                controller: phone,
+                                labelText: 'เบอร์โทรศัพท์',
+                              ),
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceAround,
+                                children: [
+                                  Expanded(
+                                    child: WidgetTextFieldStringShow(
+                                      controller: gender,
+                                      labelText: 'เพศ',
+                                    ),
+                                  ),Expanded(
+                                    child: WidgetTextFieldStringShow(
+                                      controller: birthday,
+                                      labelText: 'วันเกิด',
+                                    ),
+                                  ),
+                                ],
+                              ),
+                               Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceAround,
+                                children: [
+                                  Expanded(
+                                    child: WidgetTextFieldStringShow(
+                                      controller: weight,
+                                      labelText: 'น้ำหนัก',
+                                    ),
+                                  ),Expanded(
+                                    child: WidgetTextFieldStringShow(
+                                      controller: height,
+                                      labelText: 'ส่วนสูง',
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.only(bottom: 10, left: 15, right: 15,top: 15),
+                                child: SizedBox(
+                                  width: 400,
+                                  child: FilledButton(onPressed: (){
+                                     Get.to(() => const editProfileCus());
+                                  }, child: const Text("แก้ไขข้อมูล")),
                                 ),
-                                Padding(
-                                  padding:
-                                      const EdgeInsets.only(top: 8, bottom: 20),
-                                  child: Text(customer.first.fullName),
-                                ),
-                                txtfild(fullName, "ชื่อ-นามสกุล"),
-                                txtfild(email, "E-mail"),
-                                txtfild(phone, "เบอร์โทรศัพท์"),
-                                Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceAround,
-                                  children: [
-                                    Expanded(child: txtfild(gender, "เพศ")),
-                                    Expanded(
-                                        child: txtfild(birthday, "วันเกิด"))
-                                    
-                                  ],
-                                ),
-                                Row(
-                                  // mainAxisAlignment: MainAxisAlignment.spaceAround,
-                                  children: [
-                                    Expanded(child: txtfild(weight, "น้ำหนัก")),
-                                    Expanded(child: txtfild(height, "ส่วนสูง"))
-                                  ],
-                                ),
+                              )
 
-                                //txtfild(weight, "เพศ"),
-                                // Row(
-                                //   children: [
-                                //     SizedBox(width: 20,),
-                                //      Icon(
-                                //       Icons.phone,
-                                //       color:
-                                //           Theme.of(context).colorScheme.primary,
-                                //       size: 24.0,
-                                //     ),
-                                //     Padding(
-                                //       padding: const EdgeInsets.only(left: 18),
-                                //       child: Text(customer.first.phone),
-                                //     ),
-                                //   ],
-                                // ),
-                              ],
-                            ),
+                            ],
                           ),
                         ),
                       ],
@@ -170,13 +179,11 @@ class _ProfileUserState extends State<ProfileUser> {
       birthday.text = thaiDate(customer.first.birthday);
       log('เพศ: ${customer.first.gender}');
       if (customer.first.gender == "1") {
-        gender.text = "ผู้หญิง";
+        gender.text = "หญิง";
         log('เพศใหม่1: ${gender.text}');
-      } else if (customer.first.gender == "2") {
-        gender.text = "ผู้ชาย";
-      } else {
-        gender.text = "ไม่ได้ระบุ";
-      }
+      } else{
+        gender.text = "ชาย";
+      } 
       //gender.text = customer.first.gender;
       phone.text = customer.first.phone;
       email.text = customer.first.email;
@@ -185,28 +192,5 @@ class _ProfileUserState extends State<ProfileUser> {
     } catch (err) {
       log('Error: $err');
     }
-  }
-
-  txtfild(final TextEditingController _controller, String txtTop) {
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 10, left: 15, right: 15),
-      child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-        Padding(
-          padding: const EdgeInsets.only(left: 5, bottom: 3),
-          child: Text(
-            txtTop,
-            style: Theme.of(context).textTheme.bodyLarge,
-          ),
-        ),
-        TextField(
-          readOnly: true,
-          controller: _controller,
-          decoration: InputDecoration(
-            contentPadding: EdgeInsets.symmetric(vertical: 10, horizontal: 12),
-            border: OutlineInputBorder(),
-          ),
-        ),
-      ]),
-    );
   }
 }

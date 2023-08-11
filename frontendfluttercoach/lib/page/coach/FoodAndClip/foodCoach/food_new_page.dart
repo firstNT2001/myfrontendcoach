@@ -94,30 +94,20 @@ class _FoodNewCoachPageState extends State<FoodNewCoachPage> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Padding(
-                      padding: const EdgeInsets.only(
-                          bottom: 18, top: 28, left: 20, right: 20),
-                      child: WidgetTextFieldString(
-                        controller: name,
-                        labelText: 'ขื่อเมนู',
-                      ),
+                    SizedBox(height: 28,),
+                    WidgetTextFieldString(
+                      controller: name,
+                      labelText: 'ขื่อเมนู',
                     ),
-                    Padding(
-                      padding: const EdgeInsets.only(
-                          bottom: 18, left: 20, right: 20),
-                      child: WidgetTextFieldInt(
-                        controller: calories,
-                        labelText: 'Calories',
-                        maxLength: 10,
-                      ),
+                    WidgetTextFieldInt(
+                      controller: calories,
+                      labelText: 'Calories',
+                      maxLength: 10,
                     ),
-                    Padding(
-                        padding: const EdgeInsets.only(
-                            bottom: 18, left: 20, right: 20),
-                        child: WidgetTextFieldLines(
-                          controller: details,
-                          labelText: 'ส่วนผสม',
-                        )),
+                    WidgetTextFieldLines(
+                      controller: details,
+                      labelText: 'ส่วนผสม',
+                    ),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.end,
                       children: [

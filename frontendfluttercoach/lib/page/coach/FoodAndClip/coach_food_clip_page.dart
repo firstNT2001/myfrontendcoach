@@ -407,7 +407,7 @@ class _FoodCoachPageState extends State<FoodCoachPage> {
                 pushNewScreen(
                   context,
                   screen: ClipEditCoachPage(icpId: listClips.icpId),
-                  withNavBar: false,
+                  withNavBar: true,
                 );
               },
               child: Column(
