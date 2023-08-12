@@ -292,126 +292,129 @@ class _FoodNewCoursePageState extends State<FoodNewCoursePage> {
     SmartDialog.show(builder: (_) {
       return Container(
         width: MediaQuery.of(context).size.width * 0.9,
-        height: 550,
+        height: 600,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(20),
           color: Colors.white,
         ),
         alignment: Alignment.center,
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          //crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Padding(
-              padding: const EdgeInsets.only(
-                  left: 20, right: 20, top: 50, bottom: 10),
-              child: Text("เมนูอาหาร",
-                  style: Theme.of(context).textTheme.headlineSmall),
-            ),
-            if (listFood.image != '') ...{
-              ClipRRect(
-                  borderRadius: BorderRadius.circular(15),
-                  child: Image.network(
-                    listFood.image,
+        child: SingleChildScrollView(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            //crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Padding(
+                padding: const EdgeInsets.only(
+                    left: 20, right: 20, top: 50, bottom: 10),
+                child: Text("เมนูอาหาร",
+                    style: Theme.of(context).textTheme.headlineSmall),
+              ),
+              if (listFood.image != '') ...{
+                ClipRRect(
+                    borderRadius: BorderRadius.circular(15),
+                    child: Image.network(
+                      listFood.image,
+                      width: MediaQuery.of(context).size.width * 0.7,
+                      height: MediaQuery.of(context).size.height * 0.2,
+                      fit: BoxFit.cover,
+                    )),
+              } else ...{
+                Container(
                     width: MediaQuery.of(context).size.width * 0.7,
                     height: MediaQuery.of(context).size.height * 0.2,
-                    fit: BoxFit.cover,
-                  )),
-            } else ...{
-              Container(
-                  width: MediaQuery.of(context).size.width * 0.7,
-                  height: MediaQuery.of(context).size.height * 0.2,
-                  decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(26),
-                      color: Colors.black26)),
-              const SizedBox(
-                height: 8,
-              ),
-            },
-            Padding(
-              padding: const EdgeInsets.only(top: 10, bottom: 8),
-              child: Text(
-                'ชื่อเมนู: ${listFood.name}',
-                maxLines: 5,
-                style: Theme.of(context).textTheme.bodyLarge,
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.only(bottom: 8, right: 20, left: 20),
-              child: Text(
-                'รายละเอียด: ${listFood.details}',
-                maxLines: 5,
-                style: Theme.of(context).textTheme.bodyLarge,
-              ),
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                Padding(
-                  padding: const EdgeInsets.only(right: 30, bottom: 8.0),
-                  child: SizedBox(
-                      //width: MediaQuery.of(context).size.width * 0.7,
-                      child: Text(
-                    'Calories: ${listFood.calories.toString()}',
-                    style: Theme.of(context).textTheme.bodyLarge,
-                  )),
+                    decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(26),
+                        color: Colors.black26)),
+                const SizedBox(
+                  height: 8,
                 ),
-              ],
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Padding(
-                  padding: const EdgeInsets.only(left: 30),
-                  child: SizedBox(
-                    width: MediaQuery.of(context).size.width * 0.4,
-                    //height: MediaQuery.of(context).size.height * 0.2,
-                    child: WidgetDropdownStringNotValue(
-                      title: 'เลือกมืออาหาร',
-                      selectedValue: selectedValuehand,
-                      ListItems: listhand,
+              },
+              Padding(
+                padding: const EdgeInsets.only(top: 10, bottom: 8, right: 20, left: 20),
+                child: Text(
+                  'ชื่อเมนู: ${listFood.name}',
+                  maxLines: 5,
+                  style: Theme.of(context).textTheme.bodyLarge,
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.only(bottom: 8, right: 20, left: 20),
+                child: Text(
+                  'รายละเอียด: ${listFood.details}',
+                  maxLines: 5,
+                  style: Theme.of(context).textTheme.bodyLarge,
+                ),
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.only(right: 30, bottom: 8.0),
+                    child: SizedBox(
+                        //width: MediaQuery.of(context).size.width * 0.7,
+                        child: Text(
+                      'Calories: ${listFood.calories.toString()}',
+                      style: Theme.of(context).textTheme.bodyLarge,
+                    )),
+                  ),
+                ],
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.only(left: 30),
+                    child: SizedBox(
+                      width: MediaQuery.of(context).size.width * 0.4,
+                      //height: MediaQuery.of(context).size.height * 0.2,
+                      child: WidgetDropdownStringNotValue(
+                        title: 'เลือกมืออาหาร',
+                        selectedValue: selectedValuehand,
+                        ListItems: listhand,
+                      ),
                     ),
                   ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(top: 15, right: 30),
-                  child: FilledButton(
-                      onPressed: () {
-                        log(selectedValuehand.text);
-                        if (selectedValuehand.text.isEmpty) {
-                          warningFood(context);
-                        } else {
-                          setState(() {
-                            increaseFood.add(listFood);
-
-                            FoodDayIdPost requestFoodPost = FoodDayIdPost(
-                              listFoodId: listFood.ifid,
-                              time: selectedValuehand.text == 'มื้อเช้า'
-                                  ? '1'
-                                  : selectedValuehand.text == 'มื้อเที่ยง'
-                                      ? '2'
-                                      : selectedValuehand.text == 'มื้อเย็น'
-                                          ? '3'
-                                          : '',
-                            );
-                            increaseFoodDay.add(requestFoodPost);
-                            log(jsonEncode(requestFoodPost));
-                            selectedValuehand.text = 'มื้อเช้า';
-                            //เปลี่ยนสีเมือเลือกเมนู฿อาหาร
-                            colorList[index] =
-                                context.read<AppData>().colorSelect;
-                            selectedValuehand.text = '';
-                          });
-
-                          SmartDialog.dismiss();
-                        }
-                      },
-                      child: const Text('ยืนยัน')),
-                ),
-              ],
-            )
-          ],
+                  Padding(
+                    padding: const EdgeInsets.only(top: 15, right: 30),
+                    child: FilledButton(
+                        onPressed: () {
+                          log(selectedValuehand.text);
+                          if (selectedValuehand.text.isEmpty) {
+                            warningFood(context);
+                          } else {
+                            setState(() {
+                              increaseFood.add(listFood);
+        
+                              FoodDayIdPost requestFoodPost = FoodDayIdPost(
+                                listFoodId: listFood.ifid,
+                                time: selectedValuehand.text == 'มื้อเช้า'
+                                    ? '1'
+                                    : selectedValuehand.text == 'มื้อเที่ยง'
+                                        ? '2'
+                                        : selectedValuehand.text == 'มื้อเย็น'
+                                            ? '3'
+                                            : '',
+                              );
+                              increaseFoodDay.add(requestFoodPost);
+                              log(jsonEncode(requestFoodPost));
+                              selectedValuehand.text = 'มื้อเช้า';
+                              //เปลี่ยนสีเมือเลือกเมนู฿อาหาร
+                              colorList[index] =
+                                  context.read<AppData>().colorSelect;
+                              selectedValuehand.text = '';
+                            });
+        
+                            SmartDialog.dismiss();
+                          }
+                        },
+                        child: const Text('ยืนยัน')),
+                  ),
+                ],
+              ),
+              const SizedBox(width: 20,),
+            ],
+          ),
         ),
       );
     });

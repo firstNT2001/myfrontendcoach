@@ -189,7 +189,9 @@ class _CourseEditPageState extends State<CourseEditPage> {
               visible: widget.isVisible,
               child: Column(
                 children: [
-                  SizedBox(height: 28,),
+                  SizedBox(
+                    height: 28,
+                  ),
                   WidgetTextFieldString(
                     controller: name,
                     labelText: 'ชื่อ',
@@ -484,6 +486,8 @@ class _CourseEditPageState extends State<CourseEditPage> {
             moduleResult = updateCourse.data;
             log(jsonEncode(moduleResult.result));
             if (moduleResult.result == '0') {
+              // ignore: use_build_context_synchronously
+              context.read<AppData>().img = courses.first.image;
               Get.to(() => DaysCoursePage(
                     coID: widget.coID,
                     isVisible: widget.isVisible,
@@ -618,7 +622,8 @@ class _CourseEditPageState extends State<CourseEditPage> {
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
                   Padding(
-                    padding: const EdgeInsets.only(top: 10, bottom: 20, right: 8),
+                    padding:
+                        const EdgeInsets.only(top: 10, bottom: 20, right: 8),
                     child: FilledButton.icon(
                         onPressed: () {
                           //roomchat= widget.namecourse+coID.toString();

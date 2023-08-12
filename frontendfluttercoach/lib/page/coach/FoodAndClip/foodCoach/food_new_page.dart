@@ -6,8 +6,6 @@ import 'package:file_picker/file_picker.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
 
 import 'package:provider/provider.dart';
 
@@ -94,7 +92,9 @@ class _FoodNewCoachPageState extends State<FoodNewCoachPage> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    SizedBox(height: 28,),
+                    SizedBox(
+                      height: 28,
+                    ),
                     WidgetTextFieldString(
                       controller: name,
                       labelText: 'ขื่อเมนู',
@@ -128,14 +128,14 @@ class _FoodNewCoachPageState extends State<FoodNewCoachPage> {
                             bottom: 18, left: 20, right: 20),
                         child: SizedBox(
                             width: MediaQuery.of(context).size.width,
-                            child: button()),
+                            child: button(context)),
                       ),
                     ),
                   ],
                 ))));
   }
 
-  FilledButton button() {
+  FilledButton button(BuildContext context) {
     return FilledButton(
         onPressed: () async {
           if (name.text.isEmpty ||
@@ -164,13 +164,19 @@ class _FoodNewCoachPageState extends State<FoodNewCoachPage> {
                 cid.toString(), listFoodCoachIdPost);
             modelResult = insertFood.data;
             log(jsonEncode(modelResult.result));
-             if (modelResult.result == '0') {
-              // ignore: use_build_context_synchronously
-              warning(context);
-            } else {
+            if (modelResult.result == '1') {
               // ignore: use_build_context_synchronously
               success(context);
-              Get.to(() => const FoodCoachPage());
+              // ignore: use_build_context_synchronously
+              Navigator.pushAndRemoveUntil<void>(
+                context,
+                MaterialPageRoute<void>(
+                    builder: (BuildContext context) => const FoodCoachPage()),
+                ModalRoute.withName('/NavbarBottomCoach'),
+              );
+            } else {
+              // ignore: use_build_context_synchronously
+              warning(context);
             }
           }
         },

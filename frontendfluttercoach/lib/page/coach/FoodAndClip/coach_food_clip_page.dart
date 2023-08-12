@@ -80,13 +80,22 @@ class _FoodCoachPageState extends State<FoodCoachPage> {
                 child: const Icon(FontAwesomeIcons.bowlFood),
                 label: 'เพิ่มเมนู',
                 onTap: () {
-                  Get.to(() => const FoodNewCoachPage());
+                  pushNewScreen(
+                    context,
+                    screen: const FoodNewCoachPage(),
+                    withNavBar: true,
+                  );
                 }),
             SpeedDialChild(
                 child: const Icon(FontAwesomeIcons.dumbbell),
                 label: 'เพิ่มคลิป',
                 onTap: () {
-                  Get.to(() => const ClipNewCoachPage());
+                   pushNewScreen(
+                    context,
+                    screen: const ClipNewCoachPage(),
+                    withNavBar: true,
+                  );
+                  
                 }),
           ],
         ),

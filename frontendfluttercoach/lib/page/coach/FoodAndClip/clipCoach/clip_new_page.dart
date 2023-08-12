@@ -90,7 +90,9 @@ class _ClipNewCoachPageState extends State<ClipNewCoachPage> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                SizedBox(height: 28,),
+                SizedBox(
+                  height: 28,
+                ),
                 WidgetTextFieldString(
                   controller: name,
                   labelText: 'ชื่อ',
@@ -296,13 +298,19 @@ class _ClipNewCoachPageState extends State<ClipNewCoachPage> {
             var insertClip = await _listClipServices.insertListClipByCoachID(
                 cid, listClipCoachIdPost);
             modelResult = insertClip.data;
-            if (modelResult.result == '0') {
-              // ignore: use_build_context_synchronously
-              warning(context);
-            } else {
+            if (modelResult.result == '1') {
               // ignore: use_build_context_synchronously
               success(context);
-              Get.to(() => const FoodCoachPage());
+              // ignore: use_build_context_synchronously
+              Navigator.pushAndRemoveUntil<void>(
+                context,
+                MaterialPageRoute<void>(
+                    builder: (BuildContext context) => const FoodCoachPage()),
+                ModalRoute.withName('/NavbarBottomCoach'),
+              );
+            } else {
+              // ignore: use_build_context_synchronously
+              warning(context);
             }
             log(jsonEncode(modelResult.result));
           }

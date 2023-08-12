@@ -59,7 +59,7 @@ class _DaysCoursePageState extends State<DaysCoursePage> {
   int numberOfDays = 0;
 
   bool _enabled = true;
-
+ late Color caughtColor;
   @override
   void initState() {
     super.initState();
@@ -67,6 +67,8 @@ class _DaysCoursePageState extends State<DaysCoursePage> {
 
     _daysService = context.read<AppData>().daysService;
     loadDaysDataMethod = loadDaysDataAsync();
+
+    
 
     _courseService = context.read<AppData>().courseService;
     loadCourseDataMethod = loadCourseDataAsync();
@@ -79,57 +81,70 @@ class _DaysCoursePageState extends State<DaysCoursePage> {
 
   @override
   Widget build(BuildContext context) {
+    caughtColor = Theme.of(context).colorScheme.primary;
     return WillPopScope(
       onWillPop: () async => false,
       child: Scaffold(
         resizeToAvoidBottomInset: false,
-        appBar: AppBar(
-          leading: IconButton(
-            icon: const Icon(
-              FontAwesomeIcons.chevronLeft,
-              color: Colors.black,
-            ),
-            onPressed: () {
-              // log(widget.coID);
-              Navigator.pushAndRemoveUntil<void>(
-                context,
-                MaterialPageRoute<void>(
-                    builder: (BuildContext context) => CourseEditPage(
-                        coID: widget.coID, isVisible: widget.isVisible)),
-                ModalRoute.withName('/NavbarBottomCoach'),
-              );
-             
-              
-              // MaterialPageRoute<void>(
-              //       builder: (BuildContext context) => CourseEditPage(coID: widget.coID, isVisible: widget.isVisible));
-              //   ModalRoute.withName('/');
-             // Get.back();
-            },
-          ),
-          actions: [
-            IconButton(
-              icon: const Icon(
-                FontAwesomeIcons.calendarPlus,
-                color: Colors.black,
+        floatingActionButtonLocation: FloatingActionButtonLocation.endDocked,
+        floatingActionButton: DragTarget(
+          onAccept: (Color color) {
+            caughtColor = color;
+          },
+          builder: (BuildContext context, List<dynamic> accepted,
+              List<dynamic> rejectedData) {
+            return SizedBox(
+              height: 60,
+              width: 60,
+              child: Padding(
+                padding: const EdgeInsets.only(),
+                child: FloatingActionButton(
+                  backgroundColor: accepted.isEmpty
+                      ? caughtColor
+                      : Theme.of(context).colorScheme.error,
+                  foregroundColor: Colors.white,
+                  onPressed: () {
+                    // _buycouse(context);
+                    // ignore: prefer_const_constructors
+                  },
+                  shape: const CircleBorder(),
+                  child: const Icon(FontAwesomeIcons.trash),
+                ),
               ),
-              onPressed: () {
-                dialogInsertDay(context);
-              },
-            )
-          ],
-          //backgroundColor: Theme.of(context).colorScheme.primaryContainer,
-          iconTheme: const IconThemeData(
-            color: Colors.black, //change your color here
-          ),
-          title: Text(title),
-          centerTitle: true,
+            );
+          },
+          // onWillAccept: (data) {
+          //   //return data == 'red';
+          //   log('red');
+          // },
+          onLeave: (data) {
+    // setState(() {
+    //   showSnackBarGlobal(context, 'Dropped successfully!');
+    //   _isDropped = true;
+    // });
+     log('red');
+  },
+          // child: SizedBox(
+          //   height: 60,
+          //   width: 60,
+          //   child: Padding(
+          //     padding: const EdgeInsets.only(),
+          //     child: FloatingActionButton(
+          //       backgroundColor: Theme.of(context).colorScheme.primary,
+          //       foregroundColor: Colors.white,
+          //       onPressed: () {
+          //         // _buycouse(context);
+          //         // ignore: prefer_const_constructors
+          //       },
+          //       shape: const CircleBorder(),
+          //       child: const Icon(FontAwesomeIcons.trash),
+          //     ),
+          //   ),
+          // ),
         ),
         body: SafeArea(
           child: Column(
             children: [
-              const SizedBox(
-                height: 20,
-              ),
               Expanded(child: showDays()),
             ],
           ),
@@ -154,53 +169,128 @@ class _DaysCoursePageState extends State<DaysCoursePage> {
         });
   }
 
-  ReorderableGridView gridViewDays(BuildContext context) {
-    return ReorderableGridView.builder(
-      itemCount: days.length,
-      itemBuilder: (context, index) {
-        final listday = days[index];
-        index = index + 1;
-        return Card(
-          color: Colors.white,
-          key: ValueKey(index),
-          child: InkWell(
-              onLongPress: () {
-                dialogDeleteDay(context, listday.did);
-              },
-              onTap: () {
-                Get.to(() => HomeFoodAndClipPage(
-                      did: listday.did.toString(),
-                      sequence: index.toString(),
-                      isVisible: widget.isVisible,
-                    ));
-              },
-              child: Center(child: Text(index.toString()))),
-        );
-      },
-      onReorder: (oldIndex, newIndex) {
-        startLoading(context);
-        setState(() {
-          setState(() {
-            final element = days.removeAt(oldIndex);
-            days.insert(newIndex, element);
-          });
-        });
-        updateDay(days);
+  gridViewDays(BuildContext context) {
+    return Stack(
+      children: [
+        Stack(
+          children: [
+            Container(
+              width: MediaQuery.of(context).size.width,
+              height: MediaQuery.of(context).size.height * 0.4,
+              decoration: BoxDecoration(
+                  //borderRadius: BorderRadius.circular(20),
+                  boxShadow: [
+                    BoxShadow(
+                        spreadRadius: 2,
+                        blurRadius: 10,
+                        color: Colors.black.withOpacity(0.1))
+                  ],
+                  //shape: BoxShape.circle,
+                  image: DecorationImage(
+                    fit: BoxFit.cover,
+                    image: NetworkImage(context.read<AppData>().img),
+                  )),
+            ),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  CircleAvatar(
+                    backgroundColor: Colors.white,
+                    radius: 20,
+                    child: IconButton(
+                      icon: const Icon(
+                        FontAwesomeIcons.chevronLeft,
+                      ),
+                      onPressed: () {
+                        Get.back();
+                      },
+                    ),
+                  ),
+                  Visibility(
+                    visible: widget.isVisible,
+                    child: CircleAvatar(
+                        backgroundColor: Colors.white,
+                        radius: 20,
+                        child: IconButton(
+                          icon: const Icon(
+                            FontAwesomeIcons.calendarPlus,
+                          ),
+                          onPressed: () {
+                            dialogInsertDay(context);
+                          },
+                        )),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+        reorderableGridView(context),
+      ],
+    );
+  }
 
-        //  updateDays(oldIndex, newIndex);
-        // loadDaysDataMethod = loadDaysDataAsync();
-      },
-      dragWidgetBuilder: (index, child) {
-        return Card(
-          color: Theme.of(context).colorScheme.primary,
-          child: Text(index.toString()),
-        );
-      },
-      onDragStart: (index) {
-        log("onDragStart: $index");
-      },
-      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-          crossAxisCount: 5, mainAxisExtent: 65),
+  reorderableGridView(BuildContext context) {
+    return Padding(
+      padding: EdgeInsets.only(top: MediaQuery.of(context).size.height / 3),
+      child: Container(
+        width: MediaQuery.of(context).size.width,
+        decoration: const BoxDecoration(
+            borderRadius: BorderRadius.only(
+                topLeft: Radius.circular(20), topRight: Radius.circular(20)),
+            color: Colors.white),
+        child: Padding(
+          padding: const EdgeInsets.only(top: 20, right: 20, left: 20),
+          child: ReorderableGridView.builder(
+            itemCount: days.length,
+            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: 4, mainAxisExtent: 65),
+            itemBuilder: (context, index) {
+              final listday = days[index];
+              index = index + 1;
+              return Card(
+                color: Colors.white,
+                key: ValueKey(index),
+                child: InkWell(
+                    // onLongPress: () {
+                    //   dialogDeleteDay(context, listday.did);
+                    // },
+                    onTap: () {
+                      Get.to(() => HomeFoodAndClipPage(
+                            did: listday.did.toString(),
+                            sequence: index.toString(),
+                            isVisible: widget.isVisible,
+                          ));
+                    },
+                    child: Center(child: Text(index.toString()))),
+              );
+            },
+            //onDragUpdate: (){},
+            onReorder: (oldIndex, newIndex) {
+              startLoading(context);
+              setState(() {
+                setState(() {
+                  final element = days.removeAt(oldIndex);
+                  days.insert(newIndex, element);
+                });
+              });
+              updateDay(days);
+            },
+            dragWidgetBuilder: (index, child) {
+              index = index + 1;
+              return Card(
+                color: Theme.of(context).colorScheme.primary,
+                child: Center(child: Text(index.toString())),
+              );
+            },
+            onDragStart: (index) {
+              log("onDragStart: $index");
+            },
+          ),
+        ),
+      ),
     );
   }
 

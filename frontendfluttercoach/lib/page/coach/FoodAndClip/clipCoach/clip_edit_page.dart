@@ -8,8 +8,7 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
+
 import 'package:loading_indicator/loading_indicator.dart';
 import 'package:provider/provider.dart';
 import 'package:video_player/video_player.dart';
@@ -254,15 +253,19 @@ class _ClipEditCoachPageState extends State<ClipEditCoachPage> {
             modelResult = insertClip.data;
             log(jsonEncode(modelResult.result));
             if (modelResult.result == '0') {
-              // setState(() {
-              //   textErr = 'บันทึกไม่สำเร็จ';
-              // });
+               // ignore: use_build_context_synchronously
+              success(context);
               // ignore: use_build_context_synchronously
-              warning(context);
+              Navigator.pushAndRemoveUntil<void>(
+                context,
+                MaterialPageRoute<void>(
+                    builder: (BuildContext context) => const FoodCoachPage()),
+                ModalRoute.withName('/NavbarBottomCoach'),
+              );
+             
             } else {
               // ignore: use_build_context_synchronously
-              success(context);
-              Get.to(() => const FoodCoachPage());
+              warning(context);
             }
           }
         },

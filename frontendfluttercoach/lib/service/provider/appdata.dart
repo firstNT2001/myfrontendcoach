@@ -44,7 +44,7 @@ class AppData with ChangeNotifier {
   String detail = "";
   String exdate = "";
   int day = 0;
-
+  
   //user
   int uid = 0;
   String nameCus = " ";

@@ -33,7 +33,6 @@ import '../../../../widget/image_video.dart';
 import '../../../../widget/wg_editClip_Dialog.dart';
 import '../../../../widget/wg_editFood_Dialog.dart';
 import '../../../../widget/wg_search_food.dart';
-import '../../daysCourse/days_course_page.dart';
 import 'clipCourse/insertClip/clip_select_page.dart';
 import 'foodCourse/insertFood/food_new_page.dart';
 
@@ -130,7 +129,6 @@ class _HomeFoodAndClipPageState extends State<HomeFoodAndClipPage> {
                 child: const Icon(FontAwesomeIcons.bowlFood),
                 label: 'เพิ่มเมนู',
                 onTap: () {
-                  
                   Get.to(() => FoodNewCoursePage(
                         did: widget.did,
                         isVisible: widget.isVisible,
@@ -159,10 +157,7 @@ class _HomeFoodAndClipPageState extends State<HomeFoodAndClipPage> {
               FontAwesomeIcons.chevronLeft,
             ),
             onPressed: () {
-              // Get.to(() => DaysCoursePage(
-              //       coID: context.read<AppData>().coID.toString(),
-              //       isVisible: widget.isVisible,
-              //     ));
+           
               Get.back();
             },
           ),
@@ -174,21 +169,37 @@ class _HomeFoodAndClipPageState extends State<HomeFoodAndClipPage> {
                   .colorScheme
                   .primaryContainer, //<-- Unselected text
               tabs: const [
+                
+                Tab(
+                  icon: Icon(
+                    FontAwesomeIcons.dumbbell,
+                  ),
+                ),
                 Tab(
                   icon: Icon(
                     FontAwesomeIcons.utensils,
                   ),
                 ),
-                Tab(
-                  icon: Icon(
-                    FontAwesomeIcons.dumbbell,
-                  ),
-                )
               ]),
           centerTitle: true,
         ),
         body: TabBarView(
           children: [
+             //Clip
+            Column(
+              children: [
+                const SizedBox(
+                  height: 10,
+                ),
+                Expanded(
+                  child: Padding(
+                    padding: const EdgeInsets.only(
+                        left: 8, right: 8, top: 5, bottom: 5),
+                    child: showClip(),
+                  ),
+                )
+              ],
+            ),
             //Food
             Column(
               children: [
@@ -205,21 +216,7 @@ class _HomeFoodAndClipPageState extends State<HomeFoodAndClipPage> {
               ],
             ),
 
-            //Clip
-            Column(
-              children: [
-                const SizedBox(
-                  height: 10,
-                ),
-                Expanded(
-                  child: Padding(
-                    padding: const EdgeInsets.only(
-                        left: 8, right: 8, top: 5, bottom: 5),
-                    child: showClip(),
-                  ),
-                )
-              ],
-            ),
+           
           ],
         ));
   }

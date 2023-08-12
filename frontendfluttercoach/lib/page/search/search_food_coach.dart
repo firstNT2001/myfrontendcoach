@@ -10,7 +10,6 @@ import 'package:frontendfluttercoach/model/response/md_Result.dart';
 import 'package:frontendfluttercoach/service/listFood.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
-import 'package:persistent_bottom_nav_bar_v2/persistent-tab-view.dart';
 import 'package:provider/provider.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 
@@ -166,11 +165,12 @@ class _SearchFoodCoachPageState extends State<SearchFoodCoachPage> {
               width: MediaQuery.of(context).size.width,
               child: InkWell(
                 onTap: () {
-                  pushNewScreen(
-                    context,
-                    screen: FoodEditCoachPage(ifid: listfood.ifid),
-                    withNavBar: true,
-                  );
+                  // pushNewScreen(
+                  //   context,
+                  //   screen: ,
+                  //   withNavBar: true,
+                  // );
+                  Get.to(() => FoodEditCoachPage(ifid: listfood.ifid));
                 },
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,

@@ -186,20 +186,19 @@ class _FoodEditCoachPageState extends State<FoodEditCoachPage> {
                 widget.ifid.toString(), request);
             modelResult = editFood.data;
             log(jsonEncode(modelResult.result));
-            if (modelResult.result == '0') {
-              // ignore: use_build_context_synchronously
-              warning(context);
-            } else {
+            if (modelResult.result == '1') {
               // ignore: use_build_context_synchronously
               success(context);
               // ignore: use_build_context_synchronously
               Navigator.pushAndRemoveUntil<void>(
                 context,
                 MaterialPageRoute<void>(
-                    builder: (BuildContext context) => FoodCoachPage()),
+                    builder: (BuildContext context) => const FoodCoachPage()),
                 ModalRoute.withName('/NavbarBottomCoach'),
               );
-              //Get.to(() => const FoodCoachPage());
+            } else {
+              // ignore: use_build_context_synchronously
+              warning(context);
             }
           }
         },
