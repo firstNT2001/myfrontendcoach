@@ -193,7 +193,9 @@ class _CourseEditPageState extends State<CourseEditPage> {
               visible: widget.isVisible,
               child: Column(
                 children: [
-                  SizedBox(height: 28,),
+                  SizedBox(
+                    height: 28,
+                  ),
                   WidgetTextFieldString(
                     controller: name,
                     labelText: 'ชื่อ',
@@ -204,8 +206,7 @@ class _CourseEditPageState extends State<CourseEditPage> {
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        SizedBox(
-                          width: (width - 16 - (3 * padding)) / 2,
+                        Expanded(
                           child: WidgetTextFieldInt(
                             controller: amount,
                             labelText: 'จำนวนคน',
@@ -230,32 +231,30 @@ class _CourseEditPageState extends State<CourseEditPage> {
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        SizedBox(
-                          width: (width - 16 - (3 * padding)) / 2,
+                        Expanded(
                           child: WidgetTextFieldInt(
                             controller: price,
                             labelText: 'ราคา',
                             maxLength: 5,
                           ),
                         ),
-                        SizedBox(
-                          width: (width - 16 - (3 * padding)) / 2,
-                          child: WidgetDropdownString(
-                            title: 'เลือกความยากง่าย',
-                            selectedValue: selectedValue,
-                            listItems: LevelItems,
+                        Expanded(
+                          child: Padding(
+                            padding: const EdgeInsets.only(right: 15),
+                            child: WidgetDropdownString(
+                              title: 'เลือกความยากง่าย',
+                              selectedValue: selectedValue,
+                              listItems: LevelItems,
+                            ),
                           ),
                         ),
                       ],
                     ),
                   ),
-                  Padding(
-                      padding: const EdgeInsets.only(
-                          bottom: 8, top: 8, left: 13, right: 13),
-                      child: WidgetTextFieldLines(
-                        controller: details,
-                        labelText: 'รายละเอียด',
-                      )),
+                  WidgetTextFieldLines(
+                    controller: details,
+                    labelText: 'รายละเอียด',
+                  ),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: [
@@ -441,15 +440,15 @@ class _CourseEditPageState extends State<CourseEditPage> {
               ),
               Visibility(
                 visible: widget.isVisible,
-                child:  Container(
-                decoration: BoxDecoration(
-                  boxShadow: [
-                    BoxShadow(
-                        color: Colors.grey.shade600,
-                        spreadRadius: 1,
-                        blurRadius: 15)
-                  ],
-                ),
+                child: Container(
+                  decoration: BoxDecoration(
+                    boxShadow: [
+                      BoxShadow(
+                          color: Colors.grey.shade600,
+                          spreadRadius: 1,
+                          blurRadius: 15)
+                    ],
+                  ),
                   child: CircleAvatar(
                       backgroundColor: Colors.white,
                       radius: 20,

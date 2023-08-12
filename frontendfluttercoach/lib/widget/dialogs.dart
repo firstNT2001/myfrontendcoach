@@ -55,16 +55,16 @@ Widget load(BuildContext context) => LoadingAnimationWidget.horizontalRotatingDo
       // rightDotColor: const Color(0xFFEA3799),
       size: 50,
     );
-void warning(BuildContext context) {
-  CherryToast.warning(
-    title: const Text('บันทึกไม่สำเร็จ'),
-    displayTitle: false,
-    description: const Text('บันทึกไม่สำเร็จ'),
-    toastPosition: Position.bottom,
-    animationDuration: const Duration(milliseconds: 1000),
-    autoDismiss: true,
-  ).show(context);
-}
+// void warning(BuildContext context) {
+//   CherryToast.warning(
+//     title: const Text('บันทึกไม่สำเร็จ'),
+//     displayTitle: false,
+//     description: const Text('บันทึกไม่สำเร็จ'),
+//     toastPosition: Position.bottom,
+//     animationDuration: const Duration(milliseconds: 1000),
+//     autoDismiss: true,
+//   ).show(context);
+// }
 void warningDelete(BuildContext context) {
   CherryToast.warning(
     title: const Text('ลบไม่สำเร็จ'),

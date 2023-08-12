@@ -6,6 +6,7 @@ import 'package:file_picker/file_picker.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:frontendfluttercoach/widget/dialogs.dart';
 
 import 'package:provider/provider.dart';
 
@@ -14,11 +15,12 @@ import '../../../../model/request/listFood_coachID_post.dart';
 import '../../../../model/response/md_Result.dart';
 import '../../../../service/listFood.dart';
 import '../../../../service/provider/appdata.dart';
+
 import '../../../../widget/PopUp/popUp.dart';
 import '../../../../widget/textField/wg_textField.dart';
 import '../../../../widget/textField/wg_textFieldLines.dart';
 import '../../../../widget/textField/wg_textField_int copy.dart';
-import '../coach_food_clip_page.dart';
+import '../../navigationbar.dart';
 
 class FoodNewCoachPage extends StatefulWidget {
   const FoodNewCoachPage({super.key});
@@ -147,6 +149,7 @@ class _FoodNewCoachPageState extends State<FoodNewCoachPage> {
               textErr = 'กรุณาใส่รูป';
             });
           } else {
+            startLoading(context);
             setState(() {
               textErr = '';
             });
@@ -162,6 +165,7 @@ class _FoodNewCoachPageState extends State<FoodNewCoachPage> {
                 cid.toString(), listFoodCoachIdPost);
             modelResult = insertFood.data;
             log(jsonEncode(modelResult.result));
+            stopLoading();
             if (modelResult.result == '1') {
               // ignore: use_build_context_synchronously
               success(context);
@@ -169,7 +173,7 @@ class _FoodNewCoachPageState extends State<FoodNewCoachPage> {
               Navigator.pushAndRemoveUntil<void>(
                 context,
                 MaterialPageRoute<void>(
-                    builder: (BuildContext context) => const FoodCoachPage()),
+                    builder: (BuildContext context) => const NavbarBottomCoach()),
                 ModalRoute.withName('/NavbarBottomCoach'),
               );
             } else {

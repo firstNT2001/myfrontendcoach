@@ -22,7 +22,7 @@ import '../../../../widget/PopUp/popUp.dart';
 import '../../../../widget/showCilp.dart';
 import '../../../../widget/textField/wg_textField.dart';
 import '../../../../widget/textField/wg_textFieldLines.dart';
-import '../coach_food_clip_page.dart';
+import '../../navigationbar.dart';
 
 class ClipEditCoachPage extends StatefulWidget {
   final int icpId;
@@ -239,6 +239,7 @@ class _ClipEditCoachPageState extends State<ClipEditCoachPage> {
             setState(() {
               textErr = '';
             });
+            startLoading(context);
             if (pickedFile != null) await uploadFile();
             if (pickedFile == null) pathVdieo = listclips.first.video;
             ListClipClipIdPut listClipCoachIdPut = ListClipClipIdPut(
@@ -252,6 +253,7 @@ class _ClipEditCoachPageState extends State<ClipEditCoachPage> {
                 widget.icpId.toString(), listClipCoachIdPut);
             modelResult = insertClip.data;
             log(jsonEncode(modelResult.result));
+            stopLoading();
             if (modelResult.result == '0') {
                // ignore: use_build_context_synchronously
               success(context);
@@ -259,7 +261,7 @@ class _ClipEditCoachPageState extends State<ClipEditCoachPage> {
               Navigator.pushAndRemoveUntil<void>(
                 context,
                 MaterialPageRoute<void>(
-                    builder: (BuildContext context) => const FoodCoachPage()),
+                    builder: (BuildContext context) => const NavbarBottomCoach()),
                 ModalRoute.withName('/NavbarBottomCoach'),
               );
              

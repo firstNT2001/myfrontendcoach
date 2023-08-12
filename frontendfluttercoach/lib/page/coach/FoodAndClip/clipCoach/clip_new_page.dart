@@ -8,8 +8,7 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
+
 import 'package:loading_indicator/loading_indicator.dart';
 import 'package:provider/provider.dart';
 import 'package:video_player/video_player.dart';
@@ -21,7 +20,7 @@ import '../../../../service/provider/appdata.dart';
 import '../../../../widget/PopUp/popUp.dart';
 import '../../../../widget/textField/wg_textField.dart';
 import '../../../../widget/textField/wg_textFieldLines.dart';
-import '../coach_food_clip_page.dart';
+import '../../navigationbar.dart';
 
 class ClipNewCoachPage extends StatefulWidget {
   const ClipNewCoachPage({super.key});
@@ -53,7 +52,14 @@ class _ClipNewCoachPageState extends State<ClipNewCoachPage> {
   void initState() {
     super.initState();
     cid = context.read<AppData>().cid.toString();
-
+    _controller = VideoPlayerController.asset('')
+      ..initialize().then((_) {
+        setState(() {});
+      });
+    _customVideoPlayerController = CustomVideoPlayerController(
+      context: context,
+      videoPlayerController: _controller,
+    );
     _listClipServices = context.read<AppData>().listClipServices;
   }
 
@@ -90,7 +96,9 @@ class _ClipNewCoachPageState extends State<ClipNewCoachPage> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                SizedBox(height: 28,),
+                SizedBox(
+                  height: 28,
+                ),
                 WidgetTextFieldString(
                   controller: name,
                   labelText: 'ชื่อ',
@@ -136,7 +144,7 @@ class _ClipNewCoachPageState extends State<ClipNewCoachPage> {
     return Stack(
       children: [
         if (pickedFile != null) ...{
-          Expanded(
+          Positioned(
             child: SafeArea(
               child: CustomVideoPlayer(
                   customVideoPlayerController: _customVideoPlayerController),
@@ -196,7 +204,7 @@ class _ClipNewCoachPageState extends State<ClipNewCoachPage> {
                     color: Colors.black,
                   ),
                   onPressed: () {
-                    Get.back();
+                    Navigator.pop(context);
                   },
                 ),
               ),
@@ -287,6 +295,7 @@ class _ClipNewCoachPageState extends State<ClipNewCoachPage> {
             setState(() {
               textErr = '';
             });
+            startLoading(context);
             if (pickedFile != null) await uploadFile();
             ListClipCoachIdPost listClipCoachIdPost = ListClipCoachIdPost(
                 name: name.text,
@@ -296,6 +305,7 @@ class _ClipNewCoachPageState extends State<ClipNewCoachPage> {
             var insertClip = await _listClipServices.insertListClipByCoachID(
                 cid, listClipCoachIdPost);
             modelResult = insertClip.data;
+            stopLoading();
             if (modelResult.result == '1') {
               // ignore: use_build_context_synchronously
               success(context);
@@ -303,7 +313,7 @@ class _ClipNewCoachPageState extends State<ClipNewCoachPage> {
               Navigator.pushAndRemoveUntil<void>(
                 context,
                 MaterialPageRoute<void>(
-                    builder: (BuildContext context) => const FoodCoachPage()),
+                    builder: (BuildContext context) => const NavbarBottomCoach()),
                 ModalRoute.withName('/NavbarBottomCoach'),
               );
             } else {
