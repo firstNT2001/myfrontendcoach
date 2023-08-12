@@ -90,9 +90,7 @@ class _ClipNewCoachPageState extends State<ClipNewCoachPage> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                SizedBox(
-                  height: 28,
-                ),
+                SizedBox(height: 28,),
                 WidgetTextFieldString(
                   controller: name,
                   labelText: 'ชื่อ',

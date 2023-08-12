@@ -23,6 +23,7 @@ class _WidgetHistoryState extends State<WidgetHistory> {
   late List<Historywallet> history;
   late WalletService walletServiceService;
   late Future<void> loadDataMethod;
+  int money =0;
   @override
   void initState() {
     super.initState();
@@ -59,7 +60,7 @@ class _WidgetHistoryState extends State<WidgetHistory> {
                     shrinkWrap: true,
                     itemCount: history.length,
                     itemBuilder: (context, index) {
-                      log('llll'+history[index].date);
+                      money = history[index].amount*1000;
                       String day = history[index].date.substring(0, 2);
 
                       String month = history[index].date.substring(2, 4);
@@ -68,7 +69,6 @@ class _WidgetHistoryState extends State<WidgetHistory> {
                       DateTime dateTime =
                           DateTime.parse("$year-$month-$day");
                       thaiDate(dateTime.toString());
-                      log(thaiDate(dateTime.toString()));
                       //DateTime time =  DateFormat("ddMMyyyy").parse(history[index].date);
                       final listhis = history[index];
                       return Card(
@@ -76,7 +76,7 @@ class _WidgetHistoryState extends State<WidgetHistory> {
                           leading: Icon(FontAwesomeIcons.clockRotateLeft),
                           title: Text(thaiDate(dateTime.toString())),
                           subtitle: Text(
-                            "+ ${listhis.amount} บาท",
+                            "+ ${money} บาท",
                             style: TextStyle(color: Colors.green),
                           ),
                         ),

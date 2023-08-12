@@ -4,6 +4,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:frontendfluttercoach/page/user/money/widgethistory/widget_history.dart';
+import 'package:get/get.dart';
 import 'package:persistent_bottom_nav_bar_v2/persistent-tab-view.dart';
 import 'package:provider/provider.dart';
 import 'package:retrofit/retrofit.dart';
@@ -52,11 +53,8 @@ class _HistoryWalletState extends State<HistoryWallet> {
                 padding: const EdgeInsets.all(8.0),
                 child: IconButton(
                     onPressed: () {
-                      pushNewScreen(
-                        context,
-                        screen: const addCoin(),
-                        withNavBar: true,
-                      );
+                     
+                      Get.to(() => const addCoin());
                     },
                     icon: Icon(
                       FontAwesomeIcons.circlePlus,
