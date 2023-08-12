@@ -38,7 +38,8 @@ class _WidgetsearchState extends State<Widgetsearch> {
   TextEditingController myController = TextEditingController();
   bool isVisibleCoach = false;
   bool isVisibleCourse = true;
-  bool isVisibleText = true;
+  bool isVisibleText = false;
+  bool isVisibleSearch = false;
   int uid = 0;
   @override
   void initState() {
@@ -72,7 +73,10 @@ class _WidgetsearchState extends State<Widgetsearch> {
                     controller: myController,
                     onChanged: (value) {
                       if (myController.text.isNotEmpty) {
-                        log("logg " + myController.text);
+                        //isVisibleSearch = true;
+                        isVisibleSearch = false;
+                        setState(() {});
+                        log("sert ");
                         coachService
                             .coach(
                                 nameCoach: myController.text,
@@ -82,33 +86,50 @@ class _WidgetsearchState extends State<Widgetsearch> {
                           var datacoach = coachdata.data;
                           //var checkcoaches = coaches.length;
                           coaches = datacoach;
-                          // if (coaches.isNotEmpty) {
-                          //   //log("message"+coaches.first);
-                          //   setState(() {
-                          //     isVisibleCoach = true;
-                          //     isVisibleCourse = false;
-                          //   });
+                          if (coaches.isNotEmpty) {
+                            //log("message"+coaches.first);
+                            setState(() {
+                              //isVisibleCoach = true;
+                              isVisibleText = false;
+                            });
 
-                          //   log(coaches.length.toString());
-                          // } else {
-                          //   setState(() {
-                          //     isVisibleCoach = false;
-                          //     isVisibleCourse = true;
-                          //   });
-                          // }
+                            log(coaches.length.toString());
+                          } else {
+                            setState(() {
+                              //isVisibleCoach = false;
+                              isVisibleText = true;
+                            });
+                          }
                         });
                         courseService
-                            .course(cid: '', coID: '', name: myController.text)
+                            .courseOpenSell(
+                                cid: '', coID: '', name: myController.text)
                             .then((coursedata) {
                           var datacourse = coursedata.data;
                           courses = datacourse;
-                          // if (courses.isNotEmpty) {
-                          //   setState(() {});
-                          //   log(courses.length.toString());
-                          // }
+                          if (courses.isNotEmpty) {
+                            //log("message"+coaches.first);
+                            setState(() {
+                              //isVisibleCoach = true;
+                              isVisibleText = false;
+                            });
+
+                            log(coaches.length.toString());
+                          } else {
+                            setState(() {
+                              //isVisibleCoach = false;
+                              isVisibleText = true;
+                            });
+                          }
                         });
                       } else {
-                        Container();
+                        log("55555555");
+                        setState(() {
+                          isVisibleText = false;
+                          isVisibleSearch = true;
+                          isVisibleCoach = false;
+                          isVisibleCourse = false;
+                        });
                       }
                     },
                     // onSubmitted: (value) {
@@ -144,39 +165,92 @@ class _WidgetsearchState extends State<Widgetsearch> {
               children: [
                 FilledButton(
                     onPressed: () {
-                      setState(() {
-                        isVisibleCoach = false;
-                        isVisibleCourse = true;
-                      });
+                       if (courses.isEmpty) {
+                          log("coaEm");
+                          setState(() {
+                            isVisibleSearch = true;
+                            isVisibleCoach = false;
+                            isVisibleCourse = false;
+                          });
+                        } else {
+
+                          log("notcoaEm");
+                          setState(() {
+                            isVisibleCoach = false;
+                            isVisibleCourse = true;
+                            isVisibleSearch = false;
+                          });}
                     },
                     child: Text("คอร์ส")),
                 Padding(
                   padding: const EdgeInsets.all(10.0),
                   child: FilledButton(
                       onPressed: () {
-                        setState(() {
-                          isVisibleCoach = true;
-                          isVisibleCourse = false;
-                        });
+                        if (coaches.isEmpty) {
+                          log("coaEm");
+                          setState(() {
+                            isVisibleSearch = true;
+                            isVisibleCoach = false;
+                            isVisibleCourse = false;
+                          });
+                        } else {
+                          log("notcoaEm");
+                          setState(() {
+                            isVisibleCoach = true;
+                            isVisibleCourse = false;
+                            isVisibleSearch = false;
+                          });
+                        }
+                        // setState(() {
+                        //   isVisibleCoach = true;
+                        //   isVisibleCourse = false;
+                        // });
                       },
                       child: Text("โค้ช")),
                 ),
               ],
             ),
-            // Visibility(
-            //   visible: isVisibleText,
-            //   child: Container(
-            //     height: 500,
-            //     child: Row(
-            //       crossAxisAlignment: CrossAxisAlignment.center,
-            //       mainAxisAlignment: MainAxisAlignment.center,
-            //                   children: [
-            //                     Icon(Icons.search,size: 70,color: const Color.fromARGB(96, 85, 85, 85)),
-            //                     Text("ค้นหา",style: TextStyle(fontSize: 50,color: Color.fromARGB(96, 85, 85, 85) )),
-            //                   ],
-            //                 ),
-            //   ),
-            // ),
+            Visibility(
+              visible: isVisibleText,
+              child: Container(
+                height: 100,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    Text("ไม่พบผลลัพธ์สำหรับ",
+                        style: TextStyle(
+                            fontSize: 18,
+                            color: Color.fromARGB(96, 85, 85, 85))),
+                    Text("''" + myController.text + "''",
+                        style: TextStyle(
+                            fontSize: 18,
+                            color: Color.fromARGB(96, 85, 85, 85)))
+                  ],
+                ),
+              ),
+            ),
+            Visibility(
+              visible: isVisibleSearch,
+              child: Container(
+                height: 100,
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.end,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Icon(FontAwesomeIcons.search,
+                        color: Color.fromARGB(96, 85, 85, 85), size: 25),
+                    Padding(
+                      padding: const EdgeInsets.only(left: 10),
+                      child: Text("พิมพ์เพื่อค้นหา",
+                          style: TextStyle(
+                              fontSize: 18,
+                              color: Color.fromARGB(96, 85, 85, 85))),
+                    ),
+                  ],
+                ),
+              ),
+            ),
             Visibility(
               visible: isVisibleCoach,
               child: Expanded(

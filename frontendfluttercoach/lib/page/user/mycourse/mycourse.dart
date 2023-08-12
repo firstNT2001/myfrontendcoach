@@ -132,7 +132,7 @@ class _MyCousesState extends State<MyCouses> {
               final listcours = courses[index];
               final listpercents = listpercent[index];
               final listshowpercents = listpercent[index]*100;
-              log("listpercents"+listpercents.toString());
+              
               return Padding(
                 padding: const EdgeInsets.only(left: 10, right: 10, bottom: 20),
                 child: InkWell(
