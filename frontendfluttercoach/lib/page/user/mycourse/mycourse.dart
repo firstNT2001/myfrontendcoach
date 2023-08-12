@@ -4,6 +4,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
+import 'package:persistent_bottom_nav_bar_v2/persistent-tab-view.dart';
 import 'package:provider/provider.dart';
 
 import '../../../model/response/clip_get_res.dart';
@@ -65,7 +66,11 @@ class _MyCousesState extends State<MyCouses> {
                   size: 40,
                 ),
                 onPressed: () {
-                  Get.to(() => const HistoryPage());
+                  pushNewScreen(
+                      context,
+                      screen: const HistoryPage(),
+                      withNavBar: true,
+                    );    
                 }),
           ),
           Padding(
@@ -113,17 +118,6 @@ class _MyCousesState extends State<MyCouses> {
       log('Error: $err');
     }
   }
-
-  // Future<void> loadProgessData() async {
-  //   try {
-  //     var datas = await progessService.processbar(coID: '294');
-  //     progess = datas.data;
-  //     log("percent${progess.percent}");
-  //   } catch (err) {
-  //     log('Error: $err');
-  //   }
-  // }
-
   Widget loadcourse() {
     return FutureBuilder(
       future: loadDataMethod,
@@ -149,14 +143,18 @@ class _MyCousesState extends State<MyCouses> {
                     String stExpirationDay = listcours.course.expirationDate;
                     context.read<AppData>().idcourse = listcours.course.coId;
                     //context.read<AppData>().cid = listcours.coach.cid;
-                    Get.to(() => ShowDayMycourse(
+                    pushNewScreen(
+                      context,
+                      screen: ShowDayMycourse(
                         coID: listcours.course.coId,
                         img: listcours.course.image,
                         namecourse: listcours.course.name,
                         namecoach: listcours.course.coach.fullName,
                         detail: listcours.course.details,
                         expirationDate: stExpirationDay,
-                        dayincourse: listcours.course.days));
+                        dayincourse: listcours.course.days) ,
+                      withNavBar: true,
+                    );    
                   },
                   child: Container(
                     alignment: Alignment.center,

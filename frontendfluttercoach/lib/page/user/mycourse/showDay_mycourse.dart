@@ -11,15 +11,14 @@ import 'package:frontendfluttercoach/page/user/mycourse/showFood_Clip.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
-
 import '../../../model/request/course_EX.dart';
+import '../../../model/response/md_Customer_get.dart';
 import '../../../model/response/md_Day_showmycourse.dart';
 import '../../../model/response/md_Result.dart';
 import '../../../service/course.dart';
+import '../../../service/customer.dart';
 import '../../../service/day.dart';
 import '../../../service/provider/appdata.dart';
-import '../../waitingForEdit/chat.dart';
-import '../chat/room.dart';
 
 class ShowDayMycourse extends StatefulWidget {
   ShowDayMycourse(
@@ -31,7 +30,7 @@ class ShowDayMycourse extends StatefulWidget {
       required this.detail,
       required this.expirationDate,
       required this.dayincourse});
-  late int coID;    
+  late int coID;
   late String img;
   late String namecourse;
   late String namecoach;
@@ -56,20 +55,24 @@ class _ShowDayMycourseState extends State<ShowDayMycourse> {
   late DateTime expirationDate;
   String txtdateEX = "";
   String txtdateStart = "";
-  late String roomchat ;
+  late String roomchat;
   var update;
+
   int coID = 0;
   void initState() {
     // TODO: implement initState
+
     super.initState();
     coID = context.read<AppData>().idcourse;
     dayService = DayService(Dio(), baseUrl: context.read<AppData>().baseurl);
     courseService =
         CourseService(Dio(), baseUrl: context.read<AppData>().baseurl);
+  
     loadDataMethod = loadData();
 
     today = DateTime(nows.year, nows.month, nows.day);
-    expirationDate = DateTime(nows.year, nows.month, nows.day + widget.dayincourse-1);
+    expirationDate =
+        DateTime(nows.year, nows.month, nows.day + widget.dayincourse - 1);
     var formatter = DateFormat.yMMMd();
 
     var onlyBuddhistYear = nows.yearInBuddhistCalendar;
@@ -80,22 +83,111 @@ class _ShowDayMycourseState extends State<ShowDayMycourse> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(),
-      body: Column(
-        children: [
-          //loadCourse(),
-          Expanded(child: loadDay())
-        ],
+      floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
+      floatingActionButton: SizedBox(
+        height: 60,
+        width: 60,
+        child: FloatingActionButton(
+          backgroundColor: Theme.of(context).colorScheme.primary,
+          foregroundColor: Colors.white,
+          onPressed: () {
+            Get.to(() => ChatPage(
+                  roomID: coID.toString() + widget.namecourse,
+                  userID: coID.toString(),
+                  firstName: widget.namecourse,
+                  roomName: widget.namecourse,
+                ));
+            // ignore: prefer_const_constructors
+          },
+          shape: const CircleBorder(),
+          child: const Icon(
+            FontAwesomeIcons.facebookMessenger,
+            size: 25,
+          ),
+        ),
+      ),
+      body: SafeArea(
+        child: ListView(
+          children: [
+            const Padding(
+              padding: EdgeInsets.only(left: 15, top: 10),
+              child: Text("DAILY WORKOUT",
+                  style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold)),
+            ),
+            const Padding(
+              padding: EdgeInsets.only(left: 15, bottom: 10),
+              child: Text("COACHING",
+                  style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold)),
+            ),
+            Image.network(
+              widget.img,
+              height: 200,
+              width: double.infinity,
+              fit: BoxFit.cover,
+            ),
+            Padding(
+              padding: const EdgeInsets.only(left: 15, top: 25, bottom: 8),
+              child: Row(
+                children: [
+                  Text(widget.namecourse,
+                      style: const TextStyle(
+                          fontSize: 20, fontWeight: FontWeight.w700)),
+                  // FilledButton.icon(onPressed: (){
+                  //   //roomchat= widget.namecourse+coID.toString();
+                  //   Get.to(() => ChatPage(roomID: coID.toString(), userID: coID.toString(), firstName: widget.namecourse, roomName: "เผาา",));
+                  // }, icon: Icon(FontAwesomeIcons.facebookMessenger,size: 16,), label: Text("คุยกับโค้ช"))
+                ],
+              ),
+            ),
+            Row(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.only(left: 15, bottom: 10),
+                  child: FilledButton.icon(
+                      onPressed: () {},
+                      icon: const Icon(
+                        FontAwesomeIcons.user,
+                        size: 16,
+                      ),
+                      label: Text(widget.namecoach,
+                          style: const TextStyle(
+                              color: Colors.white, fontSize: 16))),
+                ),
+              ],
+            ),
+            const Padding(
+              padding: EdgeInsets.only(left: 15, bottom: 10),
+              child: Text("รายละเอียดคอร์ส",
+                  style: TextStyle(fontSize: 17, fontWeight: FontWeight.w700)),
+            ),
+            Padding(
+              padding: const EdgeInsets.only(left: 20, bottom: 8, right: 8),
+              child: Text(widget.detail,
+                  style: Theme.of(context).textTheme.bodyLarge),
+            ),
+            const Padding(
+              padding: EdgeInsets.only(left: 15),
+              child: Text("วันที่",
+                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.w700)),
+            ),
+            Padding(
+              padding: const EdgeInsets.only(
+                  left: 20, right: 20, top: 5, bottom: 30),
+              child: loadDay(),
+            ),
+          ],
+        ),
       ),
     );
   }
 
   Future<void> loadData() async {
     try {
-      var dataday =
-          await dayService.day(did: '', coID: widget.coID.toString(), sequence: '');
+      var dataday = await dayService.day(
+          did: '', coID: widget.coID.toString(), sequence: '');
       days = dataday.data;
       log('couse: ${days.length}');
+     
     } catch (err) {
       log('Error: $err');
     }
@@ -108,102 +200,49 @@ class _ShowDayMycourseState extends State<ShowDayMycourse> {
         if (snapshot.connectionState != ConnectionState.done) {
           return const Center(child: CircularProgressIndicator());
         } else {
-          return ListView(
-            children: [
-              const SizedBox(
-                  height: 35,
-                  width: 390,
-                  child: Text(
-                    "Daily workout",
-                    style: TextStyle(fontSize: 25),
-                  )),
-              Image.network(
-                widget.img,
-                height: 200,
-                width: double.infinity,
-                fit: BoxFit.cover,
-              ),
-              Padding(
-                padding: const EdgeInsets.only(left: 15, top: 25),
-                child: Row(
-                  children: [
-                    Text(widget.namecourse,
-                        style: Theme.of(context).textTheme.bodyLarge),
-                    FilledButton.icon(onPressed: (){
-                      //roomchat= widget.namecourse+coID.toString();
-                      Get.to(() => ChatPage(roomID: coID.toString(), userID: coID.toString(), firstName: widget.namecourse, roomName: "เผาา",));
-                    }, icon: Icon(FontAwesomeIcons.facebookMessenger,size: 16,), label: Text("คุยกับโค้ช"))
-                  ],
+          return Container(
+            height: 250,
+            decoration: BoxDecoration(
+                color: Theme.of(context).colorScheme.primaryContainer,
+                borderRadius: BorderRadius.circular(20)
+                //more than 50% of width makes circle
                 ),
-              ),
-              Padding(
-                padding: const EdgeInsets.only(left: 15, bottom: 8),
-                child: Text(widget.namecoach,
-                    style: Theme.of(context).textTheme.bodyLarge),
-              ),
-              Padding(
-                padding: const EdgeInsets.only(left: 15),
-                child: Text("รายละเอียดคอร์ส",
-                    style: Theme.of(context).textTheme.bodyLarge),
-              ),
-              Padding(
-                padding: const EdgeInsets.only(left: 17, bottom: 8, right: 8),
-                child:
-                    Text(widget.detail, style: Theme.of(context).textTheme.bodyLarge),
-              ),
-              Expanded(
-                child: ListView.builder(
-                  shrinkWrap: true,
-                  itemCount: days.length,
-                  itemBuilder: (context, index) {
-                    final listday = days[index];
-                    return Card(
-                      child: ListTile(
-                        title: Row(
-                          children: [
-                            Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: Text("วันที่",
-                                  style: Theme.of(context).textTheme.bodyLarge),
+            child: Padding(
+              padding: const EdgeInsets.all(15.0),
+              child: GridView.count(
+                  crossAxisCount: 5,
+                  children: days
+                      .map((day) => Column(children: [
+                            Container(
+                              height: 50,
+                              width: 50,
+                              decoration: BoxDecoration(
+                                  color: Colors.black,
+                                  borderRadius: BorderRadius.circular(100)
+                                  //more than 50% of width makes circle
+                                  ),
+                              child: Center(
+                                  child: Text(
+                                day.sequence.toString(),
+                                style: const TextStyle(
+                                  color: Colors.white,
+                                ),
+                              )),
                             ),
-                            Padding(
-                              padding: const EdgeInsets.only(top: 4),
-                              child: Text(listday.sequence.toString(),
-                                  style: Theme.of(context).textTheme.bodyLarge),
-                            ),
-                          ],
-                        ),
-                        trailing: ElevatedButton(
-                            onPressed: () { 
-                              if (widget.expirationDate == "0001-01-01T00:00:00Z") {
-                                //log(message);
-                                _bindPage(context);
-                                log("ยังไม่เริ่ม$widget.expirationDate");
-                                setState(() {
-                                  loadDataMethod = loadData();
-                                });
-                              } else if( today.day > expirationDate.day){
-
-                                  log("IUIUIU "+today.day.toString());
-                                  log("IUIUIU "+expirationDate.day.toString());
-                              }else {
-                                log("เริ่มแล้ว$widget.expirationDate");
-                                log(" DID:= ${listday.did}");
-                                context.read<AppData>().did = listday.did;
-                                context.read<AppData>().idcourse = coID;
-
-                                Get.to(() =>   showFood(indexSeq: index,));
-                              }
-                            },
-                            child: Text("เริ่ม",
-                                style: Theme.of(context).textTheme.bodyLarge)),
-                      ),
-                    );
-                  },
-                ),
-              ),
-            ],
+                            //  Padding(
+                            //    padding: const EdgeInsets.all(8.0),
+                            //    child: Text(day.sequence.toString()),
+                            //  )
+                          ]))
+                      .toList()),
+            ),
           );
+          // Card(child: Padding(
+          //   padding: const EdgeInsets.all(20),
+          //   child: Column(
+          //     children: days.map((day) => Container(child: Text(day.sequence.toString()),)).toList(),
+          //   ),
+          // ),);
         }
       },
     );
@@ -257,7 +296,7 @@ class _ShowDayMycourseState extends State<ShowDayMycourse> {
                       context.read<AppData>().idcourse = coID;
                       log(days.first.did.toString());
                       SmartDialog.dismiss();
-                      Get.to(() => showFood(indexSeq: days.first.sequence-1));
+                      Get.to(() => showFood(indexSeq: days.first.sequence - 1));
                     },
                     child: const Text('เริ่มเลย'),
                   ),
@@ -270,3 +309,93 @@ class _ShowDayMycourseState extends State<ShowDayMycourse> {
     });
   }
 }
+// ListView(
+//             children: [
+              
+//               Image.network(
+//                 widget.img,
+//                 height: 200,
+//                 width: double.infinity,
+//                 fit: BoxFit.cover,
+//               ),
+//               Padding(
+//                 padding: const EdgeInsets.only(left: 15, top: 25),
+//                 child: Row(
+//                   children: [
+//                     Text(widget.namecourse,
+//                         style: Theme.of(context).textTheme.bodyLarge),
+//                     FilledButton.icon(onPressed: (){
+//                       //roomchat= widget.namecourse+coID.toString();
+//                       Get.to(() => ChatPage(roomID: coID.toString(), userID: coID.toString(), firstName: widget.namecourse, roomName: "เผาา",));
+//                     }, icon: Icon(FontAwesomeIcons.facebookMessenger,size: 16,), label: Text("คุยกับโค้ช"))
+//                   ],
+//                 ),
+//               ),
+//               Padding(
+//                 padding: const EdgeInsets.only(left: 15, bottom: 8),
+//                 child: Text(widget.namecoach,
+//                     style: Theme.of(context).textTheme.bodyLarge),
+//               ),
+//               Padding(
+//                 padding: const EdgeInsets.only(left: 15),
+//                 child: Text("รายละเอียดคอร์ส",
+//                     style: Theme.of(context).textTheme.bodyLarge),
+//               ),
+//               Padding(
+//                 padding: const EdgeInsets.only(left: 17, bottom: 8, right: 8),
+//                 child:
+//                     Text(widget.detail, style: Theme.of(context).textTheme.bodyLarge),
+//               ),
+//               Expanded(
+//                 child: ListView.builder(
+//                   shrinkWrap: true,
+//                   itemCount: days.length,
+//                   itemBuilder: (context, index) {
+//                     final listday = days[index];
+//                     return Card(
+//                       child: ListTile(
+//                         title: Row(
+//                           children: [
+//                             Padding(
+//                               padding: const EdgeInsets.all(8.0),
+//                               child: Text("วันที่",
+//                                   style: Theme.of(context).textTheme.bodyLarge),
+//                             ),
+//                             Padding(
+//                               padding: const EdgeInsets.only(top: 4),
+//                               child: Text(listday.sequence.toString(),
+//                                   style: Theme.of(context).textTheme.bodyLarge),
+//                             ),
+//                           ],
+//                         ),
+//                         trailing: ElevatedButton(
+//                             onPressed: () { 
+//                               if (widget.expirationDate == "0001-01-01T00:00:00Z") {
+//                                 //log(message);
+//                                 _bindPage(context);
+//                                 log("ยังไม่เริ่ม$widget.expirationDate");
+//                                 setState(() {
+//                                   loadDataMethod = loadData();
+//                                 });
+//                               } else if( today.day > expirationDate.day){
+
+//                                   log("IUIUIU "+today.day.toString());
+//                                   log("IUIUIU "+expirationDate.day.toString());
+//                               }else {
+//                                 log("เริ่มแล้ว$widget.expirationDate");
+//                                 log(" DID:= ${listday.did}");
+//                                 context.read<AppData>().did = listday.did;
+//                                 context.read<AppData>().idcourse = coID;
+                
+//                                 Get.to(() =>   showFood(indexSeq: index,));
+//                               }
+//                             },
+//                             child: Text("เริ่ม",
+//                                 style: Theme.of(context).textTheme.bodyLarge)),
+//                       ),
+//                     );
+//                   },
+//                 ),
+//               ),
+//             ],
+//           );
