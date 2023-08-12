@@ -178,9 +178,13 @@ class _CourseEditPageState extends State<CourseEditPage> {
       padding: EdgeInsets.only(top: MediaQuery.of(context).size.height / 3),
       child: Container(
         width: MediaQuery.of(context).size.width,
-        decoration: const BoxDecoration(
-            borderRadius: BorderRadius.only(
+        decoration: BoxDecoration(
+            borderRadius: const BorderRadius.only(
                 topLeft: Radius.circular(20), topRight: Radius.circular(20)),
+            boxShadow: [
+              BoxShadow(
+                  color: Colors.grey.shade600, spreadRadius: 1, blurRadius: 15)
+            ],
             color: Colors.white),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -393,7 +397,13 @@ class _CourseEditPageState extends State<CourseEditPage> {
                 child: Container(
                   height: 40,
                   width: 40,
-                  decoration: const BoxDecoration(
+                  decoration: BoxDecoration(
+                      boxShadow: [
+                        BoxShadow(
+                            color: Colors.grey.shade600,
+                            spreadRadius: 1,
+                            blurRadius: 15)
+                      ],
                       shape: BoxShape.circle,
                       //border: Border.all(width: 4, color: Colors.white),
                       color: Colors.white),
@@ -409,31 +419,51 @@ class _CourseEditPageState extends State<CourseEditPage> {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              CircleAvatar(
-                backgroundColor: Colors.white,
-                radius: 20,
-                child: IconButton(
-                  icon: const Icon(
-                    FontAwesomeIcons.chevronLeft,
+              Container(
+                decoration: BoxDecoration(
+                  boxShadow: [
+                    BoxShadow(
+                        color: Colors.grey.shade600,
+                        spreadRadius: 1,
+                        blurRadius: 15)
+                  ],
+                ),
+                child: CircleAvatar(
+                  backgroundColor: Colors.white,
+                  radius: 20,
+                  child: IconButton(
+                    icon: const Icon(
+                      FontAwesomeIcons.chevronLeft,
+                    ),
+                    onPressed: () {
+                      Get.back();
+                    },
                   ),
-                  onPressed: () {
-                    Get.back();
-                  },
                 ),
               ),
               Visibility(
                 visible: widget.isVisible,
-                child: CircleAvatar(
-                    backgroundColor: Colors.white,
-                    radius: 20,
-                    child: IconButton(
-                      icon: const Icon(
-                        FontAwesomeIcons.trash,
-                      ),
-                      onPressed: () {
-                        dialogDelete(context);
-                      },
-                    )),
+                child:  Container(
+                decoration: BoxDecoration(
+                  boxShadow: [
+                    BoxShadow(
+                        color: Colors.grey.shade600,
+                        spreadRadius: 1,
+                        blurRadius: 15)
+                  ],
+                ),
+                  child: CircleAvatar(
+                      backgroundColor: Colors.white,
+                      radius: 20,
+                      child: IconButton(
+                        icon: const Icon(
+                          FontAwesomeIcons.trash,
+                        ),
+                        onPressed: () {
+                          dialogDelete(context);
+                        },
+                      )),
+                ),
               ),
             ],
           ),

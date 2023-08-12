@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:developer';
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:frontendfluttercoach/model/request/day_dayID_put.dart';
@@ -24,7 +25,6 @@ import '../../../service/provider/appdata.dart';
 import '../../../widget/PopUp/popUp.dart';
 import '../../../widget/dialogs.dart';
 import '../course/FoodAndClip/course_food_clip.dart';
-import '../course/course_edit_page.dart';
 
 class DaysCoursePage extends StatefulWidget {
   const DaysCoursePage(
@@ -59,7 +59,8 @@ class _DaysCoursePageState extends State<DaysCoursePage> {
   int numberOfDays = 0;
 
   bool _enabled = true;
- late Color caughtColor;
+  List<Color> cardColors = [];
+
   @override
   void initState() {
     super.initState();
@@ -67,8 +68,6 @@ class _DaysCoursePageState extends State<DaysCoursePage> {
 
     _daysService = context.read<AppData>().daysService;
     loadDaysDataMethod = loadDaysDataAsync();
-
-    
 
     _courseService = context.read<AppData>().courseService;
     loadCourseDataMethod = loadCourseDataAsync();
@@ -81,67 +80,10 @@ class _DaysCoursePageState extends State<DaysCoursePage> {
 
   @override
   Widget build(BuildContext context) {
-    caughtColor = Theme.of(context).colorScheme.primary;
     return WillPopScope(
-      onWillPop: () async => false,
+      onWillPop: () async => true,
       child: Scaffold(
         resizeToAvoidBottomInset: false,
-        floatingActionButtonLocation: FloatingActionButtonLocation.endDocked,
-        floatingActionButton: DragTarget(
-          onAccept: (Color color) {
-            caughtColor = color;
-          },
-          builder: (BuildContext context, List<dynamic> accepted,
-              List<dynamic> rejectedData) {
-            return SizedBox(
-              height: 60,
-              width: 60,
-              child: Padding(
-                padding: const EdgeInsets.only(),
-                child: FloatingActionButton(
-                  backgroundColor: accepted.isEmpty
-                      ? caughtColor
-                      : Theme.of(context).colorScheme.error,
-                  foregroundColor: Colors.white,
-                  onPressed: () {
-                    // _buycouse(context);
-                    // ignore: prefer_const_constructors
-                  },
-                  shape: const CircleBorder(),
-                  child: const Icon(FontAwesomeIcons.trash),
-                ),
-              ),
-            );
-          },
-          // onWillAccept: (data) {
-          //   //return data == 'red';
-          //   log('red');
-          // },
-          onLeave: (data) {
-    // setState(() {
-    //   showSnackBarGlobal(context, 'Dropped successfully!');
-    //   _isDropped = true;
-    // });
-     log('red');
-  },
-          // child: SizedBox(
-          //   height: 60,
-          //   width: 60,
-          //   child: Padding(
-          //     padding: const EdgeInsets.only(),
-          //     child: FloatingActionButton(
-          //       backgroundColor: Theme.of(context).colorScheme.primary,
-          //       foregroundColor: Colors.white,
-          //       onPressed: () {
-          //         // _buycouse(context);
-          //         // ignore: prefer_const_constructors
-          //       },
-          //       shape: const CircleBorder(),
-          //       child: const Icon(FontAwesomeIcons.trash),
-          //     ),
-          //   ),
-          // ),
-        ),
         body: SafeArea(
           child: Column(
             children: [
@@ -196,31 +138,51 @@ class _DaysCoursePageState extends State<DaysCoursePage> {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  CircleAvatar(
-                    backgroundColor: Colors.white,
-                    radius: 20,
-                    child: IconButton(
-                      icon: const Icon(
-                        FontAwesomeIcons.chevronLeft,
+                  Container(
+                    decoration: BoxDecoration(
+                      boxShadow: [
+                        BoxShadow(
+                            color: Colors.grey.shade600,
+                            spreadRadius: 1,
+                            blurRadius: 15)
+                      ],
+                    ),
+                    child: CircleAvatar(
+                      backgroundColor: Colors.white,
+                      radius: 20,
+                      child: IconButton(
+                        icon: const Icon(
+                          FontAwesomeIcons.chevronLeft,
+                        ),
+                        onPressed: () {
+                          Get.back();
+                        },
                       ),
-                      onPressed: () {
-                        Get.back();
-                      },
                     ),
                   ),
                   Visibility(
                     visible: widget.isVisible,
-                    child: CircleAvatar(
-                        backgroundColor: Colors.white,
-                        radius: 20,
-                        child: IconButton(
-                          icon: const Icon(
-                            FontAwesomeIcons.calendarPlus,
-                          ),
-                          onPressed: () {
-                            dialogInsertDay(context);
-                          },
-                        )),
+                    child: Container(
+                      decoration: BoxDecoration(
+                        boxShadow: [
+                          BoxShadow(
+                              color: Colors.grey.shade600,
+                              spreadRadius: 1,
+                              blurRadius: 15)
+                        ],
+                      ),
+                      child: CircleAvatar(
+                          backgroundColor: Colors.white,
+                          radius: 20,
+                          child: IconButton(
+                            icon: const Icon(
+                              FontAwesomeIcons.calendarPlus,
+                            ),
+                            onPressed: () {
+                              dialogInsertDay(context);
+                            },
+                          )),
+                    ),
                   ),
                 ],
               ),
@@ -237,58 +199,136 @@ class _DaysCoursePageState extends State<DaysCoursePage> {
       padding: EdgeInsets.only(top: MediaQuery.of(context).size.height / 3),
       child: Container(
         width: MediaQuery.of(context).size.width,
-        decoration: const BoxDecoration(
-            borderRadius: BorderRadius.only(
+        decoration: BoxDecoration(
+            borderRadius: const BorderRadius.only(
                 topLeft: Radius.circular(20), topRight: Radius.circular(20)),
+            boxShadow: [
+              BoxShadow(
+                  color: Colors.grey.shade600, spreadRadius: 1, blurRadius: 15)
+            ],
             color: Colors.white),
-        child: Padding(
-          padding: const EdgeInsets.only(top: 20, right: 20, left: 20),
-          child: ReorderableGridView.builder(
-            itemCount: days.length,
-            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 4, mainAxisExtent: 65),
-            itemBuilder: (context, index) {
-              final listday = days[index];
-              index = index + 1;
-              return Card(
-                color: Colors.white,
-                key: ValueKey(index),
-                child: InkWell(
-                    // onLongPress: () {
-                    //   dialogDeleteDay(context, listday.did);
-                    // },
-                    onTap: () {
-                      Get.to(() => HomeFoodAndClipPage(
-                            did: listday.did.toString(),
-                            sequence: index.toString(),
-                            isVisible: widget.isVisible,
-                          ));
-                    },
-                    child: Center(child: Text(index.toString()))),
-              );
-            },
-            //onDragUpdate: (){},
-            onReorder: (oldIndex, newIndex) {
-              startLoading(context);
-              setState(() {
-                setState(() {
-                  final element = days.removeAt(oldIndex);
-                  days.insert(newIndex, element);
-                });
-              });
-              updateDay(days);
-            },
-            dragWidgetBuilder: (index, child) {
-              index = index + 1;
-              return Card(
-                color: Theme.of(context).colorScheme.primary,
-                child: Center(child: Text(index.toString())),
-              );
-            },
-            onDragStart: (index) {
-              log("onDragStart: $index");
-            },
-          ),
+        child: Column(
+          children: [
+            Padding(
+              padding: const EdgeInsets.only(top: 20, right: 20, left: 20),
+              child: Text(
+                'วันออกกำลังกาย',
+                style: Theme.of(context).textTheme.headlineSmall,
+              ),
+            ),
+            Expanded(
+              child: Padding(
+                padding: const EdgeInsets.only(top: 20, right: 20, left: 20),
+                child: ReorderableGridView.builder(
+                  itemCount: days.length,
+                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: 4, mainAxisExtent: 65),
+                  itemBuilder: (context, index) {
+                    final listday = days[index];
+                    int i = index + 1;
+                    return PopupMenuButton(
+                      key: ValueKey(index),
+                      color: Colors.white,
+                      shape: const RoundedRectangleBorder(
+                          borderRadius:
+                              BorderRadius.all(Radius.circular(15.0))),
+                      offset: const Offset(0, 65),
+                      onOpened: () {
+                        setState(() {
+                          cardColors[index] =
+                              Theme.of(context).colorScheme.primary;
+                        });
+                      },
+                      onCanceled: () {
+                        setState(() {
+                          cardColors[index] =
+                              Theme.of(context).colorScheme.tertiary;
+                        });
+                      },
+                      itemBuilder: (context) => [
+                        const PopupMenuItem(
+                          value: 1,
+                          child: Row(
+                            children: [
+                              Icon(FontAwesomeIcons.pen),
+                              SizedBox(
+                                width: 10,
+                              ),
+                              Text('แก้ไข'),
+                            ],
+                          ),
+                        ),
+                        const PopupMenuItem(
+                            value: 2,
+                            child: Row(
+                              children: [
+                                Icon(FontAwesomeIcons.trash),
+                                SizedBox(
+                                  width: 10,
+                                ),
+                                Text('ลบ'),
+                              ],
+                            )),
+                      ],
+                      onSelected: (value) {
+                        if (value == 1) {
+                          setState(() {
+                            cardColors[index] =
+                                Theme.of(context).colorScheme.tertiary;
+                          });
+                          Get.to(() => HomeFoodAndClipPage(
+                                did: listday.did.toString(),
+                                sequence: i.toString(),
+                                isVisible: widget.isVisible,
+                              ));
+                        } else {
+                          
+                          dialogDeleteDay(context, listday.did);
+                          setState(() {
+                            cardColors[index] =
+                                Theme.of(context).colorScheme.tertiary;
+                          });
+                        }
+                      },
+                      child: Card(
+                        color: cardColors[index],
+                        key: ValueKey(index),
+                        child: Center(
+                            child: Text(
+                          i.toString(),
+                          style: Theme.of(context)
+                              .textTheme
+                              .titleMedium!
+                              .copyWith(color: Colors.white),
+                        )),
+                      ),
+                    );
+                  },
+                  //onDragUpdate: (){},
+                  onReorder: (oldIndex, newIndex) {
+                    startLoading(context);
+                    setState(() {
+                      setState(() {
+                        final element = days.removeAt(oldIndex);
+                        days.insert(newIndex, element);
+                      });
+                    });
+                    updateDay(days);
+                  },
+                  dragWidgetBuilder: (index, child) {
+                    int i = index + 1;
+                    return Card(
+                      color: Theme.of(context).colorScheme.primary,
+                      child: Center(child: Text(i.toString())),
+                    );
+                  },
+                  onDragStart: (index) {
+                    log("onDragStart: $index");
+                  },
+                ),
+              ),
+            ),
+          ],
         ),
       ),
     );
@@ -301,7 +341,9 @@ class _DaysCoursePageState extends State<DaysCoursePage> {
           await _daysService.days(did: '', coID: widget.coID, sequence: '');
       days = res.data;
       log("did: ${days.length.toString()}");
-      // name.text = foods.name;
+      for (int i = 0; i < days.length; i++) {
+        cardColors.add(Theme.of(context).colorScheme.tertiary);
+      }
     } catch (err) {
       log('Error: $err');
     }
