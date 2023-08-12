@@ -170,10 +170,10 @@ class _showCousePageState extends State<showCousePage> {
                       },
                       icon: const Icon(
                         FontAwesomeIcons.solidUser,
-                        size: 14,
+                        size: 16,
                       ),
                       label: Text(courses.first.coach.fullName,
-                          style: Theme.of(context).textTheme.bodyMedium)),
+                          style: TextStyle(color: Colors.white,fontSize: 16))),
                 ),
                 Padding(
                   padding: const EdgeInsets.only(left: 20, right: 20),

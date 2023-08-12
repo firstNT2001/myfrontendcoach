@@ -146,7 +146,7 @@ class _ShowDayMycourseState extends State<ShowDayMycourse> {
                   child: FilledButton.icon(
                       onPressed: () {},
                       icon: const Icon(
-                        FontAwesomeIcons.user,
+                        FontAwesomeIcons.solidUser,
                         size: 16,
                       ),
                       label: Text(widget.namecoach,
