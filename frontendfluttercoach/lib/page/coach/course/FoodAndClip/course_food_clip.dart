@@ -33,7 +33,6 @@ import '../../../../widget/image_video.dart';
 import '../../../../widget/wg_editClip_Dialog.dart';
 import '../../../../widget/wg_editFood_Dialog.dart';
 import '../../../../widget/wg_search_food.dart';
-import '../../daysCourse/days_course_page.dart';
 import 'clipCourse/insertClip/clip_select_page.dart';
 import 'foodCourse/insertFood/food_new_page.dart';
 
@@ -130,7 +129,6 @@ class _HomeFoodAndClipPageState extends State<HomeFoodAndClipPage> {
                 child: const Icon(FontAwesomeIcons.bowlFood),
                 label: 'เพิ่มเมนู',
                 onTap: () {
-                  
                   Get.to(() => FoodNewCoursePage(
                         did: widget.did,
                         isVisible: widget.isVisible,
@@ -159,10 +157,7 @@ class _HomeFoodAndClipPageState extends State<HomeFoodAndClipPage> {
               FontAwesomeIcons.chevronLeft,
             ),
             onPressed: () {
-              // Get.to(() => DaysCoursePage(
-              //       coID: context.read<AppData>().coID.toString(),
-              //       isVisible: widget.isVisible,
-              //     ));
+           
               Get.back();
             },
           ),
@@ -174,21 +169,37 @@ class _HomeFoodAndClipPageState extends State<HomeFoodAndClipPage> {
                   .colorScheme
                   .primaryContainer, //<-- Unselected text
               tabs: const [
+                
+                Tab(
+                  icon: Icon(
+                    FontAwesomeIcons.dumbbell,
+                  ),
+                ),
                 Tab(
                   icon: Icon(
                     FontAwesomeIcons.utensils,
                   ),
                 ),
-                Tab(
-                  icon: Icon(
-                    FontAwesomeIcons.dumbbell,
-                  ),
-                )
               ]),
           centerTitle: true,
         ),
         body: TabBarView(
           children: [
+             //Clip
+            Column(
+              children: [
+                const SizedBox(
+                  height: 10,
+                ),
+                Expanded(
+                  child: Padding(
+                    padding: const EdgeInsets.only(
+                        left: 8, right: 8, top: 5, bottom: 5),
+                    child: showClip(),
+                  ),
+                )
+              ],
+            ),
             //Food
             Column(
               children: [
@@ -205,21 +216,7 @@ class _HomeFoodAndClipPageState extends State<HomeFoodAndClipPage> {
               ],
             ),
 
-            //Clip
-            Column(
-              children: [
-                const SizedBox(
-                  height: 10,
-                ),
-                Expanded(
-                  child: Padding(
-                    padding: const EdgeInsets.only(
-                        left: 8, right: 8, top: 5, bottom: 5),
-                    child: showClip(),
-                  ),
-                )
-              ],
-            ),
+           
           ],
         ));
   }
@@ -487,95 +484,99 @@ class _HomeFoodAndClipPageState extends State<HomeFoodAndClipPage> {
                 topLeft: Radius.circular(20), topRight: Radius.circular(20)),
             color: Colors.white,
           ),
-          child: Column(
-            children: [
-              const SizedBox(
-                height: 20,
-              ),
-              Padding(
-                padding: const EdgeInsets.only(left: 20, bottom: 20),
-                child:
-                    Text(name, style: Theme.of(context).textTheme.titleLarge),
-              ),
-              Row(
-                children: [
-                  Padding(
+          child: SingleChildScrollView(
+            child: Column(
+              children: [
+                const SizedBox(
+                  height: 20,
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(left: 20, bottom: 20),
+                  child:
+                      Text(name, style: Theme.of(context).textTheme.titleLarge),
+                ),
+                Row(
+                  children: [
+                    Padding(
+                        padding: const EdgeInsets.only(left: 20, right: 20),
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(20), // Image border
+                          child: SizedBox.fromSize(
+                            size: const Size.fromRadius(60), // Image radius
+                            child: Image.network(img, fit: BoxFit.cover),
+                          ),
+                        )),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text('แคลอรี่ $cal',
+                            style: Theme.of(context).textTheme.bodyLarge),
+                        const SizedBox(height: 20),
+                        Expanded(
+                          child: SizedBox(
+                            height: 60,
+                            width: 150,
+                            child: WidgetDropdownString(
+                              title: 'เลือกมืออาหาร',
+                              selectedValue: selectedValuehand,
+                              listItems: listhand,
+                            ),
+                          ),
+                        ),
+                      ],
+                    )
+                  ],
+                ),
+                const SizedBox(
+                  height: 20,
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    Padding(
                       padding: const EdgeInsets.only(left: 20, right: 20),
-                      child: ClipRRect(
-                        borderRadius: BorderRadius.circular(20), // Image border
-                        child: SizedBox.fromSize(
-                          size: const Size.fromRadius(60), // Image radius
-                          child: Image.network(img, fit: BoxFit.cover),
-                        ),
-                      )),
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text('แคลอรี่ $cal',
-                          style: Theme.of(context).textTheme.bodyLarge),
-                      const SizedBox(height: 10),
-                      SizedBox(
-                        height: 60,
-                        width: 150,
-                        child: WidgetDropdownString(
-                          title: 'เลือกมืออาหาร',
-                          selectedValue: selectedValuehand,
-                          listItems: listhand,
-                        ),
-                      ),
-                    ],
-                  )
-                ],
-              ),
-              const SizedBox(
-                height: 10,
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.only(left: 20, right: 20),
-                    child: FilledButton(
-                        onPressed: () async {
-                          log(fid.toString());
-                          FoodFoodIdPut foodFoodIdPut = FoodFoodIdPut(
-                            listFoodId: ifid,
-                            time: selectedValuehand.text == 'มื้อเช้า'
-                                ? '1'
-                                : selectedValuehand.text == 'มื้อเที่ยง'
-                                    ? '2'
-                                    : selectedValuehand.text == 'มื้อเย็น'
-                                        ? '3'
-                                        : '',
-                            dayOfCouseId: int.parse(widget.did),
-                          );
-                          log(jsonEncode(foodFoodIdPut));
-                          var response = await _foodService.updateFoodByFoodID(
-                              fid, foodFoodIdPut);
-                          modelResult = response.data;
-                          log(modelResult.result);
-                          if (modelResult.result == '1') {
-                            SmartDialog.dismiss();
-                            // ignore: use_build_context_synchronously
-                            success(context);
-                            setState(() {
-                              loadFoodDataMethod = loadFoodData();
-                            });
-                          } else {
-                            // ignore: use_build_context_synchronously
-                            QuickAlert.show(
-                              context: context,
-                              type: QuickAlertType.error,
-                              title: 'Oops...',
-                              text: 'เป็น ${selectedValuehand.text} อยู่แล้ว',
+                      child: FilledButton(
+                          onPressed: () async {
+                            log(fid.toString());
+                            FoodFoodIdPut foodFoodIdPut = FoodFoodIdPut(
+                              listFoodId: ifid,
+                              time: selectedValuehand.text == 'มื้อเช้า'
+                                  ? '1'
+                                  : selectedValuehand.text == 'มื้อเที่ยง'
+                                      ? '2'
+                                      : selectedValuehand.text == 'มื้อเย็น'
+                                          ? '3'
+                                          : '',
+                              dayOfCouseId: int.parse(widget.did),
                             );
-                          }
-                        },
-                        child: const Text("บันทึก")),
-                  ),
-                ],
-              )
-            ],
+                            log(jsonEncode(foodFoodIdPut));
+                            var response = await _foodService.updateFoodByFoodID(
+                                fid, foodFoodIdPut);
+                            modelResult = response.data;
+                            log(modelResult.result);
+                            if (modelResult.result == '1') {
+                              SmartDialog.dismiss();
+                              // ignore: use_build_context_synchronously
+                              success(context);
+                              setState(() {
+                                loadFoodDataMethod = loadFoodData();
+                              });
+                            } else {
+                              // ignore: use_build_context_synchronously
+                              QuickAlert.show(
+                                context: context,
+                                type: QuickAlertType.error,
+                                title: 'Oops...',
+                                text: 'เป็น ${selectedValuehand.text} อยู่แล้ว',
+                              );
+                            }
+                          },
+                          child: const Text("บันทึก")),
+                    ),
+                  ],
+                )
+              ],
+            ),
           ),
         );
       },

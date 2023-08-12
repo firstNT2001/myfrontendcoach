@@ -5,7 +5,6 @@ import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
-import 'package:persistent_bottom_nav_bar_v2/persistent-tab-view.dart';
 
 import 'package:provider/provider.dart';
 import 'package:quickalert/models/quickalert_type.dart';
@@ -80,12 +79,22 @@ class _FoodCoachPageState extends State<FoodCoachPage> {
                 child: const Icon(FontAwesomeIcons.bowlFood),
                 label: 'เพิ่มเมนู',
                 onTap: () {
+                  // pushNewScreen(
+                  //   context,
+                  //   screen: const FoodNewCoachPage(),
+                  //   withNavBar: true,
+                  // );
                   Get.to(() => const FoodNewCoachPage());
                 }),
             SpeedDialChild(
                 child: const Icon(FontAwesomeIcons.dumbbell),
                 label: 'เพิ่มคลิป',
                 onTap: () {
+                  //  pushNewScreen(
+                  //   context,
+                  //   screen: const ClipNewCoachPage(),
+                  //   withNavBar: true,
+                  // );
                   Get.to(() => const ClipNewCoachPage());
                 }),
           ],
@@ -189,7 +198,7 @@ class _FoodCoachPageState extends State<FoodCoachPage> {
               children: [
                 TextButton.icon(
                   onPressed: () {
-                    Get.to(() => SearchClipCoachPage());
+                    Get.to(() => const SearchClipCoachPage());
                   },
                   icon: const Icon(
                     FontAwesomeIcons.magnifyingGlass,
@@ -230,7 +239,7 @@ class _FoodCoachPageState extends State<FoodCoachPage> {
               children: [
                 TextButton.icon(
                   onPressed: () {
-                    Get.to(() => SearchFoodCoachPage());
+                    Get.to(() => const SearchFoodCoachPage());
                   },
                   icon: const Icon(
                     FontAwesomeIcons.magnifyingGlass,
@@ -287,11 +296,12 @@ class _FoodCoachPageState extends State<FoodCoachPage> {
             //height: MediaQuery.of(context).size.height * 0.4,
             child: InkWell(
               onTap: () {
-                pushNewScreen(
-                  context,
-                  screen: FoodEditCoachPage(ifid: listfood.ifid),
-                  withNavBar: true,
-                );
+                // pushNewScreen(
+                //   context,
+                //   screen: FoodEditCoachPage(ifid: listfood.ifid),
+                //   withNavBar: true,
+                // );
+                Get.to(() =>  FoodEditCoachPage(ifid: listfood.ifid));
               },
               child: Column(
                 children: [
@@ -404,11 +414,12 @@ class _FoodCoachPageState extends State<FoodCoachPage> {
             height: MediaQuery.of(context).size.height * 0.4,
             child: InkWell(
               onTap: () {
-                pushNewScreen(
-                  context,
-                  screen: ClipEditCoachPage(icpId: listClips.icpId),
-                  withNavBar: true,
-                );
+                // pushNewScreen(
+                //   context,
+                //   screen: ClipEditCoachPage(icpId: listClips.icpId),
+                //   withNavBar: true,
+                // );
+                Get.to(() => ClipEditCoachPage(icpId: listClips.icpId) );
               },
               child: Column(
                 children: [

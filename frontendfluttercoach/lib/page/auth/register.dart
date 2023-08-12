@@ -166,12 +166,9 @@ class _RegisterPageState extends State<RegisterPage> {
           ],
         ),
       ),
-      Padding(
-        padding: const EdgeInsets.only(bottom: 8, top: 10, left: 20, right: 20),
-        child: WidgetTextFieldString(
-          controller: fullName,
-          labelText: 'ชื่อ',
-        ),
+      WidgetTextFieldString(
+        controller: fullName,
+        labelText: 'ชื่อ',
       ),
       Padding(
         padding: const EdgeInsets.only(bottom: 8),
@@ -179,19 +176,20 @@ class _RegisterPageState extends State<RegisterPage> {
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            SizedBox(
-              width: (width - 16 - (3 * 20)) / 2,
+            Expanded(
               child: WidgetTextFieldString(
                 controller: name,
                 labelText: 'ชื่อเล่น',
               ),
             ),
-            SizedBox(
-              width: (width - 16 - (3 * 20)) / 2,
-              child: WidgetDropdownStringNotValue(
-                title: 'เพศ',
-                selectedValue: selectedValue, ListItems: LevelItems,
-                //listItems: LevelItems,
+            Expanded(
+              child: Padding(
+                 padding: const EdgeInsets.only( left: 15, right: 15),
+                child: WidgetDropdownStringNotValue(
+                  title: 'เพศ',
+                  selectedValue: selectedValue, ListItems: LevelItems,
+                  //listItems: LevelItems,
+                ),
               ),
             ),
           ],
@@ -249,7 +247,7 @@ class _RegisterPageState extends State<RegisterPage> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               SizedBox(
-                width: (width - 16 - (3 * 20)) / 2,
+                width: (width - 16 - (3 * 15)) / 2,
                 child: WidgetTextFieldInt(
                   controller: weight,
                   labelText: 'นํ้าหนัก',
@@ -257,7 +255,7 @@ class _RegisterPageState extends State<RegisterPage> {
                 ),
               ),
               SizedBox(
-                width: (width - 16 - (3 * 20)) / 2,
+                width: (width - 16 - (3 * 15)) / 2,
                 child: WidgetTextFieldInt(
                   controller: height,
                   labelText: 'ส่วนสูง',
@@ -319,7 +317,12 @@ class _RegisterPageState extends State<RegisterPage> {
               setState(() {
                 textErr = 'กรุณากรอกข้อมูลให้ครบ';
               });
-            } else if (password1.text != password2.text) {
+            }  else if (phone.text.length != 10) {
+                setState(() {
+                textErr = 'กรุณากรอกเบอร์โทรศัพท์ให้ถูกต้อง';
+              });
+            }
+            else if (password1.text != password2.text) {
               setState(() {
                 textErr = 'รหัสไม่ตรงกัน';
               });

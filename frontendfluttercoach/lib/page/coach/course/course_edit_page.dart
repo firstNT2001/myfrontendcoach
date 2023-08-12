@@ -178,9 +178,13 @@ class _CourseEditPageState extends State<CourseEditPage> {
       padding: EdgeInsets.only(top: MediaQuery.of(context).size.height / 3),
       child: Container(
         width: MediaQuery.of(context).size.width,
-        decoration: const BoxDecoration(
-            borderRadius: BorderRadius.only(
+        decoration: BoxDecoration(
+            borderRadius: const BorderRadius.only(
                 topLeft: Radius.circular(20), topRight: Radius.circular(20)),
+            boxShadow: [
+              BoxShadow(
+                  color: Colors.grey.shade600, spreadRadius: 1, blurRadius: 15)
+            ],
             color: Colors.white),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -189,7 +193,9 @@ class _CourseEditPageState extends State<CourseEditPage> {
               visible: widget.isVisible,
               child: Column(
                 children: [
-                  SizedBox(height: 28,),
+                  SizedBox(
+                    height: 28,
+                  ),
                   WidgetTextFieldString(
                     controller: name,
                     labelText: 'ชื่อ',
@@ -200,8 +206,7 @@ class _CourseEditPageState extends State<CourseEditPage> {
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        SizedBox(
-                          width: (width - 16 - (3 * padding)) / 2,
+                        Expanded(
                           child: WidgetTextFieldInt(
                             controller: amount,
                             labelText: 'จำนวนคน',
@@ -226,32 +231,30 @@ class _CourseEditPageState extends State<CourseEditPage> {
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        SizedBox(
-                          width: (width - 16 - (3 * padding)) / 2,
+                        Expanded(
                           child: WidgetTextFieldInt(
                             controller: price,
                             labelText: 'ราคา',
                             maxLength: 5,
                           ),
                         ),
-                        SizedBox(
-                          width: (width - 16 - (3 * padding)) / 2,
-                          child: WidgetDropdownString(
-                            title: 'เลือกความยากง่าย',
-                            selectedValue: selectedValue,
-                            listItems: LevelItems,
+                        Expanded(
+                          child: Padding(
+                            padding: const EdgeInsets.only(right: 15),
+                            child: WidgetDropdownString(
+                              title: 'เลือกความยากง่าย',
+                              selectedValue: selectedValue,
+                              listItems: LevelItems,
+                            ),
                           ),
                         ),
                       ],
                     ),
                   ),
-                  Padding(
-                      padding: const EdgeInsets.only(
-                          bottom: 8, top: 8, left: 13, right: 13),
-                      child: WidgetTextFieldLines(
-                        controller: details,
-                        labelText: 'รายละเอียด',
-                      )),
+                  WidgetTextFieldLines(
+                    controller: details,
+                    labelText: 'รายละเอียด',
+                  ),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: [
@@ -391,7 +394,13 @@ class _CourseEditPageState extends State<CourseEditPage> {
                 child: Container(
                   height: 40,
                   width: 40,
-                  decoration: const BoxDecoration(
+                  decoration: BoxDecoration(
+                      boxShadow: [
+                        BoxShadow(
+                            color: Colors.grey.shade600,
+                            spreadRadius: 1,
+                            blurRadius: 15)
+                      ],
                       shape: BoxShape.circle,
                       //border: Border.all(width: 4, color: Colors.white),
                       color: Colors.white),
@@ -407,31 +416,51 @@ class _CourseEditPageState extends State<CourseEditPage> {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              CircleAvatar(
-                backgroundColor: Colors.white,
-                radius: 20,
-                child: IconButton(
-                  icon: const Icon(
-                    FontAwesomeIcons.chevronLeft,
+              Container(
+                decoration: BoxDecoration(
+                  boxShadow: [
+                    BoxShadow(
+                        color: Colors.grey.shade600,
+                        spreadRadius: 1,
+                        blurRadius: 15)
+                  ],
+                ),
+                child: CircleAvatar(
+                  backgroundColor: Colors.white,
+                  radius: 20,
+                  child: IconButton(
+                    icon: const Icon(
+                      FontAwesomeIcons.chevronLeft,
+                    ),
+                    onPressed: () {
+                      Get.back();
+                    },
                   ),
-                  onPressed: () {
-                    Get.back();
-                  },
                 ),
               ),
               Visibility(
                 visible: widget.isVisible,
-                child: CircleAvatar(
-                    backgroundColor: Colors.white,
-                    radius: 20,
-                    child: IconButton(
-                      icon: const Icon(
-                        FontAwesomeIcons.trash,
-                      ),
-                      onPressed: () {
-                        dialogDelete(context);
-                      },
-                    )),
+                child: Container(
+                  decoration: BoxDecoration(
+                    boxShadow: [
+                      BoxShadow(
+                          color: Colors.grey.shade600,
+                          spreadRadius: 1,
+                          blurRadius: 15)
+                    ],
+                  ),
+                  child: CircleAvatar(
+                      backgroundColor: Colors.white,
+                      radius: 20,
+                      child: IconButton(
+                        icon: const Icon(
+                          FontAwesomeIcons.trash,
+                        ),
+                        onPressed: () {
+                          dialogDelete(context);
+                        },
+                      )),
+                ),
               ),
             ],
           ),
@@ -484,6 +513,8 @@ class _CourseEditPageState extends State<CourseEditPage> {
             moduleResult = updateCourse.data;
             log(jsonEncode(moduleResult.result));
             if (moduleResult.result == '0') {
+              // ignore: use_build_context_synchronously
+              context.read<AppData>().img = courses.first.image;
               Get.to(() => DaysCoursePage(
                     coID: widget.coID,
                     isVisible: widget.isVisible,
@@ -618,7 +649,8 @@ class _CourseEditPageState extends State<CourseEditPage> {
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
                   Padding(
-                    padding: const EdgeInsets.only(top: 10, bottom: 20, right: 8),
+                    padding:
+                        const EdgeInsets.only(top: 10, bottom: 20, right: 8),
                     child: FilledButton.icon(
                         onPressed: () {
                           //roomchat= widget.namecourse+coID.toString();

@@ -6,8 +6,7 @@ import 'package:file_picker/file_picker.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
+import 'package:frontendfluttercoach/widget/dialogs.dart';
 
 import 'package:provider/provider.dart';
 
@@ -16,11 +15,12 @@ import '../../../../model/request/listFood_coachID_post.dart';
 import '../../../../model/response/md_Result.dart';
 import '../../../../service/listFood.dart';
 import '../../../../service/provider/appdata.dart';
+
 import '../../../../widget/PopUp/popUp.dart';
 import '../../../../widget/textField/wg_textField.dart';
 import '../../../../widget/textField/wg_textFieldLines.dart';
 import '../../../../widget/textField/wg_textField_int copy.dart';
-import '../coach_food_clip_page.dart';
+import '../../navigationbar.dart';
 
 class FoodNewCoachPage extends StatefulWidget {
   const FoodNewCoachPage({super.key});
@@ -128,14 +128,14 @@ class _FoodNewCoachPageState extends State<FoodNewCoachPage> {
                             bottom: 18, left: 20, right: 20),
                         child: SizedBox(
                             width: MediaQuery.of(context).size.width,
-                            child: button()),
+                            child: button(context)),
                       ),
                     ),
                   ],
                 ))));
   }
 
-  FilledButton button() {
+  FilledButton button(BuildContext context) {
     return FilledButton(
         onPressed: () async {
           if (name.text.isEmpty ||
@@ -149,6 +149,7 @@ class _FoodNewCoachPageState extends State<FoodNewCoachPage> {
               textErr = 'กรุณาใส่รูป';
             });
           } else {
+            startLoading(context);
             setState(() {
               textErr = '';
             });
@@ -164,13 +165,20 @@ class _FoodNewCoachPageState extends State<FoodNewCoachPage> {
                 cid.toString(), listFoodCoachIdPost);
             modelResult = insertFood.data;
             log(jsonEncode(modelResult.result));
-             if (modelResult.result == '0') {
-              // ignore: use_build_context_synchronously
-              warning(context);
-            } else {
+            stopLoading();
+            if (modelResult.result == '1') {
               // ignore: use_build_context_synchronously
               success(context);
-              Get.to(() => const FoodCoachPage());
+              // ignore: use_build_context_synchronously
+              Navigator.pushAndRemoveUntil<void>(
+                context,
+                MaterialPageRoute<void>(
+                    builder: (BuildContext context) => const NavbarBottomCoach()),
+                ModalRoute.withName('/NavbarBottomCoach'),
+              );
+            } else {
+              // ignore: use_build_context_synchronously
+              warning(context);
             }
           }
         },

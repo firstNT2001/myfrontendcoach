@@ -215,93 +215,95 @@ class _FoodEditSelectPageState extends State<FoodEditSelectPage> {
       builder: (_) {
         return Container(
           width: MediaQuery.of(context).size.width,
-          height: MediaQuery.of(context).size.height * 0.5,
+          height: MediaQuery.of(context).size.height * 0.45,
           decoration: const BoxDecoration(
             borderRadius: BorderRadius.only(
                 topRight: Radius.circular(20), topLeft: Radius.circular(20)),
             color: Colors.white,
           ),
-          child: Column(
-            children: [
-              const SizedBox(
-                height: 20,
-              ),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.only(left: 20, bottom: 20),
-                    child: Text(name,
-                        style: Theme.of(context).textTheme.titleLarge),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.only(left: 20, bottom: 10),
-                    child: Text("รายละเอียด",
-                        style: Theme.of(context).textTheme.titleMedium),
-                  ),
-                  Padding(
-                    padding:
-                        const EdgeInsets.only(left: 20, right: 20, bottom: 20),
-                    child: SizedBox(
-                      width: MediaQuery.of(context).size.width,
-                      child: AutoSizeText(
-                        "   $details",
-                        maxLines: 8,
-                        style: Theme.of(context).textTheme.titleMedium,
+          child: SingleChildScrollView(
+            child: Column(
+              children: [
+                const SizedBox(
+                  height: 20,
+                ),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.only(left: 20, bottom: 20),
+                      child: Text(name,
+                          style: Theme.of(context).textTheme.titleLarge),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(left: 20, bottom: 10),
+                      child: Text("รายละเอียด",
+                          style: Theme.of(context).textTheme.titleMedium),
+                    ),
+                    Padding(
+                      padding:
+                          const EdgeInsets.only(left: 20, right: 20, bottom: 20),
+                      child: SizedBox(
+                        width: MediaQuery.of(context).size.width,
+                        child: Text(
+                          "   $details",
+                          //maxLines: 8,
+                          style: Theme.of(context).textTheme.titleMedium,
+                        ),
                       ),
                     ),
-                  ),
-                ],
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.only(left: 20, right: 20),
-                    child: ElevatedButton(
-                        onPressed: () async {
-                          log(widget.time);
-                          FoodFoodIdPut foodFoodIdPut = FoodFoodIdPut(
-                              listFoodId: ifid,
-                              time: widget.time,
-                              dayOfCouseId: int.parse(widget.did));
-                          log(jsonEncode(foodFoodIdPut));
-                          var response = await _foodCourseService
-                              .updateFoodByFoodID(widget.fid, foodFoodIdPut);
-                          modelResult = response.data;
-                          log(modelResult.result);
-                          if (modelResult.result == '1') {
-                            // ignore: use_build_context_synchronously
-                            Navigator.pushAndRemoveUntil<void>(
-                              context,
-                              MaterialPageRoute<void>(
-                                  builder: (BuildContext context) =>
-                                      HomeFoodAndClipPage(
-                                        did: widget.did,
-                                        sequence:
-                                            context.read<AppData>().sequence,
-                                        isVisible: widget.isVisible,
-                                      )),
-                              ModalRoute.withName('/DaysCoursePage'),
-                            );
-                          } else {
-                            // ignore: use_build_context_synchronously
-                            CherryToast.warning(
-                              title: Text('มีเมนู $name ในวันนี้แล้ว'),
-                              displayTitle: false,
-                              description: Text('มีเมนู $name ในวันนี้แล้ว'),
-                              toastPosition: Position.bottom,
-                              animationDuration:
-                                  const Duration(milliseconds: 1000),
-                              autoDismiss: true,
-                            ).show(context);
-                          }
-                        },
-                        child: const Text("บันทึก")),
-                  ),
-                ],
-              )
-            ],
+                  ],
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.only(left: 20, right: 20),
+                      child: FilledButton(
+                          onPressed: () async {
+                            log(widget.time);
+                            FoodFoodIdPut foodFoodIdPut = FoodFoodIdPut(
+                                listFoodId: ifid,
+                                time: widget.time,
+                                dayOfCouseId: int.parse(widget.did));
+                            log(jsonEncode(foodFoodIdPut));
+                            var response = await _foodCourseService
+                                .updateFoodByFoodID(widget.fid, foodFoodIdPut);
+                            modelResult = response.data;
+                            log(modelResult.result);
+                            if (modelResult.result == '1') {
+                              // ignore: use_build_context_synchronously
+                              Navigator.pushAndRemoveUntil<void>(
+                                context,
+                                MaterialPageRoute<void>(
+                                    builder: (BuildContext context) =>
+                                        HomeFoodAndClipPage(
+                                          did: widget.did,
+                                          sequence:
+                                              context.read<AppData>().sequence,
+                                          isVisible: widget.isVisible,
+                                        )),
+                                ModalRoute.withName('/DaysCoursePage'),
+                              );
+                            } else {
+                              // ignore: use_build_context_synchronously
+                              CherryToast.warning(
+                                title: Text('มีเมนู $name ในวันนี้แล้ว'),
+                                displayTitle: false,
+                                description: Text('มีเมนู $name ในวันนี้แล้ว'),
+                                toastPosition: Position.bottom,
+                                animationDuration:
+                                    const Duration(milliseconds: 1000),
+                                autoDismiss: true,
+                              ).show(context);
+                            }
+                          },
+                          child: const Text("บันทึก")),
+                    ),
+                  ],
+                )
+              ],
+            ),
           ),
         );
       },

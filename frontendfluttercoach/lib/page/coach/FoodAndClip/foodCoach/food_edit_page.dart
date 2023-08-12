@@ -19,7 +19,7 @@ import '../../../../widget/PopUp/popUp.dart';
 import '../../../../widget/textField/wg_textField.dart';
 import '../../../../widget/textField/wg_textFieldLines.dart';
 import '../../../../widget/textField/wg_textField_int copy.dart';
-import '../coach_food_clip_page.dart';
+import '../../navigationbar.dart';
 
 class FoodEditCoachPage extends StatefulWidget {
   final int ifid;
@@ -186,20 +186,19 @@ class _FoodEditCoachPageState extends State<FoodEditCoachPage> {
                 widget.ifid.toString(), request);
             modelResult = editFood.data;
             log(jsonEncode(modelResult.result));
-            if (modelResult.result == '0') {
-              // ignore: use_build_context_synchronously
-              warning(context);
-            } else {
+            if (modelResult.result == '1') {
               // ignore: use_build_context_synchronously
               success(context);
               // ignore: use_build_context_synchronously
               Navigator.pushAndRemoveUntil<void>(
                 context,
                 MaterialPageRoute<void>(
-                    builder: (BuildContext context) => FoodCoachPage()),
+                    builder: (BuildContext context) => const NavbarBottomCoach()),
                 ModalRoute.withName('/NavbarBottomCoach'),
               );
-              //Get.to(() => const FoodCoachPage());
+            } else {
+              // ignore: use_build_context_synchronously
+              warning(context);
             }
           }
         },
