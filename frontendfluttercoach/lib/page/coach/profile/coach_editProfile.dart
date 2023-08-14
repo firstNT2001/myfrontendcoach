@@ -83,7 +83,7 @@ class _CoachEidtProfilePageState extends State<CoachEidtProfilePage> {
 
   Scaffold scaffold(BuildContext context) {
     return Scaffold(
-      resizeToAvoidBottomInset: false,
+      //resizeToAvoidBottomInset: false,
       body: SafeArea(
           child: ListView(
         children: [

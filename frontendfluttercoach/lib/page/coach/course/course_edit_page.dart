@@ -133,18 +133,18 @@ class _CourseEditPageState extends State<CourseEditPage> {
 
   Scaffold scaffold(double width, double padding) {
     return Scaffold(
-        resizeToAvoidBottomInset: false,
+        //resizeToAvoidBottomInset: false,
         //backgroundColor: Theme.of(context).colorScheme.primaryContainer,
         body: SafeArea(
-          child: ListView(
-            children: [
-              showCourse(width, padding),
-              if (widget.isVisible == false) ...{
-                showDays(),
-              },
-            ],
-          ),
-        ));
+      child: ListView(
+        children: [
+          showCourse(width, padding),
+          if (widget.isVisible == false) ...{
+            showDays(),
+          },
+        ],
+      ),
+    ));
   }
 
   FutureBuilder<void> showCourse(double width, double padding) {
@@ -255,6 +255,7 @@ class _CourseEditPageState extends State<CourseEditPage> {
                       ],
                     ),
                   ),
+                 
                   WidgetTextFieldLines(
                     controller: details,
                     labelText: 'รายละเอียด',
