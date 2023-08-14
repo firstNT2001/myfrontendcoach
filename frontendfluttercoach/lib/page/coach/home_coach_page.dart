@@ -30,6 +30,7 @@ import '../../widget/wg_menu.dart';
 import '../Request/request_page.dart';
 import '../search/search_course.dart';
 import 'course/course_edit_page.dart';
+import 'course/course_show.dart';
 
 class HomePageCoach extends StatefulWidget {
   const HomePageCoach({super.key});
@@ -275,9 +276,9 @@ class _HomePageCoachState extends State<HomePageCoach> {
           padding: const EdgeInsets.only(left: 10, right: 10, bottom: 20),
           child: InkWell(
             onTap: () {
-              Get.to(() => CourseEditPage(
+            
+              Get.to(() => ShowCourse(
                     coID: courses[index].coId.toString(),
-                    isVisible: true,
                   ));
             },
             child: Container(
