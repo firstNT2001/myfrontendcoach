@@ -110,7 +110,7 @@ class _MyCousesState extends State<MyCouses> {
         var datas = await progessService.processbar(
             coID: courses[i].courseId.toString());
         progess = datas.data;
-        percen=progess.percent/100;
+        percen=(progess.percent/100).toPrecision(1);
         listpercent.add(percen);
         log("percent${percen.toString()}");
       }
