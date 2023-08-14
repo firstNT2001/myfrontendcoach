@@ -104,7 +104,9 @@ class _CourseNewPageState extends State<CourseNewPage> {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          SizedBox(height: 28,),
+                          SizedBox(
+                            height: 28,
+                          ),
                           WidgetTextFieldString(
                             controller: name,
                             labelText: 'ชื่อ',
@@ -115,16 +117,14 @@ class _CourseNewPageState extends State<CourseNewPage> {
                               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                SizedBox(
-                                  width: (width - 16 - (3 * padding)) / 2,
+                                Expanded(
                                   child: WidgetTextFieldInt(
                                     controller: amount,
                                     labelText: 'จำนวนคน',
                                     maxLength: 2,
                                   ),
                                 ),
-                                SizedBox(
-                                  width: (width - 16 - (3 * padding)) / 2,
+                                Expanded(
                                   child: WidgetTextFieldInt(
                                     controller: days,
                                     labelText: 'จำนวนวัน',
@@ -140,39 +140,38 @@ class _CourseNewPageState extends State<CourseNewPage> {
                               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                SizedBox(
-                                  width: (width - 16 - (3 * padding)) / 2,
+                                Expanded(
                                   child: WidgetTextFieldInt(
                                     controller: price,
                                     labelText: 'ราคา',
                                     maxLength: 5,
                                   ),
                                 ),
-                                SizedBox(
-                                  width: (width - 16 - (3 * padding)) / 2,
-                                  child: WidgetDropdownStringNotValue(
-                                    title: 'เลือกความยากง่าย',
-                                    selectedValue: selectedValue,
-                                    ListItems: LevelItems,
-                                    //listItems: LevelItems,
+                                Expanded(
+                                  child: Padding(
+                                    padding: const EdgeInsets.only(
+                                        right: 15, left: 15),
+                                    child: WidgetDropdownStringNotValue(
+                                      title: 'เลือกความยากง่าย',
+                                      selectedValue: selectedValue,
+                                      ListItems: LevelItems,
+                                      //listItems: LevelItems,
+                                    ),
                                   ),
                                 ),
                               ],
                             ),
                           ),
-                          Padding(
-                              padding: const EdgeInsets.only(
-                                  bottom: 15, top: 8, left: 20, right: 20),
-                              child: WidgetTextFieldLines(
-                                controller: details,
-                                labelText: 'รายละเอียด',
-                              )),
+                          WidgetTextFieldLines(
+                            controller: details,
+                            labelText: 'รายละเอียด',
+                          ),
                           Row(
                             mainAxisAlignment: MainAxisAlignment.end,
                             children: [
                               Padding(
                                 padding: const EdgeInsets.only(
-                                    bottom: 8, left: 20, right: 23),
+                                    bottom: 0, left: 20, right: 23),
                                 child: Text(
                                   textErr,
                                   style: TextStyle(
@@ -320,7 +319,13 @@ class _CourseNewPageState extends State<CourseNewPage> {
               child: Container(
                 height: 40,
                 width: 40,
-                decoration: const BoxDecoration(
+                decoration: BoxDecoration(
+                    boxShadow: [
+                      BoxShadow(
+                          color: Colors.grey.shade600,
+                          spreadRadius: 1,
+                          blurRadius: 15)
+                    ],
                     shape: BoxShape.circle,
                     //border: Border.all(width: 4, color: Colors.white),
                     color: Colors.white),
@@ -330,7 +335,6 @@ class _CourseNewPageState extends State<CourseNewPage> {
                 ),
               ),
             )),
-       
       ],
     );
   }

@@ -13,11 +13,11 @@ import 'package:frontendfluttercoach/service/listFood.dart';
 import 'package:frontendfluttercoach/widget/dropdown/wg_dropdown_notValue_string.dart';
 import 'package:get/get.dart';
 import 'package:provider/provider.dart';
-import 'package:skeletonizer/skeletonizer.dart';
 
 import '../../../../../../model/request/food_dayID_post.dart';
 import '../../../../../../service/provider/appdata.dart';
 import '../../../../../../widget/PopUp/popUp.dart';
+import '../../../../../../widget/dialogs.dart';
 import 'food_select_time_page.dart';
 
 class FoodNewCoursePage extends StatefulWidget {
@@ -46,7 +46,6 @@ class _FoodNewCoursePageState extends State<FoodNewCoursePage> {
   final List<String> listhand = ['มื้อเช้า', 'มื้อเที่ยง', 'มื้อเย็น'];
 
   String textErr = '';
-  bool _enabled = true;
 
   @override
   void initState() {
@@ -61,12 +60,7 @@ class _FoodNewCoursePageState extends State<FoodNewCoursePage> {
   Widget build(BuildContext context) {
     return WillPopScope(
         onWillPop: () async => false,
-        child: (_enabled == true)
-            ? Skeletonizer(
-                enabled: true,
-                child: scaffold(context),
-              )
-            : scaffold(context));
+        child:  scaffold(context));
   }
 
   Scaffold scaffold(BuildContext context) {
@@ -168,11 +162,7 @@ class _FoodNewCoursePageState extends State<FoodNewCoursePage> {
         colorFood.add(context.read<AppData>().colorNotSelect);
       }
       log("image${listFoods[2].image}");
-      Future.delayed(Duration(seconds: context.read<AppData>().duration), () {
-      setState(() {
-        _enabled = false;
-      });
-    });
+      
     } catch (err) {
       log('Error: $err');
     }
@@ -183,7 +173,7 @@ class _FoodNewCoursePageState extends State<FoodNewCoursePage> {
       future: loadListFoodDataMethod,
       builder: (context, snapshot) {
         if (snapshot.connectionState != ConnectionState.done) {
-          return Container();
+          return Center(child: load(context));
         } else {
           return listViewFood();
         }
@@ -297,7 +287,6 @@ class _FoodNewCoursePageState extends State<FoodNewCoursePage> {
           borderRadius: BorderRadius.circular(20),
           color: Colors.white,
         ),
-        alignment: Alignment.center,
         child: SingleChildScrollView(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.start,

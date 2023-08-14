@@ -15,7 +15,6 @@ import 'package:provider/provider.dart';
 import 'package:quickalert/models/quickalert_type.dart';
 import 'package:quickalert/widgets/quickalert_dialog.dart';
 import 'package:reorderable_grid_view/reorderable_grid_view.dart';
-import 'package:skeletonizer/skeletonizer.dart';
 
 import '../../../model/request/course_courseID_put.dart';
 import '../../../model/response/md_coach_course_get.dart';
@@ -25,6 +24,7 @@ import '../../../service/provider/appdata.dart';
 import '../../../widget/PopUp/popUp.dart';
 import '../../../widget/dialogs.dart';
 import '../course/FoodAndClip/course_food_clip.dart';
+import '../course/course_edit_page.dart';
 
 class DaysCoursePage extends StatefulWidget {
   const DaysCoursePage(
@@ -58,7 +58,6 @@ class _DaysCoursePageState extends State<DaysCoursePage> {
   int sequence = 0;
   int numberOfDays = 0;
 
-  bool _enabled = true;
   List<Color> cardColors = [];
 
   @override
@@ -71,11 +70,6 @@ class _DaysCoursePageState extends State<DaysCoursePage> {
 
     _courseService = context.read<AppData>().courseService;
     loadCourseDataMethod = loadCourseDataAsync();
-    Future.delayed(Duration(seconds: context.read<AppData>().duration), () {
-      setState(() {
-        _enabled = false;
-      });
-    });
   }
 
   @override
@@ -99,15 +93,11 @@ class _DaysCoursePageState extends State<DaysCoursePage> {
     return FutureBuilder(
         future: loadDaysDataMethod,
         builder: (context, AsyncSnapshot snapshot) {
-          return (_enabled)
-              ? Skeletonizer(
-                  textBoneBorderRadius:
-                      const TextBoneBorderRadius.fromHeightFactor(.10),
-                  enabled: true,
-                  ignoreContainers: false,
-                  child: gridViewDays(context),
-                )
-              : gridViewDays(context);
+          if (snapshot.connectionState != ConnectionState.done) {
+            return Center(child: load(context));
+          } else {
+            return gridViewDays(context);
+          }
         });
   }
 
@@ -155,7 +145,15 @@ class _DaysCoursePageState extends State<DaysCoursePage> {
                           FontAwesomeIcons.chevronLeft,
                         ),
                         onPressed: () {
-                          Get.back();
+                          Navigator.pushAndRemoveUntil<void>(
+                            context,
+                            MaterialPageRoute<void>(
+                                builder: (BuildContext context) =>
+                                    CourseEditPage(
+                                        coID: widget.coID,
+                                        isVisible: widget.isVisible)),
+                            ModalRoute.withName('/NavbarBottomCoach'),
+                          );
                         },
                       ),
                     ),
@@ -204,7 +202,19 @@ class _DaysCoursePageState extends State<DaysCoursePage> {
                 topLeft: Radius.circular(20), topRight: Radius.circular(20)),
             boxShadow: [
               BoxShadow(
-                  color: Colors.grey.shade600, spreadRadius: 1, blurRadius: 15)
+                color: Colors.grey.shade600,
+                spreadRadius: 1,
+                blurRadius: 5,
+                offset: const Offset(0, -7),
+              ),
+              BoxShadow(
+                color: Colors.grey.shade300,
+                offset: const Offset(5, 0),
+              ),
+              BoxShadow(
+                color: Colors.grey.shade300,
+                offset: const Offset(-5, 0),
+              )
             ],
             color: Colors.white),
         child: Column(
@@ -282,7 +292,6 @@ class _DaysCoursePageState extends State<DaysCoursePage> {
                                 isVisible: widget.isVisible,
                               ));
                         } else {
-                          
                           dialogDeleteDay(context, listday.did);
                           setState(() {
                             cardColors[index] =

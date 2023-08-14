@@ -11,7 +11,6 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:provider/provider.dart';
-import 'package:skeletonizer/skeletonizer.dart';
 import 'package:uuid/uuid.dart';
 import 'package:flutter_chat_types/flutter_chat_types.dart' as types;
 import '../../../../../../model/request/clip_clipID_put.dart';
@@ -24,6 +23,7 @@ import '../../../../../../service/days.dart';
 import '../../../../../../service/listClip.dart';
 import '../../../../../../service/provider/appdata.dart';
 import '../../../../../../service/request.dart';
+import '../../../../../../widget/dialogs.dart';
 import '../../../../../../widget/image_video.dart';
 import '../../../../../../widget/showCilp.dart';
 import '../../../../../Request/request_page.dart';
@@ -62,7 +62,6 @@ class _ClipEditSelectPageState extends State<ClipEditSelectPage> {
   late RequestService _RequestService;
 
   String nameClip = "";
-  bool _enabled = true;
 
   @override
   void initState() {
@@ -79,21 +78,12 @@ class _ClipEditSelectPageState extends State<ClipEditSelectPage> {
 
     loadDayData();
     loadClipData();
-    Future.delayed(Duration(seconds: context.read<AppData>().duration), () {
-      setState(() {
-        _enabled = false;
-      });
-    });
+   
   }
 
   @override
   Widget build(BuildContext context) {
-    return (_enabled == true)
-        ? Skeletonizer(
-            enabled: true,
-            child: scaffold(context),
-          )
-        : scaffold(context);
+    return  scaffold(context);
   }
 
   Scaffold scaffold(BuildContext context) {
@@ -109,7 +99,7 @@ class _ClipEditSelectPageState extends State<ClipEditSelectPage> {
             Get.back();
           },
         ),
-        backgroundColor: Theme.of(context).colorScheme.primary,
+        backgroundColor: Colors.white,
         iconTheme: const IconThemeData(
           color: Colors.black, //change your color here
         ),
@@ -173,7 +163,7 @@ class _ClipEditSelectPageState extends State<ClipEditSelectPage> {
       future: loadListClipDataMethod,
       builder: (context, snapshot) {
         if (snapshot.connectionState != ConnectionState.done) {
-          return Container();
+          return Center(child: load(context));
         } else {
           return ListView.builder(
             shrinkWrap: true,

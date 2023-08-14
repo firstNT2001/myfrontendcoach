@@ -10,7 +10,6 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:provider/provider.dart';
-import 'package:skeletonizer/skeletonizer.dart';
 
 import '../../../../../../model/request/food_foodID_put.dart';
 import '../../../../../../model/response/md_FoodList_get.dart';
@@ -18,6 +17,7 @@ import '../../../../../../model/response/md_Result.dart';
 import '../../../../../../service/food.dart';
 import '../../../../../../service/listFood.dart';
 import '../../../../../../service/provider/appdata.dart';
+import '../../../../../../widget/dialogs.dart';
 import '../../course_food_clip.dart';
 
 class FoodEditSelectPage extends StatefulWidget {
@@ -47,7 +47,6 @@ class _FoodEditSelectPageState extends State<FoodEditSelectPage> {
   ///FoodCourses
   late FoodServices _foodCourseService;
 
-  bool _enabled = true;
 
   @override
   void initState() {
@@ -57,21 +56,12 @@ class _FoodEditSelectPageState extends State<FoodEditSelectPage> {
 
     //FoodCourses
     _foodCourseService = context.read<AppData>().foodServices;
-    Future.delayed(Duration(seconds: context.read<AppData>().duration), () {
-      setState(() {
-        _enabled = false;
-      });
-    });
+    
   }
 
   @override
   Widget build(BuildContext context) {
-    return (_enabled == true)
-        ? Skeletonizer(
-            enabled: true,
-            child: scaffold(context),
-          )
-        : scaffold(context);
+    return scaffold(context);
   }
 
   Scaffold scaffold(BuildContext context) {
@@ -125,7 +115,7 @@ class _FoodEditSelectPageState extends State<FoodEditSelectPage> {
       future: loadListFoodDataMethod,
       builder: (context, snapshot) {
         if (snapshot.connectionState != ConnectionState.done) {
-          return Container();
+          return Center(child: load(context));
         } else {
           return ListView.builder(
             shrinkWrap: true,

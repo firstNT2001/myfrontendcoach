@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:frontendfluttercoach/widget/dialogs.dart';
-import 'package:get/get_connect/http/src/utils/utils.dart';
-import 'package:skeletonizer/skeletonizer.dart';
+
 import 'package:video_player/video_player.dart';
 
 class VideoItem extends StatefulWidget {
@@ -19,6 +18,7 @@ class _VideoItemState extends State<VideoItem> {
   void initState() {
     // TODO: implement initState
     super.initState();
+    // ignore: deprecated_member_use
     _controller = VideoPlayerController.network(widget.video)
       ..initialize().then((_) {
         setState(() {}); //when your thumbnail will show.

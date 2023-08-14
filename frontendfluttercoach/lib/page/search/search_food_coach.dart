@@ -11,9 +11,9 @@ import 'package:frontendfluttercoach/service/listFood.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:provider/provider.dart';
-import 'package:skeletonizer/skeletonizer.dart';
 
 import '../../service/provider/appdata.dart';
+import '../../widget/dialogs.dart';
 import '../coach/FoodAndClip/foodCoach/food_edit_page.dart';
 
 class SearchFoodCoachPage extends StatefulWidget {
@@ -30,7 +30,6 @@ class _SearchFoodCoachPageState extends State<SearchFoodCoachPage> {
   List<ModelFoodList> foods = [];
   late ModelResult modelResult;
 
-  bool _enabledFood = true;
   TextEditingController searchName = TextEditingController();
   @override
   void initState() {
@@ -123,11 +122,7 @@ class _SearchFoodCoachPageState extends State<SearchFoodCoachPage> {
           cid: context.read<AppData>().cid.toString(),
           name: searchName.text);
       foods = datas.data;
-      Future.delayed(Duration(seconds: context.read<AppData>().duration), () {
-        setState(() {
-          _enabledFood = false;
-        });
-      });
+      
     } catch (err) {
       log('Error: $err');
     }
@@ -137,16 +132,10 @@ class _SearchFoodCoachPageState extends State<SearchFoodCoachPage> {
     return FutureBuilder(
       future: loadFoodDataMethod,
       builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.done) {
-          return Skeletonizer(
-            enabled: _enabledFood,
-            child: listView(),
-          );
+        if (snapshot.connectionState != ConnectionState.done) {
+          return Center(child: load(context));
         } else {
-          return Skeletonizer(
-            enabled: _enabledFood,
-            child: listView(),
-          );
+          return listView();
         }
       },
     );

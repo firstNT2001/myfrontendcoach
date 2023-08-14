@@ -12,7 +12,6 @@ import 'package:get/get.dart';
 import 'package:provider/provider.dart';
 import 'package:quickalert/models/quickalert_type.dart';
 import 'package:quickalert/widgets/quickalert_dialog.dart';
-import 'package:skeletonizer/skeletonizer.dart';
 
 import '../../../model/request/course_courseID_put.dart';
 
@@ -29,6 +28,7 @@ import '../../../service/provider/appdata.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 import '../../../widget/PopUp/popUp.dart';
+import '../../../widget/dialogs.dart';
 import '../../../widget/dropdown/wg_dropdown_string.dart';
 
 import '../../../widget/textField/wg_textField.dart';
@@ -106,7 +106,6 @@ class _CourseEditPageState extends State<CourseEditPage> {
 
   String textErr = "";
 
-  bool _enabled = true;
   @override
   void initState() {
     super.initState();
@@ -121,11 +120,6 @@ class _CourseEditPageState extends State<CourseEditPage> {
     _daysService = context.read<AppData>().daysService;
 
     loadDaysDataMethod = loadDaysDataAsync();
-    Future.delayed(Duration(seconds: context.read<AppData>().duration), () {
-      setState(() {
-        _enabled = false;
-      });
-    });
   }
 
   @override
@@ -134,9 +128,7 @@ class _CourseEditPageState extends State<CourseEditPage> {
     double width = (screenSize.width > 550) ? 550 : screenSize.width;
     //double height = (screenSize.height > 550) ? 550 : screenSize.height;
     double padding = 8;
-    return (_enabled == true)
-        ? Skeletonizer(enabled: true, child: scaffold(width, padding))
-        : scaffold(width, padding);
+    return scaffold(width, padding);
   }
 
   Scaffold scaffold(double width, double padding) {
@@ -168,7 +160,7 @@ class _CourseEditPageState extends State<CourseEditPage> {
               ],
             );
           } else {
-            return Container();
+            return Center(child: load(context));
           }
         });
   }
@@ -183,7 +175,19 @@ class _CourseEditPageState extends State<CourseEditPage> {
                 topLeft: Radius.circular(20), topRight: Radius.circular(20)),
             boxShadow: [
               BoxShadow(
-                  color: Colors.grey.shade600, spreadRadius: 1, blurRadius: 15)
+                color: Colors.grey.shade600,
+                spreadRadius: 1,
+                blurRadius: 5,
+                offset: const Offset(0, -7),
+              ),
+              BoxShadow(
+                color: Colors.grey.shade300,
+                offset: const Offset(5, 0),
+              ),
+              BoxShadow(
+                color: Colors.grey.shade300,
+                offset: const Offset(-5, 0),
+              )
             ],
             color: Colors.white),
         child: Column(

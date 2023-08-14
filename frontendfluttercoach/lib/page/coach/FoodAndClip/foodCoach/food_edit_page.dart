@@ -16,6 +16,7 @@ import '../../../../model/response/md_Result.dart';
 import '../../../../service/listFood.dart';
 import '../../../../service/provider/appdata.dart';
 import '../../../../widget/PopUp/popUp.dart';
+import '../../../../widget/dialogs.dart';
 import '../../../../widget/textField/wg_textField.dart';
 import '../../../../widget/textField/wg_textFieldLines.dart';
 import '../../../../widget/textField/wg_textField_int copy.dart';
@@ -81,8 +82,7 @@ class _FoodEditCoachPageState extends State<FoodEditCoachPage> {
         future: _loadData,
         builder: (context, AsyncSnapshot snapshot) {
           if (snapshot.connectionState != ConnectionState.done) {
-            return Container();
-            //return const Center(child: CircularProgressIndicator());
+             return Center(child: load(context));
           }
           return Stack(
             children: [

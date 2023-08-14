@@ -11,7 +11,6 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:provider/provider.dart';
-import 'package:skeletonizer/skeletonizer.dart';
 
 import '../../../../../../model/request/clip_dayID_post.dart';
 import '../../../../../../model/response/md_ClipList_get.dart';
@@ -43,27 +42,18 @@ class _ClipInsertPageState extends State<ClipInsertPage> {
   // FoodService
   late ClipServices _clipCourseService;
   late ModelResult modelResult;
-  bool _enabled = true;
+
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
     _clipCourseService = context.read<AppData>().clipServices;
-    Future.delayed(Duration(seconds: context.read<AppData>().duration), () {
-      setState(() {
-        _enabled = false;
-      });
-    });
+  
   }
 
   @override
   Widget build(BuildContext context) {
-    return (_enabled == true)
-        ? Skeletonizer(
-            enabled: true,
-            child: scaffold(context),
-          )
-        : scaffold(context);
+    return scaffold(context);
   }
 
   Scaffold scaffold(BuildContext context) {

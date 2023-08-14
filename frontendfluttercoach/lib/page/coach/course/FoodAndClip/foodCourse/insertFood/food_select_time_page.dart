@@ -10,7 +10,6 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:frontendfluttercoach/service/food.dart';
 
 import 'package:provider/provider.dart';
-import 'package:skeletonizer/skeletonizer.dart';
 
 import '../../../../../../model/request/food_dayID_post.dart';
 import '../../../../../../model/response/md_FoodList_get.dart';
@@ -44,7 +43,6 @@ class _FoodSelectTimePageState extends State<FoodSelectTimePage>
   late Future<void> loadListFoodDataMethod;
   late FoodServices _foodCourseService;
   late ModelResult modelResult;
-  bool _enabled = true;
 
   final List<String> listhand = ['มื้อเช้า', 'มื้อเที่ยง', 'มื้อเย็น'];
 
@@ -64,23 +62,14 @@ class _FoodSelectTimePageState extends State<FoodSelectTimePage>
       duration: const Duration(milliseconds: 2000),
     );
 
-    Future.delayed(Duration(seconds: context.read<AppData>().duration), () {
-      setState(() {
-        _enabled = false;
-      });
-    });
+  
   }
 
   @override
   Widget build(BuildContext context) {
     return WillPopScope(
         onWillPop: () async => false,
-        child: (_enabled == true)
-            ? Skeletonizer(
-                enabled: true,
-                child: scaffold(context),
-              )
-            : scaffold(context));
+        child: scaffold(context));
   }
 
   Scaffold scaffold(BuildContext contexts) {

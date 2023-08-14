@@ -12,7 +12,6 @@ import 'package:frontendfluttercoach/page/auth/GoogleAuthenticator.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:provider/provider.dart';
-import 'package:skeletonizer/skeletonizer.dart';
 
 import '../../../model/request/registerCoachDTO.dart';
 import '../../../model/response/md_Coach_get.dart';
@@ -20,11 +19,13 @@ import '../../../service/auth.dart';
 import '../../../service/coach.dart';
 import '../../../service/provider/appdata.dart';
 import '../../../widget/PopUp/popUp.dart';
+import '../../../widget/dialogs.dart';
 import '../../../widget/dropdown/wg_dropdown_string.dart';
 import '../../../widget/textField/wg_textField.dart';
 import '../../../widget/textField/wg_textFieldLines.dart';
 import '../../../widget/textField/wg_textField_int copy.dart';
 import '../../user/money/widgethistory/widget_history.dart';
+import 'coach_editPassword.dart';
 
 class CoachEidtProfilePage extends StatefulWidget {
   const CoachEidtProfilePage({super.key});
@@ -63,9 +64,7 @@ class _CoachEidtProfilePageState extends State<CoachEidtProfilePage> {
   // ignore: non_constant_identifier_names
   final List<String> LevelItems = ['ชาย', 'หญิง'];
   final selectedValue = TextEditingController();
-  bool _enabled = true;
-    bool _isvisible = false;
-
+  bool _isvisible = false;
 
   String textErr = '';
 
@@ -75,21 +74,11 @@ class _CoachEidtProfilePageState extends State<CoachEidtProfilePage> {
     _coachService = context.read<AppData>().coachService;
     _authService = context.read<AppData>().authService;
     loadCoachDataMethod = loadCoachData();
-    Future.delayed(Duration(seconds: context.read<AppData>().duration), () {
-      setState(() {
-        _enabled = false;
-      });
-    });
   }
 
   @override
   Widget build(BuildContext context) {
-    return (_enabled == true)
-        ? Skeletonizer(
-            enabled: true,
-            child: scaffold(context),
-          )
-        : scaffold(context);
+    return scaffold(context);
   }
 
   Scaffold scaffold(BuildContext context) {
@@ -119,15 +108,15 @@ class _CoachEidtProfilePageState extends State<CoachEidtProfilePage> {
               qualification.text.isEmpty ||
               property.text.isEmpty) {
             setState(() {
-             _isvisible = true;
+              _isvisible = true;
             });
           } else {
             if (pickedImg != null) await uploadfile();
             if (pickedImg == null) profile = coachs.first.image;
             if (newbirht.isEmpty) {
-                                newbirht = oldbirht;
-                              }
-                              log("newbirht"+newbirht);
+              newbirht = oldbirht;
+            }
+            log("newbirht" + newbirht);
             RegisterCoachDto request = RegisterCoachDto(
                 fullName: fullName.text,
                 username: name.text,
@@ -206,60 +195,61 @@ class _CoachEidtProfilePageState extends State<CoachEidtProfilePage> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        IconButton(
-                          icon: const Icon(
-                            FontAwesomeIcons.chevronLeft,
-                          ),
-                          onPressed: () {
-                            Get.back();
-                          },
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      IconButton(
+                        icon: const Icon(
+                          FontAwesomeIcons.chevronLeft,
                         ),
-                        const Center(
-                          child: Padding(
-                            padding: EdgeInsets.only(top: 5),
-                            child: Text(
-                              'แก้ไขโปรไฟล์',
-                              style: TextStyle(
-                                  fontSize: 28, fontWeight: FontWeight.w500),
-                            ),
+                        onPressed: () {
+                          Get.back();
+                        },
+                      ),
+                      const Center(
+                        child: Padding(
+                          padding: EdgeInsets.only(top: 5),
+                          child: Text(
+                            'แก้ไขโปรไฟล์',
+                            style: TextStyle(
+                                fontSize: 28, fontWeight: FontWeight.w500),
                           ),
                         ),
-                        IconButton(
-                          icon: const Icon(
-                            FontAwesomeIcons.key,
-                            // color: Colors.red,
-                          ),
-                          // pushNewScreen(
-                          //   context,
-                          //   screen: const ProfileUser(),
-                          //   withNavBar: true,
-                          // );
-                          onPressed: () {
-                            Get.to(() => GoogleAuthenticatorPage(
-                                  email: coachs.first.email,
-                                  password: coachs.first.password,
-                                ));
-                          },
+                      ),
+                      IconButton(
+                        icon: const Icon(
+                          FontAwesomeIcons.key,
+                          // color: Colors.red,
                         ),
-                      ],
-                    ),
+                        // pushNewScreen(
+                        //   context,
+                        //   screen: const ProfileUser(),
+                        //   withNavBar: true,
+                        // );
+                        onPressed: () {
+                          Get.to(() => GoogleAuthenticatorPage(
+                                email: coachs.first.email,
+                                password: coachs.first.password,
+                              ));
+                        },
+                      ),
+                    ],
+                  ),
                   const SizedBox(
                     height: 10,
                   ),
                   image(),
                   const SizedBox(
                     height: 10,
-                  ),WidgetTextFieldString(
-                            controller: name,
-                            labelText: 'ชื่อผู้ใช้',
-                          ),
-                          WidgetTextFieldString(
-                      controller: email,
-                      labelText: 'Email',
-                    ),
+                  ),
+                  WidgetTextFieldString(
+                    controller: name,
+                    labelText: 'ชื่อผู้ใช้',
+                  ),
+                  WidgetTextFieldString(
+                    controller: email,
+                    labelText: 'Email',
+                  ),
                   WidgetTextFieldString(
                     controller: fullName,
                     labelText: 'ชื่อ-นามสกุล',
@@ -272,23 +262,23 @@ class _CoachEidtProfilePageState extends State<CoachEidtProfilePage> {
                         child: Padding(
                           padding: const EdgeInsets.only(bottom: 10, left: 15),
                           child: WidgetDropdownString(
-                          title: 'เพศ',
-                          selectedValue: selectedValue,
-                          listItems: LevelItems,
+                            title: 'เพศ',
+                            selectedValue: selectedValue,
+                            listItems: LevelItems,
+                          ),
                         ),
-                      ),),
+                      ),
                       Expanded(
                         child: WidgetTextFieldInt(
-                            controller: phone,
-                            labelText: 'เบอร์โทรศัพท์',
-                            maxLength: 10,
-                          ),
+                          controller: phone,
+                          labelText: 'เบอร์โทรศัพท์',
+                          maxLength: 10,
+                        ),
                       ),
                     ],
                   ),
                   txtfildBirth(birthday, "วันเกิด"),
                   const Divider(endIndent: 20, indent: 20),
-
                   WidgetTextFieldLines(
                     controller: qualification,
                     labelText: 'วุฒิการศึกษา',
@@ -323,9 +313,11 @@ class _CoachEidtProfilePageState extends State<CoachEidtProfilePage> {
                           FontAwesomeIcons.chevronRight,
                         ),
                         onPressed: () {
-                          // Get.to(() => EditPasswordPage(
-                          //       password: _password.text
-                          //     ));
+                          Get.to(() => CoachEditPassword(
+                                password: coachs.first.password,
+                                id: context.read<AppData>().cid.toString(),
+                                visible: true,
+                              ));
                         },
                       ),
                     ],
@@ -339,7 +331,7 @@ class _CoachEidtProfilePageState extends State<CoachEidtProfilePage> {
               ),
             );
           } else {
-            return Container();
+            return Center(child: load(context));
           }
         });
   }
@@ -405,8 +397,8 @@ class _CoachEidtProfilePageState extends State<CoachEidtProfilePage> {
       ),
     );
   }
-txtfildBirth(
-      final TextEditingController _controller, String txtTop) {
+
+  txtfildBirth(final TextEditingController _controller, String txtTop) {
     return Padding(
       padding: const EdgeInsets.only(bottom: 10, left: 15, right: 15),
       child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
@@ -449,6 +441,7 @@ txtfildBirth(
       ]),
     );
   }
+
   //
   //Image
   Future selectImg() async {

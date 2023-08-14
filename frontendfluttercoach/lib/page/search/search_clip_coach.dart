@@ -12,6 +12,7 @@ import '../../model/response/md_ClipList_get.dart';
 import '../../model/response/md_Result.dart';
 import '../../service/listClip.dart';
 import '../../service/provider/appdata.dart';
+import '../../widget/dialogs.dart';
 
 class SearchClipCoachPage extends StatefulWidget {
   const SearchClipCoachPage({super.key});
@@ -186,7 +187,7 @@ class _SearchClipCoachPageState extends State<SearchClipCoachPage> {
       future: loadClipDataMethod,
       builder: (context, snapshot) {
         if (snapshot.connectionState != ConnectionState.done) {
-          return const Center(child: CircularProgressIndicator());
+           return Center(child: load(context));
         } else {
           return ListView.builder(
             shrinkWrap: true,

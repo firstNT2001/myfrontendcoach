@@ -1,15 +1,19 @@
 import 'dart:developer';
 
+import 'package:custom_rating_bar/custom_rating_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:provider/provider.dart';
-import 'package:skeletonizer/skeletonizer.dart';
+import 'package:switcher_button/switcher_button.dart';
 
+import '../../model/request/course_courseID_put.dart';
+import '../../model/response/md_Result.dart';
 import '../../model/response/md_coach_course_get.dart';
 import '../../service/course.dart';
 import '../../service/provider/appdata.dart';
+import '../../widget/dialogs.dart';
 import '../coach/course/course_edit_page.dart';
 
 class SearchCoursePage extends StatefulWidget {
@@ -26,8 +30,8 @@ class _SearchCoursePageState extends State<SearchCoursePage> {
   List<Course> courses = [];
 
   TextEditingController searchName = TextEditingController();
+    late ModelResult modelResult;
 
-  bool _enabled = true;
 
   @override
   void initState() {
@@ -35,21 +39,12 @@ class _SearchCoursePageState extends State<SearchCoursePage> {
     _courseService = context.read<AppData>().courseService;
     loadCourseDataMethod = loadCourseData();
 
-    Future.delayed(Duration(seconds: context.read<AppData>().duration), () {
-      setState(() {
-        _enabled = false;
-      });
-    });
+    
   }
 
   @override
   Widget build(BuildContext context) {
-    return (_enabled)
-        ? Skeletonizer(
-            enabled: true,
-            child: scaffold(context),
-          )
-        : scaffold(context);
+    return scaffold(context);
   }
 
   Scaffold scaffold(BuildContext context) {
@@ -88,7 +83,7 @@ class _SearchCoursePageState extends State<SearchCoursePage> {
                 borderRadius: BorderRadius.circular(15)),
             child: TextField(
               controller: searchName,
-              // autofocus: true,
+              autofocus: true,
               style: const TextStyle(color: Colors.black),
               onChanged: (value) {
                 setState(() {
@@ -146,7 +141,7 @@ class _SearchCoursePageState extends State<SearchCoursePage> {
       future: loadCourseDataMethod,
       builder: (context, snapshot) {
         if (snapshot.connectionState != ConnectionState.done) {
-          return Container();
+          return Center(child: load(context));
         } else {
           return listViewCourse();
         }
@@ -166,7 +161,7 @@ class _SearchCoursePageState extends State<SearchCoursePage> {
             onTap: () {
               Get.to(() => CourseEditPage(
                     coID: courses[index].coId.toString(),
-                    isVisible: false,
+                    isVisible: true,
                   ));
             },
             child: Container(
@@ -176,35 +171,107 @@ class _SearchCoursePageState extends State<SearchCoursePage> {
                 aspectRatio: 16 / 9,
                 child: Stack(
                   children: <Widget>[
-                    Container(
-                      alignment: Alignment.topCenter,
-                      child: AspectRatio(
-                          aspectRatio: 16 / 9,
-                          child: Container(
+                    if (listcours.image != '') ...{
+                      Container(
+                        alignment: Alignment.topCenter,
+                        child: AspectRatio(
+                            aspectRatio: 16 / 9,
+                            child: Container(
+                              decoration: BoxDecoration(
+                                color: Theme.of(context).colorScheme.onPrimary,
+                                image: DecorationImage(
+                                    image: NetworkImage(listcours.image),
+                                    fit: BoxFit.cover),
+                                borderRadius: BorderRadius.circular(20),
+                              ),
+                            )),
+                        //color: Colors.white,
+                      ),
+                    },
+                    (listcours.status == '1')
+                        ? Container(
+                            padding: const EdgeInsets.all(5.0),
+                            alignment: Alignment.bottomCenter,
                             decoration: BoxDecoration(
-                              color: const Color(0xff7c94b6),
-                              image: DecorationImage(
-                                  image: NetworkImage(listcours.image),
-                                  fit: BoxFit.cover),
+                              gradient: LinearGradient(
+                                begin: Alignment.topCenter,
+                                end: Alignment.bottomCenter,
+                                colors: <Color>[
+                                  const Color.fromARGB(255, 0, 0, 0)
+                                      .withAlpha(0),
+                                  const Color.fromARGB(49, 0, 0, 0),
+                                  const Color.fromARGB(127, 0, 0, 0)
+                                  // const Color.fromARGB(255, 255, 255, 255)
+                                  //     .withAlpha(0),
+                                  // Color.fromARGB(39, 255, 255, 255),
+                                  // Color.fromARGB(121, 255, 255, 255)
+                                ],
+                              ),
                               borderRadius: BorderRadius.circular(20),
                             ),
-                          )),
-                      //color: Colors.white,
-                    ),
-                    Container(
-                      padding: const EdgeInsets.all(5.0),
-                      alignment: Alignment.bottomCenter,
-                      decoration: BoxDecoration(
-                        gradient: LinearGradient(
-                          begin: Alignment.topCenter,
-                          end: Alignment.bottomCenter,
-                          colors: <Color>[
-                            const Color.fromARGB(255, 0, 0, 0).withAlpha(0),
-                            const Color.fromARGB(49, 0, 0, 0),
-                            const Color.fromARGB(127, 0, 0, 0)
-                          ],
-                        ),
-                        borderRadius: BorderRadius.circular(20),
+                          )
+                        : Container(
+                            padding: const EdgeInsets.all(5.0),
+                            alignment: Alignment.bottomCenter,
+                            decoration: BoxDecoration(
+                              color: const Color.fromARGB(148, 0, 0, 0),
+                              borderRadius: BorderRadius.circular(20),
+                            ),
+                            child: Center(
+                              child: Text(
+                                'ปิด',
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .headlineLarge!
+                                    .copyWith(color: Colors.white),
+                              ),
+                            ),
+                          ),
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: [
+                          (listcours.status == '1')
+                              ? SwitcherButton(
+                                  value: true,
+                                  onChange: (value) async {
+                                    CourseCourseIdPut request =
+                                        CourseCourseIdPut(
+                                            status: '0',
+                                            amount: listcours.amount,
+                                            days: listcours.days,
+                                            details: listcours.details,
+                                            image: listcours.image,
+                                            level: listcours.level,
+                                            name: listcours.name,
+                                            price: listcours.price);
+
+                                    await updateStatus(
+                                        request, listcours.coId.toString());
+                                    log("1$value");
+                                  },
+                                )
+                              : SwitcherButton(
+                                  value: false,
+                                  onChange: (value) async {
+                                    CourseCourseIdPut request =
+                                        CourseCourseIdPut(
+                                            status: '1',
+                                            amount: listcours.amount,
+                                            days: listcours.days,
+                                            details: listcours.details,
+                                            image: listcours.image,
+                                            level: listcours.level,
+                                            name: listcours.name,
+                                            price: listcours.price);
+
+                                    await updateStatus(
+                                        request, listcours.coId.toString());
+                                    log("0$value");
+                                  },
+                                ),
+                        ],
                       ),
                     ),
                     Padding(
@@ -213,69 +280,24 @@ class _SearchCoursePageState extends State<SearchCoursePage> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         mainAxisAlignment: MainAxisAlignment.end,
                         children: [
-                          Text(listcours.name,
-                              style: Theme.of(context).textTheme.titleLarge),
-                          Row(
-                            children: [
-                              const Padding(
-                                padding: EdgeInsets.only(right: 8),
-                                child: Icon(
-                                  FontAwesomeIcons.solidUser,
-                                  size: 16.0,
-                                ),
-                              ),
-                              Text(listcours.coach.fullName,
-                                  style: Theme.of(context).textTheme.bodyLarge),
-                            ],
+                          Text(
+                            listcours.name,
+                            style: Theme.of(context)
+                                .textTheme
+                                .titleLarge!
+                                .copyWith(color: Colors.white),
                           ),
-                          (listcours.level == '1')
-                              ? Row(
-                                  children: [
-                                    Icon(FontAwesomeIcons.bolt,
-                                        size: 16,
-                                        color: Theme.of(context)
-                                            .colorScheme
-                                            .tertiaryContainer),
-                                    const Icon(FontAwesomeIcons.bolt, size: 16),
-                                    const Icon(FontAwesomeIcons.bolt, size: 16),
-                                  ],
-                                )
-                              : (listcours.level == '2')
-                                  ? Row(
-                                      children: [
-                                        Icon(FontAwesomeIcons.bolt,
-                                            size: 16,
-                                            color: Theme.of(context)
-                                                .colorScheme
-                                                .tertiaryContainer),
-                                        Icon(FontAwesomeIcons.bolt,
-                                            size: 16,
-                                            color: Theme.of(context)
-                                                .colorScheme
-                                                .tertiaryContainer),
-                                        const Icon(FontAwesomeIcons.bolt,
-                                            size: 16),
-                                      ],
-                                    )
-                                  : Row(
-                                      children: [
-                                        Icon(FontAwesomeIcons.bolt,
-                                            size: 16,
-                                            color: Theme.of(context)
-                                                .colorScheme
-                                                .tertiaryContainer),
-                                        Icon(FontAwesomeIcons.bolt,
-                                            size: 16,
-                                            color: Theme.of(context)
-                                                .colorScheme
-                                                .tertiaryContainer),
-                                        Icon(FontAwesomeIcons.bolt,
-                                            size: 16,
-                                            color: Theme.of(context)
-                                                .colorScheme
-                                                .tertiaryContainer),
-                                      ],
-                                    )
+                          RatingBar.readOnly(
+                            isHalfAllowed: false,
+                            filledIcon: FontAwesomeIcons.bolt,
+                            size: 16,
+                            emptyIcon: FontAwesomeIcons.bolt,
+                            filledColor:
+                                Theme.of(context).colorScheme.tertiaryContainer,
+                            emptyColor: Color.fromARGB(255, 245, 245, 245),
+                            initialRating: double.parse(listcours.level),
+                            maxRating: 3,
+                          ),
                         ],
                       ),
                     )
@@ -287,5 +309,18 @@ class _SearchCoursePageState extends State<SearchCoursePage> {
         );
       },
     );
+  }
+  Future<void> updateStatus(CourseCourseIdPut request, String coID) async {
+    
+    var response = await _courseService.updateCourseByCourseID(coID, request);
+    modelResult = response.data;
+    log(coID);
+    log(modelResult.result);
+    if (modelResult.result == '0') {
+    } else {
+      setState(() {
+        loadCourseDataMethod = loadCourseData();
+      });
+    }
   }
 }

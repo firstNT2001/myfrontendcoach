@@ -7,12 +7,12 @@ import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:percent_indicator/linear_percent_indicator.dart';
 import 'package:provider/provider.dart';
-import 'package:skeletonizer/skeletonizer.dart';
 
 import '../../../model/response/md_process.dart';
 import '../../../service/buy.dart';
 import '../../../service/progessbar.dart';
 import '../../../service/provider/appdata.dart';
+import '../../../widget/dialogs.dart';
 import '../course/course_edit_page.dart';
 
 class ShowCourseUserPage extends StatefulWidget {
@@ -30,7 +30,6 @@ class _ShowCourseUserPageState extends State<ShowCourseUserPage> {
   late Modelprogessbar progess;
 
   List<Buying> courses = [];
-  bool _enabled = true;
   List<double> lisetProgessbar = [];
   @override
   void initState() {
@@ -42,21 +41,11 @@ class _ShowCourseUserPageState extends State<ShowCourseUserPage> {
 
     loadCourseDataMethod = loadUserData();
 
-    Future.delayed(Duration(seconds: context.read<AppData>().duration), () {
-      setState(() {
-        _enabled = false;
-      });
-    });
   }
 
   @override
   Widget build(BuildContext context) {
-    return (_enabled == true)
-        ? Skeletonizer(
-            enabled: true,
-            child: scaffold(context),
-          )
-        : scaffold(context);
+    return scaffold(context);
   }
 
   Scaffold scaffold(BuildContext context) {
@@ -101,7 +90,7 @@ class _ShowCourseUserPageState extends State<ShowCourseUserPage> {
         var datas = await _progessService.processbar(
             coID: courses[i].courseId.toString());
         progess = datas.data;
-        lisetProgessbar.add(progess.percent / 100);
+        lisetProgessbar.add((progess.percent / 100).toPrecision(1));
         log("percent${lisetProgessbar[i].toString()}");
       }
     } catch (err) {
@@ -116,7 +105,7 @@ class _ShowCourseUserPageState extends State<ShowCourseUserPage> {
       future: loadCourseDataMethod,
       builder: (context, snapshot) {
         if (snapshot.connectionState != ConnectionState.done) {
-          return Container();
+          return Center(child: load(context));
         } else {
           return ListView.builder(
             shrinkWrap: true,
