@@ -10,6 +10,7 @@ import 'package:frontendfluttercoach/page/user/chat/chat.dart';
 import 'package:frontendfluttercoach/page/user/mycourse/showFood_Clip.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
+import 'package:persistent_bottom_nav_bar_v2/persistent-tab-view.dart';
 import 'package:provider/provider.dart';
 import '../../../model/request/course_EX.dart';
 import '../../../model/response/md_Customer_get.dart';
@@ -67,7 +68,7 @@ class _ShowDayMycourseState extends State<ShowDayMycourse> {
     dayService = DayService(Dio(), baseUrl: context.read<AppData>().baseurl);
     courseService =
         CourseService(Dio(), baseUrl: context.read<AppData>().baseurl);
-  
+
     loadDataMethod = loadData();
 
     today = DateTime(nows.year, nows.month, nows.day);
@@ -187,7 +188,6 @@ class _ShowDayMycourseState extends State<ShowDayMycourse> {
           did: '', coID: widget.coID.toString(), sequence: '');
       days = dataday.data;
       log('couse: ${days.length}');
-     
     } catch (err) {
       log('Error: $err');
     }
@@ -203,7 +203,7 @@ class _ShowDayMycourseState extends State<ShowDayMycourse> {
           return Container(
             height: 250,
             decoration: BoxDecoration(
-                color: Theme.of(context).colorScheme.primaryContainer,
+                color: Color.fromARGB(255, 218, 218, 218),
                 borderRadius: BorderRadius.circular(20)
                 //more than 50% of width makes circle
                 ),
@@ -213,21 +213,48 @@ class _ShowDayMycourseState extends State<ShowDayMycourse> {
                   crossAxisCount: 5,
                   children: days
                       .map((day) => Column(children: [
-                            Container(
-                              height: 50,
-                              width: 50,
-                              decoration: BoxDecoration(
-                                  color: Colors.black,
-                                  borderRadius: BorderRadius.circular(100)
-                                  //more than 50% of width makes circle
+                            InkWell(
+                              onTap: () {
+                                if (widget.expirationDate ==
+                                    "0001-01-01T00:00:00Z") {
+                                  //log(message);
+                                  _bindPage(context);
+                                  log("ยังไม่เริ่ม$widget.expirationDate");
+                                  setState(() {
+                                    loadDataMethod = loadData();
+                                  });
+                                } else if (today.day > expirationDate.day) {
+                                  log("IUIUIU " + today.day.toString());
+                                  log("IUIUIU " +
+                                      expirationDate.day.toString());
+                                } else {
+                                  log("เริ่มแล้ว$widget.expirationDate");
+                                  log(" DID:= ${day.did}");
+                                  context.read<AppData>().did = day.did;
+                                  context.read<AppData>().idcourse = coID;
+
+                                  Get.to(() => showFood(
+                                        indexSeq: day.sequence,
+                                      ));
+                                }
+                                log("day.sequence" + day.sequence.toString());
+                              },
+                              child: Container(
+                                height: 50,
+                                width: 50,
+                                decoration: BoxDecoration(
+                                    color: Colors.black,
+                                    borderRadius: BorderRadius.circular(100)
+                                    //more than 50% of width makes circle
+                                    ),
+                                child: Center(
+                                    child: Text(
+                                  day.sequence.toString(),
+                                  style: const TextStyle(
+                                    color: Colors.white,
                                   ),
-                              child: Center(
-                                  child: Text(
-                                day.sequence.toString(),
-                                style: const TextStyle(
-                                  color: Colors.white,
-                                ),
-                              )),
+                                )),
+                              ),
                             ),
                             //  Padding(
                             //    padding: const EdgeInsets.all(8.0),
@@ -388,6 +415,7 @@ class _ShowDayMycourseState extends State<ShowDayMycourse> {
 //                                 context.read<AppData>().idcourse = coID;
                 
 //                                 Get.to(() =>   showFood(indexSeq: index,));
+
 //                               }
 //                             },
 //                             child: Text("เริ่ม",

@@ -95,25 +95,16 @@ class _showFoodState extends State<showFood> {
             automaticallyImplyLeading: false,
             bottom: const TabBar(tabs: [
               Tab(
-                icon: Icon(Icons.fastfood_outlined),
-                text: "เมนูอาหาร",
-              ),
-              Tab(
                 icon: Icon(Icons.fitness_center_sharp),
                 text: "คลิปออกกำลังกาย",
+              ),
+              Tab(
+                icon: Icon(Icons.fastfood_outlined),
+                text: "เมนูอาหาร",
               ),
             ]),
           ),
           body: TabBarView(children: [
-            Column(
-              children: [
-                Expanded(
-                    child: Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: loadfoods(),
-                )),
-              ],
-            ),
             Column(
               children: [
                 Visibility(
@@ -136,7 +127,16 @@ class _showFoodState extends State<showFood> {
                         padding: const EdgeInsets.all(8.0),
                         child: loadclipscheckyesterday(),
                       ),
-                    )),           
+                    )),
+              ],
+            ),
+            Column(
+              children: [
+                Expanded(
+                    child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: loadfoods(),
+                )),
               ],
             ),
           ]),
@@ -157,7 +157,8 @@ class _showFoodState extends State<showFood> {
                   final listclip = clips[index];
                   videoUrl = listclip.listClip.video;
                   return Padding(
-                    padding: const EdgeInsets.only(left: 10,right: 10,bottom: 8),
+                    padding:
+                        const EdgeInsets.only(left: 10, right: 10, bottom: 8),
                     child: Card(
                       elevation: 0,
                       child: Padding(
@@ -397,42 +398,92 @@ class _showFoodState extends State<showFood> {
                 itemCount: foods.length,
                 itemBuilder: (context, index) {
                   final listfood = foods[index];
-                  final GlobalKey<ExpansionTileCardState> cardA =
-                      new GlobalKey();
-                  return ExpansionTileCard(
-                    //baseColor: const Color.fromARGB(255, 212, 212, 212),
-                    //expandedColor: const Color.fromARGB(255, 191, 191, 191),
-                    key: cardA,
-                    leading: SizedBox(
-                        height: 200,
-                        width: 200,
-                        child: Image.network(
-                          listfood.listFood.image,
-                        )),
-                    title: Text(listfood.listFood.name),
-                    subtitle: Text("${listfood.listFood.calories} แคลอรี่",
-                        style: Theme.of(context).textTheme.bodyLarge),
-                    children: <Widget>[
-                      const Divider(
-                        thickness: 1.0,
-                        height: 1.0,
-                        color: Colors.black,
-                        endIndent: 8,
-                        indent: 8,
-                      ),
-                      Align(
-                        alignment: Alignment.centerLeft,
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 16.0,
-                            vertical: 8.0,
-                          ),
-                          child: Text(listfood.listFood.details,
-                              style: Theme.of(context).textTheme.bodyLarge),
-                        ),
-                      ),
-                    ],
+                  return Column(
+                    children: [
+                      
+                      Container(
+              height: 190.0,
+              child: ListView(
+                scrollDirection: Axis.horizontal,
+                children: List.generate(10, (int index) {
+                  return Card(
+                    color: Colors.blue[index * 100],
+                    child:       AspectRatio(
+                                  aspectRatio: 16 / 13,
+                                  child: Container(
+                                    decoration: BoxDecoration(
+                                      color: const Color.fromARGB(
+                                          255, 207, 208, 209),
+                                      image: DecorationImage(
+                                          image: NetworkImage(
+                                            listfood.listFood.image,
+                                          ),
+                                          fit: BoxFit.cover),
+                                      borderRadius: BorderRadius.circular(20),
+                                    ),
+                                  )),
                   );
+                }),
+              ),
+            ),
+          ],
+        );
+                      // Container(
+                      //   height: 120.0,
+                      //   child: ListView(
+                      //      scrollDirection: Axis.horizontal,
+                      //     children: [
+                      //       Row(children: [
+                      //         if (listfood.listFood.image != '') ...{
+                      //         AspectRatio(
+                      //             aspectRatio: 16 / 13,
+                      //             child: Container(
+                      //               decoration: BoxDecoration(
+                      //                 color: const Color.fromARGB(
+                      //                     255, 207, 208, 209),
+                      //                 image: DecorationImage(
+                      //                     image: NetworkImage(
+                      //                       listfood.listFood.image,
+                      //                     ),
+                      //                     fit: BoxFit.cover),
+                      //                 borderRadius: BorderRadius.circular(20),
+                      //               ),
+                      //             )),
+                      //       } else
+                      //         AspectRatio(
+                      //             aspectRatio: 16 / 13,
+                      //             child: Container(
+                      //               decoration: BoxDecoration(
+                      //                 color: const Color.fromARGB(
+                      //                     255, 207, 208, 209),
+                      //                 borderRadius: BorderRadius.circular(20),
+                      //               ),
+                      //             )),
+                      //       Row(
+                      //         mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      //         children: [
+                      //           Padding(
+                      //             padding:
+                      //                 const EdgeInsets.only(left: 16, top: 8),
+                      //             child: SizedBox(
+                      //               width: MediaQuery.of(context).size.width *
+                      //                   0.35,
+                      //               child: Text(
+                      //                 listfood.listFood.name,
+                      //                 maxLines: 2,
+                      //                 style: Theme.of(context)
+                      //                     .textTheme
+                      //                     .titleMedium,
+                      //               ),
+                      //             ),
+                      //           ),
+                      //         ],
+                      //       )
+                      //       ],)
+                          
+                      //   ],)
+                      // ),
+                    
                 });
           }
         });
@@ -465,7 +516,7 @@ class _showFoodState extends State<showFood> {
             Padding(
               padding: const EdgeInsets.all(12.0),
               child: TextField(
-                controller: textRequest,                
+                controller: textRequest,
                 keyboardType: TextInputType.multiline,
                 maxLines: 4,
                 decoration: InputDecoration(
@@ -599,3 +650,39 @@ class _showFoodState extends State<showFood> {
     }
   }
 }
+//  final GlobalKey<ExpansionTileCardState> cardA =
+//                       new GlobalKey();
+//                   return ExpansionTileCard(
+//                     //baseColor: const Color.fromARGB(255, 212, 212, 212),
+//                     //expandedColor: const Color.fromARGB(255, 191, 191, 191),
+//                     key: cardA,
+//                     leading: SizedBox(
+//                         height: 200,
+//                         width: 200,
+//                         child: Image.network(
+//                           listfood.listFood.image,
+//                         )),
+//                     title: Text(listfood.listFood.name),
+//                     subtitle: Text("${listfood.listFood.calories} แคลอรี่",
+//                         style: Theme.of(context).textTheme.bodyLarge),
+//                     children: <Widget>[
+//                       const Divider(
+//                         thickness: 1.0,
+//                         height: 1.0,
+//                         color: Colors.black,
+//                         endIndent: 8,
+//                         indent: 8,
+//                       ),
+//                       Align(
+//                         alignment: Alignment.centerLeft,
+//                         child: Padding(
+//                           padding: const EdgeInsets.symmetric(
+//                             horizontal: 16.0,
+//                             vertical: 8.0,
+//                           ),
+//                           child: Text(listfood.listFood.details,
+//                               style: Theme.of(context).textTheme.bodyLarge),
+//                         ),
+//                       ),
+//                     ],
+//                   );
