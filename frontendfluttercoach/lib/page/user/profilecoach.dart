@@ -51,204 +51,217 @@ class _ProfileCoachPageState extends State<ProfileCoachPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-          backgroundColor: Colors.white,
-          leading: IconButton(
-            icon: const Icon(
-              FontAwesomeIcons.chevronLeft,
-            ),
-            onPressed: () {
-              // Get.to(() => DaysCoursePage(
-              //       coID: context.read<AppData>().coID.toString(),
-              //       isVisible: widget.isVisible,
-              //     ));
-              Navigator.pop(context);
-            },
+        backgroundColor: Colors.white,
+        leading: IconButton(
+          icon: const Icon(
+            FontAwesomeIcons.chevronLeft,
           ),
+          onPressed: () {
+            // Get.to(() => DaysCoursePage(
+            //       coID: context.read<AppData>().coID.toString(),
+            //       isVisible: widget.isVisible,
+            //     ));
+            Navigator.pop(context);
+          },
+        ),
       ),
       body: SafeArea(
         child: ListView(
-         // crossAxisAlignment: CrossAxisAlignment.start,
+          // crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-          loadcoach(),
-         // const Divider(
-         //   color: Colors.black,
-         //   indent: 8,
-         //   endIndent: 8,
-         // ),
-         Padding(
-           padding: const EdgeInsets.only(left: 8,top: 15,bottom: 8,right: 8 ),
-           child: ClipRRect(
-               borderRadius: const BorderRadius.only(
-                 topLeft: Radius.circular(12),
-                 topRight: Radius.circular(12),
-                 bottomLeft: Radius.circular(12),
-                 bottomRight: Radius.circular(12)
-               ),
-               child: Container(
-                   color: Colors.amber,
-                   child:  const Padding(
-                     padding: EdgeInsets.only(left: 8,right: 8,top: 5,bottom: 5),
-                     child: Text(
-                       "คอร์สทั้งหมด",
-                       style: TextStyle(fontSize: 16),
-                     ),
-                   ))),
-         ),
-         loadcourse(),
-        ],),
+            loadcoach(),
+            // const Divider(
+            //   color: Colors.black,
+            //   indent: 8,
+            //   endIndent: 8,
+            // ),
+            Padding(
+              padding:
+                  const EdgeInsets.only(left: 8, top: 15, bottom: 8, right: 8),
+              child: ClipRRect(
+                  borderRadius: const BorderRadius.only(
+                      topLeft: Radius.circular(12),
+                      topRight: Radius.circular(12),
+                      bottomLeft: Radius.circular(12),
+                      bottomRight: Radius.circular(12)),
+                  child: Container(
+                      color: Colors.amber,
+                      child: const Padding(
+                        padding: EdgeInsets.only(
+                            left: 8, right: 8, top: 5, bottom: 5),
+                        child: Text(
+                          "คอร์สทั้งหมด",
+                          style: TextStyle(fontSize: 16),
+                        ),
+                      ))),
+            ),
+            loadcourse(),
+          ],
+        ),
       ),
     );
   }
-Widget loadcourse() {
+
+  Widget loadcourse() {
     return FutureBuilder(
       future: loadDataMethod,
       builder: (context, snapshot) {
         if (snapshot.connectionState != ConnectionState.done) {
           return const Center(child: CircularProgressIndicator());
         } else {
-          return Column(children: courses.map((listcours) =>   Padding(
-                padding: const EdgeInsets.only(left: 10, right: 10, bottom: 20),
-                child: InkWell(
-                  onTap: () {
-                    context.read<AppData>().idcourse = listcours.coId;
-                    Get.to(() => const showCousePage());
-                  },
-                  child: Container(
-                    alignment: Alignment.center,
-                    width: double.infinity,
-                    child: AspectRatio(
-                      aspectRatio: 16 / 9,
-                      child: Stack(
-                        children: <Widget>[
-                          Container(
-                            alignment: Alignment.topCenter,
-                            child: AspectRatio(
-                                aspectRatio: 16 / 9,
-                                child: Container(
+          return Column(
+            children: courses
+                .map((listcours) => Padding(
+                      padding: const EdgeInsets.only(
+                          left: 10, right: 10, bottom: 20),
+                      child: InkWell(
+                        onTap: () {
+                          context.read<AppData>().idcourse = listcours.coId;
+                          Get.to(() => const showCousePage());
+                        },
+                        child: Container(
+                          alignment: Alignment.center,
+                          width: double.infinity,
+                          child: AspectRatio(
+                            aspectRatio: 16 / 9,
+                            child: Stack(
+                              children: <Widget>[
+                                Container(
+                                  alignment: Alignment.topCenter,
+                                  child: AspectRatio(
+                                      aspectRatio: 16 / 9,
+                                      child: Container(
+                                        decoration: BoxDecoration(
+                                          color: const Color(0xff7c94b6),
+                                          image: DecorationImage(
+                                              image:
+                                                  NetworkImage(listcours.image),
+                                              fit: BoxFit.cover),
+                                          borderRadius:
+                                              BorderRadius.circular(20),
+                                        ),
+                                      )),
+                                  //color: Colors.white,
+                                ),
+                                Container(
+                                  padding: const EdgeInsets.all(5.0),
+                                  alignment: Alignment.bottomCenter,
                                   decoration: BoxDecoration(
-                                    color: const Color(0xff7c94b6),
-                                    image: DecorationImage(
-                                        image: NetworkImage(listcours.image),
-                                        fit: BoxFit.cover),
+                                    gradient: LinearGradient(
+                                      begin: Alignment.topCenter,
+                                      end: Alignment.bottomCenter,
+                                      colors: <Color>[
+                                        const Color.fromARGB(255, 0, 0, 0)
+                                            .withAlpha(0),
+                                        const Color.fromARGB(49, 0, 0, 0),
+                                        const Color.fromARGB(127, 0, 0, 0)
+                                        // const Color.fromARGB(255, 255, 255, 255)
+                                        //     .withAlpha(0),
+                                        // Color.fromARGB(39, 255, 255, 255),
+                                        // Color.fromARGB(121, 255, 255, 255)
+                                      ],
+                                    ),
                                     borderRadius: BorderRadius.circular(20),
                                   ),
-                                )),
-                            //color: Colors.white,
-                          ),
-                          Container(
-                            padding: const EdgeInsets.all(5.0),
-                            alignment: Alignment.bottomCenter,
-                            decoration: BoxDecoration(
-                              gradient: LinearGradient(
-                                begin: Alignment.topCenter,
-                                end: Alignment.bottomCenter,
-                                colors: <Color>[
-                                  const Color.fromARGB(255, 0, 0, 0)
-                                      .withAlpha(0),
-                                  const Color.fromARGB(49, 0, 0, 0),
-                                  const Color.fromARGB(127, 0, 0, 0)
-                                  // const Color.fromARGB(255, 255, 255, 255)
-                                  //     .withAlpha(0),
-                                  // Color.fromARGB(39, 255, 255, 255),
-                                  // Color.fromARGB(121, 255, 255, 255)
-                                ],
-                              ),
-                              borderRadius: BorderRadius.circular(20),
-                            ),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              mainAxisAlignment: MainAxisAlignment.end,
-                              children: [
-                                Text(listcours.name,
-                                    style:
-                                        Theme.of(context).textTheme.titleLarge),
-                                Row(
-                                  children: [
-                                    const Padding(
-                                      padding: EdgeInsets.only(right: 8),
-                                      child: Icon(
-                                        FontAwesomeIcons.solidUser,
-                                        size: 16.0,
-                                      ),
-                                    ),
-                                    Text(listcours.coach.fullName,
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .bodyLarge),
-                                  ],
                                 ),
-                                (listcours.level == '1')
-                                    ? Row(
+                                Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    mainAxisAlignment: MainAxisAlignment.end,
+                                    children: [
+                                      Text(listcours.name,
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .titleLarge),
+                                      Row(
                                         children: [
-                                          Icon(FontAwesomeIcons.bolt,
-                                              size: 16,
-                                              color: Theme.of(context)
-                                                  .colorScheme
-                                                  .tertiaryContainer),
-                                          const Icon(FontAwesomeIcons.bolt,
-                                              size: 16),
-                                          const Icon(FontAwesomeIcons.bolt,
-                                              size: 16),
+                                          const Padding(
+                                            padding: EdgeInsets.only(right: 8),
+                                            child: Icon(
+                                              FontAwesomeIcons.solidUser,
+                                              size: 16.0,
+                                            ),
+                                          ),
+                                          Text(listcours.coach.fullName,
+                                              style: Theme.of(context)
+                                                  .textTheme
+                                                  .bodyLarge),
                                         ],
-                                      )
-                                    : (listcours.level == '2')
-                                        ? Row(
-                                            children: [
-                                              Icon(FontAwesomeIcons.bolt,
-                                                  size: 16,
-                                                  color: Theme.of(context)
-                                                      .colorScheme
-                                                      .tertiaryContainer),
-                                              Icon(FontAwesomeIcons.bolt,
-                                                  size: 16,
-                                                  color: Theme.of(context)
-                                                      .colorScheme
-                                                      .tertiaryContainer),
-                                              const Icon(FontAwesomeIcons.bolt,
-                                                  size: 16),
-                                            ],
-                                          )
-                                        : Row(
-                                            children: [
-                                              Icon(FontAwesomeIcons.bolt,
-                                                  size: 16,
-                                                  color: Theme.of(context)
-                                                      .colorScheme
-                                                      .tertiaryContainer),
-                                              Icon(FontAwesomeIcons.bolt,
-                                                  size: 16,
-                                                  color: Theme.of(context)
-                                                      .colorScheme
-                                                      .tertiaryContainer),
-                                              Icon(FontAwesomeIcons.bolt,
-                                                  size: 16,
-                                                  color: Theme.of(context)
-                                                      .colorScheme
-                                                      .tertiaryContainer),
-                                            ],
-                                          )
+                                      ),
+                                      (listcours.level == '1')
+                                          ? Row(
+                                              children: [
+                                                Icon(FontAwesomeIcons.bolt,
+                                                    size: 16,
+                                                    color: Theme.of(context)
+                                                        .colorScheme
+                                                        .tertiaryContainer),
+                                                const Icon(
+                                                    FontAwesomeIcons.bolt,
+                                                    size: 16),
+                                                const Icon(
+                                                    FontAwesomeIcons.bolt,
+                                                    size: 16),
+                                              ],
+                                            )
+                                          : (listcours.level == '2')
+                                              ? Row(
+                                                  children: [
+                                                    Icon(FontAwesomeIcons.bolt,
+                                                        size: 16,
+                                                        color: Theme.of(context)
+                                                            .colorScheme
+                                                            .tertiaryContainer),
+                                                    Icon(FontAwesomeIcons.bolt,
+                                                        size: 16,
+                                                        color: Theme.of(context)
+                                                            .colorScheme
+                                                            .tertiaryContainer),
+                                                    const Icon(
+                                                        FontAwesomeIcons.bolt,
+                                                        size: 16),
+                                                  ],
+                                                )
+                                              : Row(
+                                                  children: [
+                                                    Icon(FontAwesomeIcons.bolt,
+                                                        size: 16,
+                                                        color: Theme.of(context)
+                                                            .colorScheme
+                                                            .tertiaryContainer),
+                                                    Icon(FontAwesomeIcons.bolt,
+                                                        size: 16,
+                                                        color: Theme.of(context)
+                                                            .colorScheme
+                                                            .tertiaryContainer),
+                                                    Icon(FontAwesomeIcons.bolt,
+                                                        size: 16,
+                                                        color: Theme.of(context)
+                                                            .colorScheme
+                                                            .tertiaryContainer),
+                                                  ],
+                                                )
+                                    ],
+                                  ),
+                                )
                               ],
                             ),
-                          )
-                        ],
+                          ),
+                        ),
                       ),
-                    ),
-                  ),
-                ),
-              )
-           ).toList(),);
-       
-       
+                    ))
+                .toList(),
+          );
+
           // return ListView.builder(
           //   // shrinkWrap: true,
           //   primary: false,
           //   itemCount: courses.length,
           //   itemBuilder: (context, index) {
           //     final listcours = courses[index];
-          //     return 
+          //     return
           //     Padding(
           //       padding: const EdgeInsets.only(left: 10, right: 10, bottom: 20),
           //       child: InkWell(
@@ -382,7 +395,7 @@ Widget loadcourse() {
           //         ),
           //       ),
           //     );
-           
+
           //   },
           // );
         }
@@ -400,70 +413,108 @@ Widget loadcourse() {
               children: [
                 Row(
                   children: [
+                    //listcours.image
                     Stack(
                       children: [
-                        ClipRRect(
-                          borderRadius: const BorderRadius.only(
-                              topRight: Radius.circular(100),
-                              bottomRight: Radius.circular(100)),
+                        const SizedBox(
+                          height: 20,
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.only(top: 20),
                           child: Container(
-                            height: 180,
-                            width: 200,
-                            color: Theme.of(context).colorScheme.primary,
-                          ),
-                        ),
-                        Positioned(
-                            right: -75,
-                            top: -110,
-                            child: Container(
-                              height: 200,
-                              width: 150,
-                              margin: const EdgeInsets.all(100.0),
+                              height: 150,
+                              width: MediaQuery.of(context).size.width * 0.99,
                               decoration: const BoxDecoration(
-                                  color:
-                                      Color.fromARGB(255, 255, 255, 255),
-                                  shape: BoxShape.circle),
-                            )),
-                        Positioned(
-                          right: 30,
-                          top: 20,
-                          child: CircleAvatar(
-                            radius: 70,
-                            backgroundImage: NetworkImage(coach.first.image),
-                          ),
+                                gradient: LinearGradient(
+                                    begin: Alignment.topCenter,
+                                    end: Alignment.bottomCenter,
+                                    colors: [
+                                      Color.fromRGBO(255, 0, 0, 0.61),
+                                      Color.fromRGBO(255, 173, 51, 0.75),
+                                    ],
+                                    stops: [
+                                      0.0,
+                                      0.99
+                                    ]),
+                              )),
                         ),
+                        Row(
+                          children: [
+                            Padding(
+                              padding: const EdgeInsets.only(left: 10),
+                              child: Container(
+                                height: MediaQuery.of(context).size.height * 0.23,
+                                width: MediaQuery.of(context).size.width * 0.47,
+                                decoration: BoxDecoration(
+                                  color: const Color(0xff7c94b6),
+                                  image: const DecorationImage(
+                                      image: NetworkImage(
+                                          'https://yt3.googleusercontent.com/iZr7yWd2I6dY4x9yR4QJvB9lgKRPVxYtRMkoniBY68a_eabcWmzHE6XgVfu89XfFN-wvO9Es4fk=s900-c-k-c0x00ffffff-no-rj'),
+                                      fit: BoxFit.cover),
+                                  borderRadius: BorderRadius.circular(100),
+                                ),
+                              ),
+                            ),
+                            const SizedBox(width: 30,),
+                             Text("@${coach.first.username}",
+                            style: const TextStyle(fontSize: 18,fontWeight: FontWeight.bold))
+                          ],
+                        ),
+                       
                       ],
                     ),
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text("@${coach.first.username}",
-                              style: const TextStyle(fontSize: 16)),
-                          Text(coach.first.fullName,
-                              style: const TextStyle(fontSize: 16)),
-                          
-                        ],
-                      ),
-                    )
+                    // Stack(
+                    //   children: [
+                    //     ClipRRect(
+                    //       borderRadius: const BorderRadius.only(
+                    //           topRight: Radius.circular(100),
+                    //           bottomRight: Radius.circular(100)),
+                    //       child: Container(
+                    //         height: 180,
+                    //         width: 200,
+                    //         color: Theme.of(context).colorScheme.primary,
+                    //       ),
+                    //     ),
+                    //     Positioned(
+                    //         right: -75,
+                    //         top: -110,
+                    //         child: Container(
+                    //           height: 200,
+                    //           width: 150,
+                    //           margin: const EdgeInsets.all(100.0),
+                    //           decoration: const BoxDecoration(
+                    //               color:
+                    //                   Color.fromARGB(255, 255, 255, 255),
+                    //               shape: BoxShape.circle),
+                    //         )),
+                    //     Positioned(
+                    //       right: 30,
+                    //       top: 20,
+                    //       child: CircleAvatar(
+                    //         radius: 70,
+                    //         backgroundImage: NetworkImage(coach.first.image),
+                    //       ),
+                    //     ),
+                    //   ],
+                    // ),
+                    
                   ],
                 ),
                 Padding(
-                  padding: EdgeInsets.only(top: 10, left: 8),
+                  padding: const EdgeInsets.only(top: 10, left: 8),
                   child: Row(
-                              children: [
-                                const Icon(
-                                  FontAwesomeIcons.graduationCap,
-                                  size: 18,
-                                ),
-                                Padding(
-                                  padding: const EdgeInsets.only(left: 8,right: 8),
-                                  child: Text(coach.first.qualification,
-                                      style: const TextStyle(fontSize: 16)),
-                                ),
-                              ],
-                            ),
+                    children: [
+                      const Icon(
+                        FontAwesomeIcons.graduationCap,
+                        size: 18,
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(left: 8, right: 8),
+                        child: Text(coach.first.qualification,
+                            style: const TextStyle(fontSize: 16)),
+                      ),
+                    ],
+                  ),
                 ),
                 const Padding(
                   padding: EdgeInsets.only(top: 10, left: 8),
