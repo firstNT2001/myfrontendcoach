@@ -11,6 +11,7 @@ import 'package:frontendfluttercoach/model/response/md_Result.dart';
 import 'package:frontendfluttercoach/model/response/md_days.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
+import 'package:in_app_notification/in_app_notification.dart';
 import 'package:provider/provider.dart';
 import 'package:quickalert/models/quickalert_type.dart';
 import 'package:quickalert/widgets/quickalert_dialog.dart';
@@ -23,6 +24,7 @@ import '../../../service/days.dart';
 import '../../../service/provider/appdata.dart';
 import '../../../widget/PopUp/popUp.dart';
 import '../../../widget/dialogs.dart';
+import '../../../widget/notificationBody.dart';
 import '../course/FoodAndClip/course_food_clip.dart';
 import '../course/course_edit_page.dart';
 
@@ -242,7 +244,11 @@ class _DaysCoursePageState extends State<DaysCoursePage> {
                             if (moveIsVisible == true) {
                               moveDayColor =
                                   Theme.of(context).colorScheme.primary;
-                                
+                              InAppNotification.show(
+                                child: NotificationBody(count: 2),
+                                context: context,
+                                onTap: () => print('Notification tapped!'),
+                              );
                             } else {
                               moveDayColor = Colors.black;
                             }
