@@ -481,7 +481,27 @@ class _HomePageCoachState extends State<HomePageCoach> {
     log(coID);
     log(modelResult.result);
     if (modelResult.result == '0') {
+        // // ignore: use_build_context_synchronously
+        //   InAppNotification.show(
+        //     child: NotificationBody(
+        //       count: 1,
+        //       message: 'อัพเดทสถานะไม่สำเร็จ',
+        //     ),
+        //     context: context,
+        //     onTap: () => print('Notification tapped!'),
+        //     duration: const Duration(milliseconds: 1500),
+        //   );
     } else {
+        // // ignore: use_build_context_synchronously
+        //   InAppNotification.show(
+        //     child: NotificationBody(
+        //       count: 1,
+        //       message: 'อัพเดทสถานะสำเร็จ',
+        //     ),
+        //     context: context,
+        //     onTap: () => print('Notification tapped!'),
+        //     duration: const Duration(milliseconds: 1500),
+        //   );
       setState(() {
         loadCourseDataMethod = loadCourseData();
       });

@@ -8,6 +8,7 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
+import 'package:in_app_notification/in_app_notification.dart';
 import 'package:provider/provider.dart';
 import 'package:quickalert/models/quickalert_type.dart';
 import 'package:quickalert/widgets/quickalert_dialog.dart';
@@ -30,6 +31,7 @@ import '../../../widget/PopUp/popUp.dart';
 import '../../../widget/dialogs.dart';
 import '../../../widget/dropdown/wg_dropdown_string.dart';
 
+import '../../../widget/notificationBody.dart';
 import '../../../widget/textField/wg_textField.dart';
 import '../../../widget/textField/wg_textFieldLines.dart';
 import '../../../widget/textField/wg_textField_int copy.dart';
@@ -532,7 +534,15 @@ class _CourseEditPageState extends State<CourseEditPage> {
                   ));
             } else {
               // ignore: use_build_context_synchronously
-              success(context);
+              InAppNotification.show(
+                child: NotificationBody(
+                  count: 1,
+                  message: 'แก้ไขสำเร็จ',
+                ),
+                context: context,
+                onTap: () => print('Notification tapped!'),
+                duration: const Duration(milliseconds: 1500),
+              );
               Get.to(() => DaysCoursePage(
                     coID: widget.coID,
                     isVisible: widget.isVisible,
@@ -725,18 +735,11 @@ class _CourseEditPageState extends State<CourseEditPage> {
   void dialogDelete(BuildContext context) {
     QuickAlert.show(
       context: context,
-
       type: QuickAlertType.confirm,
       text: 'Do you want to delete?',
       confirmBtnText: 'Yes',
       cancelBtnText: 'No',
       confirmBtnColor: Theme.of(context).colorScheme.primary,
-      // barrierColor: Colors.white,
-      // confirmBtnTextStyle:
-      //     const TextStyle(
-      //   color: Colors.black,
-      //   fontWeight: FontWeight.bold,
-      // ),
       onConfirmBtnTap: () async {
         var response = await _courseService.deleteCourse(widget.coID);
         modelResult = response.data;
@@ -749,9 +752,27 @@ class _CourseEditPageState extends State<CourseEditPage> {
                 builder: (BuildContext context) => NavbarBottomCoach()),
             ModalRoute.withName('/'),
           );
+          // ignore: use_build_context_synchronously
+          InAppNotification.show(
+            child: NotificationBody(
+              count: 1,
+              message: 'ลบคอร์สสำเร็จ',
+            ),
+            context: context,
+            onTap: () => print('Notification tapped!'),
+            duration: const Duration(milliseconds: 1500),
+          );
         } else {
           // ignore: use_build_context_synchronously
-          popUpWarningDelete(context);
+          InAppNotification.show(
+            child: NotificationBody(
+              count: 1,
+              message: 'ลบคอร์สไม่สำเร็จ',
+            ),
+            context: context,
+            onTap: () => print('Notification tapped!'),
+            duration: const Duration(milliseconds: 1500),
+          );
         }
       },
     );
