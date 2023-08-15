@@ -142,7 +142,7 @@ class _ShowCourseState extends State<ShowCourse> {
                         MaterialPageRoute<void>(
                             builder: (BuildContext context) =>
                                 const NavbarBottomCoach()),
-                        ModalRoute.withName('/'),
+                        ModalRoute.withName('/NavbarBottomCoach'),
                       );
                     },
                   ),

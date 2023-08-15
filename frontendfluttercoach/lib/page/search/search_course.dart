@@ -15,6 +15,7 @@ import '../../service/course.dart';
 import '../../service/provider/appdata.dart';
 import '../../widget/dialogs.dart';
 import '../coach/course/course_edit_page.dart';
+import '../coach/navigationbar.dart';
 
 class SearchCoursePage extends StatefulWidget {
   const SearchCoursePage({super.key});
@@ -30,21 +31,18 @@ class _SearchCoursePageState extends State<SearchCoursePage> {
   List<Course> courses = [];
 
   TextEditingController searchName = TextEditingController();
-    late ModelResult modelResult;
-
+  late ModelResult modelResult;
 
   @override
   void initState() {
     super.initState();
     _courseService = context.read<AppData>().courseService;
     loadCourseDataMethod = loadCourseData();
-
-    
   }
 
   @override
   Widget build(BuildContext context) {
-    return scaffold(context);
+    return WillPopScope(onWillPop: () async => false, child: scaffold(context));
   }
 
   Scaffold scaffold(BuildContext context) {
@@ -73,7 +71,13 @@ class _SearchCoursePageState extends State<SearchCoursePage> {
               FontAwesomeIcons.chevronLeft,
             ),
             onPressed: () {
-              Navigator.pop(context);
+             Navigator.pushAndRemoveUntil<void>(
+                        context,
+                        MaterialPageRoute<void>(
+                            builder: (BuildContext context) =>
+                                const NavbarBottomCoach()),
+                        ModalRoute.withName('/NavbarBottomCoach'),
+                      );
             },
           ),
           Container(
@@ -310,8 +314,8 @@ class _SearchCoursePageState extends State<SearchCoursePage> {
       },
     );
   }
+
   Future<void> updateStatus(CourseCourseIdPut request, String coID) async {
-    
     var response = await _courseService.updateCourseByCourseID(coID, request);
     modelResult = response.data;
     log(coID);

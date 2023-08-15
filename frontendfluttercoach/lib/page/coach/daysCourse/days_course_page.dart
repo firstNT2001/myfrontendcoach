@@ -22,7 +22,6 @@ import '../../../model/response/md_coach_course_get.dart';
 import '../../../service/course.dart';
 import '../../../service/days.dart';
 import '../../../service/provider/appdata.dart';
-import '../../../widget/PopUp/popUp.dart';
 import '../../../widget/dialogs.dart';
 import '../../../widget/notificationBody.dart';
 import '../course/FoodAndClip/course_food_clip.dart';
@@ -78,7 +77,7 @@ class _DaysCoursePageState extends State<DaysCoursePage> {
   @override
   Widget build(BuildContext context) {
     return WillPopScope(
-      onWillPop: () async => true,
+      onWillPop: () async => false,
       child: Scaffold(
         resizeToAvoidBottomInset: false,
         body: SafeArea(
@@ -245,9 +244,13 @@ class _DaysCoursePageState extends State<DaysCoursePage> {
                               moveDayColor =
                                   Theme.of(context).colorScheme.primary;
                               InAppNotification.show(
-                                child: NotificationBody(count: 2),
+                                child: NotificationBody(
+                                  count: 1,
+                                  message: 'เคลื่อนย้ายวัน',
+                                ),
                                 context: context,
                                 onTap: () => print('Notification tapped!'),
+                                duration: const Duration(milliseconds: 1500),
                               );
                             } else {
                               moveDayColor = Colors.black;
@@ -340,7 +343,20 @@ class _DaysCoursePageState extends State<DaysCoursePage> {
                             },
                             child: cardText(index, i, context),
                           )
-                        : cardText(index, i, context);
+                        : InkWell(
+                            key: ValueKey(index),
+                            onTap: () {
+                              InAppNotification.show(
+                                child: NotificationBody(
+                                  count: 1,
+                                  message: 'กรุณากดค้างที่วัน',
+                                ),
+                                context: context,
+                                onTap: () => print('Notification tapped!'),
+                                duration: const Duration(milliseconds: 1500),
+                              );
+                            },
+                            child: cardText(index, i, context));
                   },
                   //onDragUpdate: (){},
                   onReorder: (oldIndex, newIndex) {
@@ -355,11 +371,11 @@ class _DaysCoursePageState extends State<DaysCoursePage> {
                   },
                   dragWidgetBuilder: (index, child) {
                     int i = index + 1;
-                    return Card(
-                      color: Theme.of(context).colorScheme.primary,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(100),
-                        //set border radius more than 50% of height and width to make circle
+                    return Container(
+                      key: ValueKey(index),
+                      decoration: BoxDecoration(
+                        color: Theme.of(context).colorScheme.primary,
+                        shape: BoxShape.circle,
                       ),
                       child: Center(child: Text(i.toString())),
                     );
@@ -376,24 +392,25 @@ class _DaysCoursePageState extends State<DaysCoursePage> {
     );
   }
 
-  Card cardText(int index, int i, BuildContext context) {
-    return Card(
-      shadowColor: Colors.black,
-      elevation: (moveIsVisible) ? 30 : 0,
-      color: cardColors[index],
+  Padding cardText(int index, int i, BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.all(3.0),
       key: ValueKey(index),
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(100),
-        //set border radius more than 50% of height and width to make circle
+      child: Container(
+        key: ValueKey(index),
+        decoration: BoxDecoration(
+          color: cardColors[index],
+          shape: BoxShape.circle,
+        ),
+        child: Center(
+            child: Text(
+          i.toString(),
+          style: Theme.of(context)
+              .textTheme
+              .titleMedium!
+              .copyWith(color: Colors.white),
+        )),
       ),
-      child: Center(
-          child: Text(
-        i.toString(),
-        style: Theme.of(context)
-            .textTheme
-            .titleMedium!
-            .copyWith(color: Colors.white),
-      )),
     );
   }
 
@@ -433,8 +450,17 @@ class _DaysCoursePageState extends State<DaysCoursePage> {
       log("${days[i].did.toString()} : ${jsonEncode(request)}");
     }
     stopLoading();
+
     // ignore: use_build_context_synchronously
-    success(context);
+    InAppNotification.show(
+      child: NotificationBody(
+        count: 1,
+        message: 'เคลื่อนย้ายวันสำเร็จ',
+      ),
+      context: context,
+      onTap: () => print('Notification tapped!'),
+      duration: const Duration(milliseconds: 1500),
+    );
   }
 
   //Dialog Delete
@@ -485,13 +511,29 @@ class _DaysCoursePageState extends State<DaysCoursePage> {
         stopLoading();
         if (modelResult.result == '1') {
           // ignore: use_build_context_synchronously
-          popUpSuccessDelete(context);
+          InAppNotification.show(
+            child: NotificationBody(
+              count: 1,
+              message: 'ลบวันเรียบร้อยแล้ว',
+            ),
+            context: context,
+            onTap: () => print('Notification tapped!'),
+            duration: const Duration(milliseconds: 1500),
+          );
           setState(() {
             loadDaysDataMethod = loadDaysDataAsync();
           });
         } else {
           // ignore: use_build_context_synchronously
-          popUpWarningDelete(context);
+          InAppNotification.show(
+            child: NotificationBody(
+              count: 1,
+              message: 'ลบวันไม่สำเร็จ',
+            ),
+            context: context,
+            onTap: () => print('Notification tapped!'),
+            duration: const Duration(milliseconds: 1500),
+          );
         }
       },
     );
@@ -541,6 +583,16 @@ class _DaysCoursePageState extends State<DaysCoursePage> {
         stopLoading();
 
         log('onConfirmBtnTap');
+        // ignore: use_build_context_synchronously
+        InAppNotification.show(
+          child: NotificationBody(
+            count: 1,
+            message: 'ได้เพิ่มวันเรียบร้อยแล้ว',
+          ),
+          context: context,
+          onTap: () => print('Notification tapped!'),
+          duration: const Duration(milliseconds: 1500),
+        );
       },
     );
   }

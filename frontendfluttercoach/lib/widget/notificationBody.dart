@@ -4,14 +4,17 @@ import 'package:flutter/cupertino.dart';
 import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+
 class NotificationBody extends StatelessWidget {
   final int count;
   final double minHeight;
-
+  final String message;
   NotificationBody({
     Key? key,
     this.count = 0,
     this.minHeight = 0.0,
+    required this.message,
   }) : super(key: key);
 
   @override
@@ -28,9 +31,9 @@ class NotificationBody extends StatelessWidget {
           decoration: BoxDecoration(
             boxShadow: [
               BoxShadow(
-                color: Colors.black.withOpacity(0.1),
-                spreadRadius: 12,
-                blurRadius: 16,
+                 color: Colors.grey.shade600,
+                spreadRadius: 5,
+                blurRadius: 30,
               ),
             ],
           ),
@@ -40,23 +43,22 @@ class NotificationBody extends StatelessWidget {
               filter: ImageFilter.blur(sigmaX: 24, sigmaY: 24),
               child: DecoratedBox(
                 decoration: BoxDecoration(
-                  color: Colors.lightGreen.withOpacity(0.4),
-                  borderRadius: BorderRadius.circular(16.0),
-                  border: Border.all(
-                    width: 1.4,
-                    color: Colors.lightGreen.withOpacity(0.2),
-                  ),
+                  color: Color.fromARGB(115, 255, 255, 255).withOpacity(0.4),
                 ),
                 child: Padding(
                   padding: const EdgeInsets.all(16.0),
-                  child: Center(
-                    child: Text(
-                      'Count: $count',
-                      style: Theme.of(context)
-                          .textTheme
-                          .headline4!
-                          .copyWith(color: Colors.white),
-                    ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Text(message,
+                          style: Theme.of(context).textTheme.titleMedium!
+                          //.copyWith(color: Colors.white),
+                          ),
+                      const Icon(
+                        FontAwesomeIcons.chevronUp,
+                      )
+                    ],
                   ),
                 ),
               ),

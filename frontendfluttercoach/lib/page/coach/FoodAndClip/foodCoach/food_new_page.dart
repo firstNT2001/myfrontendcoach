@@ -7,6 +7,7 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:frontendfluttercoach/widget/dialogs.dart';
+import 'package:in_app_notification/in_app_notification.dart';
 
 import 'package:provider/provider.dart';
 
@@ -16,7 +17,7 @@ import '../../../../model/response/md_Result.dart';
 import '../../../../service/listFood.dart';
 import '../../../../service/provider/appdata.dart';
 
-import '../../../../widget/PopUp/popUp.dart';
+import '../../../../widget/notificationBody.dart';
 import '../../../../widget/textField/wg_textField.dart';
 import '../../../../widget/textField/wg_textFieldLines.dart';
 import '../../../../widget/textField/wg_textField_int copy.dart';
@@ -94,7 +95,9 @@ class _FoodNewCoachPageState extends State<FoodNewCoachPage> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    SizedBox(height: 28,),
+                    SizedBox(
+                      height: 28,
+                    ),
                     WidgetTextFieldString(
                       controller: name,
                       labelText: 'ขื่อเมนู',
@@ -168,17 +171,34 @@ class _FoodNewCoachPageState extends State<FoodNewCoachPage> {
             stopLoading();
             if (modelResult.result == '1') {
               // ignore: use_build_context_synchronously
-              success(context);
+              InAppNotification.show(
+                child: NotificationBody(
+                  count: 1,
+                  message: 'เพิ่มเมนูอาหารสำเร็จ',
+                ),
+                context: context,
+                onTap: () => print('Notification tapped!'),
+                duration: const Duration(milliseconds: 1500),
+              );
               // ignore: use_build_context_synchronously
               Navigator.pushAndRemoveUntil<void>(
                 context,
                 MaterialPageRoute<void>(
-                    builder: (BuildContext context) => const NavbarBottomCoach()),
+                    builder: (BuildContext context) =>
+                        const NavbarBottomCoach()),
                 ModalRoute.withName('/NavbarBottomCoach'),
               );
             } else {
               // ignore: use_build_context_synchronously
-              warning(context);
+              InAppNotification.show(
+                child: NotificationBody(
+                  count: 1,
+                  message: 'เพิ่มเมนูอาหารไม่สำเร็จ',
+                ),
+                context: context,
+                onTap: () => print('Notification tapped!'),
+                duration: const Duration(milliseconds: 1500),
+              );
             }
           }
         },

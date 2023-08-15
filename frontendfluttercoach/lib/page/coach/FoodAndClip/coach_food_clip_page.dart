@@ -5,6 +5,7 @@ import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
+import 'package:in_app_notification/in_app_notification.dart';
 
 import 'package:provider/provider.dart';
 import 'package:quickalert/models/quickalert_type.dart';
@@ -19,6 +20,7 @@ import '../../../service/provider/appdata.dart';
 
 import '../../../widget/dialogs.dart';
 import '../../../widget/image_video.dart';
+import '../../../widget/notificationBody.dart';
 import 'clipCoach/clip_edit_page.dart';
 import 'clipCoach/clip_new_page.dart';
 import '../../search/search_clip_coach.dart';
@@ -507,6 +509,16 @@ class _FoodCoachPageState extends State<FoodCoachPage> {
 
         Navigator.of(context, rootNavigator: true).pop();
         log('onConfirmBtnTap');
+        // ignore: use_build_context_synchronously
+        InAppNotification.show(
+          child: NotificationBody(
+            count: 1,
+            message: 'ลบเมนูอาหารเรียบร้อยแล้ว',
+          ),
+          context: context,
+          onTap: () => print('Notification tapped!'),
+          duration: const Duration(milliseconds: 1500),
+        );
       },
     );
   }
@@ -528,7 +540,16 @@ class _FoodCoachPageState extends State<FoodCoachPage> {
         });
 
         Navigator.of(context, rootNavigator: true).pop();
-        log('onConfirmBtnTap');
+        // ignore: use_build_context_synchronously
+        InAppNotification.show(
+          child: NotificationBody(
+            count: 1,
+            message: 'ลบคลิปท่าออกกำลังกายเรียบร้อยแล้ว',
+          ),
+          context: context,
+          onTap: () => print('Notification tapped!'),
+          duration: const Duration(milliseconds: 1500),
+        );
       },
     );
   }
