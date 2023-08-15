@@ -1,13 +1,10 @@
 import 'dart:convert';
 import 'dart:developer';
 
-import 'package:appinio_video_player/appinio_video_player.dart';
-import 'package:buddhist_datetime_dateformat/buddhist_datetime_dateformat.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
 import 'package:frontendfluttercoach/service/course.dart';
 import 'package:intl/intl.dart';
-import 'package:video_player/video_player.dart';
 import '../../../../model/response/clip_get_res.dart';
 import '../../../../service/clip.dart';
 import '../../../model/request/status_clip.dart';
@@ -21,10 +18,10 @@ import 'package:provider/provider.dart';
 import 'package:dio/dio.dart';
 
 import '../../../service/provider/appdata.dart';
-import 'package:expansion_tile_card/expansion_tile_card.dart';
 
 import '../../../service/request.dart';
 import 'Widget/widget_loadcilcp.dart';
+import 'Widget/widget_showfood.dart';
 import 'mycourse.dart';
 
 class showFood extends StatefulWidget {
@@ -72,8 +69,9 @@ class _showFoodState extends State<showFood> {
     super.initState();
     coachID = context.read<AppData>().cid;
     uid = context.read<AppData>().uid;
-    log("uid" + uid.toString());
+    
     did = context.read<AppData>().did;
+    log("did$did");
     coID = context.read<AppData>().idcourse;
     requestService =
         RequestService(Dio(), baseUrl: context.read<AppData>().baseurl);
@@ -95,25 +93,16 @@ class _showFoodState extends State<showFood> {
             automaticallyImplyLeading: false,
             bottom: const TabBar(tabs: [
               Tab(
-                icon: Icon(Icons.fastfood_outlined),
-                text: "เมนูอาหาร",
-              ),
-              Tab(
                 icon: Icon(Icons.fitness_center_sharp),
                 text: "คลิปออกกำลังกาย",
+              ),
+              Tab(
+                icon: Icon(Icons.fastfood_outlined),
+                text: "เมนูอาหาร",
               ),
             ]),
           ),
           body: TabBarView(children: [
-            Column(
-              children: [
-                Expanded(
-                    child: Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: loadfoods(),
-                )),
-              ],
-            ),
             Column(
               children: [
                 Visibility(
@@ -136,8 +125,50 @@ class _showFoodState extends State<showFood> {
                         padding: const EdgeInsets.all(8.0),
                         child: loadclipscheckyesterday(),
                       ),
-                    )),           
+                    )),
               ],
+            ),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: ListView(
+              
+               
+                children: [
+                  const Padding(
+                    padding: EdgeInsets.only(left: 8,top: 15),
+                    child: Text("มื้อเช้า",style: TextStyle(fontSize:20 ,fontWeight: FontWeight.w600),),
+                  ),
+                  SizedBox(
+                    height: 200,
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Widgetloadfood(did: did, time: '1',),
+                    ),
+                  ),
+                  const Padding(
+                    padding:  EdgeInsets.only(left: 8,top: 15),
+                    child: Text("มื้อเที่ยง",style: TextStyle(fontSize:20 ,fontWeight: FontWeight.w600),),
+                  ),
+                  SizedBox(
+                    height: 200,
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Widgetloadfood(did: did, time: '2',),
+                    ),
+                  ),
+                  const Padding(
+                    padding:  EdgeInsets.only(left: 8,top: 15),
+                    child: Text("มื้อเย็น",style: TextStyle(fontSize:20 ,fontWeight: FontWeight.w600),),
+                  ),
+                  SizedBox(
+                    height: 200,
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Widgetloadfood(did: did, time: '3',),
+                    ),
+                  ),
+                ],
+              ),
             ),
           ]),
         ));
@@ -157,7 +188,8 @@ class _showFoodState extends State<showFood> {
                   final listclip = clips[index];
                   videoUrl = listclip.listClip.video;
                   return Padding(
-                    padding: const EdgeInsets.only(left: 10,right: 10,bottom: 8),
+                    padding:
+                        const EdgeInsets.only(left: 10, right: 10, bottom: 8),
                     child: Card(
                       elevation: 0,
                       child: Padding(
@@ -246,7 +278,7 @@ class _showFoodState extends State<showFood> {
                 shrinkWrap: true,
                 itemCount: clips.length,
                 itemBuilder: (context, index) {
-                  log("ldshowtomorrow" + showtomorrow.toString());
+                  log("ldshowtomorrow$showtomorrow");
 
                   final listclip = clips[index];
                   videoUrl = listclip.listClip.video;
@@ -325,11 +357,11 @@ class _showFoodState extends State<showFood> {
                   final listclip = clips[index];
                   videoUrl = listclip.listClip.video;
                   if (listclip.status == "1") {
-                    log("statusyes" + status);
+                    log("statusyes$status");
                     isChecked[index] = true;
                   } else {
                     isChecked[index] = false;
-                    log("statusyes" + status);
+                    log("statusyes$status");
                   }
                   return SizedBox(
                     width: MediaQuery.of(context).size.width * 0.8,
@@ -384,60 +416,6 @@ class _showFoodState extends State<showFood> {
           }
         });
   }
-
-  Widget loadfoods() {
-    return FutureBuilder(
-        future: loadDataMethod,
-        builder: (context, snapshot) {
-          if (snapshot.connectionState != ConnectionState.done) {
-            return const Center(child: CircularProgressIndicator());
-          } else {
-            return ListView.builder(
-                shrinkWrap: true,
-                itemCount: foods.length,
-                itemBuilder: (context, index) {
-                  final listfood = foods[index];
-                  final GlobalKey<ExpansionTileCardState> cardA =
-                      new GlobalKey();
-                  return ExpansionTileCard(
-                    //baseColor: const Color.fromARGB(255, 212, 212, 212),
-                    //expandedColor: const Color.fromARGB(255, 191, 191, 191),
-                    key: cardA,
-                    leading: SizedBox(
-                        height: 200,
-                        width: 200,
-                        child: Image.network(
-                          listfood.listFood.image,
-                        )),
-                    title: Text(listfood.listFood.name),
-                    subtitle: Text("${listfood.listFood.calories} แคลอรี่",
-                        style: Theme.of(context).textTheme.bodyLarge),
-                    children: <Widget>[
-                      const Divider(
-                        thickness: 1.0,
-                        height: 1.0,
-                        color: Colors.black,
-                        endIndent: 8,
-                        indent: 8,
-                      ),
-                      Align(
-                        alignment: Alignment.centerLeft,
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 16.0,
-                            vertical: 8.0,
-                          ),
-                          child: Text(listfood.listFood.details,
-                              style: Theme.of(context).textTheme.bodyLarge),
-                        ),
-                      ),
-                    ],
-                  );
-                });
-          }
-        });
-  }
-
   void _bindPage(BuildContext ctx) {
     //target widget
     SmartDialog.show(builder: (_) {
@@ -465,13 +443,13 @@ class _showFoodState extends State<showFood> {
             Padding(
               padding: const EdgeInsets.all(12.0),
               child: TextField(
-                controller: textRequest,                
+                controller: textRequest,
                 keyboardType: TextInputType.multiline,
                 maxLines: 4,
                 decoration: InputDecoration(
                   hintText: "กรุณาใส่ข้อความ",
                   focusedBorder: OutlineInputBorder(
-                    borderSide: BorderSide(width: 2, color: Colors.redAccent),
+                    borderSide: const BorderSide(width: 2, color: Colors.redAccent),
                     borderRadius: BorderRadius.circular(12.0),
                   ),
                   enabledBorder: OutlineInputBorder(
@@ -511,7 +489,7 @@ class _showFoodState extends State<showFood> {
                       // context.read<AppData>().did = days.first.did;
                       // context.read<AppData>().idcourse = coID;
                       // log(days.first.did.toString());
-                      Get.to(() => MyCouses());
+                      Get.to(() => const MyCouses());
                     },
                     //     widget.coID.toString()
                     child: const Text('ยืนยัน'),
@@ -546,54 +524,45 @@ class _showFoodState extends State<showFood> {
 
       var formatter = DateFormat.yMMMd();
       //หาลิสของวันทั้งหมดที่มี แล้วเรียงวันใหม่
-      log("dayincourse= " + dayincourse.toString());
+      log("dayincourse= $dayincourse");
       for (int i = 0; i < dayincourse; i++) {
         dayex = DateTime(exdate.year, exdate.month, exdate.day - i);
         listindexday.add(dayex);
         listindexday.sort();
-        log("iร= " + listindexday[i].day.toString());
+        log("iร= ${listindexday[i].day}");
       }
-      log("iรf= " + listindexday.toString());
+      log("iรf= $listindexday");
       //ลิสที่หาได้มาเช็คว่า วันปัจจุบันและวันหมดอายุอยู่indexไหน
       for (int i = 0; i < listindexday.length; i++) {
-        log("i= " + listindexday[i].day.toString());
+        log("i= ${listindexday[i].day}");
         if (today.day == listindexday[i].day) {
-          log("today= " + today.toString());
+          log("today= $today");
           if (i == widget.indexSeq) {
             setState(() {
               showtoday = true;
               log("วันนี้นะจ๊ะ");
-              log("วันนี้นะจ๊ะi= " +
-                  i.toString() +
-                  "  widget.indexSeq " +
-                  widget.indexSeq.toString());
+              log("วันนี้นะจ๊ะi= $i  widget.indexSeq ${widget.indexSeq}");
             });
           } else if (i > widget.indexSeq) {
             setState(() {
               showyesterday = true;
               log("วันนี้คือเมื่อวาน");
-              log("วันนี้คือเมื่อวานi= " +
-                  i.toString() +
-                  "  widget.indexSeq " +
-                  widget.indexSeq.toString());
+              log("วันนี้คือเมื่อวานi= $i  widget.indexSeq ${widget.indexSeq}");
             });
           } else {
             setState(() {
               showtomorrow = true;
               log("วันพรุ่งนี้นะจ๊ะ");
-              log("วันพรุ่งนี้นะจ๊ะi= " +
-                  i.toString() +
-                  "  widget.indexSeq " +
-                  widget.indexSeq.toString());
+              log("วันพรุ่งนี้นะจ๊ะi= $i  widget.indexSeq ${widget.indexSeq}");
             });
           }
         } else {
           Container();
         }
       }
-      log("showtoday" + showtoday.toString());
-      log("showtomorrow" + showtomorrow.toString());
-      log("showyesterdayshowyesterday" + showyesterday.toString());
+      log("showtoday$showtoday");
+      log("showtomorrow$showtomorrow");
+      log("showyesterdayshowyesterday$showyesterday");
     } catch (err) {
       log('Error: $err');
     }

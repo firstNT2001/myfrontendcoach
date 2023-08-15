@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
+import 'package:persistent_bottom_nav_bar_v2/persistent-tab-view.dart';
 import 'package:provider/provider.dart';
 import 'package:retrofit/retrofit.dart';
 
@@ -31,13 +32,14 @@ class _WidgetsearchState extends State<Widgetsearch> {
   late CourseService courseService;
 
   late CustomerService customerService;
- List<Customer> customer = [];
+  List<Customer> customer = [];
   List<Coach> coaches = [];
   List<Course> courses = [];
   TextEditingController myController = TextEditingController();
   bool isVisibleCoach = false;
   bool isVisibleCourse = true;
-  bool isVisibleText = true;
+  bool isVisibleText = false;
+  bool isVisibleSearch = false;
   int uid = 0;
   @override
   void initState() {
@@ -71,40 +73,63 @@ class _WidgetsearchState extends State<Widgetsearch> {
                     controller: myController,
                     onChanged: (value) {
                       if (myController.text.isNotEmpty) {
-                        log("logg " + myController.text);
+                        //isVisibleSearch = true;
+                        isVisibleSearch = false;
+                        setState(() {});
+                        log("sert ");
                         coachService
-                            .coach(nameCoach: myController.text, cid: "", email: '')
+                            .coach(
+                                nameCoach: myController.text,
+                                cid: "",
+                                email: '')
                             .then((coachdata) {
                           var datacoach = coachdata.data;
                           //var checkcoaches = coaches.length;
                           coaches = datacoach;
-                          // if (coaches.isNotEmpty) {
-                          //   //log("message"+coaches.first);
-                          //   setState(() {
-                          //     isVisibleCoach = true;
-                          //     isVisibleCourse = false;
-                          //   });
+                          if (coaches.isNotEmpty) {
+                            //log("message"+coaches.first);
+                            setState(() {
+                              //isVisibleCoach = true;
+                              isVisibleText = false;
+                            });
 
-                          //   log(coaches.length.toString());
-                          // } else {
-                          //   setState(() {
-                          //     isVisibleCoach = false;
-                          //     isVisibleCourse = true;
-                          //   });
-                          // }
+                            log(coaches.length.toString());
+                          } else {
+                            setState(() {
+                              //isVisibleCoach = false;
+                              isVisibleText = true;
+                            });
+                          }
                         });
                         courseService
-                            .course(cid: '', coID: '', name: myController.text)
+                            .courseOpenSell(
+                                cid: '', coID: '', name: myController.text)
                             .then((coursedata) {
                           var datacourse = coursedata.data;
                           courses = datacourse;
-                          // if (courses.isNotEmpty) {
-                          //   setState(() {});
-                          //   log(courses.length.toString());
-                          // }
+                          if (courses.isNotEmpty) {
+                            //log("message"+coaches.first);
+                            setState(() {
+                              //isVisibleCoach = true;
+                              isVisibleText = false;
+                            });
+
+                            log(coaches.length.toString());
+                          } else {
+                            setState(() {
+                              //isVisibleCoach = false;
+                              isVisibleText = true;
+                            });
+                          }
                         });
                       } else {
-                        Container();
+                        log("55555555");
+                        setState(() {
+                          isVisibleText = false;
+                          isVisibleSearch = true;
+                          isVisibleCoach = false;
+                          isVisibleCourse = false;
+                        });
                       }
                     },
                     // onSubmitted: (value) {
@@ -138,38 +163,94 @@ class _WidgetsearchState extends State<Widgetsearch> {
             Row(
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
-                FilledButton(onPressed: () {setState(() {
-                      isVisibleCoach = false;
-                      isVisibleCourse = true;
-                    });}, child: Text("คอร์ส")),
+                FilledButton(
+                    onPressed: () {
+                       if (courses.isEmpty) {
+                          log("coaEm");
+                          setState(() {
+                            isVisibleSearch = true;
+                            isVisibleCoach = false;
+                            isVisibleCourse = false;
+                          });
+                        } else {
+
+                          log("notcoaEm");
+                          setState(() {
+                            isVisibleCoach = false;
+                            isVisibleCourse = true;
+                            isVisibleSearch = false;
+                          });}
+                    },
+                    child: Text("คอร์ส")),
                 Padding(
                   padding: const EdgeInsets.all(10.0),
                   child: FilledButton(
                       onPressed: () {
-                        setState(() {
-                          isVisibleCoach = true;
-                          isVisibleCourse = false;
-                        });
+                        if (coaches.isEmpty) {
+                          log("coaEm");
+                          setState(() {
+                            isVisibleSearch = true;
+                            isVisibleCoach = false;
+                            isVisibleCourse = false;
+                          });
+                        } else {
+                          log("notcoaEm");
+                          setState(() {
+                            isVisibleCoach = true;
+                            isVisibleCourse = false;
+                            isVisibleSearch = false;
+                          });
+                        }
+                        // setState(() {
+                        //   isVisibleCoach = true;
+                        //   isVisibleCourse = false;
+                        // });
                       },
                       child: Text("โค้ช")),
                 ),
-                
               ],
             ),
-            // Visibility(
-            //   visible: isVisibleText,
-            //   child: Container(
-            //     height: 500,
-            //     child: Row(
-            //       crossAxisAlignment: CrossAxisAlignment.center,
-            //       mainAxisAlignment: MainAxisAlignment.center,
-            //                   children: [
-            //                     Icon(Icons.search,size: 70,color: const Color.fromARGB(96, 85, 85, 85)),
-            //                     Text("ค้นหา",style: TextStyle(fontSize: 50,color: Color.fromARGB(96, 85, 85, 85) )),
-            //                   ],
-            //                 ),
-            //   ),
-            // ),
+            Visibility(
+              visible: isVisibleText,
+              child: Container(
+                height: 100,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    Text("ไม่พบผลลัพธ์สำหรับ",
+                        style: TextStyle(
+                            fontSize: 18,
+                            color: Color.fromARGB(96, 85, 85, 85))),
+                    Text("''" + myController.text + "''",
+                        style: TextStyle(
+                            fontSize: 18,
+                            color: Color.fromARGB(96, 85, 85, 85)))
+                  ],
+                ),
+              ),
+            ),
+            Visibility(
+              visible: isVisibleSearch,
+              child: Container(
+                height: 100,
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.end,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Icon(FontAwesomeIcons.search,
+                        color: Color.fromARGB(96, 85, 85, 85), size: 25),
+                    Padding(
+                      padding: const EdgeInsets.only(left: 10),
+                      child: Text("พิมพ์เพื่อค้นหา",
+                          style: TextStyle(
+                              fontSize: 18,
+                              color: Color.fromARGB(96, 85, 85, 85))),
+                    ),
+                  ],
+                ),
+              ),
+            ),
             Visibility(
               visible: isVisibleCoach,
               child: Expanded(
@@ -180,92 +261,104 @@ class _WidgetsearchState extends State<Widgetsearch> {
                       itemCount: coaches.length,
                       itemBuilder: (context, index) {
                         final coach = coaches[index];
-                        return  Padding(
+                        return Padding(
                           padding: const EdgeInsets.all(8.0),
                           child: InkWell(
-                                          onTap: () {
-                                            Get.to(() => const showCousePage());
-                                          },
-                                          child: Container(
-                                            alignment: Alignment.center,
-                                            width: double.infinity,
-                                            child: AspectRatio(
-                                              aspectRatio: 16 / 9,
-                                              child: Stack(
-                          children: <Widget>[
-                            Container(
-                              alignment: Alignment.topCenter,
+                            onTap: () {
+                              pushNewScreen(
+                                context,
+                                screen: const showCousePage(),
+                                withNavBar: true,
+                              );
+                            },
+                            child: Container(
+                              alignment: Alignment.center,
+                              width: double.infinity,
                               child: AspectRatio(
-                                  aspectRatio: 16 / 9,
-                                  child: Container(
-                                    decoration: BoxDecoration(
-                                      color:
-                                          Theme.of(context).colorScheme.onPrimary,
-                                      image: DecorationImage(
-                                          image: NetworkImage(coach.image),
-                                          fit: BoxFit.cover),
-                                      borderRadius: BorderRadius.circular(20),
+                                aspectRatio: 16 / 9,
+                                child: Stack(
+                                  children: <Widget>[
+                                    Container(
+                                      alignment: Alignment.topCenter,
+                                      child: AspectRatio(
+                                          aspectRatio: 16 / 9,
+                                          child: Container(
+                                            decoration: BoxDecoration(
+                                              color: Theme.of(context)
+                                                  .colorScheme
+                                                  .onPrimary,
+                                              image: DecorationImage(
+                                                  image:
+                                                      NetworkImage(coach.image),
+                                                  fit: BoxFit.cover),
+                                              borderRadius:
+                                                  BorderRadius.circular(20),
+                                            ),
+                                          )),
+                                      //color: Colors.white,
                                     ),
-                                  )),
-                              //color: Colors.white,
-                            ),
-                            Container(
-                              padding: const EdgeInsets.all(5.0),
-                              alignment: Alignment.bottomCenter,
-                              decoration: BoxDecoration(
-                                gradient: LinearGradient(
-                                  begin: Alignment.topCenter,
-                                  end: Alignment.bottomCenter,
-                                  colors: <Color>[
-                                    const Color.fromARGB(255, 0, 0, 0)
-                                        .withAlpha(0),
-                                    const Color.fromARGB(49, 0, 0, 0),
-                                    const Color.fromARGB(127, 0, 0, 0)
-                                    // const Color.fromARGB(255, 255, 255, 255)
-                                    //     .withAlpha(0),
-                                    // Color.fromARGB(39, 255, 255, 255),
-                                    // Color.fromARGB(121, 255, 255, 255)
+                                    Container(
+                                      padding: const EdgeInsets.all(5.0),
+                                      alignment: Alignment.bottomCenter,
+                                      decoration: BoxDecoration(
+                                        gradient: LinearGradient(
+                                          begin: Alignment.topCenter,
+                                          end: Alignment.bottomCenter,
+                                          colors: <Color>[
+                                            const Color.fromARGB(255, 0, 0, 0)
+                                                .withAlpha(0),
+                                            const Color.fromARGB(49, 0, 0, 0),
+                                            const Color.fromARGB(127, 0, 0, 0)
+                                            // const Color.fromARGB(255, 255, 255, 255)
+                                            //     .withAlpha(0),
+                                            // Color.fromARGB(39, 255, 255, 255),
+                                            // Color.fromARGB(121, 255, 255, 255)
+                                          ],
+                                        ),
+                                        borderRadius: BorderRadius.circular(20),
+                                      ),
+                                    ),
+                                    Padding(
+                                      padding: const EdgeInsets.all(8.0),
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.end,
+                                        children: [
+                                          Text(coach.fullName,
+                                              style: Theme.of(context)
+                                                  .textTheme
+                                                  .titleLarge!
+                                                  .copyWith(
+                                                      color: Colors.white)),
+                                          Row(
+                                            children: [
+                                              const Padding(
+                                                padding:
+                                                    EdgeInsets.only(right: 8),
+                                                child: Icon(
+                                                  FontAwesomeIcons.solidUser,
+                                                  size: 16.0,
+                                                  color: Colors.white,
+                                                ),
+                                              ),
+                                              Text(coach.username,
+                                                  style: Theme.of(context)
+                                                      .textTheme
+                                                      .bodyLarge!
+                                                      .copyWith(
+                                                          color: Colors.white)),
+                                            ],
+                                          ),
+                                        ],
+                                      ),
+                                    )
                                   ],
                                 ),
-                                borderRadius: BorderRadius.circular(20),
                               ),
                             ),
-                            Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                mainAxisAlignment: MainAxisAlignment.end,
-                                children: [
-                                  Text(coach.fullName,
-                                      style: Theme.of(context)
-                                          .textTheme
-                                          .titleLarge!
-                                          .copyWith(color: Colors.white)),
-                                  Row(
-                                    children: [
-                                      const Padding(
-                                        padding: EdgeInsets.only(right: 8),
-                                        child: Icon(
-                                          FontAwesomeIcons.solidUser,
-                                          size: 16.0,
-                                          color: Colors.white,
-                                        ),
-                                      ),
-                                      Text(coach.username,
-                                          style: Theme.of(context)
-                                              .textTheme
-                                              .bodyLarge!
-                                              .copyWith(color: Colors.white)),
-                                    ],
-                                  ),
-                                ],
-                              ),
-                            )
-                          ],
-                                              ),
-                                            ),
-                                          ),
-                                        ),
+                          ),
                         );
                         // Card(
                         //   color: Theme.of(context).colorScheme.outline,
@@ -300,9 +393,11 @@ class _WidgetsearchState extends State<Widgetsearch> {
 
   Future<void> loadData() async {
     try {
-      var datacourse = await courseService.courseOpenSell(coID: '', cid: '', name: '');
+      var datacourse =
+          await courseService.courseOpenSell(coID: '', cid: '', name: '');
       courses = datacourse.data;
-      var result = await customerService.customer(uid: uid.toString(), email: '');
+      var result =
+          await customerService.customer(uid: uid.toString(), email: '');
       customer = result.data;
     } catch (err) {
       log('Error: $err');
@@ -317,7 +412,10 @@ class _WidgetsearchState extends State<Widgetsearch> {
           return const Center(child: CircularProgressIndicator());
         } else {
           return Padding(
-            padding: const EdgeInsets.only(left: 10, right: 10,),
+            padding: const EdgeInsets.only(
+              left: 10,
+              right: 10,
+            ),
             child: ListView.builder(
               shrinkWrap: true,
               itemCount: courses.length,
@@ -342,8 +440,9 @@ class _WidgetsearchState extends State<Widgetsearch> {
                                   aspectRatio: 16 / 9,
                                   child: Container(
                                     decoration: BoxDecoration(
-                                      color:
-                                          Theme.of(context).colorScheme.onPrimary,
+                                      color: Theme.of(context)
+                                          .colorScheme
+                                          .onPrimary,
                                       image: DecorationImage(
                                           image: NetworkImage(listcours.image),
                                           fit: BoxFit.cover),
@@ -410,7 +509,8 @@ class _WidgetsearchState extends State<Widgetsearch> {
                                         .colorScheme
                                         .tertiaryContainer,
                                     emptyColor: Color.fromARGB(255, 37, 37, 37),
-                                    initialRating: double.parse(listcours.level),
+                                    initialRating:
+                                        double.parse(listcours.level),
                                     maxRating: 3,
                                   ),
                                 ],

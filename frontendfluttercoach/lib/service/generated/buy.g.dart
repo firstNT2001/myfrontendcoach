@@ -73,6 +73,30 @@ class _BuyCourseService implements BuyCourseService {
   }
 
   @override
+  Future<HttpResponse<int>> amountUserinCourse({required originalID}) async {
+    const _extra = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{r'originalID': originalID};
+    final _headers = <String, dynamic>{};
+    final _data = <String, dynamic>{};
+    final _result =
+        await _dio.fetch<int>(_setStreamType<HttpResponse<int>>(Options(
+      method: 'GET',
+      headers: _headers,
+      extra: _extra,
+    )
+            .compose(
+              _dio.options,
+              '/buy/count',
+              queryParameters: queryParameters,
+              data: _data,
+            )
+            .copyWith(baseUrl: baseUrl ?? _dio.options.baseUrl)));
+    final value = _result.data!;
+    final httpResponse = HttpResponse(value, _result);
+    return httpResponse;
+  }
+
+  @override
   Future<HttpResponse<List<Buying>>> buying({
     required uid,
     required coID,
