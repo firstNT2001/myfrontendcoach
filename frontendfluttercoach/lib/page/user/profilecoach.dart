@@ -26,7 +26,7 @@ class _ProfileCoachPageState extends State<ProfileCoachPage> {
   late List<Course> courses = [];
   late List<Coach> coach = [];
   int selectedIndex = 0;
- 
+
   PageController pageController = PageController();
   void onTapped(int index) {
     setState(() {
@@ -50,6 +50,21 @@ class _ProfileCoachPageState extends State<ProfileCoachPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+          backgroundColor: Colors.white,
+          leading: IconButton(
+            icon: const Icon(
+              FontAwesomeIcons.chevronLeft,
+            ),
+            onPressed: () {
+              // Get.to(() => DaysCoursePage(
+              //       coID: context.read<AppData>().coID.toString(),
+              //       isVisible: widget.isVisible,
+              //     ));
+              Navigator.pop(context);
+            },
+          ),
+      ),
       body: SafeArea(
         child: ListView(
          // crossAxisAlignment: CrossAxisAlignment.start,

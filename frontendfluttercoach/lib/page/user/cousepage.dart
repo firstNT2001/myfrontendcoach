@@ -13,6 +13,7 @@ import 'package:frontendfluttercoach/service/review.dart';
 import 'package:get/get.dart';
 import 'package:get/get_connect/http/src/utils/utils.dart';
 import 'package:intl/intl.dart';
+import 'package:persistent_bottom_nav_bar_v2/persistent-tab-view.dart';
 import 'package:provider/provider.dart';
 import '../../model/request/buycourse_coID_post.dart';
 import '../../model/response/md_Day_showmycourse.dart';
@@ -87,6 +88,21 @@ class _showCousePageState extends State<showCousePage> {
             child: const Icon(Icons.shopping_cart),
           ),
         ),
+        appBar: AppBar(
+          backgroundColor: Colors.white,
+          leading: IconButton(
+            icon: const Icon(
+              FontAwesomeIcons.chevronLeft,
+            ),
+            onPressed: () {
+              // Get.to(() => DaysCoursePage(
+              //       coID: context.read<AppData>().coID.toString(),
+              //       isVisible: widget.isVisible,
+              //     ));
+              Navigator.pop(context);
+            },
+          ),
+      ),
         body: SafeArea(
           child: ListView(
             children: [
@@ -184,9 +200,14 @@ class _showCousePageState extends State<showCousePage> {
                       onPressed: () {
                         log("courses.first.coach.cid =" +
                             courses.first.coach.cid.toString());
-                        Get.to(() => ProfileCoachPage(
+                       
+                            pushNewScreen(
+                      context,
+                      screen: ProfileCoachPage(
                               coachID: courses.first.coach.cid,
-                            ));
+                            ),
+                      withNavBar: true,
+                    );
                       },
                       icon: const Icon(
                         FontAwesomeIcons.solidUser,

@@ -20,6 +20,7 @@ import '../../../service/course.dart';
 import '../../../service/customer.dart';
 import '../../../service/day.dart';
 import '../../../service/provider/appdata.dart';
+import '../profilecoach.dart';
 
 class ShowDayMycourse extends StatefulWidget {
   ShowDayMycourse(
@@ -145,7 +146,15 @@ class _ShowDayMycourseState extends State<ShowDayMycourse> {
                 Padding(
                   padding: const EdgeInsets.only(left: 15, bottom: 10),
                   child: FilledButton.icon(
-                      onPressed: () {},
+                      onPressed: () {
+                        pushNewScreen(
+                      context,
+                      screen: ProfileCoachPage(
+                              coachID: widget.coID
+                            ),
+                      withNavBar: true,
+                    );
+                      },
                       icon: const Icon(
                         FontAwesomeIcons.solidUser,
                         size: 16,
@@ -171,11 +180,16 @@ class _ShowDayMycourseState extends State<ShowDayMycourse> {
               child: Text("วันที่",
                   style: TextStyle(fontSize: 18, fontWeight: FontWeight.w700)),
             ),
-            Padding(
-              padding: const EdgeInsets.only(
-                  left: 20, right: 20, top: 5, bottom: 30),
-              child: loadDay(),
-            ),
+            // Padding(
+            //   padding: const EdgeInsets.only( left: 20, right: 20, top: 5, bottom: 30),
+            //   child: loadDay(),
+            // ),
+            SizedBox(
+              height: 300,
+              child: Padding(
+                padding: const EdgeInsets.only( left: 20, right: 20, bottom: 30),
+                child: loadDay(),
+              )),
           ],
         ),
       ),
@@ -200,69 +214,61 @@ class _ShowDayMycourseState extends State<ShowDayMycourse> {
         if (snapshot.connectionState != ConnectionState.done) {
           return const Center(child: CircularProgressIndicator());
         } else {
-          return Container(
-            height: 250,
-            decoration: BoxDecoration(
-                color: Color.fromARGB(255, 218, 218, 218),
-                borderRadius: BorderRadius.circular(20)
-                //more than 50% of width makes circle
-                ),
-            child: Padding(
-              padding: const EdgeInsets.all(15.0),
-              child: GridView.count(
-                  crossAxisCount: 5,
-                  children: days
-                      .map((day) => Column(children: [
-                            InkWell(
-                              onTap: () {
-                                if (widget.expirationDate ==
-                                    "0001-01-01T00:00:00Z") {
-                                  //log(message);
-                                  _bindPage(context);
-                                  log("ยังไม่เริ่ม$widget.expirationDate");
-                                  setState(() {
-                                    loadDataMethod = loadData();
-                                  });
-                                } else if (today.day > expirationDate.day) {
-                                  log("IUIUIU " + today.day.toString());
-                                  log("IUIUIU " +
-                                      expirationDate.day.toString());
-                                } else {
-                                  log("เริ่มแล้ว$widget.expirationDate");
-                                  log(" DID:= ${day.did}");
-                                  context.read<AppData>().did = day.did;
-                                  context.read<AppData>().idcourse = coID;
+          return Padding(
+            padding: const EdgeInsets.all(10.0),
+            child: GridView.count(
+                crossAxisCount: 5,
+                children: days
+                    .map((day) => Column(children: [
+                          InkWell(
+                            onTap: () {
+                              if (widget.expirationDate ==
+                                  "0001-01-01T00:00:00Z") {
+                                //log(message);
+                                _bindPage(context);
+                                log("ยังไม่เริ่ม$widget.expirationDate");
+                                setState(() {
+                                  loadDataMethod = loadData();
+                                });
+                              } else if (today.day > expirationDate.day) {
+                                log("IUIUIU " + today.day.toString());
+                                log("IUIUIU " +
+                                    expirationDate.day.toString());
+                              } else {
+                                log("เริ่มแล้ว$widget.expirationDate");
+                                log(" DID:= ${day.did}");
+                                context.read<AppData>().did = day.did;
+                                context.read<AppData>().idcourse = coID;
 
-                                  Get.to(() => showFood(
-                                        indexSeq: day.sequence,
-                                      ));
-                                }
-                                log("day.sequence" + day.sequence.toString());
-                              },
-                              child: Container(
-                                height: 50,
-                                width: 50,
-                                decoration: BoxDecoration(
-                                    color: Colors.black,
-                                    borderRadius: BorderRadius.circular(100)
-                                    //more than 50% of width makes circle
-                                    ),
-                                child: Center(
-                                    child: Text(
-                                  day.sequence.toString(),
-                                  style: const TextStyle(
-                                    color: Colors.white,
+                                Get.to(() => showFood(
+                                      indexSeq: day.sequence,
+                                    ));
+                              }
+                              log("day.sequence" + day.sequence.toString());
+                            },
+                            child: Container(
+                              height: 65,
+                              width: 65,
+                              decoration: BoxDecoration(
+                                  color: Colors.black,
+                                  borderRadius: BorderRadius.circular(100)
+                                  //more than 50% of width makes circle
                                   ),
-                                )),
-                              ),
+                              child: Center(
+                                  child: Text(
+                                day.sequence.toString(),
+                                style: const TextStyle(
+                                  color: Colors.white,fontSize: 16,fontWeight: FontWeight.w400
+                                ),
+                              )),
                             ),
-                            //  Padding(
-                            //    padding: const EdgeInsets.all(8.0),
-                            //    child: Text(day.sequence.toString()),
-                            //  )
-                          ]))
-                      .toList()),
-            ),
+                          ),
+                          //  Padding(
+                          //    padding: const EdgeInsets.all(8.0),
+                          //    child: Text(day.sequence.toString()),
+                          //  )
+                        ]))
+                    .toList()),
           );
           // Card(child: Padding(
           //   padding: const EdgeInsets.all(20),
