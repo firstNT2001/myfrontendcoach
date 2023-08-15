@@ -3,14 +3,17 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
 import 'package:provider/provider.dart';
 
+import '../../../model/response/md_Review_get.dart';
 import '../../../model/response/md_coach_course_get.dart';
 
 import '../../../service/course.dart';
 import '../../../service/provider/appdata.dart';
+import '../../../service/review.dart';
 import '../../../widget/dialogs.dart';
+import '../../user/mycourse/Widget/widget_loadreview.dart';
+import '../navigationbar.dart';
 import 'course_edit_page.dart';
 
 class ShowCourse extends StatefulWidget {
@@ -23,15 +26,18 @@ class ShowCourse extends StatefulWidget {
 class _ShowCourseState extends State<ShowCourse> {
   //CourseService
   late CourseService _courseService;
+  late ReviewService _reviewService;
   late Future<void> loadDataMethod;
   List<Course> courses = [];
-
+  List<ModelReview> modelReview = [];
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
     _courseService = context.read<AppData>().courseService;
+    _reviewService = context.read<AppData>().reviewService;
     loadDataMethod = loadDataAsync();
+    loadReviewDataAsync();
   }
 
   @override
@@ -53,6 +59,19 @@ class _ShowCourseState extends State<ShowCourse> {
       var res =
           await _courseService.course(cid: '', name: '', coID: widget.coID);
       courses = res.data;
+    } catch (err) {
+      log('Error: $err');
+    }
+  }
+
+  //LoadData
+  Future<void> loadReviewDataAsync() async {
+    try {
+      var res = await _reviewService.review(coID: widget.coID);
+      modelReview = res.data;
+      for (var intdex in modelReview) {
+        log('score:${intdex.score.toString()}');
+      }
     } catch (err) {
       log('Error: $err');
     }
@@ -118,7 +137,13 @@ class _ShowCourseState extends State<ShowCourse> {
                       FontAwesomeIcons.chevronLeft,
                     ),
                     onPressed: () {
-                      Get.back();
+                      Navigator.pushAndRemoveUntil<void>(
+                        context,
+                        MaterialPageRoute<void>(
+                            builder: (BuildContext context) =>
+                                const NavbarBottomCoach()),
+                        ModalRoute.withName('/'),
+                      );
                     },
                   ),
                 ),
@@ -202,17 +227,23 @@ class _ShowCourseState extends State<ShowCourse> {
                               blurRadius: 5.0,
                               offset: Offset(0.0, 0.75))
                         ],
-                        color: const Color.fromRGBO(244, 243, 243, 1),
+                        color: Theme.of(context).colorScheme.primary,
                         borderRadius: BorderRadius.circular(30)),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
-                        const Icon(FontAwesomeIcons.user),
+                        const Icon(
+                          FontAwesomeIcons.user,
+                          color: Colors.white,
+                        ),
                         Padding(
                           padding: const EdgeInsets.only(left: 8),
                           child: Text(context.read<AppData>().nameCoach,
-                              style: Theme.of(context).textTheme.bodyLarge),
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .bodyLarge!
+                                  .copyWith(color: Colors.white)),
                         ),
                       ],
                     ),
@@ -222,18 +253,44 @@ class _ShowCourseState extends State<ShowCourse> {
                   height: 10,
                 ),
                 Padding(
-                    padding: const EdgeInsets.only(bottom: 8, left: 13),
-                    child: Text('รายละเอียด',
+                    padding:
+                        const EdgeInsets.only(bottom: 8, left: 15, right: 15),
+                    child: Text('รายละเอียดคอร์ส',
                         style: Theme.of(context).textTheme.bodyLarge)),
                 Padding(
-                    padding: const EdgeInsets.only(bottom: 8, left: 13),
+                    padding:
+                        const EdgeInsets.only(bottom: 18, left: 15, right: 15),
                     child: Text('    ${courses.first.details}',
                         style: Theme.of(context).textTheme.bodyLarge)),
+                const Divider(
+                  endIndent: 20,
+                  indent: 20,
+                ),
+                WidgetloadeReview(
+                  couseID: widget.coID,
+                ),
+                // Center(
+                //   child: Padding(
+                //     padding:
+                //         const EdgeInsets.only(bottom: 18, left: 15, right: 15),
+                //     child: SizedBox(
+                //         width: MediaQuery.of(context).size.width,
+                //         child: button()),
+                //   ),
+                // ),
               ],
             ),
           ],
         ),
       ),
+    );
+  }
+
+  FilledButton button() {
+    return FilledButton(
+      //style: style,
+      onPressed: () async {},
+      child: const Text('จัดการวัน'),
     );
   }
 }

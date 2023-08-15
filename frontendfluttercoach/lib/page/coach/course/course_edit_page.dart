@@ -6,7 +6,6 @@ import 'dart:io';
 import 'package:file_picker/file_picker.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
-import 'package:frontendfluttercoach/page/coach/home_coach_page.dart';
 
 import 'package:get/get.dart';
 import 'package:provider/provider.dart';
@@ -36,7 +35,9 @@ import '../../../widget/textField/wg_textFieldLines.dart';
 import '../../../widget/textField/wg_textField_int copy.dart';
 import '../../user/chat/chat.dart';
 import '../daysCourse/days_course_page.dart';
+import '../navigationbar.dart';
 import 'FoodAndClip/course_food_clip.dart';
+import 'course_show.dart';
 
 class CourseEditPage extends StatefulWidget {
   const CourseEditPage(
@@ -255,7 +256,6 @@ class _CourseEditPageState extends State<CourseEditPage> {
                       ],
                     ),
                   ),
-                 
                   WidgetTextFieldLines(
                     controller: details,
                     labelText: 'รายละเอียด',
@@ -438,7 +438,13 @@ class _CourseEditPageState extends State<CourseEditPage> {
                       FontAwesomeIcons.chevronLeft,
                     ),
                     onPressed: () {
-                      Get.back();
+                      Navigator.pushAndRemoveUntil<void>(
+                        context,
+                        MaterialPageRoute<void>(
+                            builder: (BuildContext context) =>
+                                ShowCourse(coID: widget.coID)),
+                        ModalRoute.withName('/NavbarBottomCoach'),
+                      );
                     },
                   ),
                 ),
@@ -736,7 +742,13 @@ class _CourseEditPageState extends State<CourseEditPage> {
         modelResult = response.data;
         Navigator.of(context, rootNavigator: true).pop();
         if (modelResult.result == '1') {
-          Get.to(() => const HomePageCoach());
+          // ignore: use_build_context_synchronously
+          Navigator.pushAndRemoveUntil<void>(
+            context,
+            MaterialPageRoute<void>(
+                builder: (BuildContext context) => NavbarBottomCoach()),
+            ModalRoute.withName('/'),
+          );
         } else {
           // ignore: use_build_context_synchronously
           popUpWarningDelete(context);

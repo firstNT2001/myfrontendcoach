@@ -29,7 +29,6 @@ import '../../widget/dialogs.dart';
 import '../../widget/wg_menu.dart';
 import '../Request/request_page.dart';
 import '../search/search_course.dart';
-import 'course/course_edit_page.dart';
 import 'course/course_show.dart';
 
 class HomePageCoach extends StatefulWidget {

@@ -79,10 +79,7 @@ class _CourseNewPageState extends State<CourseNewPage> {
   }
 
   @override
-  Widget build(BuildContext context) {
-    Size screenSize = MediaQuery.of(context).size;
-    double width = (screenSize.width > 550) ? 550 : screenSize.width;
-    double padding = 13;
+  Widget build(BuildContext context) {  
     return Scaffold(
       body: SafeArea(
         child: ListView(
@@ -216,11 +213,7 @@ class _CourseNewPageState extends State<CourseNewPage> {
           setState(() {
             textErr = 'กรุณากรอกข้อมูลให้ครบ';
           });
-        } else if (pickedImg == null) {
-          setState(() {
-            textErr = 'กรุณาใส่รูป';
-          });
-        } else {
+        }  else {
           log("selectedValue${selectedValue.text}");
           if (selectedValue.text == 'ง่าย') {
             lavel = 1;
@@ -230,7 +223,7 @@ class _CourseNewPageState extends State<CourseNewPage> {
             lavel = 3;
           }
           log(selectedValue.text);
-          if (pickedImg != null) await uploadfile();
+         // if (pickedImg != null) await uploadfile();
           //if (pickedImg == null) profile = courses.first.image;
           CourseCoachIdPost request = CourseCoachIdPost(
               bid: null,
@@ -238,7 +231,7 @@ class _CourseNewPageState extends State<CourseNewPage> {
               details: details.text,
               level: lavel.toString(),
               amount: int.parse(amount.text),
-              image: profile,
+              image: 'profile',
               days: int.parse(days.text),
               price: int.parse(price.text),
               status: status,
