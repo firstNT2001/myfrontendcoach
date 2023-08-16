@@ -246,7 +246,7 @@ class _DaysCoursePageState extends State<DaysCoursePage> {
                               InAppNotification.show(
                                 child: NotificationBody(
                                   count: 1,
-                                  message: 'เคลื่อนย้ายวัน',
+                                  message: 'เคลื่อนย้ายวัน / เปิด',
                                 ),
                                 context: context,
                                 onTap: () => print('Notification tapped!'),
@@ -254,6 +254,15 @@ class _DaysCoursePageState extends State<DaysCoursePage> {
                               );
                             } else {
                               moveDayColor = Colors.black;
+                               InAppNotification.show(
+                                child: NotificationBody(
+                                  count: 1,
+                                  message: 'เคลื่อนย้ายวัน / ปิด',
+                                ),
+                                context: context,
+                                onTap: () => print('Notification tapped!'),
+                                duration: const Duration(milliseconds: 1500),
+                              );
                             }
                             log(moveIsVisible.toString());
                           },
