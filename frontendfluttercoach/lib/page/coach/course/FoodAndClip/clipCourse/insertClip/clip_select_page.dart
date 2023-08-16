@@ -13,12 +13,12 @@ import 'package:get/get.dart';
 
 import 'package:provider/provider.dart';
 import 'package:badges/badges.dart' as badges;
-import 'package:skeletonizer/skeletonizer.dart';
 
 import '../../../../../../model/request/clip_dayID_post.dart';
 import '../../../../../../model/response/md_ClipList_get.dart';
 import '../../../../../../service/listClip.dart';
 import '../../../../../../service/provider/appdata.dart';
+import '../../../../../../widget/dialogs.dart';
 import '../../../../../../widget/image_video.dart';
 import '../../../../../../widget/showCilp.dart';
 
@@ -53,27 +53,18 @@ class _ClipSelectPageState extends State<ClipSelectPage> {
   // Uint8List? _thumbnailData;
 
   List<String> imageURL = [];
-  bool _enabled = true;
+
   @override
   void initState() {
     super.initState();
     _listClipService = context.read<AppData>().listClipServices;
     loadListClipDataMethod = loadListClipsData();
-    Future.delayed(Duration(seconds: context.read<AppData>().duration), () {
-      setState(() {
-        _enabled = false;
-      });
-    });
+   
   }
 
   @override
   Widget build(BuildContext context) {
-    return (_enabled == true)
-        ? Skeletonizer(
-            enabled: true,
-            child: scaffold(context),
-          )
-        : scaffold(context);
+    return scaffold(context);
   }
 
   Scaffold scaffold(BuildContext context) {
@@ -181,7 +172,7 @@ class _ClipSelectPageState extends State<ClipSelectPage> {
       future: loadListClipDataMethod,
       builder: (context, snapshot) {
         if (snapshot.connectionState != ConnectionState.done) {
-          return Container();
+          return Center(child: load(context));
         } else {
           return ListView.builder(
             shrinkWrap: true,

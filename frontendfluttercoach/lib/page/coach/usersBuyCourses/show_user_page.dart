@@ -5,11 +5,11 @@ import 'package:flutter/material.dart';
 import 'package:frontendfluttercoach/page/coach/usersBuyCourses/show_course_user_page.dart';
 import 'package:get/get.dart';
 import 'package:provider/provider.dart';
-import 'package:skeletonizer/skeletonizer.dart';
 
 import '../../../model/response/md_Buying_get.dart';
 import '../../../service/buy.dart';
 import '../../../service/provider/appdata.dart';
+import '../../../widget/dialogs.dart';
 
 class ShowUserByCoursePage extends StatefulWidget {
   const ShowUserByCoursePage({super.key});
@@ -23,28 +23,18 @@ class _ShowUserByCoursePageState extends State<ShowUserByCoursePage> {
   late Future<void> loadCourseDataMethod;
   late BuyCourseService _BuyingService;
   List<Buying> courses = [];
-  bool _enabled = true;
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
     _BuyingService = context.read<AppData>().buyCourseService;
     loadCourseDataMethod = loadUserData();
-    Future.delayed(Duration(seconds: context.read<AppData>().duration), () {
-      setState(() {
-        _enabled = false;
-      });
-    });
+    
   }
 
   @override
   Widget build(BuildContext context) {
-    return (_enabled == true)
-        ? Skeletonizer(
-            enabled: true,
-            child: scaffold(context),
-          )
-        : scaffold(context);
+    return scaffold(context);
   }
 
   Scaffold scaffold(BuildContext context) {
@@ -95,7 +85,7 @@ class _ShowUserByCoursePageState extends State<ShowUserByCoursePage> {
       future: loadCourseDataMethod,
       builder: (context, snapshot) {
         if (snapshot.connectionState != ConnectionState.done) {
-          return const Center(child: CircularProgressIndicator());
+          return Center(child: load(context));
         } else {
           return ListView.builder(
             shrinkWrap: true,

@@ -8,8 +8,8 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
+import 'package:in_app_notification/in_app_notification.dart';
+
 import 'package:loading_indicator/loading_indicator.dart';
 import 'package:provider/provider.dart';
 import 'package:video_player/video_player.dart';
@@ -18,10 +18,10 @@ import '../../../../model/request/listClip_coachID_post.dart';
 import '../../../../model/response/md_Result.dart';
 import '../../../../service/listClip.dart';
 import '../../../../service/provider/appdata.dart';
-import '../../../../widget/PopUp/popUp.dart';
+import '../../../../widget/notificationBody.dart';
 import '../../../../widget/textField/wg_textField.dart';
 import '../../../../widget/textField/wg_textFieldLines.dart';
-import '../coach_food_clip_page.dart';
+import '../../navigationbar.dart';
 
 class ClipNewCoachPage extends StatefulWidget {
   const ClipNewCoachPage({super.key});
@@ -53,7 +53,14 @@ class _ClipNewCoachPageState extends State<ClipNewCoachPage> {
   void initState() {
     super.initState();
     cid = context.read<AppData>().cid.toString();
-
+    _controller = VideoPlayerController.asset('')
+      ..initialize().then((_) {
+        setState(() {});
+      });
+    _customVideoPlayerController = CustomVideoPlayerController(
+      context: context,
+      videoPlayerController: _controller,
+    );
     _listClipServices = context.read<AppData>().listClipServices;
   }
 
@@ -90,7 +97,9 @@ class _ClipNewCoachPageState extends State<ClipNewCoachPage> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                SizedBox(height: 28,),
+                SizedBox(
+                  height: 28,
+                ),
                 WidgetTextFieldString(
                   controller: name,
                   labelText: 'ชื่อ',
@@ -136,7 +145,7 @@ class _ClipNewCoachPageState extends State<ClipNewCoachPage> {
     return Stack(
       children: [
         if (pickedFile != null) ...{
-          Expanded(
+          Positioned(
             child: SafeArea(
               child: CustomVideoPlayer(
                   customVideoPlayerController: _customVideoPlayerController),
@@ -196,7 +205,7 @@ class _ClipNewCoachPageState extends State<ClipNewCoachPage> {
                     color: Colors.black,
                   ),
                   onPressed: () {
-                    Get.back();
+                    Navigator.pop(context);
                   },
                 ),
               ),
@@ -287,6 +296,7 @@ class _ClipNewCoachPageState extends State<ClipNewCoachPage> {
             setState(() {
               textErr = '';
             });
+            startLoading(context);
             if (pickedFile != null) await uploadFile();
             ListClipCoachIdPost listClipCoachIdPost = ListClipCoachIdPost(
                 name: name.text,
@@ -296,13 +306,37 @@ class _ClipNewCoachPageState extends State<ClipNewCoachPage> {
             var insertClip = await _listClipServices.insertListClipByCoachID(
                 cid, listClipCoachIdPost);
             modelResult = insertClip.data;
-            if (modelResult.result == '0') {
+            stopLoading();
+            if (modelResult.result == '1') {
               // ignore: use_build_context_synchronously
-              warning(context);
+              InAppNotification.show(
+                child: NotificationBody(
+                  count: 1,
+                  message: 'เพิ่มคลิปท่าออกกำลังกายสำเร็จ',
+                ),
+                context: context,
+                onTap: () => print('Notification tapped!'),
+                duration: const Duration(milliseconds: 1500),
+              );
+              // ignore: use_build_context_synchronously
+              Navigator.pushAndRemoveUntil<void>(
+                context,
+                MaterialPageRoute<void>(
+                    builder: (BuildContext context) =>
+                        const NavbarBottomCoach()),
+                ModalRoute.withName('/NavbarBottomCoach'),
+              );
             } else {
               // ignore: use_build_context_synchronously
-              success(context);
-              Get.to(() => const FoodCoachPage());
+              InAppNotification.show(
+                child: NotificationBody(
+                  count: 1,
+                  message: 'เพิ่มคลิปท่าออกกำลังกายไม่สำเร็จ',
+                ),
+                context: context,
+                onTap: () => print('Notification tapped!'),
+                duration: const Duration(milliseconds: 1500),
+              );
             }
             log(jsonEncode(modelResult.result));
           }

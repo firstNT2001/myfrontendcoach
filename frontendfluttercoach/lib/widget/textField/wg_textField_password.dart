@@ -2,9 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class TextFieldPassword extends StatefulWidget {
-  const TextFieldPassword({super.key, required this.controller});
+  const TextFieldPassword(
+      {super.key, required this.controller, required this.title});
   final TextEditingController controller;
-
+  final String title;
   @override
   State<TextFieldPassword> createState() => _TextFieldPasswordState();
 }
@@ -20,7 +21,7 @@ class _TextFieldPasswordState extends State<TextFieldPassword> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Text('Password'),
+        Text(widget.title),
         TextField(
           obscureText: passwordVisible,
           controller: widget.controller,
@@ -35,7 +36,7 @@ class _TextFieldPasswordState extends State<TextFieldPassword> {
 
             suffixIcon: IconButton(
               icon: Icon(
-                  passwordVisible ? Icons.visibility : Icons.visibility_off),
+                  passwordVisible ?  Icons.visibility_off : Icons.visibility ),
               onPressed: () {
                 setState(
                   () {

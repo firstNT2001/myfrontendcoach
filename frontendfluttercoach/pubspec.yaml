@@ -109,9 +109,10 @@ dependencies:
   url_launcher: ^6.1.12
   switcher_button: ^0.0.4
   quickalert: ^1.0.1
-  skeletonizer: ^0.5.0
   reorderable_grid_view: ^2.2.7
   chewie: ^1.7.0
+  in_app_notification: ^1.1.2
+
   # video_thumbnail: ^0.5.3
    
   

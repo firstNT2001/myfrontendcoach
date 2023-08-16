@@ -10,11 +10,10 @@ import 'package:frontendfluttercoach/model/response/md_Result.dart';
 import 'package:frontendfluttercoach/service/listFood.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
-import 'package:persistent_bottom_nav_bar_v2/persistent-tab-view.dart';
 import 'package:provider/provider.dart';
-import 'package:skeletonizer/skeletonizer.dart';
 
 import '../../service/provider/appdata.dart';
+import '../../widget/dialogs.dart';
 import '../coach/FoodAndClip/foodCoach/food_edit_page.dart';
 
 class SearchFoodCoachPage extends StatefulWidget {
@@ -31,7 +30,6 @@ class _SearchFoodCoachPageState extends State<SearchFoodCoachPage> {
   List<ModelFoodList> foods = [];
   late ModelResult modelResult;
 
-  bool _enabledFood = true;
   TextEditingController searchName = TextEditingController();
   @override
   void initState() {
@@ -124,11 +122,7 @@ class _SearchFoodCoachPageState extends State<SearchFoodCoachPage> {
           cid: context.read<AppData>().cid.toString(),
           name: searchName.text);
       foods = datas.data;
-      Future.delayed(Duration(seconds: context.read<AppData>().duration), () {
-        setState(() {
-          _enabledFood = false;
-        });
-      });
+      
     } catch (err) {
       log('Error: $err');
     }
@@ -138,16 +132,10 @@ class _SearchFoodCoachPageState extends State<SearchFoodCoachPage> {
     return FutureBuilder(
       future: loadFoodDataMethod,
       builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.done) {
-          return Skeletonizer(
-            enabled: _enabledFood,
-            child: listView(),
-          );
+        if (snapshot.connectionState != ConnectionState.done) {
+          return Center(child: load(context));
         } else {
-          return Skeletonizer(
-            enabled: _enabledFood,
-            child: listView(),
-          );
+          return listView();
         }
       },
     );
@@ -166,11 +154,12 @@ class _SearchFoodCoachPageState extends State<SearchFoodCoachPage> {
               width: MediaQuery.of(context).size.width,
               child: InkWell(
                 onTap: () {
-                  pushNewScreen(
-                    context,
-                    screen: FoodEditCoachPage(ifid: listfood.ifid),
-                    withNavBar: true,
-                  );
+                  // pushNewScreen(
+                  //   context,
+                  //   screen: ,
+                  //   withNavBar: true,
+                  // );
+                  Get.to(() => FoodEditCoachPage(ifid: listfood.ifid));
                 },
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,

@@ -5,12 +5,11 @@ import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
-import 'package:persistent_bottom_nav_bar_v2/persistent-tab-view.dart';
+import 'package:in_app_notification/in_app_notification.dart';
 
 import 'package:provider/provider.dart';
 import 'package:quickalert/models/quickalert_type.dart';
 import 'package:quickalert/widgets/quickalert_dialog.dart';
-import 'package:skeletonizer/skeletonizer.dart';
 
 import '../../../model/response/md_ClipList_get.dart';
 import '../../../model/response/md_FoodList_get.dart';
@@ -19,7 +18,9 @@ import '../../../service/listClip.dart';
 import '../../../service/listFood.dart';
 import '../../../service/provider/appdata.dart';
 
+import '../../../widget/dialogs.dart';
 import '../../../widget/image_video.dart';
+import '../../../widget/notificationBody.dart';
 import 'clipCoach/clip_edit_page.dart';
 import 'clipCoach/clip_new_page.dart';
 import '../../search/search_clip_coach.dart';
@@ -48,9 +49,7 @@ class _FoodCoachPageState extends State<FoodCoachPage> {
   String cid = "";
   late ModelResult modelResult;
   bool isDelete = false;
-  bool _enabledFood = true;
   // ignore: unused_field
-  bool _enabledClip = true;
 
   @override
   void initState() {
@@ -80,12 +79,22 @@ class _FoodCoachPageState extends State<FoodCoachPage> {
                 child: const Icon(FontAwesomeIcons.bowlFood),
                 label: 'เพิ่มเมนู',
                 onTap: () {
+                  // pushNewScreen(
+                  //   context,
+                  //   screen: const FoodNewCoachPage(),
+                  //   withNavBar: true,
+                  // );
                   Get.to(() => const FoodNewCoachPage());
                 }),
             SpeedDialChild(
                 child: const Icon(FontAwesomeIcons.dumbbell),
                 label: 'เพิ่มคลิป',
                 onTap: () {
+                  //  pushNewScreen(
+                  //   context,
+                  //   screen: const ClipNewCoachPage(),
+                  //   withNavBar: true,
+                  // );
                   Get.to(() => const ClipNewCoachPage());
                 }),
           ],
@@ -130,9 +139,7 @@ class _FoodCoachPageState extends State<FoodCoachPage> {
                 const SizedBox(
                   height: 10,
                 ),
-                (_enabledFood)
-                    ? Skeletonizer(enabled: true, child: searchFood(context))
-                    : searchFood(context),
+                searchFood(context),
                 Expanded(
                   child: Padding(
                     padding: const EdgeInsets.only(
@@ -147,9 +154,7 @@ class _FoodCoachPageState extends State<FoodCoachPage> {
                 const SizedBox(
                   height: 10,
                 ),
-                (_enabledFood)
-                    ? Skeletonizer(enabled: true, child: searchClip(context))
-                    : searchClip(context),
+                searchClip(context),
                 Expanded(
                   child: Padding(
                     padding: const EdgeInsets.only(
@@ -189,7 +194,7 @@ class _FoodCoachPageState extends State<FoodCoachPage> {
               children: [
                 TextButton.icon(
                   onPressed: () {
-                    Get.to(() => SearchClipCoachPage());
+                    Get.to(() => const SearchClipCoachPage());
                   },
                   icon: const Icon(
                     FontAwesomeIcons.magnifyingGlass,
@@ -230,7 +235,7 @@ class _FoodCoachPageState extends State<FoodCoachPage> {
               children: [
                 TextButton.icon(
                   onPressed: () {
-                    Get.to(() => SearchFoodCoachPage());
+                    Get.to(() => const SearchFoodCoachPage());
                   },
                   icon: const Icon(
                     FontAwesomeIcons.magnifyingGlass,
@@ -252,16 +257,10 @@ class _FoodCoachPageState extends State<FoodCoachPage> {
     return FutureBuilder(
       future: loadFoodDataMethod,
       builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.done) {
-          return Skeletonizer(
-            enabled: _enabledFood,
-            child: gridViewFood(),
-          );
+        if (snapshot.connectionState != ConnectionState.done) {
+          return Center(child: load(context));
         } else {
-          return Skeletonizer(
-            enabled: _enabledFood,
-            child: gridViewFood(),
-          );
+          return gridViewFood();
         }
         // return (_enabled == true)
         //     ? Skeletonizer(
@@ -287,11 +286,12 @@ class _FoodCoachPageState extends State<FoodCoachPage> {
             //height: MediaQuery.of(context).size.height * 0.4,
             child: InkWell(
               onTap: () {
-                pushNewScreen(
-                  context,
-                  screen: FoodEditCoachPage(ifid: listfood.ifid),
-                  withNavBar: true,
-                );
+                // pushNewScreen(
+                //   context,
+                //   screen: FoodEditCoachPage(ifid: listfood.ifid),
+                //   withNavBar: true,
+                // );
+                Get.to(() => FoodEditCoachPage(ifid: listfood.ifid));
               },
               child: Column(
                 children: [
@@ -366,16 +366,10 @@ class _FoodCoachPageState extends State<FoodCoachPage> {
     return FutureBuilder(
       future: loadClipDataMethod,
       builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.done) {
-          return Skeletonizer(
-            enabled: _enabledFood,
-            child: gridViewClip(),
-          );
+        if (snapshot.connectionState != ConnectionState.done) {
+          return Center(child: load(context));
         } else {
-          return Skeletonizer(
-            enabled: _enabledFood,
-            child: gridViewClip(),
-          );
+          return gridViewClip();
         }
 
         // return (snapshot.hasData)
@@ -404,11 +398,12 @@ class _FoodCoachPageState extends State<FoodCoachPage> {
             height: MediaQuery.of(context).size.height * 0.4,
             child: InkWell(
               onTap: () {
-                pushNewScreen(
-                  context,
-                  screen: ClipEditCoachPage(icpId: listClips.icpId),
-                  withNavBar: true,
-                );
+                // pushNewScreen(
+                //   context,
+                //   screen: ClipEditCoachPage(icpId: listClips.icpId),
+                //   withNavBar: true,
+                // );
+                Get.to(() => ClipEditCoachPage(icpId: listClips.icpId));
               },
               child: Column(
                 children: [
@@ -479,11 +474,6 @@ class _FoodCoachPageState extends State<FoodCoachPage> {
         name: '',
       );
       foods = datas.data;
-      Future.delayed(Duration(seconds: context.read<AppData>().duration), () {
-        setState(() {
-          _enabledFood = false;
-        });
-      });
     } catch (err) {
       log('Error: $err');
     }
@@ -494,11 +484,6 @@ class _FoodCoachPageState extends State<FoodCoachPage> {
       var datas =
           await _listClipService.listClips(icpID: '', cid: cid, name: '');
       clips = datas.data;
-      Future.delayed(Duration(seconds: context.read<AppData>().duration), () {
-        setState(() {
-          _enabledFood = false;
-        });
-      });
     } catch (err) {
       log('Error: $err');
     }
@@ -524,6 +509,16 @@ class _FoodCoachPageState extends State<FoodCoachPage> {
 
         Navigator.of(context, rootNavigator: true).pop();
         log('onConfirmBtnTap');
+        // ignore: use_build_context_synchronously
+        InAppNotification.show(
+          child: NotificationBody(
+            count: 1,
+            message: 'ลบเมนูอาหารเรียบร้อยแล้ว',
+          ),
+          context: context,
+          onTap: () => print('Notification tapped!'),
+          duration: const Duration(milliseconds: 1500),
+        );
       },
     );
   }
@@ -545,7 +540,16 @@ class _FoodCoachPageState extends State<FoodCoachPage> {
         });
 
         Navigator.of(context, rootNavigator: true).pop();
-        log('onConfirmBtnTap');
+        // ignore: use_build_context_synchronously
+        InAppNotification.show(
+          child: NotificationBody(
+            count: 1,
+            message: 'ลบคลิปท่าออกกำลังกายเรียบร้อยแล้ว',
+          ),
+          context: context,
+          onTap: () => print('Notification tapped!'),
+          duration: const Duration(milliseconds: 1500),
+        );
       },
     );
   }

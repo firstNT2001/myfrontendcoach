@@ -15,7 +15,6 @@ import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'package:persistent_bottom_nav_bar_v2/persistent-tab-view.dart';
 import 'package:provider/provider.dart';
-import 'package:skeletonizer/skeletonizer.dart';
 import 'package:switcher_button/switcher_button.dart';
 
 import '../../model/request/course_courseID_put.dart';
@@ -26,10 +25,11 @@ import '../../service/coach.dart';
 import '../../service/course.dart';
 import '../../service/provider/appdata.dart';
 
+import '../../widget/dialogs.dart';
 import '../../widget/wg_menu.dart';
 import '../Request/request_page.dart';
 import '../search/search_course.dart';
-import 'course/course_edit_page.dart';
+import 'course/course_show.dart';
 
 class HomePageCoach extends StatefulWidget {
   const HomePageCoach({super.key});
@@ -67,9 +67,6 @@ class _HomePageCoachState extends State<HomePageCoach> {
   late Future<void> loadRequestDataMethod;
   late RequestService _RequestService;
 
-  bool _enabled = true;
-  bool _enabledCourse = true;
-
   @override
   void initState() {
     super.initState();
@@ -88,11 +85,6 @@ class _HomePageCoachState extends State<HomePageCoach> {
     //Request
     _RequestService = context.read<AppData>().requestService;
     loadRequestDataMethod = loadRequestData();
-    Future.delayed(Duration(seconds: context.read<AppData>().duration), () {
-      setState(() {
-        _enabled = false;
-      });
-    });
   }
 
   @override
@@ -103,58 +95,31 @@ class _HomePageCoachState extends State<HomePageCoach> {
       appBar: AppBar(
         //backgroundColor: Theme.of(context).colorScheme.primary,
         elevation: 0,
-        leading: (_enabled)
-            ? Skeletonizer(
-                child: IconButton(
-                  icon: const Icon(
-                    FontAwesomeIcons.barsStaggered,
-                    //color: Colors.black,
-                  ),
-                  onPressed: () {
-                    Get.to(() => SideMenu(
-                        name: coachs.first.username,
-                        price: coachs.first.price.toString(),
-                        image: coachs.first.image));
-                  },
-                ),
-              )
-            : IconButton(
-                icon: const Icon(
-                  FontAwesomeIcons.barsStaggered,
-                  //color: Colors.black,
-                ),
-                onPressed: () {
-                  Get.to(() => SideMenu(
-                      name: coachs.first.username,
-                      price: coachs.first.price.toString(),
-                      image: coachs.first.image));
-                },
-              ),
+        leading: IconButton(
+          icon: const Icon(
+            FontAwesomeIcons.barsStaggered,
+            //color: Colors.black,
+          ),
+          onPressed: () {
+            Get.to(() => SideMenu(
+                name: coachs.first.username,
+                price: coachs.first.price.toString(),
+                image: coachs.first.image));
+          },
+        ),
         actions: [
           Visibility(
             visible: isVisibles,
-            child: (_enabled)
-                ? Skeletonizer(
-                    enabled: true,
-                    child: Container(
-                        padding: const EdgeInsets.only(top: 10, right: 15),
-                        child: showRequest()),
-                  )
-                : Container(
-                    padding: const EdgeInsets.only(top: 10, right: 15),
-                    child: showRequest()),
+            child: Container(
+                padding: const EdgeInsets.only(top: 10, right: 15),
+                child: showRequest()),
           ),
         ],
       ),
       body: SafeArea(
         child: Column(
           children: [
-            (_enabled == true)
-                ? Skeletonizer(
-                    enabled: true,
-                    child: columnAll(context),
-                  )
-                : columnAll(context),
+            columnAll(context),
             const SizedBox(
               height: 10,
             ),
@@ -258,11 +223,6 @@ class _HomePageCoachState extends State<HomePageCoach> {
       //Courses
       var datas = await _courseService.course(coID: '', cid: cid, name: '');
       courses = datas.data;
-      Future.delayed(Duration(seconds: context.read<AppData>().duration), () {
-        setState(() {
-          _enabledCourse = false;
-        });
-      });
     } catch (err) {
       log('Error: $err');
     }
@@ -297,15 +257,9 @@ class _HomePageCoachState extends State<HomePageCoach> {
       future: loadCourseDataMethod,
       builder: (context, snapshot) {
         if (snapshot.connectionState != ConnectionState.done) {
-          return Skeletonizer(
-            enabled: _enabledCourse,
-            child: course(),
-          );
+          return Center(child: load(context));
         } else {
-          return Skeletonizer(
-            enabled: _enabledCourse,
-            child: course(),
-          );
+          return course();
         }
       },
     );
@@ -321,9 +275,9 @@ class _HomePageCoachState extends State<HomePageCoach> {
           padding: const EdgeInsets.only(left: 10, right: 10, bottom: 20),
           child: InkWell(
             onTap: () {
-              Get.to(() => CourseEditPage(
+            
+              Get.to(() => ShowCourse(
                     coID: courses[index].coId.toString(),
-                    isVisible: true,
                   ));
             },
             child: Container(
@@ -527,7 +481,27 @@ class _HomePageCoachState extends State<HomePageCoach> {
     log(coID);
     log(modelResult.result);
     if (modelResult.result == '0') {
+        // // ignore: use_build_context_synchronously
+        //   InAppNotification.show(
+        //     child: NotificationBody(
+        //       count: 1,
+        //       message: 'อัพเดทสถานะไม่สำเร็จ',
+        //     ),
+        //     context: context,
+        //     onTap: () => print('Notification tapped!'),
+        //     duration: const Duration(milliseconds: 1500),
+        //   );
     } else {
+        // // ignore: use_build_context_synchronously
+        //   InAppNotification.show(
+        //     child: NotificationBody(
+        //       count: 1,
+        //       message: 'อัพเดทสถานะสำเร็จ',
+        //     ),
+        //     context: context,
+        //     onTap: () => print('Notification tapped!'),
+        //     duration: const Duration(milliseconds: 1500),
+        //   );
       setState(() {
         loadCourseDataMethod = loadCourseData();
       });
