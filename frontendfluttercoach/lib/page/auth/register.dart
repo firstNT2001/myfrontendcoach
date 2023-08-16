@@ -19,6 +19,7 @@ import '../../widget/dropdown/wg_dropdown_notValue_string.dart';
 import '../../widget/textField/wg_textField.dart';
 import '../../widget/textField/wg_textFieldLines.dart';
 import '../../widget/textField/wg_textField_int copy.dart';
+import '../../widget/textField/wg_textField_password.dart';
 
 class RegisterPage extends StatefulWidget {
   const RegisterPage({super.key, required this.isVisible});
@@ -118,7 +119,7 @@ class _RegisterPageState extends State<RegisterPage> {
                       BoxShadow(
                           spreadRadius: 2,
                           blurRadius: 10,
-                          color:  Color.fromARGB(255, 255, 151, 33))
+                          color: Color.fromARGB(255, 255, 151, 33))
                     ],
                     shape: BoxShape.circle,
                     image: DecorationImage(
@@ -184,7 +185,7 @@ class _RegisterPageState extends State<RegisterPage> {
             ),
             Expanded(
               child: Padding(
-                 padding: const EdgeInsets.only( left: 15, right: 15),
+                padding: const EdgeInsets.only(left: 15, right: 15),
                 child: WidgetDropdownStringNotValue(
                   title: 'เพศ',
                   selectedValue: selectedValue, ListItems: LevelItems,
@@ -195,13 +196,10 @@ class _RegisterPageState extends State<RegisterPage> {
           ],
         ),
       ),
-      Padding(
-        padding: const EdgeInsets.only(bottom: 8, left: 20, right: 20),
-        child: WidgetTextFieldInt(
-          controller: phone,
-          labelText: 'เบอร์โทร',
-          maxLength: 10,
-        ),
+      WidgetTextFieldInt(
+        controller: phone,
+        labelText: 'เบอร์โทร',
+        maxLength: 10,
       ),
       const Divider(endIndent: 20, indent: 20),
       Padding(
@@ -227,15 +225,15 @@ class _RegisterPageState extends State<RegisterPage> {
       ),
       Padding(
         padding: const EdgeInsets.only(bottom: 8, left: 20, right: 20),
-        child: TextPassword(
-          password1,
+        child: TextFieldPassword(
+          controller: password1,
+          title: 'รหัสผ่าน',
         ),
       ),
       Padding(
         padding: const EdgeInsets.only(bottom: 8, left: 20, right: 20),
-        child: TextPassword(
-          password2,
-        ),
+        child:
+            TextFieldPassword(controller: password2, title: 'ยืนยันรหัสผ่าน'),
       ),
       const Divider(endIndent: 20, indent: 20),
       Visibility(
@@ -246,16 +244,14 @@ class _RegisterPageState extends State<RegisterPage> {
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              SizedBox(
-                width: (width - 16 - (3 * 15)) / 2,
+              Expanded(
                 child: WidgetTextFieldInt(
                   controller: weight,
                   labelText: 'นํ้าหนัก',
                   maxLength: 4,
                 ),
               ),
-              SizedBox(
-                width: (width - 16 - (3 * 15)) / 2,
+              Expanded(
                 child: WidgetTextFieldInt(
                   controller: height,
                   labelText: 'ส่วนสูง',
@@ -267,19 +263,13 @@ class _RegisterPageState extends State<RegisterPage> {
         ),
       ),
       if (widget.isVisible == false) ...{
-        Padding(
-          padding: const EdgeInsets.only(bottom: 8, left: 20, right: 20),
-          child: WidgetTextFieldLines(
-            controller: qualification,
-            labelText: 'วุฒิการศึกษา',
-          ),
+        WidgetTextFieldLines(
+          controller: qualification,
+          labelText: 'วุฒิการศึกษา',
         ),
-        Padding(
-          padding: const EdgeInsets.only(bottom: 18, left: 20, right: 20),
-          child: WidgetTextFieldLines(
-            controller: property,
-            labelText: 'ประวัติส่วนตัว',
-          ),
+        WidgetTextFieldLines(
+          controller: property,
+          labelText: 'ประวัติส่วนตัว',
         ),
       },
       Row(
@@ -317,12 +307,11 @@ class _RegisterPageState extends State<RegisterPage> {
               setState(() {
                 textErr = 'กรุณากรอกข้อมูลให้ครบ';
               });
-            }  else if (phone.text.length != 10) {
-                setState(() {
+            } else if (phone.text.length != 10) {
+              setState(() {
                 textErr = 'กรุณากรอกเบอร์โทรศัพท์ให้ถูกต้อง';
               });
-            }
-            else if (password1.text != password2.text) {
+            } else if (password1.text != password2.text) {
               setState(() {
                 textErr = 'รหัสไม่ตรงกัน';
               });

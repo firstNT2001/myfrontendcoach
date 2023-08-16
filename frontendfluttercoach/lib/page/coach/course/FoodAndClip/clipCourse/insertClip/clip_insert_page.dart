@@ -2,16 +2,14 @@ import 'dart:convert';
 import 'dart:developer';
 
 import 'package:auto_size_text/auto_size_text.dart';
-import 'package:cherry_toast/cherry_toast.dart';
-import 'package:cherry_toast/resources/arrays.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
+import 'package:in_app_notification/in_app_notification.dart';
 import 'package:provider/provider.dart';
-import 'package:skeletonizer/skeletonizer.dart';
 
 import '../../../../../../model/request/clip_dayID_post.dart';
 import '../../../../../../model/response/md_ClipList_get.dart';
@@ -19,6 +17,7 @@ import '../../../../../../model/response/md_Result.dart';
 import '../../../../../../service/clip.dart';
 import '../../../../../../service/provider/appdata.dart';
 import '../../../../../../widget/image_video.dart';
+import '../../../../../../widget/notificationBody.dart';
 import '../../course_food_clip.dart';
 
 class ClipInsertPage extends StatefulWidget {
@@ -43,27 +42,17 @@ class _ClipInsertPageState extends State<ClipInsertPage> {
   // FoodService
   late ClipServices _clipCourseService;
   late ModelResult modelResult;
-  bool _enabled = true;
+
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
     _clipCourseService = context.read<AppData>().clipServices;
-    Future.delayed(Duration(seconds: context.read<AppData>().duration), () {
-      setState(() {
-        _enabled = false;
-      });
-    });
   }
 
   @override
   Widget build(BuildContext context) {
-    return (_enabled == true)
-        ? Skeletonizer(
-            enabled: true,
-            child: scaffold(context),
-          )
-        : scaffold(context);
+    return scaffold(context);
   }
 
   Scaffold scaffold(BuildContext context) {
@@ -142,6 +131,7 @@ class _ClipInsertPageState extends State<ClipInsertPage> {
                                     modelResult = response.data;
                                   }
                                   log("result:${modelResult.result}");
+                                  log('message');
                                   if (modelResult.result == '1') {
                                     widget.increaseClip.clear();
                                     // ignore: use_build_context_synchronously
@@ -158,18 +148,33 @@ class _ClipInsertPageState extends State<ClipInsertPage> {
                                               )),
                                       ModalRoute.withName('/DaysCoursePage'),
                                     );
+                                    // ignore: use_build_context_synchronously
+                                    InAppNotification.show(
+                                      child: NotificationBody(
+                                        count: 1,
+                                        message:
+                                            'เพิ่มคลิปท่าออกกำลังกายสำเร็จ',
+                                      ),
+                                      context: context,
+                                      onTap: () =>
+                                          print('Notification tapped!'),
+                                      duration:
+                                          const Duration(milliseconds: 1500),
+                                    );
                                   } else {
                                     // ignore: use_build_context_synchronously
-                                    CherryToast.warning(
-                                      title: const Text('บันทึกไม่สำเร็จ'),
-                                      displayTitle: false,
-                                      description:
-                                          const Text('บันทึกไม่สำเร็จ'),
-                                      toastPosition: Position.bottom,
-                                      animationDuration:
-                                          const Duration(milliseconds: 1000),
-                                      autoDismiss: true,
-                                    ).show(context);
+                                    InAppNotification.show(
+                                      child: NotificationBody(
+                                        count: 1,
+                                        message:
+                                            'เพิ่มคลิปท่าออกกำลังกานไม่สำเร็จ',
+                                      ),
+                                      context: context,
+                                      onTap: () =>
+                                          print('Notification tapped!'),
+                                      duration:
+                                          const Duration(milliseconds: 2000),
+                                    );
                                   }
                                 },
                                 child: const Text('บันทึก'))),

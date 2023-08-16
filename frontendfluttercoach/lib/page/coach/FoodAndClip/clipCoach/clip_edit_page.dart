@@ -8,6 +8,7 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:in_app_notification/in_app_notification.dart';
 
 import 'package:loading_indicator/loading_indicator.dart';
 import 'package:provider/provider.dart';
@@ -18,7 +19,8 @@ import '../../../../model/response/md_ClipList_get.dart';
 import '../../../../model/response/md_Result.dart';
 import '../../../../service/listClip.dart';
 import '../../../../service/provider/appdata.dart';
-import '../../../../widget/PopUp/popUp.dart';
+import '../../../../widget/dialogs.dart';
+import '../../../../widget/notificationBody.dart';
 import '../../../../widget/showCilp.dart';
 import '../../../../widget/textField/wg_textField.dart';
 import '../../../../widget/textField/wg_textFieldLines.dart';
@@ -91,7 +93,6 @@ class _ClipEditCoachPageState extends State<ClipEditCoachPage> {
             return Column(
               children: [
                 video(),
-
                 Padding(
                   padding: const EdgeInsets.only(
                       bottom: 18, top: 28, left: 20, right: 20),
@@ -101,16 +102,16 @@ class _ClipEditCoachPageState extends State<ClipEditCoachPage> {
                   ),
                 ),
                 Padding(
-                  padding: const EdgeInsets.only(
-                      bottom: 18, left: 20, right: 20),
+                  padding:
+                      const EdgeInsets.only(bottom: 18, left: 20, right: 20),
                   child: WidgetTextFieldString(
                     controller: amountPerSet,
                     labelText: 'จำนวนเซ็ท',
                   ),
                 ),
                 Padding(
-                  padding: const EdgeInsets.only(
-                      bottom: 18, left: 20, right: 20),
+                  padding:
+                      const EdgeInsets.only(bottom: 18, left: 20, right: 20),
                   child: WidgetTextFieldLines(
                     controller: details,
                     labelText: 'รายละเอียดท่าออกกำลังกาย',
@@ -120,8 +121,8 @@ class _ClipEditCoachPageState extends State<ClipEditCoachPage> {
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
                     Padding(
-                      padding: const EdgeInsets.only(
-                          bottom: 8, left: 20, right: 23),
+                      padding:
+                          const EdgeInsets.only(bottom: 8, left: 20, right: 23),
                       child: Text(
                         textErr,
                         style: TextStyle(
@@ -132,8 +133,8 @@ class _ClipEditCoachPageState extends State<ClipEditCoachPage> {
                 ),
                 Center(
                   child: Padding(
-                    padding: const EdgeInsets.only(
-                        bottom: 18, left: 20, right: 20),
+                    padding:
+                        const EdgeInsets.only(bottom: 18, left: 20, right: 20),
                     child: SizedBox(
                         width: MediaQuery.of(context).size.width,
                         child: button(context)),
@@ -142,7 +143,7 @@ class _ClipEditCoachPageState extends State<ClipEditCoachPage> {
               ],
             );
           } else {
-            return Container();
+            return Center(child: load(context));
           }
         });
   }
@@ -255,19 +256,35 @@ class _ClipEditCoachPageState extends State<ClipEditCoachPage> {
             log(jsonEncode(modelResult.result));
             stopLoading();
             if (modelResult.result == '0') {
-               // ignore: use_build_context_synchronously
-              success(context);
+              // ignore: use_build_context_synchronously
+              InAppNotification.show(
+                child: NotificationBody(
+                  count: 1,
+                  message: 'แก้ไขคลิปท่าออกกำลังกายสำเร็จ',
+                ),
+                context: context,
+                onTap: () => print('Notification tapped!'),
+                duration: const Duration(milliseconds: 1500),
+              );
               // ignore: use_build_context_synchronously
               Navigator.pushAndRemoveUntil<void>(
                 context,
                 MaterialPageRoute<void>(
-                    builder: (BuildContext context) => const NavbarBottomCoach()),
+                    builder: (BuildContext context) =>
+                        const NavbarBottomCoach()),
                 ModalRoute.withName('/NavbarBottomCoach'),
               );
-             
             } else {
               // ignore: use_build_context_synchronously
-              warning(context);
+              InAppNotification.show(
+                child: NotificationBody(
+                  count: 1,
+                  message: 'แก้ไขคลิปท่าออกกำลังกายไม่สำเร็จ',
+                ),
+                context: context,
+                onTap: () => print('Notification tapped!'),
+                duration: const Duration(milliseconds: 1500),
+              );
             }
           }
         },

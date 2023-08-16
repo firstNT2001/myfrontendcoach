@@ -2,20 +2,20 @@ import 'dart:convert';
 import 'dart:developer';
 
 import 'package:auto_size_text/auto_size_text.dart';
-import 'package:cherry_toast/cherry_toast.dart';
-import 'package:cherry_toast/resources/arrays.dart';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:frontendfluttercoach/service/food.dart';
+import 'package:in_app_notification/in_app_notification.dart';
 
 import 'package:provider/provider.dart';
-import 'package:skeletonizer/skeletonizer.dart';
 
 import '../../../../../../model/request/food_dayID_post.dart';
 import '../../../../../../model/response/md_FoodList_get.dart';
 import '../../../../../../model/response/md_Result.dart';
 import '../../../../../../service/provider/appdata.dart';
+import '../../../../../../widget/notificationBody.dart';
 import '../../../../../../widget/slideAction.dart';
 import '../../course_food_clip.dart';
 
@@ -44,7 +44,6 @@ class _FoodSelectTimePageState extends State<FoodSelectTimePage>
   late Future<void> loadListFoodDataMethod;
   late FoodServices _foodCourseService;
   late ModelResult modelResult;
-  bool _enabled = true;
 
   final List<String> listhand = ['มื้อเช้า', 'มื้อเที่ยง', 'มื้อเย็น'];
 
@@ -63,24 +62,11 @@ class _FoodSelectTimePageState extends State<FoodSelectTimePage>
       upperBound: 0.5,
       duration: const Duration(milliseconds: 2000),
     );
-
-    Future.delayed(Duration(seconds: context.read<AppData>().duration), () {
-      setState(() {
-        _enabled = false;
-      });
-    });
   }
 
   @override
   Widget build(BuildContext context) {
-    return WillPopScope(
-        onWillPop: () async => false,
-        child: (_enabled == true)
-            ? Skeletonizer(
-                enabled: true,
-                child: scaffold(context),
-              )
-            : scaffold(context));
+    return WillPopScope(onWillPop: () async => false, child: scaffold(context));
   }
 
   Scaffold scaffold(BuildContext contexts) {
@@ -183,16 +169,27 @@ class _FoodSelectTimePageState extends State<FoodSelectTimePage>
                       )),
               ModalRoute.withName('/DaysCoursePage'),
             );
+            // ignore: use_build_context_synchronously
+            InAppNotification.show(
+              child: NotificationBody(
+                count: 1,
+                message: 'เพิ่มเมนูสำเร็จ',
+              ),
+              context: context,
+              onTap: () => print('Notification tapped!'),
+              duration: const Duration(milliseconds: 1500),
+            );
           } else {
             // ignore: use_build_context_synchronously
-            CherryToast.warning(
-              title: const Text('บันทึกไม่สำเร็จ'),
-              displayTitle: false,
-              description: const Text('บันทึกไม่สำเร็จ'),
-              toastPosition: Position.bottom,
-              animationDuration: const Duration(milliseconds: 1000),
-              autoDismiss: true,
-            ).show(context);
+            InAppNotification.show(
+              child: NotificationBody(
+                count: 1,
+                message: 'เพิ่มเมนูไม่สำเร็จ',
+              ),
+              context: context,
+              onTap: () => print('Notification tapped!'),
+              duration: const Duration(milliseconds: 1500),
+            );
           }
         },
         child: const Text('บันทึก'));

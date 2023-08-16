@@ -14,11 +14,11 @@ import 'package:frontendfluttercoach/model/response/food_get_res.dart';
 
 import 'package:frontendfluttercoach/service/clip.dart';
 import 'package:get/get.dart';
+import 'package:in_app_notification/in_app_notification.dart';
 import 'package:msh_checkbox/msh_checkbox.dart';
 import 'package:provider/provider.dart';
 import 'package:quickalert/models/quickalert_type.dart';
 import 'package:quickalert/widgets/quickalert_dialog.dart';
-import 'package:skeletonizer/skeletonizer.dart';
 
 import '../../../../model/request/food_foodID_put.dart';
 import '../../../../model/response/clip_get_res.dart';
@@ -28,8 +28,10 @@ import '../../../../service/food.dart';
 import '../../../../service/provider/appdata.dart';
 
 import '../../../../widget/PopUp/popUp.dart';
+import '../../../../widget/dialogs.dart';
 import '../../../../widget/dropdown/wg_dropdown_string.dart';
 import '../../../../widget/image_video.dart';
+import '../../../../widget/notificationBody.dart';
 import '../../../../widget/wg_editClip_Dialog.dart';
 import '../../../../widget/wg_editFood_Dialog.dart';
 import '../../../../widget/wg_search_food.dart';
@@ -77,7 +79,6 @@ class _HomeFoodAndClipPageState extends State<HomeFoodAndClipPage> {
   String title = "";
 
   bool isVisibleQuickAlert = true;
-  bool _enabled = true;
 
   //มืออาหาร
   final selectedValuehand = TextEditingController();
@@ -97,23 +98,13 @@ class _HomeFoodAndClipPageState extends State<HomeFoodAndClipPage> {
     loadClipDataMethod = loadClipData();
 
     title = "Day ${widget.sequence}";
-    Future.delayed(Duration(seconds: context.read<AppData>().duration), () {
-      setState(() {
-        _enabled = false;
-      });
-    });
   }
 
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
       length: 2,
-      child: (_enabled == true)
-          ? Skeletonizer(
-              enabled: true,
-              child: scaffold(context),
-            )
-          : scaffold(context),
+      child: scaffold(context),
     );
   }
 
@@ -157,7 +148,6 @@ class _HomeFoodAndClipPageState extends State<HomeFoodAndClipPage> {
               FontAwesomeIcons.chevronLeft,
             ),
             onPressed: () {
-           
               Get.back();
             },
           ),
@@ -169,7 +159,6 @@ class _HomeFoodAndClipPageState extends State<HomeFoodAndClipPage> {
                   .colorScheme
                   .primaryContainer, //<-- Unselected text
               tabs: const [
-                
                 Tab(
                   icon: Icon(
                     FontAwesomeIcons.dumbbell,
@@ -185,7 +174,7 @@ class _HomeFoodAndClipPageState extends State<HomeFoodAndClipPage> {
         ),
         body: TabBarView(
           children: [
-             //Clip
+            //Clip
             Column(
               children: [
                 const SizedBox(
@@ -215,8 +204,6 @@ class _HomeFoodAndClipPageState extends State<HomeFoodAndClipPage> {
                 ),
               ],
             ),
-
-           
           ],
         ));
   }
@@ -305,28 +292,30 @@ class _HomeFoodAndClipPageState extends State<HomeFoodAndClipPage> {
       future: loadFoodDataMethod,
       builder: (context, snapshot) {
         if (snapshot.connectionState != ConnectionState.done) {
-          return Container();
+          return Center(child: load(context));
         } else {
           return ListView.builder(
             shrinkWrap: true,
             itemCount: foods.length,
             itemBuilder: (context, index) {
               final listfood = foods[index];
-              return Slidable(
-                startActionPane:
-                    ActionPane(motion: const StretchMotion(), children: [
-                  SlidableAction(
-                    onPressed: (contexts) {
-                      dialogDeleteFood(context, listfood.fid.toString());
-                      // Navigator.pop(context);
-                    },
-                    backgroundColor: Theme.of(context).colorScheme.error,
-                    icon: Icons.delete,
-                    label: 'Delete',
-                  )
-                ]),
-                child: cardFood(context, listfood),
-              );
+              return (widget.isVisible)
+                  ? Slidable(
+                      startActionPane:
+                          ActionPane(motion: const StretchMotion(), children: [
+                        SlidableAction(
+                          onPressed: (contexts) {
+                            dialogDeleteFood(context, listfood.fid.toString());
+                            // Navigator.pop(context);
+                          },
+                          backgroundColor: Theme.of(context).colorScheme.error,
+                          icon: Icons.delete,
+                          label: 'Delete',
+                        )
+                      ]),
+                      child: cardFood(context, listfood),
+                    )
+                  : cardFood(context, listfood);
             },
           );
         }
@@ -500,31 +489,23 @@ class _HomeFoodAndClipPageState extends State<HomeFoodAndClipPage> {
                     Padding(
                         padding: const EdgeInsets.only(left: 20, right: 20),
                         child: ClipRRect(
-                          borderRadius: BorderRadius.circular(20), // Image border
+                          borderRadius:
+                              BorderRadius.circular(20), // Image border
                           child: SizedBox.fromSize(
                             size: const Size.fromRadius(60), // Image radius
                             child: Image.network(img, fit: BoxFit.cover),
                           ),
                         )),
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text('แคลอรี่ $cal',
-                            style: Theme.of(context).textTheme.bodyLarge),
-                        const SizedBox(height: 20),
-                        Expanded(
-                          child: SizedBox(
-                            height: 60,
-                            width: 150,
-                            child: WidgetDropdownString(
-                              title: 'เลือกมืออาหาร',
-                              selectedValue: selectedValuehand,
-                              listItems: listhand,
-                            ),
-                          ),
+                    Expanded(
+                      child: Padding(
+                        padding: const EdgeInsets.only(left: 20, right: 20),
+                        child: WidgetDropdownString(
+                          title: 'เลือกมืออาหาร',
+                          selectedValue: selectedValuehand,
+                          listItems: listhand,
                         ),
-                      ],
-                    )
+                      ),
+                    ),
                   ],
                 ),
                 const SizedBox(
@@ -550,8 +531,8 @@ class _HomeFoodAndClipPageState extends State<HomeFoodAndClipPage> {
                               dayOfCouseId: int.parse(widget.did),
                             );
                             log(jsonEncode(foodFoodIdPut));
-                            var response = await _foodService.updateFoodByFoodID(
-                                fid, foodFoodIdPut);
+                            var response = await _foodService
+                                .updateFoodByFoodID(fid, foodFoodIdPut);
                             modelResult = response.data;
                             log(modelResult.result);
                             if (modelResult.result == '1') {
@@ -603,6 +584,29 @@ class _HomeFoodAndClipPageState extends State<HomeFoodAndClipPage> {
           loadFoodDataMethod = loadFoodData();
         });
         Navigator.of(context, rootNavigator: true).pop();
+        if (modelResult.result == '1') {
+          // ignore: use_build_context_synchronously
+          InAppNotification.show(
+            child: NotificationBody(
+              count: 1,
+              message: 'ลบเมนูอาหารสำเร็จ',
+            ),
+            context: context,
+            onTap: () => print('Notification tapped!'),
+            duration: const Duration(milliseconds: 1500),
+          );
+        } else {
+          // ignore: use_build_context_synchronously
+          InAppNotification.show(
+            child: NotificationBody(
+              count: 1,
+              message: 'ลบเมนูอาหารไม่สำเร็จ',
+            ),
+            context: context,
+            onTap: () => print('Notification tapped!'),
+            duration: const Duration(milliseconds: 1500),
+          );
+        }
       },
     );
   }
@@ -613,7 +617,7 @@ class _HomeFoodAndClipPageState extends State<HomeFoodAndClipPage> {
       future: loadClipDataMethod,
       builder: (context, snapshot) {
         if (snapshot.connectionState != ConnectionState.done) {
-          return const Center(child: CircularProgressIndicator());
+          return Center(child: load(context));
         } else {
           return GridView.builder(
             gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
@@ -692,7 +696,7 @@ class _HomeFoodAndClipPageState extends State<HomeFoodAndClipPage> {
                                   },
                                   icon: const Icon(
                                     FontAwesomeIcons.trash,
-                                    color: Colors.white,
+                                    color: Color.fromARGB(255, 93, 93, 93),
                                   ),
                                 ),
                               ],
@@ -749,53 +753,47 @@ class _HomeFoodAndClipPageState extends State<HomeFoodAndClipPage> {
 
   void dialogDeleteClip(BuildContext context, String cpid) {
     //target widget
-    SmartDialog.show(builder: (_) {
-      return Container(
-        width: MediaQuery.of(context).size.width * 0.8,
-        height: MediaQuery.of(context).size.height * 0.3,
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(20),
-          color: Colors.white,
-        ),
-        alignment: Alignment.center,
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          //crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Padding(
-              padding: const EdgeInsets.only(
-                  left: 20, right: 20, top: 50, bottom: 16),
-              child: Text("คุณต้องการลบหรือไม",
-                  style: Theme.of(context).textTheme.headlineSmall),
+    QuickAlert.show(
+      context: context,
+      barrierDismissible: isVisibleQuickAlert,
+      type: QuickAlertType.confirm,
+      text: 'Do you want to delete?',
+      confirmBtnText: 'Yes',
+      cancelBtnText: 'No',
+      confirmBtnColor: Theme.of(context).colorScheme.primary,
+      onConfirmBtnTap: () async {
+        var response = await _clipService.deleteClip(cpid);
+        modelResult = response.data;
+        log(modelResult.result);
+        setState(() {
+          loadClipDataMethod = loadClipData();
+        });
+
+        Navigator.of(context, rootNavigator: true).pop();
+        if (modelResult.result == '1') {
+          // ignore: use_build_context_synchronously
+          InAppNotification.show(
+            child: NotificationBody(
+              count: 1,
+              message: 'ลบคลิปท่าออกกำลังกายสำเร็จ',
             ),
-            Padding(
-              padding: const EdgeInsets.only(top: 20),
-              child: Row(
-                //mainAxisSize: MainAxisSize.max,
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  FilledButton(
-                      onPressed: () {
-                        SmartDialog.dismiss();
-                      },
-                      child: const Text("ยกเลิก")),
-                  FilledButton(
-                      onPressed: () async {
-                        var response = await _clipService.deleteClip(cpid);
-                        modelResult = response.data;
-                        log(modelResult.result);
-                        setState(() {
-                          loadClipDataMethod = loadClipData();
-                        });
-                        SmartDialog.dismiss();
-                      },
-                      child: const Text("ตกลง"))
-                ],
-              ),
+            context: context,
+            onTap: () => print('Notification tapped!'),
+            duration: const Duration(milliseconds: 1500),
+          );
+        } else {
+          // ignore: use_build_context_synchronously
+          InAppNotification.show(
+            child: NotificationBody(
+              count: 1,
+              message: 'ลบคลิปท่าออกกำลังกายไม่สำเร็จ',
             ),
-          ],
-        ),
-      );
-    });
+            context: context,
+            onTap: () => print('Notification tapped!'),
+            duration: const Duration(milliseconds: 1500),
+          );
+        }
+      },
+    );
   }
 }

@@ -11,20 +11,21 @@ import 'package:frontendfluttercoach/model/response/md_Result.dart';
 import 'package:frontendfluttercoach/model/response/md_days.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
+import 'package:in_app_notification/in_app_notification.dart';
 import 'package:provider/provider.dart';
 import 'package:quickalert/models/quickalert_type.dart';
 import 'package:quickalert/widgets/quickalert_dialog.dart';
 import 'package:reorderable_grid_view/reorderable_grid_view.dart';
-import 'package:skeletonizer/skeletonizer.dart';
 
 import '../../../model/request/course_courseID_put.dart';
 import '../../../model/response/md_coach_course_get.dart';
 import '../../../service/course.dart';
 import '../../../service/days.dart';
 import '../../../service/provider/appdata.dart';
-import '../../../widget/PopUp/popUp.dart';
 import '../../../widget/dialogs.dart';
+import '../../../widget/notificationBody.dart';
 import '../course/FoodAndClip/course_food_clip.dart';
+import '../course/course_edit_page.dart';
 
 class DaysCoursePage extends StatefulWidget {
   const DaysCoursePage(
@@ -51,14 +52,14 @@ class _DaysCoursePageState extends State<DaysCoursePage> {
   bool onVisibles = true;
   bool offVisibles = false;
   bool isVisibleQuickAlert = true;
-
+  bool moveIsVisible = false;
+  Color moveDayColor = Colors.black;
   //title
   String title = 'Days';
 
   int sequence = 0;
   int numberOfDays = 0;
 
-  bool _enabled = true;
   List<Color> cardColors = [];
 
   @override
@@ -71,17 +72,12 @@ class _DaysCoursePageState extends State<DaysCoursePage> {
 
     _courseService = context.read<AppData>().courseService;
     loadCourseDataMethod = loadCourseDataAsync();
-    Future.delayed(Duration(seconds: context.read<AppData>().duration), () {
-      setState(() {
-        _enabled = false;
-      });
-    });
   }
 
   @override
   Widget build(BuildContext context) {
     return WillPopScope(
-      onWillPop: () async => true,
+      onWillPop: () async => false,
       child: Scaffold(
         resizeToAvoidBottomInset: false,
         body: SafeArea(
@@ -99,15 +95,11 @@ class _DaysCoursePageState extends State<DaysCoursePage> {
     return FutureBuilder(
         future: loadDaysDataMethod,
         builder: (context, AsyncSnapshot snapshot) {
-          return (_enabled)
-              ? Skeletonizer(
-                  textBoneBorderRadius:
-                      const TextBoneBorderRadius.fromHeightFactor(.10),
-                  enabled: true,
-                  ignoreContainers: false,
-                  child: gridViewDays(context),
-                )
-              : gridViewDays(context);
+          if (snapshot.connectionState != ConnectionState.done) {
+            return Center(child: load(context));
+          } else {
+            return gridViewDays(context);
+          }
         });
   }
 
@@ -127,7 +119,7 @@ class _DaysCoursePageState extends State<DaysCoursePage> {
                         blurRadius: 10,
                         color: Colors.black.withOpacity(0.1))
                   ],
-                  //shape: BoxShape.circle,
+                  shape: BoxShape.circle,
                   image: DecorationImage(
                     fit: BoxFit.cover,
                     image: NetworkImage(context.read<AppData>().img),
@@ -155,7 +147,15 @@ class _DaysCoursePageState extends State<DaysCoursePage> {
                           FontAwesomeIcons.chevronLeft,
                         ),
                         onPressed: () {
-                          Get.back();
+                          Navigator.pushAndRemoveUntil<void>(
+                            context,
+                            MaterialPageRoute<void>(
+                                builder: (BuildContext context) =>
+                                    CourseEditPage(
+                                        coID: widget.coID,
+                                        isVisible: widget.isVisible)),
+                            ModalRoute.withName('/NavbarBottomCoach'),
+                          );
                         },
                       ),
                     ),
@@ -204,17 +204,77 @@ class _DaysCoursePageState extends State<DaysCoursePage> {
                 topLeft: Radius.circular(20), topRight: Radius.circular(20)),
             boxShadow: [
               BoxShadow(
-                  color: Colors.grey.shade600, spreadRadius: 1, blurRadius: 15)
+                color: Colors.grey.shade600,
+                spreadRadius: 1,
+                blurRadius: 5,
+                offset: const Offset(0, -7),
+              ),
+              BoxShadow(
+                color: Colors.grey.shade300,
+                offset: const Offset(5, 0),
+              ),
+              BoxShadow(
+                color: Colors.grey.shade300,
+                offset: const Offset(-5, 0),
+              )
             ],
             color: Colors.white),
         child: Column(
           children: [
-            Padding(
-              padding: const EdgeInsets.only(top: 20, right: 20, left: 20),
-              child: Text(
-                'วันออกกำลังกาย',
-                style: Theme.of(context).textTheme.headlineSmall,
-              ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.only(top: 20, right: 20, left: 20),
+                  child: Text(
+                    'วันออกกำลังกาย',
+                    style: Theme.of(context).textTheme.headlineSmall,
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(top: 20, right: 20, left: 20),
+                  child: Column(
+                    children: [
+                      IconButton(
+                          onPressed: () {
+                            setState(() {
+                              moveIsVisible = !moveIsVisible;
+                            });
+                            if (moveIsVisible == true) {
+                              moveDayColor =
+                                  Theme.of(context).colorScheme.primary;
+                              InAppNotification.show(
+                                child: NotificationBody(
+                                  count: 1,
+                                  message: 'เคลื่อนย้ายวัน / เปิด',
+                                ),
+                                context: context,
+                                onTap: () => print('Notification tapped!'),
+                                duration: const Duration(milliseconds: 1500),
+                              );
+                            } else {
+                              moveDayColor = Colors.black;
+                               InAppNotification.show(
+                                child: NotificationBody(
+                                  count: 1,
+                                  message: 'เคลื่อนย้ายวัน / ปิด',
+                                ),
+                                context: context,
+                                onTap: () => print('Notification tapped!'),
+                                duration: const Duration(milliseconds: 1500),
+                              );
+                            }
+                            log(moveIsVisible.toString());
+                          },
+                          icon: Icon(
+                            FontAwesomeIcons.compress,
+                            color: moveDayColor,
+                          )),
+                      const Text('Move Day')
+                    ],
+                  ),
+                )
+              ],
             ),
             Expanded(
               child: Padding(
@@ -226,83 +286,86 @@ class _DaysCoursePageState extends State<DaysCoursePage> {
                   itemBuilder: (context, index) {
                     final listday = days[index];
                     int i = index + 1;
-                    return PopupMenuButton(
-                      key: ValueKey(index),
-                      color: Colors.white,
-                      shape: const RoundedRectangleBorder(
-                          borderRadius:
-                              BorderRadius.all(Radius.circular(15.0))),
-                      offset: const Offset(0, 65),
-                      onOpened: () {
-                        setState(() {
-                          cardColors[index] =
-                              Theme.of(context).colorScheme.primary;
-                        });
-                      },
-                      onCanceled: () {
-                        setState(() {
-                          cardColors[index] =
-                              Theme.of(context).colorScheme.tertiary;
-                        });
-                      },
-                      itemBuilder: (context) => [
-                        const PopupMenuItem(
-                          value: 1,
-                          child: Row(
-                            children: [
-                              Icon(FontAwesomeIcons.pen),
-                              SizedBox(
-                                width: 10,
-                              ),
-                              Text('แก้ไข'),
-                            ],
-                          ),
-                        ),
-                        const PopupMenuItem(
-                            value: 2,
-                            child: Row(
-                              children: [
-                                Icon(FontAwesomeIcons.trash),
-                                SizedBox(
-                                  width: 10,
+                    return (moveIsVisible == false)
+                        ? PopupMenuButton(
+                            key: ValueKey(index),
+                            color: Colors.white,
+                            shape: const RoundedRectangleBorder(
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(15.0))),
+                            offset: const Offset(0, 65),
+                            onOpened: () {
+                              setState(() {
+                                cardColors[index] =
+                                    Theme.of(context).colorScheme.primary;
+                              });
+                            },
+                            onCanceled: () {
+                              setState(() {
+                                cardColors[index] =
+                                    Theme.of(context).colorScheme.tertiary;
+                              });
+                            },
+                            itemBuilder: (context) => [
+                              const PopupMenuItem(
+                                value: 1,
+                                child: Row(
+                                  children: [
+                                    Icon(FontAwesomeIcons.pen),
+                                    SizedBox(
+                                      width: 10,
+                                    ),
+                                    Text('แก้ไข'),
+                                  ],
                                 ),
-                                Text('ลบ'),
-                              ],
-                            )),
-                      ],
-                      onSelected: (value) {
-                        if (value == 1) {
-                          setState(() {
-                            cardColors[index] =
-                                Theme.of(context).colorScheme.tertiary;
-                          });
-                          Get.to(() => HomeFoodAndClipPage(
-                                did: listday.did.toString(),
-                                sequence: i.toString(),
-                                isVisible: widget.isVisible,
-                              ));
-                        } else {
-                          
-                          dialogDeleteDay(context, listday.did);
-                          setState(() {
-                            cardColors[index] =
-                                Theme.of(context).colorScheme.tertiary;
-                          });
-                        }
-                      },
-                      child: Card(
-                        color: cardColors[index],
-                        key: ValueKey(index),
-                        child: Center(
-                            child: Text(
-                          i.toString(),
-                          style: Theme.of(context)
-                              .textTheme
-                              .titleMedium!
-                              .copyWith(color: Colors.white),
-                        )),
-                      ),
-                    );
+                              ),
+                              const PopupMenuItem(
+                                  value: 2,
+                                  child: Row(
+                                    children: [
+                                      Icon(FontAwesomeIcons.trash),
+                                      SizedBox(
+                                        width: 10,
+                                      ),
+                                      Text('ลบ'),
+                                    ],
+                                  )),
+                            ],
+                            onSelected: (value) {
+                              if (value == 1) {
+                                setState(() {
+                                  cardColors[index] =
+                                      Theme.of(context).colorScheme.tertiary;
+                                });
+                                Get.to(() => HomeFoodAndClipPage(
+                                      did: listday.did.toString(),
+                                      sequence: i.toString(),
+                                      isVisible: widget.isVisible,
+                                    ));
+                              } else {
+                                dialogDeleteDay(context, listday.did);
+                                setState(() {
+                                  cardColors[index] =
+                                      Theme.of(context).colorScheme.tertiary;
+                                });
+                              }
+                            },
+                            child: cardText(index, i, context),
+                          )
+                        : InkWell(
+                            key: ValueKey(index),
+                            onTap: () {
+                              InAppNotification.show(
+                                child: NotificationBody(
+                                  count: 1,
+                                  message: 'กรุณากดค้างที่วัน',
+                                ),
+                                context: context,
+                                onTap: () => print('Notification tapped!'),
+                                duration: const Duration(milliseconds: 1500),
+                              );
+                            },
+                            child: cardText(index, i, context));
                   },
                   //onDragUpdate: (){},
                   onReorder: (oldIndex, newIndex) {
@@ -317,8 +380,12 @@ class _DaysCoursePageState extends State<DaysCoursePage> {
                   },
                   dragWidgetBuilder: (index, child) {
                     int i = index + 1;
-                    return Card(
-                      color: Theme.of(context).colorScheme.primary,
+                    return Container(
+                      key: ValueKey(index),
+                      decoration: BoxDecoration(
+                        color: Theme.of(context).colorScheme.primary,
+                        shape: BoxShape.circle,
+                      ),
                       child: Center(child: Text(i.toString())),
                     );
                   },
@@ -330,6 +397,28 @@ class _DaysCoursePageState extends State<DaysCoursePage> {
             ),
           ],
         ),
+      ),
+    );
+  }
+
+  Padding cardText(int index, int i, BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.all(3.0),
+      key: ValueKey(index),
+      child: Container(
+        key: ValueKey(index),
+        decoration: BoxDecoration(
+          color: cardColors[index],
+          shape: BoxShape.circle,
+        ),
+        child: Center(
+            child: Text(
+          i.toString(),
+          style: Theme.of(context)
+              .textTheme
+              .titleMedium!
+              .copyWith(color: Colors.white),
+        )),
       ),
     );
   }
@@ -370,8 +459,17 @@ class _DaysCoursePageState extends State<DaysCoursePage> {
       log("${days[i].did.toString()} : ${jsonEncode(request)}");
     }
     stopLoading();
+
     // ignore: use_build_context_synchronously
-    success(context);
+    InAppNotification.show(
+      child: NotificationBody(
+        count: 1,
+        message: 'เคลื่อนย้ายวันสำเร็จ',
+      ),
+      context: context,
+      onTap: () => print('Notification tapped!'),
+      duration: const Duration(milliseconds: 1500),
+    );
   }
 
   //Dialog Delete
@@ -422,13 +520,29 @@ class _DaysCoursePageState extends State<DaysCoursePage> {
         stopLoading();
         if (modelResult.result == '1') {
           // ignore: use_build_context_synchronously
-          popUpSuccessDelete(context);
+          InAppNotification.show(
+            child: NotificationBody(
+              count: 1,
+              message: 'ลบวันเรียบร้อยแล้ว',
+            ),
+            context: context,
+            onTap: () => print('Notification tapped!'),
+            duration: const Duration(milliseconds: 1500),
+          );
           setState(() {
             loadDaysDataMethod = loadDaysDataAsync();
           });
         } else {
           // ignore: use_build_context_synchronously
-          popUpWarningDelete(context);
+          InAppNotification.show(
+            child: NotificationBody(
+              count: 1,
+              message: 'ลบวันไม่สำเร็จ',
+            ),
+            context: context,
+            onTap: () => print('Notification tapped!'),
+            duration: const Duration(milliseconds: 1500),
+          );
         }
       },
     );
@@ -478,6 +592,16 @@ class _DaysCoursePageState extends State<DaysCoursePage> {
         stopLoading();
 
         log('onConfirmBtnTap');
+        // ignore: use_build_context_synchronously
+        InAppNotification.show(
+          child: NotificationBody(
+            count: 1,
+            message: 'ได้เพิ่มวันเรียบร้อยแล้ว',
+          ),
+          context: context,
+          onTap: () => print('Notification tapped!'),
+          duration: const Duration(milliseconds: 1500),
+        );
       },
     );
   }

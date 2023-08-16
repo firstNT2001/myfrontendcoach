@@ -8,6 +8,7 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:in_app_notification/in_app_notification.dart';
 
 import 'package:loading_indicator/loading_indicator.dart';
 import 'package:provider/provider.dart';
@@ -17,7 +18,7 @@ import '../../../../model/request/listClip_coachID_post.dart';
 import '../../../../model/response/md_Result.dart';
 import '../../../../service/listClip.dart';
 import '../../../../service/provider/appdata.dart';
-import '../../../../widget/PopUp/popUp.dart';
+import '../../../../widget/notificationBody.dart';
 import '../../../../widget/textField/wg_textField.dart';
 import '../../../../widget/textField/wg_textFieldLines.dart';
 import '../../navigationbar.dart';
@@ -308,17 +309,34 @@ class _ClipNewCoachPageState extends State<ClipNewCoachPage> {
             stopLoading();
             if (modelResult.result == '1') {
               // ignore: use_build_context_synchronously
-              success(context);
+              InAppNotification.show(
+                child: NotificationBody(
+                  count: 1,
+                  message: 'เพิ่มคลิปท่าออกกำลังกายสำเร็จ',
+                ),
+                context: context,
+                onTap: () => print('Notification tapped!'),
+                duration: const Duration(milliseconds: 1500),
+              );
               // ignore: use_build_context_synchronously
               Navigator.pushAndRemoveUntil<void>(
                 context,
                 MaterialPageRoute<void>(
-                    builder: (BuildContext context) => const NavbarBottomCoach()),
+                    builder: (BuildContext context) =>
+                        const NavbarBottomCoach()),
                 ModalRoute.withName('/NavbarBottomCoach'),
               );
             } else {
               // ignore: use_build_context_synchronously
-              warning(context);
+              InAppNotification.show(
+                child: NotificationBody(
+                  count: 1,
+                  message: 'เพิ่มคลิปท่าออกกำลังกายไม่สำเร็จ',
+                ),
+                context: context,
+                onTap: () => print('Notification tapped!'),
+                duration: const Duration(milliseconds: 1500),
+              );
             }
             log(jsonEncode(modelResult.result));
           }

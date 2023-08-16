@@ -53,36 +53,33 @@ class _WidgetHistoryState extends State<WidgetHistory> {
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.done) {
             return Padding(
-              padding: const EdgeInsets.all(10.0),
-              child: Padding(
-                padding: const EdgeInsets.all(15.0),
-                child: ListView.builder(
-                    shrinkWrap: true,
-                    itemCount: history.length,
-                    itemBuilder: (context, index) {
-                      money = history[index].amount*1000;
-                      String day = history[index].date.substring(0, 2);
+              padding: const EdgeInsets.only(left: 18,right: 18),
+              child: ListView.builder(
+                  shrinkWrap: true,
+                  itemCount: history.length,
+                  itemBuilder: (context, index) {
+                    money = history[index].amount*1000;
+                    String day = history[index].date.substring(0, 2);
 
-                      String month = history[index].date.substring(2, 4);
-                      String year = history[index].date.substring(4);
+                    String month = history[index].date.substring(2, 4);
+                    String year = history[index].date.substring(4);
 
-                      DateTime dateTime =
-                          DateTime.parse("$year-$month-$day");
-                      thaiDate(dateTime.toString());
-                      //DateTime time =  DateFormat("ddMMyyyy").parse(history[index].date);
-                      final listhis = history[index];
-                      return Card(
-                        child: ListTile(
-                          leading: Icon(FontAwesomeIcons.clockRotateLeft),
-                          title: Text(thaiDate(dateTime.toString())),
-                          subtitle: Text(
-                            "+ ${money} บาท",
-                            style: TextStyle(color: Colors.green),
-                          ),
+                    DateTime dateTime =
+                        DateTime.parse("$year-$month-$day");
+                    thaiDate(dateTime.toString());
+                    //DateTime time =  DateFormat("ddMMyyyy").parse(history[index].date);
+                    final listhis = history[index];
+                    return Card(
+                      child: ListTile(
+                        leading: Icon(FontAwesomeIcons.clockRotateLeft),
+                        title: Text(thaiDate(dateTime.toString())),
+                        subtitle: Text(
+                          "+ ${money} บาท",
+                          style: TextStyle(color: Colors.green),
                         ),
-                      );
-                    }),
-              ),
+                      ),
+                    );
+                  }),
             );
           } else {
             return const Center(child: CircularProgressIndicator());

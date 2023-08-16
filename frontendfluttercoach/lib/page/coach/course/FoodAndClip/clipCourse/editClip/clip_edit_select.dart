@@ -10,8 +10,8 @@ import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
+import 'package:in_app_notification/in_app_notification.dart';
 import 'package:provider/provider.dart';
-import 'package:skeletonizer/skeletonizer.dart';
 import 'package:uuid/uuid.dart';
 import 'package:flutter_chat_types/flutter_chat_types.dart' as types;
 import '../../../../../../model/request/clip_clipID_put.dart';
@@ -24,7 +24,9 @@ import '../../../../../../service/days.dart';
 import '../../../../../../service/listClip.dart';
 import '../../../../../../service/provider/appdata.dart';
 import '../../../../../../service/request.dart';
+import '../../../../../../widget/dialogs.dart';
 import '../../../../../../widget/image_video.dart';
+import '../../../../../../widget/notificationBody.dart';
 import '../../../../../../widget/showCilp.dart';
 import '../../../../../Request/request_page.dart';
 import '../../course_food_clip.dart';
@@ -62,7 +64,6 @@ class _ClipEditSelectPageState extends State<ClipEditSelectPage> {
   late RequestService _RequestService;
 
   String nameClip = "";
-  bool _enabled = true;
 
   @override
   void initState() {
@@ -79,21 +80,11 @@ class _ClipEditSelectPageState extends State<ClipEditSelectPage> {
 
     loadDayData();
     loadClipData();
-    Future.delayed(Duration(seconds: context.read<AppData>().duration), () {
-      setState(() {
-        _enabled = false;
-      });
-    });
   }
 
   @override
   Widget build(BuildContext context) {
-    return (_enabled == true)
-        ? Skeletonizer(
-            enabled: true,
-            child: scaffold(context),
-          )
-        : scaffold(context);
+    return scaffold(context);
   }
 
   Scaffold scaffold(BuildContext context) {
@@ -109,7 +100,7 @@ class _ClipEditSelectPageState extends State<ClipEditSelectPage> {
             Get.back();
           },
         ),
-        backgroundColor: Theme.of(context).colorScheme.primary,
+        backgroundColor: Colors.white,
         iconTheme: const IconThemeData(
           color: Colors.black, //change your color here
         ),
@@ -173,7 +164,7 @@ class _ClipEditSelectPageState extends State<ClipEditSelectPage> {
       future: loadListClipDataMethod,
       builder: (context, snapshot) {
         if (snapshot.connectionState != ConnectionState.done) {
-          return Container();
+          return Center(child: load(context));
         } else {
           return ListView.builder(
             shrinkWrap: true,
@@ -260,8 +251,7 @@ class _ClipEditSelectPageState extends State<ClipEditSelectPage> {
     );
   }
 
-  void dialog(
-      BuildContext context, ListClip clips) {
+  void dialog(BuildContext context, ListClip clips) {
     SmartDialog.show(
       alignment: Alignment.bottomCenter,
       builder: (_) {
@@ -300,21 +290,22 @@ class _ClipEditSelectPageState extends State<ClipEditSelectPage> {
                         height: 8,
                       ),
                     },
-                     Padding(
-                padding: const EdgeInsets.only(top: 20,bottom: 8, right: 20, left: 20),
-                child: Text(
-                  'รายละเอียด ${clips.details}',
-                  style: Theme.of(context).textTheme.bodyLarge,
-                ),
-              ),
+                    Padding(
+                      padding: const EdgeInsets.only(
+                          top: 20, bottom: 8, right: 20, left: 20),
+                      child: Text(
+                        'รายละเอียด ${clips.details}',
+                        style: Theme.of(context).textTheme.bodyLarge,
+                      ),
+                    ),
                     Padding(
                       padding: const EdgeInsets.only(left: 20, bottom: 10),
                       child: Text("จำนวนเซต",
                           style: Theme.of(context).textTheme.titleMedium),
                     ),
                     Padding(
-                      padding:
-                          const EdgeInsets.only(left: 20, right: 20, bottom: 20),
+                      padding: const EdgeInsets.only(
+                          left: 20, right: 20, bottom: 20),
                       child: SizedBox(
                         width: MediaQuery.of(context).size.width,
                         child: AutoSizeText(
@@ -371,16 +362,27 @@ class _ClipEditSelectPageState extends State<ClipEditSelectPage> {
                             )),
                     ModalRoute.withName('/DaysCoursePage'),
                   );
+                  // ignore: use_build_context_synchronously
+                  InAppNotification.show(
+                    child: NotificationBody(
+                      count: 1,
+                      message: 'แก้ไขคลิปสำเร็จ',
+                    ),
+                    context: context,
+                    onTap: () => print('Notification tapped!'),
+                    duration: const Duration(milliseconds: 1500),
+                  );
                 } else {
                   // ignore: use_build_context_synchronously
-                  CherryToast.warning(
-                    title: Text('มีเมนู $name ในวันนี้แล้ว'),
-                    displayTitle: false,
-                    description: Text('มีเมนู $name ในวันนี้แล้ว'),
-                    toastPosition: Position.bottom,
-                    animationDuration: const Duration(milliseconds: 1000),
-                    autoDismiss: true,
-                  ).show(context);
+                  InAppNotification.show(
+                    child: NotificationBody(
+                      count: 1,
+                      message: 'แก้ไขคลิปไม่สำเร็จ',
+                    ),
+                    context: context,
+                    onTap: () => print('Notification tapped!'),
+                    duration: const Duration(milliseconds: 1500),
+                  );
                 }
               },
               child: const Text("บันทึก")),

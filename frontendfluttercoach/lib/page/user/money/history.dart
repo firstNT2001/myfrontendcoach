@@ -69,12 +69,12 @@ class _HistoryWalletState extends State<HistoryWallet> {
             child: showMoney(),
           ),
           const Padding(
-            padding: EdgeInsets.only(left: 25, top: 15),
+            padding: EdgeInsets.only(left: 10, top: 15),
             child: Row(
               children: [
                 Padding(
-                  padding: EdgeInsets.only(left: 5),
-                  child: Text("ประวัติการชำระเงิน"),
+                  padding: EdgeInsets.only(left: 8,bottom: 8),
+                  child: Text("ประวัติการชำระเงิน",style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),),
                 ),
               ],
             ),

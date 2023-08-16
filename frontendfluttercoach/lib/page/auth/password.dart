@@ -23,6 +23,7 @@ import '../../service/coach.dart';
 import '../../service/customer.dart';
 import '../../service/provider/appdata.dart';
 import '../../widget/textField/wg_textField_int copy.dart';
+import '../../widget/textField/wg_textField_password.dart';
 import 'login.dart';
 
 class EditPasswordPage extends StatefulWidget {
@@ -120,31 +121,8 @@ class _EditPasswordPageState extends State<EditPasswordPage> {
             setState(
               () {
                 loadData();
-                //   _coachService
-                //     .coach(cid: '', nameCoach: '', email: email.text)
-                //     .then((coachdata) {
-                //   var coachDatas = coachdata.data;
-                //   modelCoach = coachDatas;
-                //   if (modelCoach.isNotEmpty) {
-                //     setState(() {});
-                //     log(modelCoach.length.toString());
-                //   }
-                // });
-
-                // _customerService
-                //     .customer(email: email.text, uid: '')
-                //     .then((cusdata) {
-                //   var cusDatas = cusdata.data;
-                //   modelCustomer = cusDatas;
-                //   if (modelCustomer.isNotEmpty) {
-                //     setState(() {});
-                //     log(modelCustomer.length.toString());
-                //   }
-                // });
               },
             );
-            // log("modelCoach${modelCoach.length}");
-            // log("modelCustomer${modelCustomer.uid}");
           }
         },
         child: const Text('ยืนยัน'),
@@ -275,48 +253,6 @@ class _EditPasswordPageState extends State<EditPasswordPage> {
     );
   }
 
-  Column textPassword(TextEditingController controller) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        const Text('Password'),
-        TextField(
-          obscureText: passwordVisible,
-          controller: controller,
-          onChanged: (value) {
-            setState(() {
-              textErr = '';
-            });
-          },
-          decoration: InputDecoration(
-            border: const UnderlineInputBorder(),
-            // hintText: "Password",
-            // labelText: "Password",
-            //helperText: "Password must contain special character",
-            //helperStyle: const TextStyle(color: Colors.green),
-            prefixIcon: const Icon(FontAwesomeIcons.lock),
-
-            suffixIcon: IconButton(
-              icon: Icon(
-                  passwordVisible ? Icons.visibility : Icons.visibility_off),
-              onPressed: () {
-                setState(
-                  () {
-                    passwordVisible = !passwordVisible;
-                  },
-                );
-              },
-            ),
-            // alignLabelWithHint: false,
-            // filled: true,
-          ),
-          keyboardType: TextInputType.visiblePassword,
-          // textInputAction: TextInputAction.done,
-        ),
-      ],
-    );
-  }
-
   //LoadData
   Future<void> loadData() async {
     try {
@@ -369,13 +305,9 @@ class _EditPasswordPageState extends State<EditPasswordPage> {
             visible: emailVisible,
             child: Column(
               children: [
-                Padding(
-                  padding:
-                      const EdgeInsets.only(bottom: 8, left: 20, right: 20),
-                  child: WidgetTextFieldString(
-                    controller: email,
-                    labelText: 'Email',
-                  ),
+                WidgetTextFieldString(
+                  controller: email,
+                  labelText: 'Email',
                 ),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.end,
@@ -393,7 +325,7 @@ class _EditPasswordPageState extends State<EditPasswordPage> {
                 ),
                 Padding(
                   padding:
-                      const EdgeInsets.only(bottom: 18, left: 20, right: 20),
+                      const EdgeInsets.only(bottom: 18, left: 15, right: 15),
                   child: buttonEmail(),
                 ),
                 const Divider(endIndent: 20, indent: 20),
@@ -403,14 +335,10 @@ class _EditPasswordPageState extends State<EditPasswordPage> {
             visible: otpVisible,
             child: Column(
               children: [
-                Padding(
-                  padding:
-                      const EdgeInsets.only(bottom: 8, left: 20, right: 20),
-                  child: WidgetTextFieldInt(
-                    controller: otp,
-                    labelText: 'OTP',
-                    maxLength: 6,
-                  ),
+                WidgetTextFieldInt(
+                  controller: otp,
+                  labelText: 'OTP',
+                  maxLength: 6,
                 ),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.end,
@@ -428,7 +356,7 @@ class _EditPasswordPageState extends State<EditPasswordPage> {
                 ),
                 Padding(
                   padding:
-                      const EdgeInsets.only(bottom: 18, left: 20, right: 20),
+                      const EdgeInsets.only(bottom: 18, left: 15, right: 15),
                   child: buttonOTP(),
                 ),
                 const Divider(endIndent: 20, indent: 20),
@@ -440,17 +368,17 @@ class _EditPasswordPageState extends State<EditPasswordPage> {
               children: [
                 Padding(
                   padding:
-                      const EdgeInsets.only(bottom: 8, left: 20, right: 20),
-                  child: textPassword(
-                    password1,
+                      const EdgeInsets.only(bottom: 8, left: 15, right: 15),
+                  child: TextFieldPassword(
+                    controller: password1,
+                    title: 'รหัสผ่าน',
                   ),
                 ),
                 Padding(
                   padding:
-                      const EdgeInsets.only(bottom: 8, left: 20, right: 20),
-                  child: textPassword(
-                    password2,
-                  ),
+                      const EdgeInsets.only(bottom: 8, left: 15, right: 15),
+                  child: TextFieldPassword(
+                      controller: password2, title: 'ยืนยันรหัสผ่าน'),
                 ),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.end,
@@ -470,7 +398,7 @@ class _EditPasswordPageState extends State<EditPasswordPage> {
                   visible: resetPassword,
                   child: Padding(
                     padding:
-                        const EdgeInsets.only(bottom: 18, left: 20, right: 20),
+                        const EdgeInsets.only(bottom: 18, left: 15, right: 15),
                     child: buttonReset(),
                   ),
                 ),
@@ -478,7 +406,7 @@ class _EditPasswordPageState extends State<EditPasswordPage> {
                   visible: resetPasswordAll,
                   child: Padding(
                     padding:
-                        const EdgeInsets.only(bottom: 18, left: 20, right: 20),
+                        const EdgeInsets.only(bottom: 18, left: 15, right: 15),
                     child: buttonResetAll(),
                   ),
                 ),
