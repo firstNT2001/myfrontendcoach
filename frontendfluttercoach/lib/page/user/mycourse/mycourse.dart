@@ -57,7 +57,9 @@ class _MyCousesState extends State<MyCouses> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: SafeArea(
-        child: Column(children: [
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
           Align(
             alignment: Alignment.topRight,
             child: IconButton(
@@ -74,20 +76,9 @@ class _MyCousesState extends State<MyCouses> {
                 }),
           ),
           Padding(
-            padding: const EdgeInsets.only(bottom: 15),
-            child: Row(
-              children: [
-                const Icon(
-                  Icons.shopping_basket,
-                  size: 28.0,
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(left: 10),
-                  child: Text("รายการซื้อของฉัน",
-                      style: Theme.of(context).textTheme.bodyLarge),
-                ),
-              ],
-            ),
+            padding: const EdgeInsets.only(left: 10,bottom: 10),
+            child: Text("รายการซื้อของฉัน",
+                style: TextStyle(fontSize: 20,fontWeight: FontWeight.w600)),
           ),
           Expanded(
               child: Padding(
