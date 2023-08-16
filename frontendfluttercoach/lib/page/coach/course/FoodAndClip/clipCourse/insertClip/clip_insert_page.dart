@@ -131,6 +131,7 @@ class _ClipInsertPageState extends State<ClipInsertPage> {
                                     modelResult = response.data;
                                   }
                                   log("result:${modelResult.result}");
+                                  log('message');
                                   if (modelResult.result == '1') {
                                     widget.increaseClip.clear();
                                     // ignore: use_build_context_synchronously
@@ -172,7 +173,7 @@ class _ClipInsertPageState extends State<ClipInsertPage> {
                                       onTap: () =>
                                           print('Notification tapped!'),
                                       duration:
-                                          const Duration(milliseconds: 1500),
+                                          const Duration(milliseconds: 2000),
                                     );
                                   }
                                 },
