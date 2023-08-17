@@ -53,8 +53,12 @@ class _HistoryWalletState extends State<HistoryWallet> {
                 padding: const EdgeInsets.all(8.0),
                 child: IconButton(
                     onPressed: () {
+                     pushNewScreen(
+              context,
+              screen: const addCoin(),
+              withNavBar: true,
+            );
                      
-                      Get.to(() => const addCoin());
                     },
                     icon: Icon(
                       FontAwesomeIcons.circlePlus,

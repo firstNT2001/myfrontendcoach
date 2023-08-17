@@ -2,11 +2,15 @@ import 'dart:convert';
 import 'dart:developer';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
+import 'package:persistent_bottom_nav_bar_v2/persistent-tab-view.dart';
 import '../../../model/response/md_Result.dart';
 
 import '../../../service/wallet.dart';
+import '../homepage/homepageUser.dart';
 import '../profileUser.dart';
+import 'history.dart';
 
 class getQrcode extends StatefulWidget {
   const getQrcode({super.key, required this.money, required this.refNo});
@@ -41,11 +45,40 @@ class _getQrcodeState extends State<getQrcode> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return Scaffold(  
+      appBar: AppBar(
+        backgroundColor: Colors.white,
+        leading: IconButton(
+          icon: const Icon(
+            FontAwesomeIcons.chevronLeft,
+          ),
+          onPressed: () {
+             pushNewScreen(
+              context,
+              screen: const HistoryWallet(),
+              withNavBar: true,
+            );
+          },
+        ),
+      ),
       body: Center(
           child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
+          Padding(
+            padding: const EdgeInsets.only(left: 15, right: 15),
+            child: Text(
+              "กรุณาถ่ายภาพหน้าจอ QR Code ไปแสกนเพื่อชำระเงิน ",
+              style: TextStyle(fontSize: 16),
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.only(left: 15, right: 15),
+            child: Text(
+              "แล้วรอระบบทำการตรวจสอบ",
+              style: TextStyle(fontSize: 16),
+            ),
+          ),
           Padding(
             padding: const EdgeInsets.all(15.0),
             child: showQr(),
@@ -119,33 +152,30 @@ class _getQrcodeState extends State<getQrcode> {
           if (snapshot.connectionState != ConnectionState.done) {
             return const Center(child: CircularProgressIndicator());
           } else {
-            return SizedBox(
-              height: 450,
-              width: 350,
-              child: Card(
-                child: Center(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Card(
-                        child: SizedBox(
-                            width: 250,
-                            height: 380,
-                            child: Image.memory(
-                              imgQr.contentAsBytes(),
-                              fit: BoxFit.cover,
-                            )),
+            return Column(
+              children: [
+                SizedBox(
+                  height: 540,
+                  width: 360,
+                  child: Card(
+                    child: Padding(
+                      padding: const EdgeInsets.all(12.0),
+                      child: Center(
+                        child: Card(
+                          child: SizedBox(
+                              width: 320,
+                              height: 500,
+                              child: Image.memory(
+                                imgQr.contentAsBytes(),
+                                fit: BoxFit.cover,
+                              )),
+                        ),
                       ),
-                      FilledButton(
-                          onPressed: () {
-                            
-                            Get.to(() => ProfileUser());
-                          },
-                          child: Text("กลับสู่หน้าหลัก"))
-                    ],
+                    ),
                   ),
                 ),
-              ),
+                
+              ],
             );
           }
         });

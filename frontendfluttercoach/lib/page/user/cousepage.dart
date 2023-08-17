@@ -4,21 +4,16 @@ import 'dart:developer';
 import 'package:custom_rating_bar/custom_rating_bar.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_rating_native/flutter_rating_native.dart';
 import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:frontendfluttercoach/page/user/profilecoach.dart';
-
-import 'package:frontendfluttercoach/service/review.dart';
 import 'package:get/get.dart';
-import 'package:get/get_connect/http/src/utils/utils.dart';
 import 'package:intl/intl.dart';
 import 'package:persistent_bottom_nav_bar_v2/persistent-tab-view.dart';
 import 'package:provider/provider.dart';
 import '../../model/request/buycourse_coID_post.dart';
 import '../../model/response/md_Day_showmycourse.dart';
 import '../../model/response/md_Result.dart';
-import '../../model/response/md_Review_get.dart';
 import '../../model/response/md_amoutclip.dart';
 import '../../model/response/md_coach_course_get.dart';
 import '../../service/buy.dart';
@@ -42,6 +37,7 @@ class _showCousePageState extends State<showCousePage> {
   late CourseService courseService;
   late Future<void> loadDataMethod;
   late ModelAmountclip clipamount;
+  
   List<Course> courses = [];
   List<DayDetail> clip = [];
   late ModelResult moduleResult;
@@ -382,4 +378,5 @@ class _showCousePageState extends State<showCousePage> {
       );
     });
   }
+    
 }
