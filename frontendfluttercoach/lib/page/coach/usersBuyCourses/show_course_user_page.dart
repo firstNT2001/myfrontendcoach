@@ -12,8 +12,12 @@ import '../../../service/course.dart';
 import '../../../service/days.dart';
 import '../../../service/provider/appdata.dart';
 import '../../../widget/dialogs.dart';
+<<<<<<< HEAD
 import '../../user/chat/chat.dart';
 import '../course/FoodAndClip/course_food_clip.dart';
+=======
+import '../course/course_edit_page.dart';
+>>>>>>> feature/12082023-uicourse
 
 class ShowCourseOfUserPage extends StatefulWidget {
   const ShowCourseOfUserPage({super.key, required this.coID});
@@ -29,10 +33,15 @@ class _ShowCourseOfUserPageState extends State<ShowCourseOfUserPage> {
   late Future<void> loadDataMethod;
   List<Course> courses = [];
 
+<<<<<<< HEAD
   //Days
   late DaysService _daysService;
   late Future<void> loadDaysDataMethod;
   List<ModelDay> modelDays = [];
+=======
+  List<Buying> courses = [];
+  List<double> lisetProgessbar = [];
+>>>>>>> feature/12082023-uicourse
   @override
   void initState() {
     // TODO: implement initState
@@ -42,11 +51,17 @@ class _ShowCourseOfUserPageState extends State<ShowCourseOfUserPage> {
 
     _daysService = context.read<AppData>().daysService;
 
+<<<<<<< HEAD
     loadDaysDataMethod = loadDaysDataAsync();
+=======
+    loadCourseDataMethod = loadUserData();
+
+>>>>>>> feature/12082023-uicourse
   }
 
   @override
   Widget build(BuildContext context) {
+<<<<<<< HEAD
     return Scaffold(
       body: SafeArea(
         child: ListView(
@@ -57,6 +72,9 @@ class _ShowCourseOfUserPageState extends State<ShowCourseOfUserPage> {
         ),
       ),
     );
+=======
+    return scaffold(context);
+>>>>>>> feature/12082023-uicourse
   }
 
   FutureBuilder<void> showCourse() {
@@ -131,6 +149,7 @@ class _ShowCourseOfUserPageState extends State<ShowCourseOfUserPage> {
     );
   }
 
+<<<<<<< HEAD
   Padding showText(BuildContext context) {
     return Padding(
       padding: EdgeInsets.only(top: MediaQuery.of(context).size.height / 3),
@@ -228,6 +247,29 @@ class _ShowCourseOfUserPageState extends State<ShowCourseOfUserPage> {
         ),
       ),
     );
+=======
+  //LoadData
+  Future<void> loadUserData() async {
+    try {
+      var datacouse = await _buyingService.buying(
+          uid: widget.uid,
+          cid: context.read<AppData>().cid.toString(),
+          coID: '');
+      courses = datacouse.data;
+
+      log(courses.length.toString());
+      for (int i = 0; i < courses.length; i++) {
+        log("i${courses[i].courseId}");
+        var datas = await _progessService.processbar(
+            coID: courses[i].courseId.toString());
+        progess = datas.data;
+        lisetProgessbar.add((progess.percent / 100).toPrecision(1));
+        log("percent${lisetProgessbar[i].toString()}");
+      }
+    } catch (err) {
+      log('Error: $err');
+    }
+>>>>>>> feature/12082023-uicourse
   }
 
   FutureBuilder<void> showDays() {
@@ -235,7 +277,7 @@ class _ShowCourseOfUserPageState extends State<ShowCourseOfUserPage> {
       future: loadDaysDataMethod,
       builder: (context, snapshot) {
         if (snapshot.connectionState != ConnectionState.done) {
-          return Container();
+          return Center(child: load(context));
         } else {
           return Column(
             crossAxisAlignment: CrossAxisAlignment.start,

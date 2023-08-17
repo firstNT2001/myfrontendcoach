@@ -1,5 +1,6 @@
 import 'dart:developer';
 
+import 'package:custom_rating_bar/custom_rating_bar.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -38,7 +39,14 @@ class _HistoryPageState extends State<HistoryPage> {
     return Scaffold(
       body: SafeArea(
           child: Column(
-        children: [loadcourse()],
+            crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Padding(
+            padding: const EdgeInsets.only(left: 10,bottom: 10,top: 30),
+            child: Text("ประวัติการซื้อคอร์ส",
+                style: TextStyle(fontSize: 20,fontWeight: FontWeight.w600)),
+          ),
+          loadcourse()],
       )),
     );
   }
@@ -88,27 +96,29 @@ class _HistoryPageState extends State<HistoryPage> {
                               begin: Alignment.topCenter,
                               end: Alignment.bottomCenter,
                               colors: <Color>[
-                                // const Color.fromARGB(255, 0, 0, 0).withAlpha(0),
-                                // const Color.fromARGB(49, 0, 0, 0),
-                                // const Color.fromARGB(127, 0, 0, 0)
-                                const Color.fromARGB(255, 255, 255, 255)
-                                    .withAlpha(0),
-                                const Color.fromARGB(39, 255, 255, 255),
-                                const Color.fromARGB(121, 255, 255, 255)
+                                const Color.fromARGB(255, 0, 0, 0).withAlpha(0),
+                                const Color.fromARGB(49, 0, 0, 0),
+                                const Color.fromARGB(127, 0, 0, 0)
+                                // const Color.fromARGB(255, 255, 255, 255)
+                                //     .withAlpha(0),
+                                // const Color.fromARGB(39, 255, 255, 255),
+                                // const Color.fromARGB(121, 255, 255, 255)
                               ],
                             ),
                             borderRadius: BorderRadius.circular(20),
                           ),
                         ),
                         Padding(
-                          padding: const EdgeInsets.all(8.0),
+                          padding: const EdgeInsets.all(8),
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             mainAxisAlignment: MainAxisAlignment.end,
                             children: [
                               Text(listcours.course.name,
-                                  style:
-                                      Theme.of(context).textTheme.titleLarge),
+                                  style: Theme.of(context)
+                                          .textTheme
+                                          .titleLarge!
+                                          .copyWith(color: Colors.white),),
                               Row(
                                 children: [
                                   const Padding(
@@ -116,14 +126,29 @@ class _HistoryPageState extends State<HistoryPage> {
                                     child: Icon(
                                       FontAwesomeIcons.solidUser,
                                       size: 16.0,
+                                      color: Colors.white,
                                     ),
                                   ),
-                                  Text(listcours.customer.fullName,
+                                  Text(listcours.course.coach.fullName,
                                       style: Theme.of(context)
                                           .textTheme
-                                          .bodyLarge),
+                                          .bodyLarge!
+                                          .copyWith(color: Colors.white),),
                                 ],
                               ),
+                               RatingBar.readOnly(
+                                  isHalfAllowed: false,
+                                  filledIcon: FontAwesomeIcons.bolt,
+                                  size: 16,
+                                  emptyIcon: FontAwesomeIcons.bolt,
+                                  filledColor: Theme.of(context)
+                                      .colorScheme
+                                      .tertiaryContainer,
+                                  emptyColor:
+                                      Color.fromARGB(255, 245, 245, 245),
+                                  initialRating: double.parse(listcours.course.level),
+                                  maxRating: 3,
+                                ),
                             ],
                           ),
                         ),

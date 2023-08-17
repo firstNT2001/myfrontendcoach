@@ -20,6 +20,10 @@ import '../../../service/course.dart';
 import '../../../service/customer.dart';
 import '../../../service/day.dart';
 import '../../../service/provider/appdata.dart';
+<<<<<<< HEAD
+=======
+import '../profilecoach.dart';
+>>>>>>> feature/12082023-uicourse
 
 class ShowDayMycourse extends StatefulWidget {
   ShowDayMycourse(
@@ -58,13 +62,21 @@ class _ShowDayMycourseState extends State<ShowDayMycourse> {
   String txtdateStart = "";
   late String roomchat;
   var update;
+<<<<<<< HEAD
 
   int coID = 0;
   void initState() {
     // TODO: implement initState
 
+=======
+  int coachId=0;
+
+  
+  void initState() {
+    // TODO: implement initState
+    coachId =context.read<AppData>().cid;
+>>>>>>> feature/12082023-uicourse
     super.initState();
-    coID = context.read<AppData>().idcourse;
     dayService = DayService(Dio(), baseUrl: context.read<AppData>().baseurl);
     courseService =
         CourseService(Dio(), baseUrl: context.read<AppData>().baseurl);
@@ -93,8 +105,13 @@ class _ShowDayMycourseState extends State<ShowDayMycourse> {
           foregroundColor: Colors.white,
           onPressed: () {
             Get.to(() => ChatPage(
+<<<<<<< HEAD
                   roomID: coID.toString() + widget.namecourse,
                   userID: coID.toString(),
+=======
+                  roomID: widget.coID.toString() + widget.namecourse,
+                  userID: widget.coID.toString(),
+>>>>>>> feature/12082023-uicourse
                   firstName: widget.namecourse,
                   roomName: widget.namecourse,
                 ));
@@ -140,6 +157,7 @@ class _ShowDayMycourseState extends State<ShowDayMycourse> {
                 ],
               ),
             ),
+<<<<<<< HEAD
             Row(
               children: [
                 Padding(
@@ -155,6 +173,34 @@ class _ShowDayMycourseState extends State<ShowDayMycourse> {
                               color: Colors.white, fontSize: 16))),
                 ),
               ],
+=======
+            InkWell(
+              child: Row(
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.only(left: 15, bottom: 10),
+                    child: FilledButton.icon(
+                        onPressed: () {
+                          log("messagecoID"+coachId.toString());
+                          pushNewScreen(
+                      context,
+                      screen: ProfileCoachPage(
+                              coachID:coachId,
+                            ),
+                      withNavBar: true,
+                    );
+                        },
+                        icon: const Icon(
+                          FontAwesomeIcons.solidUser,
+                          size: 16,
+                        ),
+                        label: Text(widget.namecoach,
+                            style: const TextStyle(
+                                color: Colors.white, fontSize: 16))),
+                  ),
+                ],
+              ),
+>>>>>>> feature/12082023-uicourse
             ),
             const Padding(
               padding: EdgeInsets.only(left: 15, bottom: 10),
@@ -231,7 +277,11 @@ class _ShowDayMycourseState extends State<ShowDayMycourse> {
                                   log("เริ่มแล้ว$widget.expirationDate");
                                   log(" DID:= ${day.did}");
                                   context.read<AppData>().did = day.did;
+<<<<<<< HEAD
                                   context.read<AppData>().idcourse = coID;
+=======
+                                  context.read<AppData>().idcourse = widget.coID;
+>>>>>>> feature/12082023-uicourse
 
                                   Get.to(() => showFood(
                                         indexSeq: day.sequence,
@@ -320,7 +370,7 @@ class _ShowDayMycourseState extends State<ShowDayMycourse> {
                       moduleResult = update.data;
                       log(moduleResult.result);
                       context.read<AppData>().did = days.first.did;
-                      context.read<AppData>().idcourse = coID;
+                      context.read<AppData>().idcourse = widget.coID;
                       log(days.first.did.toString());
                       SmartDialog.dismiss();
                       Get.to(() => showFood(indexSeq: days.first.sequence - 1));

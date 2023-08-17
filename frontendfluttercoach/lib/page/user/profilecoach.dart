@@ -1,14 +1,18 @@
 import 'dart:developer';
+import 'package:custom_rating_bar/custom_rating_bar.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:frontendfluttercoach/page/user/cousepage.dart';
+import 'package:persistent_bottom_nav_bar_v2/persistent-tab-view.dart';
 import '../../model/response/md_Coach_get.dart';
+import '../../model/response/md_Customer_get.dart';
 import '../../model/response/md_coach_course_get.dart';
 import '../../service/coach.dart';
 import '../../service/course.dart';
 import 'package:get/get.dart';
 import 'package:provider/provider.dart';
+import '../../service/customer.dart';
 import '../../service/provider/appdata.dart';
 
 class ProfileCoachPage extends StatefulWidget {
@@ -26,7 +30,9 @@ class _ProfileCoachPageState extends State<ProfileCoachPage> {
   late List<Course> courses = [];
   late List<Coach> coach = [];
   int selectedIndex = 0;
- 
+   late CustomerService customerService;
+  List<Customer> customer = [];
+int uid=0;
   PageController pageController = PageController();
   void onTapped(int index) {
     setState(() {
@@ -40,47 +46,71 @@ class _ProfileCoachPageState extends State<ProfileCoachPage> {
     // TODO: implement initState
     super.initState();
     //couse
+    uid = context.read<AppData>().uid;
     courseService =
         CourseService(Dio(), baseUrl: context.read<AppData>().baseurl);
     coachService =
         CoachService(Dio(), baseUrl: context.read<AppData>().baseurl);
+        customerService =
+        CustomerService(Dio(), baseUrl: context.read<AppData>().baseurl);
     loadDataMethod = loadData();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        backgroundColor: Colors.white,
+        leading: IconButton(
+          icon: const Icon(
+            FontAwesomeIcons.chevronLeft,
+          ),
+          onPressed: () {
+            // Get.to(() => DaysCoursePage(
+            //       coID: context.read<AppData>().coID.toString(),
+            //       isVisible: widget.isVisible,
+            //     ));
+            Navigator.pop(context);
+          },
+        ),
+        title: Text(
+          "โปรไฟล์โค้ช",
+          style: Theme.of(context).textTheme.headlineMedium,
+        ),
+      ),
       body: SafeArea(
         child: ListView(
-         // crossAxisAlignment: CrossAxisAlignment.start,
+          // crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-          loadcoach(),
-         // const Divider(
-         //   color: Colors.black,
-         //   indent: 8,
-         //   endIndent: 8,
-         // ),
-         Padding(
-           padding: const EdgeInsets.only(left: 8,top: 15,bottom: 8,right: 8 ),
-           child: ClipRRect(
-               borderRadius: const BorderRadius.only(
-                 topLeft: Radius.circular(12),
-                 topRight: Radius.circular(12),
-                 bottomLeft: Radius.circular(12),
-                 bottomRight: Radius.circular(12)
-               ),
-               child: Container(
-                   color: Colors.amber,
-                   child:  const Padding(
-                     padding: EdgeInsets.only(left: 8,right: 8,top: 5,bottom: 5),
-                     child: Text(
-                       "คอร์สทั้งหมด",
-                       style: TextStyle(fontSize: 16),
-                     ),
-                   ))),
-         ),
-         loadcourse(),
-        ],),
+            loadcoach(),
+            // const Divider(
+            //   color: Colors.black,
+            //   indent: 8,
+            //   endIndent: 8,
+            // ),
+            Padding(
+              padding:
+                  const EdgeInsets.only(left: 8, top: 15, bottom: 8, right: 8),
+              child: ClipRRect(
+                  borderRadius: const BorderRadius.only(
+                      topLeft: Radius.circular(12),
+                      topRight: Radius.circular(12),
+                      bottomLeft: Radius.circular(12),
+                      bottomRight: Radius.circular(12)),
+                  child: Container(
+                      color: Colors.amber,
+                      child: const Padding(
+                        padding: EdgeInsets.only(
+                            left: 8, right: 8, top: 5, bottom: 5),
+                        child: Text(
+                          "คอร์สทั้งหมด",
+                          style: TextStyle(fontSize: 17,fontWeight: FontWeight.w600),
+                        ),
+                      ))),
+            ),
+            loadcourse(),
+          ],
+        ),
       ),
     );
   }
@@ -91,12 +121,24 @@ Widget loadcourse() {
         if (snapshot.connectionState != ConnectionState.done) {
           return const Center(child: CircularProgressIndicator());
         } else {
-          return Column(children: courses.map((listcours) =>   Padding(
+          return ListView.builder(
+            shrinkWrap: true,
+            itemCount: courses.length,
+            itemBuilder: (context, index) {
+              final listcours = courses[index];
+              return Padding(
                 padding: const EdgeInsets.only(left: 10, right: 10, bottom: 20),
                 child: InkWell(
                   onTap: () {
+                    log(listcours.coId.toString());
+                    log(customer.first.price.toString());
                     context.read<AppData>().idcourse = listcours.coId;
-                    Get.to(() => const showCousePage());
+                    context.read<AppData>().money = customer.first.price;
+                    pushNewScreen(
+                      context,
+                      screen: const showCousePage(),
+                      withNavBar: true,
+                    );
                   },
                   child: Container(
                     alignment: Alignment.center,
@@ -111,7 +153,8 @@ Widget loadcourse() {
                                 aspectRatio: 16 / 9,
                                 child: Container(
                                   decoration: BoxDecoration(
-                                    color: const Color(0xff7c94b6),
+                                    color:
+                                        Theme.of(context).colorScheme.onPrimary,
                                     image: DecorationImage(
                                         image: NetworkImage(listcours.image),
                                         fit: BoxFit.cover),
@@ -147,9 +190,13 @@ Widget loadcourse() {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               mainAxisAlignment: MainAxisAlignment.end,
                               children: [
-                                Text(listcours.name,
-                                    style:
-                                        Theme.of(context).textTheme.titleLarge),
+                                Text(
+                                  listcours.name,
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .titleLarge!
+                                      .copyWith(color: Colors.white),
+                                ),
                                 Row(
                                   children: [
                                     const Padding(
@@ -157,64 +204,31 @@ Widget loadcourse() {
                                       child: Icon(
                                         FontAwesomeIcons.solidUser,
                                         size: 16.0,
+                                        color: Colors.white,
                                       ),
                                     ),
-                                    Text(listcours.coach.fullName,
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .bodyLarge),
+                                    Text(
+                                      listcours.coach.fullName,
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .bodyLarge!
+                                          .copyWith(color: Colors.white),
+                                    ),
                                   ],
                                 ),
-                                (listcours.level == '1')
-                                    ? Row(
-                                        children: [
-                                          Icon(FontAwesomeIcons.bolt,
-                                              size: 16,
-                                              color: Theme.of(context)
-                                                  .colorScheme
-                                                  .tertiaryContainer),
-                                          const Icon(FontAwesomeIcons.bolt,
-                                              size: 16),
-                                          const Icon(FontAwesomeIcons.bolt,
-                                              size: 16),
-                                        ],
-                                      )
-                                    : (listcours.level == '2')
-                                        ? Row(
-                                            children: [
-                                              Icon(FontAwesomeIcons.bolt,
-                                                  size: 16,
-                                                  color: Theme.of(context)
-                                                      .colorScheme
-                                                      .tertiaryContainer),
-                                              Icon(FontAwesomeIcons.bolt,
-                                                  size: 16,
-                                                  color: Theme.of(context)
-                                                      .colorScheme
-                                                      .tertiaryContainer),
-                                              const Icon(FontAwesomeIcons.bolt,
-                                                  size: 16),
-                                            ],
-                                          )
-                                        : Row(
-                                            children: [
-                                              Icon(FontAwesomeIcons.bolt,
-                                                  size: 16,
-                                                  color: Theme.of(context)
-                                                      .colorScheme
-                                                      .tertiaryContainer),
-                                              Icon(FontAwesomeIcons.bolt,
-                                                  size: 16,
-                                                  color: Theme.of(context)
-                                                      .colorScheme
-                                                      .tertiaryContainer),
-                                              Icon(FontAwesomeIcons.bolt,
-                                                  size: 16,
-                                                  color: Theme.of(context)
-                                                      .colorScheme
-                                                      .tertiaryContainer),
-                                            ],
-                                          )
+                                RatingBar.readOnly(
+                                  isHalfAllowed: false,
+                                  filledIcon: FontAwesomeIcons.bolt,
+                                  size: 16,
+                                  emptyIcon: FontAwesomeIcons.bolt,
+                                  filledColor: Theme.of(context)
+                                      .colorScheme
+                                      .tertiaryContainer,
+                                  emptyColor:
+                                      Color.fromARGB(255, 245, 245, 245),
+                                  initialRating: double.parse(listcours.level),
+                                  maxRating: 3,
+                                ),
                               ],
                             ),
                           )
@@ -223,153 +237,9 @@ Widget loadcourse() {
                     ),
                   ),
                 ),
-              )
-           ).toList(),);
-       
-       
-          // return ListView.builder(
-          //   // shrinkWrap: true,
-          //   primary: false,
-          //   itemCount: courses.length,
-          //   itemBuilder: (context, index) {
-          //     final listcours = courses[index];
-          //     return 
-          //     Padding(
-          //       padding: const EdgeInsets.only(left: 10, right: 10, bottom: 20),
-          //       child: InkWell(
-          //         onTap: () {
-          //           context.read<AppData>().idcourse = listcours.coId;
-          //           Get.to(() => const showCousePage());
-          //         },
-          //         child: Container(
-          //           alignment: Alignment.center,
-          //           width: double.infinity,
-          //           child: AspectRatio(
-          //             aspectRatio: 16 / 9,
-          //             child: Stack(
-          //               children: <Widget>[
-          //                 Container(
-          //                   alignment: Alignment.topCenter,
-          //                   child: AspectRatio(
-          //                       aspectRatio: 16 / 9,
-          //                       child: Container(
-          //                         decoration: BoxDecoration(
-          //                           color: const Color(0xff7c94b6),
-          //                           image: DecorationImage(
-          //                               image: NetworkImage(listcours.image),
-          //                               fit: BoxFit.cover),
-          //                           borderRadius: BorderRadius.circular(20),
-          //                         ),
-          //                       )),
-          //                   //color: Colors.white,
-          //                 ),
-          //                 Container(
-          //                   padding: const EdgeInsets.all(5.0),
-          //                   alignment: Alignment.bottomCenter,
-          //                   decoration: BoxDecoration(
-          //                     gradient: LinearGradient(
-          //                       begin: Alignment.topCenter,
-          //                       end: Alignment.bottomCenter,
-          //                       colors: <Color>[
-          //                         const Color.fromARGB(255, 0, 0, 0)
-          //                             .withAlpha(0),
-          //                         const Color.fromARGB(49, 0, 0, 0),
-          //                         const Color.fromARGB(127, 0, 0, 0)
-          //                         // const Color.fromARGB(255, 255, 255, 255)
-          //                         //     .withAlpha(0),
-          //                         // Color.fromARGB(39, 255, 255, 255),
-          //                         // Color.fromARGB(121, 255, 255, 255)
-          //                       ],
-          //                     ),
-          //                     borderRadius: BorderRadius.circular(20),
-          //                   ),
-          //                 ),
-          //                 Padding(
-          //                   padding: const EdgeInsets.all(8.0),
-          //                   child: Column(
-          //                     crossAxisAlignment: CrossAxisAlignment.start,
-          //                     mainAxisAlignment: MainAxisAlignment.end,
-          //                     children: [
-          //                       Text(listcours.name,
-          //                           style:
-          //                               Theme.of(context).textTheme.titleLarge),
-          //                       Row(
-          //                         children: [
-          //                           const Padding(
-          //                             padding: EdgeInsets.only(right: 8),
-          //                             child: Icon(
-          //                               FontAwesomeIcons.solidUser,
-          //                               size: 16.0,
-          //                             ),
-          //                           ),
-          //                           Text(listcours.coach.fullName,
-          //                               style: Theme.of(context)
-          //                                   .textTheme
-          //                                   .bodyLarge),
-          //                         ],
-          //                       ),
-          //                       (listcours.level == '1')
-          //                           ? Row(
-          //                               children: [
-          //                                 Icon(FontAwesomeIcons.bolt,
-          //                                     size: 16,
-          //                                     color: Theme.of(context)
-          //                                         .colorScheme
-          //                                         .tertiaryContainer),
-          //                                 const Icon(FontAwesomeIcons.bolt,
-          //                                     size: 16),
-          //                                 const Icon(FontAwesomeIcons.bolt,
-          //                                     size: 16),
-          //                               ],
-          //                             )
-          //                           : (listcours.level == '2')
-          //                               ? Row(
-          //                                   children: [
-          //                                     Icon(FontAwesomeIcons.bolt,
-          //                                         size: 16,
-          //                                         color: Theme.of(context)
-          //                                             .colorScheme
-          //                                             .tertiaryContainer),
-          //                                     Icon(FontAwesomeIcons.bolt,
-          //                                         size: 16,
-          //                                         color: Theme.of(context)
-          //                                             .colorScheme
-          //                                             .tertiaryContainer),
-          //                                     const Icon(FontAwesomeIcons.bolt,
-          //                                         size: 16),
-          //                                   ],
-          //                                 )
-          //                               : Row(
-          //                                   children: [
-          //                                     Icon(FontAwesomeIcons.bolt,
-          //                                         size: 16,
-          //                                         color: Theme.of(context)
-          //                                             .colorScheme
-          //                                             .tertiaryContainer),
-          //                                     Icon(FontAwesomeIcons.bolt,
-          //                                         size: 16,
-          //                                         color: Theme.of(context)
-          //                                             .colorScheme
-          //                                             .tertiaryContainer),
-          //                                     Icon(FontAwesomeIcons.bolt,
-          //                                         size: 16,
-          //                                         color: Theme.of(context)
-          //                                             .colorScheme
-          //                                             .tertiaryContainer),
-          //                                   ],
-          //                                 )
-          //                     ],
-          //                   ),
-          //                 )
-          //               ],
-          //             ),
-          //           ),
-          //         ),
-          //       ),
-          //     );
-           
-          //   },
-          // );
+              );
+            },
+          );
         }
       },
     );
@@ -385,77 +255,138 @@ Widget loadcourse() {
               children: [
                 Row(
                   children: [
+                    //listcours.image
                     Stack(
                       children: [
-                        ClipRRect(
-                          borderRadius: const BorderRadius.only(
-                              topRight: Radius.circular(100),
-                              bottomRight: Radius.circular(100)),
+                        Padding(
+                          padding: const EdgeInsets.only(top: 30),
                           child: Container(
-                            height: 180,
-                            width: 200,
-                            color: Theme.of(context).colorScheme.primary,
-                          ),
-                        ),
-                        Positioned(
-                            right: -75,
-                            top: -110,
-                            child: Container(
-                              height: 200,
-                              width: 150,
-                              margin: const EdgeInsets.all(100.0),
+                              height: 100,
+                              width: MediaQuery.of(context).size.width * 0.99,
                               decoration: const BoxDecoration(
-                                  color:
-                                      Color.fromARGB(255, 255, 255, 255),
-                                  shape: BoxShape.circle),
-                            )),
-                        Positioned(
-                          right: 30,
-                          top: 20,
-                          child: CircleAvatar(
-                            radius: 70,
-                            backgroundImage: NetworkImage(coach.first.image),
-                          ),
+                                gradient: LinearGradient(
+                                    begin: Alignment.topCenter,
+                                    end: Alignment.bottomCenter,
+                                    colors: [
+                                      Color.fromRGBO(255, 149, 19, 0.824),
+                                      Color.fromRGBO(249, 155, 125, 0.973),
+                                    ],
+                                    stops: [
+                                      0.0,
+                                      0.99
+                                    ]),
+                              )),
+                        ),
+                        Row(
+                          children: [
+                            Padding(
+                              padding: const EdgeInsets.only(left: 10, top: 8),
+                              child: Container(
+                                height:
+                                    MediaQuery.of(context).size.height * 0.17,
+                                width: MediaQuery.of(context).size.width * 0.36,
+                                decoration: BoxDecoration(
+                                  color: const Color(0xff7c94b6),
+                                  image: DecorationImage(
+                                      image: NetworkImage(coach.first.image),
+                                      fit: BoxFit.cover),
+                                  borderRadius: BorderRadius.circular(100),
+                                ),
+                              ),
+                            ),
+                            const SizedBox(
+                              width: 30,
+                            ),
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                Text("@${coach.first.username}",
+                                    style: const TextStyle(
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.w600)),
+                                Text("@${coach.first.fullName}",
+                                    style: const TextStyle(
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.w600)),
+                              ],
+                            )
+                          ],
                         ),
                       ],
                     ),
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text("@${coach.first.username}",
-                              style: const TextStyle(fontSize: 16)),
-                          Text(coach.first.fullName,
-                              style: const TextStyle(fontSize: 16)),
-                          
-                        ],
-                      ),
-                    )
+                    // Stack(
+                    //   children: [
+                    //     ClipRRect(
+                    //       borderRadius: const BorderRadius.only(
+                    //           topRight: Radius.circular(100),
+                    //           bottomRight: Radius.circular(100)),
+                    //       child: Container(
+                    //         height: 180,
+                    //         width: 200,
+                    //         color: Theme.of(context).colorScheme.primary,
+                    //       ),
+                    //     ),
+                    //     Positioned(
+                    //         right: -75,
+                    //         top: -110,
+                    //         child: Container(
+                    //           height: 200,
+                    //           width: 150,
+                    //           margin: const EdgeInsets.all(100.0),
+                    //           decoration: const BoxDecoration(
+                    //               color:
+                    //                   Color.fromARGB(255, 255, 255, 255),
+                    //               shape: BoxShape.circle),
+                    //         )),
+                    //     Positioned(
+                    //       right: 30,
+                    //       top: 20,
+                    //       child: CircleAvatar(
+                    //         radius: 70,
+                    //         backgroundImage: NetworkImage(coach.first.image),
+                    //       ),
+                    //     ),
+                    //   ],
+                    // ),
                   ],
                 ),
-                Padding(
-                  padding: EdgeInsets.only(top: 10, left: 8),
-                  child: Row(
-                              children: [
-                                const Icon(
-                                  FontAwesomeIcons.graduationCap,
-                                  size: 18,
-                                ),
-                                Padding(
-                                  padding: const EdgeInsets.only(left: 8,right: 8),
-                                  child: Text(coach.first.qualification,
-                                      style: const TextStyle(fontSize: 16)),
-                                ),
-                              ],
-                            ),
-                ),
                 const Padding(
-                  padding: EdgeInsets.only(top: 10, left: 8),
-                  child: Text("คุณสมบัติ", style: TextStyle(fontSize: 16)),
+                  padding: EdgeInsets.only(top: 15, left: 10),
+                  child: Row(
+                    children: [
+                      Icon(
+                        FontAwesomeIcons.graduationCap,
+                        size: 18,
+                      ),
+                      Padding(
+                        padding: EdgeInsets.only(left: 8, right: 8),
+                        child: Text("วุฒิการศึกษา",
+                            style: TextStyle(fontSize: 16,fontWeight: FontWeight.w700)),
+                      ),
+                    ],
+                  ),
+                ), Padding(
+                        padding: const EdgeInsets.only(left: 18, right: 15,top: 5),
+                        child: Text(coach.first.qualification,
+                            style: const TextStyle(fontSize: 16)),
+                      ),
+                const Padding(
+                  padding: EdgeInsets.only(top: 10, left: 10),
+                  child: Row(
+                    children: [
+                      Icon(
+                          FontAwesomeIcons.buildingColumns,
+                          size: 18,
+                        ),
+                      Padding(
+                        padding: EdgeInsets.only(top: 10, left: 8),
+                        child: Text("คุณสมบัติ", style: TextStyle(fontSize: 16,fontWeight: FontWeight.w700)),
+                      ),
+                    ],
+                  ),
                 ),
                 Padding(
-                  padding: const EdgeInsets.only(left: 12),
+                  padding: const EdgeInsets.only(left: 18,right: 15),
                   child: Text(coach.first.property,
                       style: const TextStyle(fontSize: 16)),
                 ),
@@ -469,6 +400,8 @@ Widget loadcourse() {
 
   Future<void> loadData() async {
     try {
+      var result = await customerService.customer(uid: uid.toString(), email: '');
+      customer = result.data;
       var datas = await courseService.course(
           cid: widget.coachID.toString(), coID: '', name: '');
       log("iddddddddd= " + widget.coachID.toString());

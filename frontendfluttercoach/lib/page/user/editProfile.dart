@@ -27,6 +27,7 @@ import '../../widget/textField/wg_textField.dart';
 import '../../widget/textField/wg_textField_int copy.dart';
 import '../../widget/textField/wg_textField_int.dart';
 import '../auth/GoogleAuthenticator.dart';
+import '../coach/profile/coach_editPassword.dart';
 import 'money/widgethistory/widget_history.dart';
 
 // ignore: camel_case_types
@@ -416,6 +417,12 @@ class _editProfileCusState extends State<editProfileCus> {
                           FontAwesomeIcons.chevronRight,
                         ),
                         onPressed: () {
+                         
+                           Get.to(() => CoachEditPassword(
+                                password: password.text,
+                                id: context.read<AppData>().cid.toString(),
+                                visible: true,
+                              ));
                           // Get.to(() => EditPasswordPage(
                           //       password: _password.text
                           //     ));

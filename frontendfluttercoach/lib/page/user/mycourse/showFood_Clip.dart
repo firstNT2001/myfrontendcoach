@@ -3,6 +3,7 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:frontendfluttercoach/service/course.dart';
 import 'package:intl/intl.dart';
 import '../../../../model/response/clip_get_res.dart';
@@ -90,6 +91,22 @@ class _showFoodState extends State<showFood> {
         length: 2,
         child: Scaffold(
           appBar: AppBar(
+            leading: IconButton(
+          icon: const Icon(
+            FontAwesomeIcons.chevronLeft,
+          ),
+          onPressed: () {
+            // Get.to(() => DaysCoursePage(
+            //       coID: context.read<AppData>().coID.toString(),
+            //       isVisible: widget.isVisible,
+            //     ));
+            Navigator.pop(context);
+          },
+        ),
+        title: Text(
+          "วันที่ "+widget.indexSeq.toString(),
+          style: Theme.of(context).textTheme.headlineMedium,
+        ),
             automaticallyImplyLeading: false,
             bottom: const TabBar(tabs: [
               Tab(
