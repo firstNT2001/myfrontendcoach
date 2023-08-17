@@ -2,7 +2,7 @@ import 'dart:developer';
 
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
-import 'package:frontendfluttercoach/page/coach/usersBuyCourses/show_courseAll_user_page.dart';
+import 'package:frontendfluttercoach/page/coach/usersBuyCourses/show_course_user_page.dart';
 import 'package:get/get.dart';
 import 'package:provider/provider.dart';
 
@@ -96,7 +96,6 @@ class _ShowUserByCoursePageState extends State<ShowUserByCoursePage> {
                 height: MediaQuery.of(context).size.height * 0.15,
                 child: InkWell(
                   onTap: () {
-                    context.read<AppData>().nameCus = course.customer.fullName;
                     Get.to(() => ShowCourseUserPage(
                         uid: course.customer.uid.toString()));
                   },

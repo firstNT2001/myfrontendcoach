@@ -119,11 +119,7 @@ class _DaysCoursePageState extends State<DaysCoursePage> {
                         blurRadius: 10,
                         color: Colors.black.withOpacity(0.1))
                   ],
-<<<<<<< HEAD
-                
-=======
                   shape: BoxShape.circle,
->>>>>>> feature/12082023-uicourse
                   image: DecorationImage(
                     fit: BoxFit.cover,
                     image: NetworkImage(context.read<AppData>().img),

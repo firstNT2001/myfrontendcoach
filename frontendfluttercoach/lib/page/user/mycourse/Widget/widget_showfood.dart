@@ -2,17 +2,11 @@ import 'dart:developer';
 
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
-<<<<<<< HEAD
-import 'package:provider/provider.dart';
-
-import '../../../../model/response/food_get_res.dart';
-=======
 import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
 import 'package:provider/provider.dart';
 
 import '../../../../model/response/food_get_res.dart';
 import '../../../../model/response/md_FoodList_get.dart';
->>>>>>> feature/12082023-uicourse
 import '../../../../service/food.dart';
 import '../../../../service/provider/appdata.dart';
 
@@ -28,11 +22,7 @@ class Widgetloadfood extends StatefulWidget {
 class _WidgetloadfoodState extends State<Widgetloadfood> {
   late FoodServices foodService;
   List<ModelFood> foods = [];
-<<<<<<< HEAD
-  List<ModelFood> foodsone = [];
-=======
   List<ModelFood> listFoods = [];
->>>>>>> feature/12082023-uicourse
   late Future<void> loadDataMethod;
   @override
   void initState() {
@@ -49,19 +39,11 @@ class _WidgetloadfoodState extends State<Widgetloadfood> {
 
   Future<void> loadData() async {
     try {
-<<<<<<< HEAD
-      log("widget.did.toString()"+widget.did.toString());
-      var datafood = await foodService.foods(
-          fid: '', ifid: '', did: widget.did.toString(), name: '');
-      foods = datafood.data;
-      log("foods"+foods.length.toString());
-=======
       log("widget.did.toString()" + widget.did.toString());
       var datafood = await foodService.foods(
           fid: '', ifid: '', did: widget.did.toString(), name: '');
       foods = datafood.data;
       log("foods" + foods.length.toString());
->>>>>>> feature/12082023-uicourse
     } catch (err) {
       log('Error: $err');
     }
@@ -74,24 +56,14 @@ class _WidgetloadfoodState extends State<Widgetloadfood> {
           if (snapshot.connectionState != ConnectionState.done) {
             return const Center(child: CircularProgressIndicator());
           } else {
-<<<<<<< HEAD
-           var foodm=  foods.where((element) => element.time == widget.time).toList();
-=======
             var foodm =
                 foods.where((element) => element.time == widget.time).toList();
->>>>>>> feature/12082023-uicourse
             return ListView.builder(
                 scrollDirection: Axis.horizontal,
                 shrinkWrap: true,
                 itemCount: foodm.length,
                 itemBuilder: (context, index) {
                   final listbreakfast = foodm[index];
-<<<<<<< HEAD
-                  log("listbreakfast.time = "+listbreakfast.time);
-                  log("(widget.time = "+widget.time);
-                  return Container(
-                        height: double.infinity,
-=======
                   log("listbreakfast.time = " + listbreakfast.time);
                   log("(widget.time = " + widget.time);
                   return Container(
@@ -111,7 +83,6 @@ class _WidgetloadfoodState extends State<Widgetloadfood> {
                             // colorFood[index] = Colors.black12;
                           });
                         },
->>>>>>> feature/12082023-uicourse
                         child: Column(
                           children: [
                             Padding(
@@ -127,11 +98,7 @@ class _WidgetloadfoodState extends State<Widgetloadfood> {
                                         255, 207, 208, 209),
                                     image: DecorationImage(
                                         image: NetworkImage(
-<<<<<<< HEAD
-                                          "https://images.lifestyleasia.com/wp-content/uploads/sites/3/2023/01/18184706/DfHYF9nVQAAjL_x.jpg",
-=======
                                           listbreakfast.listFood.image,
->>>>>>> feature/12082023-uicourse
                                         ),
                                         fit: BoxFit.cover),
                                     borderRadius: BorderRadius.circular(20),
@@ -142,19 +109,12 @@ class _WidgetloadfoodState extends State<Widgetloadfood> {
                             Text(listbreakfast.listFood.name,
                                 style: Theme.of(context).textTheme.bodyLarge)
                           ],
-<<<<<<< HEAD
-                        ));
-              
-=======
                         ),
                       ));
->>>>>>> feature/12082023-uicourse
                 });
           }
         });
   }
-<<<<<<< HEAD
-=======
 
 void _dialog(BuildContext ctx, ModelFoodList listFood, int index) {
     //target widget
@@ -232,5 +192,4 @@ void _dialog(BuildContext ctx, ModelFoodList listFood, int index) {
       );
     });
   }
->>>>>>> feature/12082023-uicourse
 }
