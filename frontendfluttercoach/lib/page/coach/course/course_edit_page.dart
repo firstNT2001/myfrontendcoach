@@ -18,16 +18,12 @@ import '../../../model/request/course_courseID_put.dart';
 import '../../../model/response/md_Result.dart';
 import '../../../model/response/md_Review_get.dart';
 import '../../../model/response/md_coach_course_get.dart';
-import '../../../model/response/md_days.dart';
-import '../../../model/response/md_process.dart';
+
 import '../../../service/course.dart';
 
-import '../../../service/days.dart';
-import '../../../service/progessbar.dart';
 import '../../../service/provider/appdata.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
-import '../../../widget/PopUp/popUp.dart';
 import '../../../widget/dialogs.dart';
 import '../../../widget/dropdown/wg_dropdown_string.dart';
 
@@ -35,10 +31,8 @@ import '../../../widget/notificationBody.dart';
 import '../../../widget/textField/wg_textField.dart';
 import '../../../widget/textField/wg_textFieldLines.dart';
 import '../../../widget/textField/wg_textField_int copy.dart';
-import '../../user/chat/chat.dart';
 import '../daysCourse/days_course_page.dart';
 import '../navigationbar.dart';
-import 'FoodAndClip/course_food_clip.dart';
 import 'course_show.dart';
 
 class CourseEditPage extends StatefulWidget {
@@ -53,19 +47,12 @@ class CourseEditPage extends StatefulWidget {
 
 class _CourseEditPageState extends State<CourseEditPage> {
   //Service
-  late ProgessbarService _progessbarService;
-  late Modelprogessbar modelprogessbar;
   //CourseService
   late CourseService _courseService;
   late Future<void> loadDataMethod;
   List<Course> courses = [];
 
   late ModelResult moduleResult;
-
-  //Days
-  late DaysService _daysService;
-  late Future<void> loadDaysDataMethod;
-  List<ModelDay> modelDays = [];
 
   //Review
   // late ReviewService _reviewService;
@@ -116,13 +103,6 @@ class _CourseEditPageState extends State<CourseEditPage> {
     // _reviewService = context.read<AppData>().reviewService;
     _courseService = context.read<AppData>().courseService;
     loadDataMethod = loadDataAsync();
-
-    _progessbarService = context.read<AppData>().progessbar;
-    loadProgessData();
-
-    _daysService = context.read<AppData>().daysService;
-
-    loadDaysDataMethod = loadDaysDataAsync();
   }
 
   @override
@@ -131,10 +111,6 @@ class _CourseEditPageState extends State<CourseEditPage> {
     double width = (screenSize.width > 550) ? 550 : screenSize.width;
     //double height = (screenSize.height > 550) ? 550 : screenSize.height;
     double padding = 8;
-    return scaffold(width, padding);
-  }
-
-  Scaffold scaffold(double width, double padding) {
     return Scaffold(
         //resizeToAvoidBottomInset: false,
         //backgroundColor: Theme.of(context).colorScheme.primaryContainer,
@@ -142,9 +118,6 @@ class _CourseEditPageState extends State<CourseEditPage> {
       child: ListView(
         children: [
           showCourse(width, padding),
-          if (widget.isVisible == false) ...{
-            showDays(),
-          },
         ],
       ),
     ));
@@ -196,150 +169,88 @@ class _CourseEditPageState extends State<CourseEditPage> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Visibility(
-              visible: widget.isVisible,
-              child: Column(
+            SizedBox(
+              height: 28,
+            ),
+            WidgetTextFieldString(
+              controller: name,
+              labelText: 'ชื่อ',
+            ),
+            Padding(
+              padding: const EdgeInsets.only(bottom: 8),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
+                  Expanded(
+                    child: WidgetTextFieldInt(
+                      controller: amount,
+                      labelText: 'จำนวนคน',
+                      maxLength: 2,
+                    ),
+                  ),
                   SizedBox(
-                    height: 28,
-                  ),
-                  WidgetTextFieldString(
-                    controller: name,
-                    labelText: 'ชื่อ',
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.only(bottom: 8),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Expanded(
-                          child: WidgetTextFieldInt(
-                            controller: amount,
-                            labelText: 'จำนวนคน',
-                            maxLength: 2,
-                          ),
-                        ),
-                        SizedBox(
-                            width: (width - 16 - (3 * padding)) / 2,
-                            child: Column(
-                              children: [
-                                const SizedBox(height: 20),
-                                const Text('จำนวนวัน'),
-                                Text(days.text),
-                              ],
-                            )),
-                      ],
+                      width: (width - 16 - (3 * padding)) / 2,
+                      child: Column(
+                        children: [
+                          const SizedBox(height: 20),
+                          const Text('จำนวนวัน'),
+                          Text(days.text),
+                        ],
+                      )),
+                ],
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.only(bottom: 8),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Expanded(
+                    child: WidgetTextFieldInt(
+                      controller: price,
+                      labelText: 'ราคา',
+                      maxLength: 5,
                     ),
                   ),
-                  Padding(
-                    padding: const EdgeInsets.only(bottom: 8),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Expanded(
-                          child: WidgetTextFieldInt(
-                            controller: price,
-                            labelText: 'ราคา',
-                            maxLength: 5,
-                          ),
-                        ),
-                        Expanded(
-                          child: Padding(
-                            padding: const EdgeInsets.only(right: 15),
-                            child: WidgetDropdownString(
-                              title: 'เลือกความยากง่าย',
-                              selectedValue: selectedValue,
-                              listItems: LevelItems,
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  WidgetTextFieldLines(
-                    controller: details,
-                    labelText: 'รายละเอียด',
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.only(
-                            bottom: 8, left: 20, right: 23),
-                        child: Text(
-                          textErr,
-                          style: TextStyle(
-                              color: Theme.of(context).colorScheme.error),
-                        ),
+                  Expanded(
+                    child: Padding(
+                      padding: const EdgeInsets.only(right: 15),
+                      child: WidgetDropdownString(
+                        title: 'เลือกความยากง่าย',
+                        selectedValue: selectedValue,
+                        listItems: LevelItems,
                       ),
-                    ],
+                    ),
                   ),
                 ],
               ),
             ),
-            if (widget.isVisible == false) ...{
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Padding(
-                      padding:
-                          const EdgeInsets.only(bottom: 8, top: 28, left: 13),
-                      child: Text('ชื่อ ${name.text}',
-                          style: Theme.of(context).textTheme.headlineSmall)),
-                  Padding(
-                    padding: const EdgeInsets.only(left: 13),
-                    child: Container(
-                      width: MediaQuery.of(context).size.width * 0.4,
-                      height: 40,
-                      decoration: BoxDecoration(
-                          boxShadow: const <BoxShadow>[
-                            BoxShadow(
-                                color: Colors.grey,
-                                blurRadius: 5.0,
-                                offset: Offset(0.0, 0.75))
-                          ],
-                          color: const Color.fromRGBO(244, 243, 243, 1),
-                          borderRadius: BorderRadius.circular(30)),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          const Icon(FontAwesomeIcons.user),
-                          Padding(
-                            padding: const EdgeInsets.only(left: 8),
-                            child: Text(context.read<AppData>().nameCoach,
-                                style: Theme.of(context).textTheme.bodyLarge),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                  const SizedBox(
-                    height: 10,
-                  ),
-                  Padding(
-                      padding: const EdgeInsets.only(bottom: 8, left: 13),
-                      child: Text('รายละเอียด',
-                          style: Theme.of(context).textTheme.bodyLarge)),
-                  Padding(
-                      padding: const EdgeInsets.only(bottom: 8, left: 13),
-                      child: Text('    ${details.text}',
-                          style: Theme.of(context).textTheme.bodyLarge)),
-                ],
-              ),
-            },
-            Visibility(
-              visible: widget.isVisible,
-              child: Center(
-                child: Padding(
+            WidgetTextFieldLines(
+              controller: details,
+              labelText: 'รายละเอียด',
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                Padding(
                   padding:
-                      const EdgeInsets.only(bottom: 8, left: 13, right: 13),
-                  child: SizedBox(
-                      width: MediaQuery.of(context).size.width,
-                      child: buttonNext()),
+                      const EdgeInsets.only(bottom: 8, left: 20, right: 23),
+                  child: Text(
+                    textErr,
+                    style:
+                        TextStyle(color: Theme.of(context).colorScheme.error),
+                  ),
                 ),
+              ],
+            ),
+            Center(
+              child: Padding(
+                padding: const EdgeInsets.only(bottom: 8, left: 13, right: 13),
+                child: SizedBox(
+                    width: MediaQuery.of(context).size.width,
+                    child: buttonNext()),
               ),
             )
           ],
@@ -388,36 +299,33 @@ class _CourseEditPageState extends State<CourseEditPage> {
                   image: NetworkImage(courses.first.image),
                 )),
           ),
-        Visibility(
-          visible: widget.isVisible,
-          child: Positioned(
-              bottom: 60,
-              right: 8,
-              child: InkWell(
-                onTap: () {
-                  log("message");
-                  selectImg();
-                },
-                child: Container(
-                  height: 40,
-                  width: 40,
-                  decoration: BoxDecoration(
-                      boxShadow: [
-                        BoxShadow(
-                            color: Colors.grey.shade600,
-                            spreadRadius: 1,
-                            blurRadius: 15)
-                      ],
-                      shape: BoxShape.circle,
-                      //border: Border.all(width: 4, color: Colors.white),
-                      color: Colors.white),
-                  child: const Icon(
-                    FontAwesomeIcons.camera,
-                    color: Colors.black,
-                  ),
+        Positioned(
+            bottom: 60,
+            right: 8,
+            child: InkWell(
+              onTap: () {
+                log("message");
+                selectImg();
+              },
+              child: Container(
+                height: 40,
+                width: 40,
+                decoration: BoxDecoration(
+                    boxShadow: [
+                      BoxShadow(
+                          color: Colors.grey.shade600,
+                          spreadRadius: 1,
+                          blurRadius: 15)
+                    ],
+                    shape: BoxShape.circle,
+                    //border: Border.all(width: 4, color: Colors.white),
+                    color: Colors.white),
+                child: const Icon(
+                  FontAwesomeIcons.camera,
+                  color: Colors.black,
                 ),
-              )),
-        ),
+              ),
+            )),
         Padding(
           padding: const EdgeInsets.all(8.0),
           child: Row(
@@ -451,29 +359,26 @@ class _CourseEditPageState extends State<CourseEditPage> {
                   ),
                 ),
               ),
-              Visibility(
-                visible: widget.isVisible,
-                child: Container(
-                  decoration: BoxDecoration(
-                    boxShadow: [
-                      BoxShadow(
-                          color: Colors.grey.shade600,
-                          spreadRadius: 1,
-                          blurRadius: 15)
-                    ],
-                  ),
-                  child: CircleAvatar(
-                      backgroundColor: Colors.white,
-                      radius: 20,
-                      child: IconButton(
-                        icon: const Icon(
-                          FontAwesomeIcons.trash,
-                        ),
-                        onPressed: () {
-                          dialogDelete(context);
-                        },
-                      )),
+              Container(
+                decoration: BoxDecoration(
+                  boxShadow: [
+                    BoxShadow(
+                        color: Colors.grey.shade600,
+                        spreadRadius: 1,
+                        blurRadius: 15)
+                  ],
                 ),
+                child: CircleAvatar(
+                    backgroundColor: Colors.white,
+                    radius: 20,
+                    child: IconButton(
+                      icon: const Icon(
+                        FontAwesomeIcons.trash,
+                      ),
+                      onPressed: () {
+                        dialogCourse(context);
+                      },
+                    )),
               ),
             ],
           ),
@@ -562,13 +467,6 @@ class _CourseEditPageState extends State<CourseEditPage> {
           await _courseService.course(cid: '', name: '', coID: widget.coID);
       courses = res.data;
       data();
-      // var response = await _reviewService.review(coID: widget.coID);
-      // modelReviews = response.data;
-      // log(' = ${modelReviews.first.score}');
-      // sumAVG = modelReviews.map((m) => m.score).reduce((a, b) => a + b) /
-      //     modelReviews.length;
-      // log('AVG = ${sumAVG.toString()}');
-      // name.text = foods.name;
     } catch (err) {
       log('Error: $err');
     }
@@ -609,95 +507,6 @@ class _CourseEditPageState extends State<CourseEditPage> {
     // name.text = foods.name;
   }
 
-  Future<void> loadDaysDataAsync() async {
-    try {
-      var res =
-          await _daysService.days(did: '', coID: widget.coID, sequence: '');
-      modelDays = res.data;
-    } catch (err) {
-      log('Error: $err');
-    }
-  }
-
-  ///Show
-  FutureBuilder<void> showDays() {
-    return FutureBuilder(
-      future: loadDaysDataMethod,
-      builder: (context, snapshot) {
-        if (snapshot.connectionState != ConnectionState.done) {
-          return Container();
-        } else {
-          return Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const Divider(
-                endIndent: 20,
-                indent: 20,
-              ),
-              Padding(
-                padding: const EdgeInsets.only(left: 13),
-                child: Text('วันที่',
-                    style: Theme.of(context).textTheme.bodyLarge),
-              ),
-              GridView.builder(
-                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: 5, mainAxisExtent: 65),
-                shrinkWrap: true,
-                itemCount: modelDays.length,
-                itemBuilder: (context, index) {
-                  final modelDay = modelDays[index];
-                  return Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Card(
-                      color: Colors.white,
-                      child: InkWell(
-                          onTap: () {
-                            Get.to(() => HomeFoodAndClipPage(
-                                  did: modelDay.did.toString(),
-                                  sequence: modelDay.sequence.toString(),
-                                  isVisible: widget.isVisible,
-                                ));
-                          },
-                          child: Center(
-                              child: Text(modelDay.sequence.toString(),
-                                  style:
-                                      Theme.of(context).textTheme.bodyLarge))),
-                    ),
-                  );
-                },
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: [
-                  Padding(
-                    padding:
-                        const EdgeInsets.only(top: 10, bottom: 20, right: 8),
-                    child: FilledButton.icon(
-                        onPressed: () {
-                          //roomchat= widget.namecourse+coID.toString();
-                          Get.to(() => ChatPage(
-                                roomID: widget.coID,
-                                roomName: name.text,
-                                userID: context.read<AppData>().cid.toString(),
-                                firstName:
-                                    "โค้ช ${context.read<AppData>().nameCoach}",
-                              ));
-                        },
-                        icon: const Icon(
-                          FontAwesomeIcons.facebookMessenger,
-                          size: 16,
-                        ),
-                        label: const Text("คุยกับโค้ช")),
-                  ),
-                ],
-              )
-            ],
-          );
-        }
-      },
-    );
-  }
-
   //Image
   Future selectImg() async {
     final result = await FilePicker.platform.pickFiles(type: FileType.image);
@@ -706,16 +515,6 @@ class _CourseEditPageState extends State<CourseEditPage> {
     setState(() {
       pickedImg = result.files.first;
     });
-  }
-
-  Future<void> loadProgessData() async {
-    try {
-      var datas = await _progessbarService.processbar(coID: widget.coID);
-      modelprogessbar = datas.data;
-      log("percent${modelprogessbar.percent}");
-    } catch (err) {
-      log('Error: $err');
-    }
   }
 
   //uploadfile
@@ -732,7 +531,7 @@ class _CourseEditPageState extends State<CourseEditPage> {
   }
 
   //Dialog Delete
-  void dialogDelete(BuildContext context) {
+  void dialogCourse(BuildContext context) {
     QuickAlert.show(
       context: context,
       type: QuickAlertType.confirm,
