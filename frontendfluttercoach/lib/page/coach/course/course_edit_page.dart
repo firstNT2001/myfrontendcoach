@@ -24,7 +24,7 @@ import '../../../service/course.dart';
 import '../../../service/provider/appdata.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
-import '../../../widget/dialogs.dart';
+import '../../../widget/PopUp/popUp.dart';
 import '../../../widget/dropdown/wg_dropdown_string.dart';
 
 import '../../../widget/notificationBody.dart';
@@ -32,8 +32,7 @@ import '../../../widget/textField/wg_textField.dart';
 import '../../../widget/textField/wg_textFieldLines.dart';
 import '../../../widget/textField/wg_textField_int copy.dart';
 import '../daysCourse/days_course_page.dart';
-import '../navigationbar.dart';
-import 'course_show.dart';
+import 'FoodAndClip/course_food_clip.dart';
 
 class CourseEditPage extends StatefulWidget {
   const CourseEditPage(
@@ -103,6 +102,18 @@ class _CourseEditPageState extends State<CourseEditPage> {
     // _reviewService = context.read<AppData>().reviewService;
     _courseService = context.read<AppData>().courseService;
     loadDataMethod = loadDataAsync();
+
+    _progessbarService = context.read<AppData>().progessbar;
+    loadProgessData();
+
+    _daysService = context.read<AppData>().daysService;
+
+    loadDaysDataMethod = loadDaysDataAsync();
+    Future.delayed(Duration(seconds: context.read<AppData>().duration), () {
+      setState(() {
+        _enabled = false;
+      });
+    });
   }
 
   @override
@@ -111,16 +122,25 @@ class _CourseEditPageState extends State<CourseEditPage> {
     double width = (screenSize.width > 550) ? 550 : screenSize.width;
     //double height = (screenSize.height > 550) ? 550 : screenSize.height;
     double padding = 8;
+    return (_enabled == true)
+        ? Skeletonizer(enabled: true, child: scaffold(width, padding))
+        : scaffold(width, padding);
+  }
+
+  Scaffold scaffold(double width, double padding) {
     return Scaffold(
         //resizeToAvoidBottomInset: false,
         //backgroundColor: Theme.of(context).colorScheme.primaryContainer,
         body: SafeArea(
-      child: ListView(
-        children: [
-          showCourse(width, padding),
-        ],
-      ),
-    ));
+          child: ListView(
+            children: [
+              showCourse(width, padding),
+              if (widget.isVisible == false) ...{
+                showDays(),
+              },
+            ],
+          ),
+        ));
   }
 
   FutureBuilder<void> showCourse(double width, double padding) {
@@ -169,60 +189,86 @@ class _CourseEditPageState extends State<CourseEditPage> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            SizedBox(
-              height: 28,
-            ),
-            WidgetTextFieldString(
-              controller: name,
-              labelText: 'ชื่อ',
-            ),
-            Padding(
-              padding: const EdgeInsets.only(bottom: 8),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                crossAxisAlignment: CrossAxisAlignment.start,
+            Visibility(
+              visible: widget.isVisible,
+              child: Column(
                 children: [
-                  Expanded(
-                    child: WidgetTextFieldInt(
-                      controller: amount,
-                      labelText: 'จำนวนคน',
-                      maxLength: 2,
+                  SizedBox(height: 28,),
+                  WidgetTextFieldString(
+                    controller: name,
+                    labelText: 'ชื่อ',
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(bottom: 8),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        SizedBox(
+                          width: (width - 16 - (3 * padding)) / 2,
+                          child: WidgetTextFieldInt(
+                            controller: amount,
+                            labelText: 'จำนวนคน',
+                            maxLength: 2,
+                          ),
+                        ),
+                        SizedBox(
+                            width: (width - 16 - (3 * padding)) / 2,
+                            child: Column(
+                              children: [
+                                const SizedBox(height: 20),
+                                const Text('จำนวนวัน'),
+                                Text(days.text),
+                              ],
+                            )),
+                      ],
                     ),
                   ),
-                  SizedBox(
-                      width: (width - 16 - (3 * padding)) / 2,
-                      child: Column(
-                        children: [
-                          const SizedBox(height: 20),
-                          const Text('จำนวนวัน'),
-                          Text(days.text),
-                        ],
+                  Padding(
+                    padding: const EdgeInsets.only(bottom: 8),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        SizedBox(
+                          width: (width - 16 - (3 * padding)) / 2,
+                          child: WidgetTextFieldInt(
+                            controller: price,
+                            labelText: 'ราคา',
+                            maxLength: 5,
+                          ),
+                        ),
+                        SizedBox(
+                          width: (width - 16 - (3 * padding)) / 2,
+                          child: WidgetDropdownString(
+                            title: 'เลือกความยากง่าย',
+                            selectedValue: selectedValue,
+                            listItems: LevelItems,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  Padding(
+                      padding: const EdgeInsets.only(
+                          bottom: 8, top: 8, left: 13, right: 13),
+                      child: WidgetTextFieldLines(
+                        controller: details,
+                        labelText: 'รายละเอียด',
                       )),
-                ],
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.only(bottom: 8),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Expanded(
-                    child: WidgetTextFieldInt(
-                      controller: price,
-                      labelText: 'ราคา',
-                      maxLength: 5,
-                    ),
-                  ),
-                  Expanded(
-                    child: Padding(
-                      padding: const EdgeInsets.only(right: 15),
-                      child: WidgetDropdownString(
-                        title: 'เลือกความยากง่าย',
-                        selectedValue: selectedValue,
-                        listItems: LevelItems,
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.only(
+                            bottom: 8, left: 20, right: 23),
+                        child: Text(
+                          textErr,
+                          style: TextStyle(
+                              color: Theme.of(context).colorScheme.error),
+                        ),
                       ),
-                    ),
+                    ],
                   ),
                 ],
               ),
@@ -299,75 +345,49 @@ class _CourseEditPageState extends State<CourseEditPage> {
                   image: NetworkImage(courses.first.image),
                 )),
           ),
-        Positioned(
-            bottom: 60,
-            right: 8,
-            child: InkWell(
-              onTap: () {
-                log("message");
-                selectImg();
-              },
-              child: Container(
-                height: 40,
-                width: 40,
-                decoration: BoxDecoration(
-                    boxShadow: [
-                      BoxShadow(
-                          color: Colors.grey.shade600,
-                          spreadRadius: 1,
-                          blurRadius: 15)
-                    ],
-                    shape: BoxShape.circle,
-                    //border: Border.all(width: 4, color: Colors.white),
-                    color: Colors.white),
-                child: const Icon(
-                  FontAwesomeIcons.camera,
-                  color: Colors.black,
+        Visibility(
+          visible: widget.isVisible,
+          child: Positioned(
+              bottom: 60,
+              right: 8,
+              child: InkWell(
+                onTap: () {
+                  log("message");
+                  selectImg();
+                },
+                child: Container(
+                  height: 40,
+                  width: 40,
+                  decoration: const BoxDecoration(
+                      shape: BoxShape.circle,
+                      //border: Border.all(width: 4, color: Colors.white),
+                      color: Colors.white),
+                  child: const Icon(
+                    FontAwesomeIcons.camera,
+                    color: Colors.black,
+                  ),
                 ),
-              ),
-            )),
+              )),
+        ),
         Padding(
           padding: const EdgeInsets.all(8.0),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Container(
-                decoration: BoxDecoration(
-                  boxShadow: [
-                    BoxShadow(
-                        color: Colors.grey.shade600,
-                        spreadRadius: 1,
-                        blurRadius: 15)
-                  ],
-                ),
-                child: CircleAvatar(
-                  backgroundColor: Colors.white,
-                  radius: 20,
-                  child: IconButton(
-                    icon: const Icon(
-                      FontAwesomeIcons.chevronLeft,
-                    ),
-                    onPressed: () {
-                      Navigator.pushAndRemoveUntil<void>(
-                        context,
-                        MaterialPageRoute<void>(
-                            builder: (BuildContext context) =>
-                                ShowCourse(coID: widget.coID)),
-                        ModalRoute.withName('/NavbarBottomCoach'),
-                      );
-                    },
+              CircleAvatar(
+                backgroundColor: Colors.white,
+                radius: 20,
+                child: IconButton(
+                  icon: const Icon(
+                    FontAwesomeIcons.chevronLeft,
                   ),
+                  onPressed: () {
+                    Get.back();
+                  },
                 ),
               ),
-              Container(
-                decoration: BoxDecoration(
-                  boxShadow: [
-                    BoxShadow(
-                        color: Colors.grey.shade600,
-                        spreadRadius: 1,
-                        blurRadius: 15)
-                  ],
-                ),
+              Visibility(
+                visible: widget.isVisible,
                 child: CircleAvatar(
                     backgroundColor: Colors.white,
                     radius: 20,
@@ -376,7 +396,7 @@ class _CourseEditPageState extends State<CourseEditPage> {
                         FontAwesomeIcons.trash,
                       ),
                       onPressed: () {
-                        dialogCourse(context);
+                        dialogDelete(context);
                       },
                     )),
               ),
@@ -505,6 +525,94 @@ class _CourseEditPageState extends State<CourseEditPage> {
     }
     log(courses.first.days.toString());
     // name.text = foods.name;
+  }
+
+  Future<void> loadDaysDataAsync() async {
+    try {
+      var res =
+          await _daysService.days(did: '', coID: widget.coID, sequence: '');
+      modelDays = res.data;
+    } catch (err) {
+      log('Error: $err');
+    }
+  }
+
+  ///Show
+  FutureBuilder<void> showDays() {
+    return FutureBuilder(
+      future: loadDaysDataMethod,
+      builder: (context, snapshot) {
+        if (snapshot.connectionState != ConnectionState.done) {
+          return Container();
+        } else {
+          return Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const Divider(
+                endIndent: 20,
+                indent: 20,
+              ),
+              Padding(
+                padding: const EdgeInsets.only(left: 13),
+                child: Text('วันที่',
+                    style: Theme.of(context).textTheme.bodyLarge),
+              ),
+              GridView.builder(
+                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: 5, mainAxisExtent: 65),
+                shrinkWrap: true,
+                itemCount: modelDays.length,
+                itemBuilder: (context, index) {
+                  final modelDay = modelDays[index];
+                  return Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Card(
+                      color: Colors.white,
+                      child: InkWell(
+                          onTap: () {
+                            Get.to(() => HomeFoodAndClipPage(
+                                  did: modelDay.did.toString(),
+                                  sequence: modelDay.sequence.toString(),
+                                  isVisible: widget.isVisible,
+                                ));
+                          },
+                          child: Center(
+                              child: Text(modelDay.sequence.toString(),
+                                  style:
+                                      Theme.of(context).textTheme.bodyLarge))),
+                    ),
+                  );
+                },
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.only(top: 10, bottom: 20, right: 8),
+                    child: FilledButton.icon(
+                        onPressed: () {
+                          //roomchat= widget.namecourse+coID.toString();
+                          Get.to(() => ChatPage(
+                                roomID: widget.coID,
+                                roomName: name.text,
+                                userID: context.read<AppData>().cid.toString(),
+                                firstName:
+                                    "โค้ช ${context.read<AppData>().nameCoach}",
+                              ));
+                        },
+                        icon: const Icon(
+                          FontAwesomeIcons.facebookMessenger,
+                          size: 16,
+                        ),
+                        label: const Text("คุยกับโค้ช")),
+                  ),
+                ],
+              )
+            ],
+          );
+        }
+      },
+    );
   }
 
   //Image
