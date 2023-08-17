@@ -181,22 +181,25 @@ class _LoginPageState extends State<LoginPage> {
                         ),
                       ),
                       Padding(
-                        padding: const EdgeInsets.only(right: 20, top: 10),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.end,
-                          children: [
-                            TextButton.icon(
-                              // <-- TextButton
-                              onPressed: () {
-                                Get.to(() => const EditPasswordPage());
-                              },
-                              icon: const Icon(
-                                  FontAwesomeIcons.solidCircleQuestion),
-                              label: const Text('ลืมรหัสผ่าน'),
+                        padding: const EdgeInsets.only(right: 20,top: 15),
+                        child: InkWell(
+                          onTap: () {
+                            Get.to(() => const EditPasswordPage());
+                          },
+                          child: Row(
+                              mainAxisAlignment: MainAxisAlignment.end,
+                              children: [                            
+                                Text('ลืมรหัสผ่าน',style: TextStyle(color:  Theme.of(context).colorScheme.primary,),),
+                                Padding(
+                                  padding: const EdgeInsets.only(left: 8),
+                                  child: Icon(
+                                        FontAwesomeIcons.solidCircleQuestion, color: Theme.of(context).colorScheme.primary,),
+                                ),
+                              ],
                             ),
-                          ],
                         ),
                       ),
+                   
                       Padding(
                         padding: const EdgeInsets.only(
                             left: 20, right: 20, top: 30, bottom: 22),

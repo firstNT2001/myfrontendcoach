@@ -1,6 +1,8 @@
 import 'dart:developer';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:frontendfluttercoach/widget/slideAction.dart';
 import 'package:get/get.dart';
 import 'package:provider/provider.dart';
 
@@ -8,6 +10,7 @@ import '../../model/response/md_Customer_get.dart';
 import '../../service/customer.dart';
 import '../../service/provider/appdata.dart';
 import '../../widget/textField/wg_textfile_show.dart';
+import '../auth/login.dart';
 import 'editProfile.dart';
 import 'money/widgethistory/widget_history.dart';
 
@@ -68,6 +71,19 @@ class _ProfileUserState extends State<ProfileUser> {
                       color: Theme.of(context).colorScheme.secondaryContainer,
                       height: 170,
                     ),
+                    Positioned(
+                      //<-- SEE HERE
+                      right: 5,
+                      top: 10,
+                      child: IconButton(
+                          onPressed: () {
+                            Get.to(() => const LoginPage());
+                          },
+                          icon: Icon(
+                            FontAwesomeIcons.arrowRightFromBracket,
+                            size: 28,
+                          )),
+                    ),
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.center,
                       mainAxisAlignment: MainAxisAlignment.center,
@@ -120,7 +136,8 @@ class _ProfileUserState extends State<ProfileUser> {
                                       controller: gender,
                                       labelText: 'เพศ',
                                     ),
-                                  ),Expanded(
+                                  ),
+                                  Expanded(
                                     child: WidgetTextFieldStringShow(
                                       controller: birthday,
                                       labelText: 'วันเกิด',
@@ -128,7 +145,7 @@ class _ProfileUserState extends State<ProfileUser> {
                                   ),
                                 ],
                               ),
-                               Row(
+                              Row(
                                 mainAxisAlignment:
                                     MainAxisAlignment.spaceAround,
                                 children: [
@@ -137,7 +154,8 @@ class _ProfileUserState extends State<ProfileUser> {
                                       controller: weight,
                                       labelText: 'น้ำหนัก',
                                     ),
-                                  ),Expanded(
+                                  ),
+                                  Expanded(
                                     child: WidgetTextFieldStringShow(
                                       controller: height,
                                       labelText: 'ส่วนสูง',
@@ -146,15 +164,17 @@ class _ProfileUserState extends State<ProfileUser> {
                                 ],
                               ),
                               Padding(
-                                padding: const EdgeInsets.only(bottom: 10, left: 15, right: 15,top: 15),
+                                padding: const EdgeInsets.only(
+                                    bottom: 10, left: 15, right: 15, top: 15),
                                 child: SizedBox(
                                   width: 400,
-                                  child: FilledButton(onPressed: (){
-                                     Get.to(() => const editProfileCus());
-                                  }, child: const Text("แก้ไขข้อมูล")),
+                                  child: FilledButton(
+                                      onPressed: () {
+                                        Get.to(() => const editProfileCus());
+                                      },
+                                      child: const Text("แก้ไขข้อมูล")),
                                 ),
                               )
-
                             ],
                           ),
                         ),
@@ -181,9 +201,9 @@ class _ProfileUserState extends State<ProfileUser> {
       if (customer.first.gender == "1") {
         gender.text = "หญิง";
         log('เพศใหม่1: ${gender.text}');
-      } else{
+      } else {
         gender.text = "ชาย";
-      } 
+      }
       //gender.text = customer.first.gender;
       phone.text = customer.first.phone;
       email.text = customer.first.email;

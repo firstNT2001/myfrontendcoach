@@ -9,9 +9,12 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:frontendfluttercoach/page/user/chat/chat.dart';
 import 'package:frontendfluttercoach/page/user/mycourse/showFood_Clip.dart';
 import 'package:get/get.dart';
+import 'package:in_app_notification/in_app_notification.dart';
 import 'package:intl/intl.dart';
 import 'package:persistent_bottom_nav_bar_v2/persistent-tab-view.dart';
 import 'package:provider/provider.dart';
+import 'package:quickalert/models/quickalert_type.dart';
+import 'package:quickalert/widgets/quickalert_dialog.dart';
 import '../../../model/request/course_EX.dart';
 import '../../../model/response/md_Customer_get.dart';
 import '../../../model/response/md_Day_showmycourse.dart';
@@ -20,7 +23,10 @@ import '../../../service/course.dart';
 import '../../../service/customer.dart';
 import '../../../service/day.dart';
 import '../../../service/provider/appdata.dart';
+import '../../../widget/notificationBody.dart';
+import '../navigationbar.dart';
 import '../profilecoach.dart';
+import 'mycourse.dart';
 
 class ShowDayMycourse extends StatefulWidget {
   ShowDayMycourse(
@@ -51,7 +57,7 @@ class _ShowDayMycourseState extends State<ShowDayMycourse> {
   // late HttpResponse<ModelCourse> courses;
   List<DayDetail> days = [];
   late Future<void> loadDataMethod;
-
+  late ModelResult modelResult;
   DateTime nows = DateTime.now();
   late DateTime today;
   late DateTime expirationDate;
@@ -111,10 +117,19 @@ class _ShowDayMycourseState extends State<ShowDayMycourse> {
       body: SafeArea(
         child: ListView(
           children: [
-            const Padding(
+             Padding(
               padding: EdgeInsets.only(left: 15, top: 10),
-              child: Text("DAILY WORKOUT",
-                  style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold)),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text("DAILY WORKOUT",
+                      style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold)),
+                      IconButton(onPressed: () {
+                        dialogCourse(context);
+                      }, icon: Icon(FontAwesomeIcons.ellipsisVertical)),
+                      
+                ],
+              ),
             ),
             const Padding(
               padding: EdgeInsets.only(left: 15, bottom: 10),
@@ -346,6 +361,50 @@ class _ShowDayMycourseState extends State<ShowDayMycourse> {
         ),
       );
     });
+  }
+  void dialogCourse(BuildContext context) {
+    QuickAlert.show(
+      context: context,
+      type: QuickAlertType.confirm,
+      text: 'คุณต้องการที่จะยกเลิกคอร์สใช่หรือไม่?',
+      confirmBtnText: 'ใช่',
+      cancelBtnText: 'ไม่',
+      confirmBtnColor: Theme.of(context).colorScheme.primary,
+      onConfirmBtnTap: () async {
+        var response = await courseService.deleteCourse(widget.coID.toString());
+        modelResult = response.data;
+        Navigator.of(context, rootNavigator: true).pop();
+        if (modelResult.result == '1') {
+          // ignore: use_build_context_synchronously
+          pushNewScreen(
+                          context,
+                          screen: const MyCouses(),
+                          withNavBar: true,
+                        );
+          // ignore: use_build_context_synchronously
+          InAppNotification.show(
+            child: NotificationBody(
+              count: 1,
+              message: 'ลบคอร์สสำเร็จ',
+            ),
+            context: context,
+            onTap: () => print('Notification tapped!'),
+            duration: const Duration(milliseconds: 1500),
+          );
+        } else {
+          // ignore: use_build_context_synchronously
+          InAppNotification.show(
+            child: NotificationBody(
+              count: 1,
+              message: 'ลบคอร์สไม่สำเร็จ',
+            ),
+            context: context,
+            onTap: () => print('Notification tapped!'),
+            duration: const Duration(milliseconds: 1500),
+          );
+        }
+      },
+    );
   }
 }
 // ListView(

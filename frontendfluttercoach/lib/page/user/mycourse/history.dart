@@ -37,16 +37,34 @@ class _HistoryPageState extends State<HistoryPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        backgroundColor: Colors.white,
+        leading: IconButton(
+          icon: const Icon(
+            FontAwesomeIcons.chevronLeft,
+          ),
+          onPressed: () {
+            // Get.to(() => DaysCoursePage(
+            //       coID: context.read<AppData>().coID.toString(),
+            //       isVisible: widget.isVisible,
+            //     ));
+            Navigator.pop(context);
+          },
+        ),
+      ),
       body: SafeArea(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Padding(
-            padding: const EdgeInsets.only(left: 10,bottom: 10,top: 30),
+            padding: const EdgeInsets.only(left: 10,bottom: 10,top: 10),
             child: Text("ประวัติการซื้อคอร์ส",
                 style: TextStyle(fontSize: 20,fontWeight: FontWeight.w600)),
           ),
-          loadcourse()],
+          Padding(
+            padding: const EdgeInsets.only(left: 8,right: 8),
+            child: loadcourse(),
+          )],
       )),
     );
   }

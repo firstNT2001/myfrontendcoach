@@ -2,13 +2,16 @@ import 'dart:convert';
 import 'dart:developer';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:frontendfluttercoach/service/wallet.dart';
 import 'package:get/get.dart';
+import 'package:persistent_bottom_nav_bar_v2/persistent-tab-view.dart';
 import 'package:provider/provider.dart';
 
 import '../../../model/request/wallet_uid.dart';
 import '../../../model/response/md_Result.dart';
 import '../../../service/provider/appdata.dart';
+import '../../../widget/textField/wg_textField_int.dart';
 import 'moneyQrcode.dart';
 
 class addCoin extends StatefulWidget {
@@ -22,7 +25,7 @@ class _addCoinState extends State<addCoin> {
   late WalletService walletService;
   late ModelResult moduleResult;
   int uid = 0;
-
+  bool _isvisible = false;
   var insertWallet;
 
   final _money = TextEditingController();
@@ -43,59 +46,98 @@ class _addCoinState extends State<addCoin> {
     log(uid.toString());
     txtUid = uid.toString();
     txtTimestamp = timestamp.toString();
-    referenceNo = txtUid+txtTimestamp;
-    log("reffNoo :"+timestamp.toString());
-    log("reffNoo2 :"+referenceNo);
+    referenceNo = txtUid + txtTimestamp;
+    log("reffNoo :" + timestamp.toString());
+    log("reffNoo2 :" + referenceNo);
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("เติมเงิน"),
+        backgroundColor: Colors.white,
+        leading: IconButton(
+          icon: const Icon(
+            FontAwesomeIcons.chevronLeft,
+          ),
+          onPressed: () {
+            // Get.to(() => DaysCoursePage(
+            //       coID: context.read<AppData>().coID.toString(),
+            //       isVisible: widget.isVisible,
+            //     ));
+            Navigator.pop(context);
+          },
+        ),
       ),
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
+            Text("กรุณาใส่จำนวนเงิน",
+                style: Theme.of(context).textTheme.titleLarge),
             Padding(
-              padding: const EdgeInsets.only(bottom: 18),
-              child:  Text("กรุณาใส่จำนวนเงิน",style: Theme.of(context).textTheme.bodyLarge),
+              padding: const EdgeInsets.only(right: 20, left: 20),
+              child:
+                  WidgetTextFieldIntnotmax(controller: _money, labelText: ''),
             ),
-            SizedBox(
-              width: 200,
-              child: TextFormField(
-                controller: _money,
-                keyboardType: TextInputType.number,
-                decoration: InputDecoration(
-                  enabledBorder: OutlineInputBorder(),
-                ),
+            Visibility(
+              visible: _isvisible,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  Padding(
+                    padding:
+                        const EdgeInsets.only(bottom: 10, left: 20, right: 23),
+                    child: Text(
+                      "ขั้นต่ำ 1 บาท",
+                      style: TextStyle(
+                          color: Theme.of(context).colorScheme.error,
+                          fontSize: 16),
+                    ),
+                  ),
+                ],
               ),
             ),
             Padding(
               padding: const EdgeInsets.only(top: 18),
-              child: ElevatedButton(onPressed: () async {
-                //Double money = double.parse(_money.text);
-
-                WalletUser walletUser = WalletUser(
-                  money: double.parse(_money.text), 
-                  referenceNo: referenceNo);
-                  log(jsonEncode(walletUser));
-                  insertWallet = await  walletService.insertWallet(
-                    uid.toString(), walletUser);
-                    moduleResult = insertWallet.data;
-                    log(jsonEncode(moduleResult.result));
+              child: FilledButton(
+                  onPressed: () async {
+                    //Double money = double.parse(_money.text);
+                    if (_money.text == '0'||_money.text.isEmpty) {
+                      setState(() {
+                        _isvisible = true;
+                      });
+                    } else {
+                      WalletUser walletUser = WalletUser(
+                          money: double.parse(_money.text),
+                          referenceNo: referenceNo);
+                      log(jsonEncode(walletUser));
+                      insertWallet = await walletService.insertWallet(
+                          uid.toString(), walletUser);
+                      moduleResult = insertWallet.data;
+                      log(jsonEncode(moduleResult.result));
                       if (moduleResult.result == "1") {
                         // ignore: use_build_context_synchronously
                         //showDialogRowsAffected(context, "บันทึกสำเร็จ");
-                       Get.to(() =>  getQrcode(money: double.parse(_money.text),refNo: referenceNo,));
-                          
-                      } else{
+                         pushNewScreen(
+              context,
+              screen: getQrcode(
+                              money: double.parse(_money.text),
+                              refNo: referenceNo,
+                            ),
+              withNavBar: true,
+            );
+                       
+                      } else {
                         CircularProgressIndicator();
                       }
-              }, child: Text("เติมเงิน",style: Theme.of(context).textTheme.bodyLarge
-,)),
-            )
+                    }
+                  },
+                  child: Text(
+                    "เติมเงิน",
+                    style: TextStyle(fontSize: 16)
+                  )),
+            ),
           ],
         ),
       ),
