@@ -16,15 +16,12 @@ import 'package:provider/provider.dart';
 import 'package:quickalert/models/quickalert_type.dart';
 import 'package:quickalert/widgets/quickalert_dialog.dart';
 import '../../../model/request/course_EX.dart';
-import '../../../model/response/md_Customer_get.dart';
 import '../../../model/response/md_Day_showmycourse.dart';
 import '../../../model/response/md_Result.dart';
 import '../../../service/course.dart';
-import '../../../service/customer.dart';
 import '../../../service/day.dart';
 import '../../../service/provider/appdata.dart';
 import '../../../widget/notificationBody.dart';
-import '../navigationbar.dart';
 import '../profilecoach.dart';
 import 'mycourse.dart';
 
@@ -70,8 +67,9 @@ class _ShowDayMycourseState extends State<ShowDayMycourse> {
   
   void initState() {
     // TODO: implement initState
-    coachId =context.read<AppData>().cid;
+  
     super.initState();
+    coachId =context.read<AppData>().cid;
     dayService = DayService(Dio(), baseUrl: context.read<AppData>().baseurl);
     courseService =
         CourseService(Dio(), baseUrl: context.read<AppData>().baseurl);
@@ -99,6 +97,7 @@ class _ShowDayMycourseState extends State<ShowDayMycourse> {
           backgroundColor: Theme.of(context).colorScheme.primary,
           foregroundColor: Colors.white,
           onPressed: () {
+            
             Get.to(() => ChatPage(
                   roomID: widget.coID.toString() + widget.namecourse,
                   userID: widget.coID.toString(),
@@ -242,27 +241,24 @@ class _ShowDayMycourseState extends State<ShowDayMycourse> {
                       .map((day) => Column(children: [
                             InkWell(
                               onTap: () {
+                                
                                 if (widget.expirationDate ==
                                     "0001-01-01T00:00:00Z") {
-                                  //log(message);
+                                  log("A");
                                   _bindPage(context);
                                   log("ยังไม่เริ่ม$widget.expirationDate");
                                   setState(() {
                                     loadDataMethod = loadData();
                                   });
-                                } else if (today.day > expirationDate.day) {
-                                  log("IUIUIU " + today.day.toString());
-                                  log("IUIUIU " +
-                                      expirationDate.day.toString());
                                 } else {
+                                  log("C");
                                   log("เริ่มแล้ว$widget.expirationDate");
                                   log(" DID:= ${day.did}");
                                   context.read<AppData>().did = day.did;
                                   context.read<AppData>().idcourse = widget.coID;
 
-                                  Get.to(() => showFood(
-                                        indexSeq: day.sequence,
-                                      ));
+                                 log(" DID220:= ${day.sequence - 1}");
+                                      Get.to(() => showFood(indexSeq: days.first.sequence - 1));
                                 }
                                 log("day.sequence" + day.sequence.toString());
                               },

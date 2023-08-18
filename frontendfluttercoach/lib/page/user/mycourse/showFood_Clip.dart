@@ -73,6 +73,7 @@ class _showFoodState extends State<showFood> {
     
     did = context.read<AppData>().did;
     log("did$did");
+    log("indexSeq"+widget.indexSeq.toString());
     coID = context.read<AppData>().idcourse;
     requestService =
         RequestService(Dio(), baseUrl: context.read<AppData>().baseurl);
@@ -104,7 +105,7 @@ class _showFoodState extends State<showFood> {
           },
         ),
         title: Text(
-          "วันที่ "+widget.indexSeq.toString(),
+          "วันที่ "+(widget.indexSeq+1).toString(),
           style: Theme.of(context).textTheme.headlineMedium,
         ),
             automaticallyImplyLeading: false,
