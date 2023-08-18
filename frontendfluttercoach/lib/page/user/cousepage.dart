@@ -365,8 +365,14 @@ class _showCousePageState extends State<showCousePage> {
                           courseId.toString(), buyCoursecoIdPost);
                       moduleResult = buycourse.data;
                       if (moduleResult.result == "1") {
+                        SmartDialog.dismiss();
                         stopLoading();
-                        Get.to(() => const MyCouses());
+                        pushNewScreen(
+                          context,
+                          screen: const MyCouses(),
+                          withNavBar: true,
+                        );
+                        
                       }
                     },
                     child: Text("ชำระเงิน",

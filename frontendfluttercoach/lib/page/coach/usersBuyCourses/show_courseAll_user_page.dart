@@ -115,9 +115,9 @@ class _ShowCourseUserPageState extends State<ShowCourseUserPage> {
                 padding: const EdgeInsets.only(left: 10, right: 10, bottom: 20),
                 child: InkWell(
                   onTap: () {
-                    // Get.to(() => ShowCourseOfUserPage(
-                    //       coID: listcours.course.coId.toString(),
-                    //     ));
+                    Get.to(() => ShowCourseOfUserPage(
+                          coID: listcours.course.coId.toString(),
+                        ));
                   },
                   child: Container(
                     alignment: Alignment.center,
