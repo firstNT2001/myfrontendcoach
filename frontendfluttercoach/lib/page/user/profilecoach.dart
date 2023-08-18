@@ -134,11 +134,8 @@ Widget loadcourse() {
                     log(customer.first.price.toString());
                     context.read<AppData>().idcourse = listcours.coId;
                     context.read<AppData>().money = customer.first.price;
-                    pushNewScreen(
-                      context,
-                      screen: const showCousePage(),
-                      withNavBar: true,
-                    );
+                    Navigator.pop(context);
+                   
                   },
                   child: Container(
                     alignment: Alignment.center,

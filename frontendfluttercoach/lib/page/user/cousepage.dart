@@ -27,8 +27,8 @@ import 'mycourse/Widget/widget_loadreview.dart';
 import 'mycourse/mycourse.dart';
 
 class showCousePage extends StatefulWidget {
-  const showCousePage({super.key});
-
+   showCousePage({super.key,required this.namecourse});
+  late String namecourse;
   @override
   State<showCousePage> createState() => _showCousePageState();
 }
@@ -103,20 +103,24 @@ class _showCousePageState extends State<showCousePage> {
           ),
         ),
         appBar: AppBar(
-          backgroundColor: Colors.white,
-          leading: IconButton(
-            icon: const Icon(
-              FontAwesomeIcons.chevronLeft,
-            ),
-            onPressed: () {
-              // Get.to(() => DaysCoursePage(
-              //       coID: context.read<AppData>().coID.toString(),
-              //       isVisible: widget.isVisible,
-              //     ));
-              Navigator.pop(context);
-            },
+        backgroundColor: Colors.white,
+        leading: IconButton(
+          icon: const Icon(
+            FontAwesomeIcons.chevronLeft,
           ),
+          onPressed: () {
+            // Get.to(() => DaysCoursePage(
+            //       coID: context.read<AppData>().coID.toString(),
+            //       isVisible: widget.isVisible,
+            //     ));
+            Navigator.pop(context);
+          },
         ),
+        title: Text(
+          widget.namecourse,
+          style: Theme.of(context).textTheme.headlineMedium,
+        ),
+      ),
         body: SafeArea(
           child: ListView(
             children: [

@@ -1,8 +1,8 @@
-
 import 'package:custom_rating_bar/custom_rating_bar.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:frontendfluttercoach/page/user/homepage/widget/widget_search.dart';
+import 'package:frontendfluttercoach/page/user/homepage/widget/widget_searchtext.dart';
 
 import 'package:persistent_bottom_nav_bar_v2/persistent-tab-view.dart';
 import 'package:provider/provider.dart';
@@ -14,6 +14,7 @@ import '../../../service/course.dart';
 import '../../../service/customer.dart';
 import '../../../service/provider/appdata.dart';
 import '../cousepage.dart';
+import '../mycourse/Widget/widget_loadScore.dart';
 
 class HomePageUser extends StatefulWidget {
   const HomePageUser({super.key});
@@ -26,6 +27,7 @@ class _HomePageUserState extends State<HomePageUser> {
   late Future<void> loadDataMethod;
   late CourseService courseService;
   late CustomerService customerService;
+
   List<Customer> customer = [];
   List<Course> courses = [];
   int uid = 0;
@@ -48,72 +50,141 @@ class _HomePageUserState extends State<HomePageUser> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          const Padding(
-            padding: EdgeInsets.only(left: 15, top: 45),
-            child: Text("DAILY WORKOUT",
-                style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold)),
-          ),
-          const Padding(
-            padding: EdgeInsets.only(left: 15),
-            child: Text("COACHING",
-                style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold)),
-          ),
-          Center(
-            child: Padding(
-              padding: const EdgeInsets.only(top: 15),
-              child: Container(
-                width: MediaQuery.of(context).size.width * 0.9,
-                decoration: BoxDecoration(
-                    color: const Color.fromARGB(255, 243, 243, 244),
-                    borderRadius: BorderRadius.circular(15)),
-                child: TextField(
-                  readOnly: true,
-                  onTap: () {
-                    pushNewScreen(
-                      context,
-                      screen: const Widgetsearch(),
-                      withNavBar: true,
-                    );                 
-                  },
-                  decoration: InputDecoration(
-                      border: InputBorder.none,
-                      enabledBorder: OutlineInputBorder(
-                        borderSide: BorderSide(
-                            width: 1,
-                            color: Theme.of(context)
-                                .colorScheme
-                                .tertiary), //<-- SEE HERE
-                        borderRadius: BorderRadius.circular(20.0),
-                      ),
-                      focusedBorder: OutlineInputBorder(
-                        borderSide: BorderSide(
-                            width: 1.5,
-                            color: Theme.of(context)
-                                .colorScheme
-                                .tertiary), //<-- SEE HERE
-                        borderRadius: BorderRadius.circular(20.0),
-                      ),
-                      prefixIcon: Icon(FontAwesomeIcons.search),
-                      hintText: "ค้นหา",
-                      hintStyle: TextStyle(color: Colors.grey)),
+      body: SafeArea(
+        child: Stack(
+          children: [
+            Container(
+              decoration: const BoxDecoration(
+    boxShadow: [
+      BoxShadow(
+        color: Color.fromARGB(255, 196, 196, 196),
+        blurRadius: 20.0,
+        spreadRadius: 1,
+        offset: Offset(
+          0,
+          1,
+        ),
+      )
+    ],
+  ),
+              child: ClipRRect(
+                borderRadius: const BorderRadius.only(
+                  bottomRight: Radius.circular(30.0),
+                  bottomLeft: Radius.circular(30.0),
+                ),
+                child: Container(
+                  decoration: const BoxDecoration(
+                      
+                      gradient:
+                          LinearGradient(begin: Alignment.topCenter, colors: [
+                        Color.fromARGB(228, 255, 122, 13),
+                        Color.fromARGB(255, 255, 150, 12),
+                        Color.fromARGB(255, 255, 158, 31)
+                      ])),
+                  height: MediaQuery.of(context).size.height * 0.218,
                 ),
               ),
             ),
-          ),
-          //showCourseAll
-          Visibility(
-            visible: isSuggestVisible,
-            child: Expanded(
-              child: Padding(
-                padding: const EdgeInsets.only(left: 8, right: 8),
-                child: loadcourse(),
-              ),
+            Padding(
+                    padding: const EdgeInsets.only(top: 40, bottom: 20,left: 280,right: 15),
+                    child: SizedBox(
+                        width: MediaQuery.of(context).size.width * 0.4,
+                        height: MediaQuery.of(context).size.height * 0.1,
+                        child: Image.asset("assets/images/dancing.png")),
+                  ),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const Padding(
+                  padding: EdgeInsets.only(left: 15, top: 20),
+                  child: Text("DAILY WORKOUT",
+                      style: TextStyle(
+                          fontSize: 30,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white)),
+                ),
+                const Padding(
+                  padding: EdgeInsets.only(left: 15),
+                  child: Text("COACHING",
+                      style: TextStyle(
+                          fontSize: 30,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white)),
+                ),
+                Center(
+                  child: Padding(
+                    padding: const EdgeInsets.only(top: 15),
+                    child: Container(
+                      width: MediaQuery.of(context).size.width * 0.9,
+                      decoration: BoxDecoration(
+                          color: const Color.fromARGB(255, 243, 243, 244),
+                          borderRadius: BorderRadius.circular(15)),
+                      child: TextField(
+                        readOnly: true,
+                        onTap: () {
+                          pushNewScreen(
+                            context,
+                            screen: const WidgetSearchtext(),
+                            withNavBar: true,
+                          );
+                        },
+                        decoration: InputDecoration(
+                            border: InputBorder.none,
+                            enabledBorder: OutlineInputBorder(
+                              borderSide: BorderSide(
+                                  width: 1,
+                                  color: Colors.grey.shade100), //<-- SEE HERE
+                              borderRadius: BorderRadius.circular(20.0),
+                            ),
+                            focusedBorder: OutlineInputBorder(
+                              borderSide: BorderSide(
+                                  width: 1.5,
+                                  color: Colors.grey.shade100), //<-- SEE HERE
+                              borderRadius: BorderRadius.circular(20.0),
+                            ),
+                            prefixIcon: const Icon(
+                              FontAwesomeIcons.search,
+                              color: Colors.grey,
+                            ),
+                            hintText: "ค้นหา",
+                            hintStyle: const TextStyle(color: Colors.grey)),
+                      ),
+                    ),
+                  ),
+                ),
+                const SizedBox(
+                  height: 20,
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(left: 10, top: 15),
+                  child: Row(
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.only(right: 5),
+                        child: Icon(FontAwesomeIcons.fire, color: Colors.red),
+                      ),
+                      Text(
+                        "คอร์สแนะนำ",
+                        style: TextStyle(
+                            fontSize: 20, fontWeight: FontWeight.w600),
+                      ),
+                    ],
+                  ),
+                ),
+                //showCourseAll
+                Visibility(
+                  visible: isSuggestVisible,
+                  child: Expanded(
+                    child: Padding(
+                      padding: const EdgeInsets.only(left: 8, right: 8),
+                      child: loadcourse(),
+                    ),
+                  ),
+                ),
+              ],
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
@@ -123,18 +194,13 @@ class _HomePageUserState extends State<HomePageUser> {
       // Coachbycourse course = Coachbycourse();
       // log(jsonEncode(course));
       log("User ID" + uid.toString());
-      var result = await customerService.customer(uid: uid.toString(), email: '');
+      var result =
+          await customerService.customer(uid: uid.toString(), email: '');
       customer = result.data;
-      var datacourse = await courseService.courseOpenSell(coID: '', cid: '', name: '');
+      var datacourse =
+          await courseService.courseOpenSell(coID: '', cid: '', name: '');
 
       courses = datacourse.data;
-      // log("list coachname =${courses.length}");
-      // double h = ((customer.data.height) + .0) / 100;
-      // double w = customer.data.weight + .0;
-      // log('BMI=: $h');
-      // log('BMI=: $w');
-      // bmi = (w / (h * h));
-      // log('BMI=: $bmi');
     } catch (err) {
       log('Error: $err');
     }
@@ -162,103 +228,112 @@ class _HomePageUserState extends State<HomePageUser> {
                     context.read<AppData>().money = customer.first.price;
                     pushNewScreen(
                       context,
-                      screen: const showCousePage(),
+                      screen:  showCousePage(namecourse:listcours.name ),
                       withNavBar: true,
                     );
                   },
-                  child: Container(
-                    alignment: Alignment.center,
-                    width: double.infinity,
-                    child: AspectRatio(
-                      aspectRatio: 16 / 9,
-                      child: Stack(
-                        children: <Widget>[
-                          Container(
-                            alignment: Alignment.topCenter,
-                            child: AspectRatio(
-                                aspectRatio: 16 / 9,
-                                child: Container(
-                                  decoration: BoxDecoration(
-                                    color:
-                                        Theme.of(context).colorScheme.onPrimary,
-                                    image: DecorationImage(
-                                        image: NetworkImage(listcours.image),
-                                        fit: BoxFit.cover),
-                                    borderRadius: BorderRadius.circular(20),
-                                  ),
-                                )),
-                            //color: Colors.white,
-                          ),
-                          Container(
-                            padding: const EdgeInsets.all(5.0),
-                            alignment: Alignment.bottomCenter,
-                            decoration: BoxDecoration(
-                              gradient: LinearGradient(
-                                begin: Alignment.topCenter,
-                                end: Alignment.bottomCenter,
-                                colors: <Color>[
-                                  const Color.fromARGB(255, 0, 0, 0)
-                                      .withAlpha(0),
-                                  const Color.fromARGB(49, 0, 0, 0),
-                                  const Color.fromARGB(127, 0, 0, 0)
-                                  // const Color.fromARGB(255, 255, 255, 255)
-                                  //     .withAlpha(0),
-                                  // Color.fromARGB(39, 255, 255, 255),
-                                  // Color.fromARGB(121, 255, 255, 255)
-                                ],
-                              ),
-                              borderRadius: BorderRadius.circular(20),
+                  child: Card(
+                    elevation: 10,
+                    child: Container(
+                      alignment: Alignment.center,
+                      width: double.infinity,
+                      child: AspectRatio(
+                        aspectRatio: 16 / 9,
+                        child: Stack(
+                          children: <Widget>[
+                            Container(
+                              alignment: Alignment.topCenter,
+                              child: AspectRatio(
+                                  aspectRatio: 16 / 9,
+                                  child: Container(
+                                    decoration: BoxDecoration(
+                                      color: Theme.of(context)
+                                          .colorScheme
+                                          .onPrimary,
+                                      image: DecorationImage(
+                                          image: NetworkImage(listcours.image),
+                                          fit: BoxFit.cover),
+                                      borderRadius: BorderRadius.circular(20),
+                                    ),
+                                  )),
+                              //color: Colors.white,
                             ),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              mainAxisAlignment: MainAxisAlignment.end,
-                              children: [
-                                Text(
-                                  listcours.name,
-                                  style: Theme.of(context)
-                                      .textTheme
-                                      .titleLarge!
-                                      .copyWith(color: Colors.white),
-                                ),
-                                Row(
-                                  children: [
-                                    const Padding(
-                                      padding: EdgeInsets.only(right: 8),
-                                      child: Icon(
-                                        FontAwesomeIcons.solidUser,
-                                        size: 16.0,
-                                        color: Colors.white,
-                                      ),
-                                    ),
-                                    Text(
-                                      listcours.coach.fullName,
-                                      style: Theme.of(context)
-                                          .textTheme
-                                          .bodyLarge!
-                                          .copyWith(color: Colors.white),
-                                    ),
+                            Container(
+                              padding: const EdgeInsets.all(5.0),
+                              alignment: Alignment.bottomCenter,
+                              decoration: BoxDecoration(
+                                gradient: LinearGradient(
+                                  begin: Alignment.topCenter,
+                                  end: Alignment.bottomCenter,
+                                  colors: <Color>[
+                                    const Color.fromARGB(255, 0, 0, 0)
+                                        .withAlpha(0),
+                                    const Color.fromARGB(49, 0, 0, 0),
+                                    const Color.fromARGB(127, 0, 0, 0)
+                                    // const Color.fromARGB(255, 255, 255, 255)
+                                    //     .withAlpha(0),
+                                    // Color.fromARGB(39, 255, 255, 255),
+                                    // Color.fromARGB(121, 255, 255, 255)
                                   ],
                                 ),
-                                RatingBar.readOnly(
-                                  isHalfAllowed: false,
-                                  filledIcon: FontAwesomeIcons.bolt,
-                                  size: 16,
-                                  emptyIcon: FontAwesomeIcons.bolt,
-                                  filledColor: Theme.of(context)
-                                      .colorScheme
-                                      .tertiaryContainer,
-                                  emptyColor:
-                                      Color.fromARGB(255, 245, 245, 245),
-                                  initialRating: double.parse(listcours.level),
-                                  maxRating: 3,
-                                ),
-                              ],
+                                borderRadius: BorderRadius.circular(20),
+                              ),
                             ),
-                          )
-                        ],
+                            Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                mainAxisAlignment: MainAxisAlignment.end,
+                                children: [
+                                  Row(
+                                    children: [
+                                      Text(
+                                        listcours.name,
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .titleLarge!
+                                            .copyWith(color: Colors.white),
+                                      ),
+                                    ],
+                                  ),
+                                  Row(
+                                    children: [
+                                      const Padding(
+                                        padding: EdgeInsets.only(right: 8),
+                                        child: Icon(
+                                          FontAwesomeIcons.solidUser,
+                                          size: 16.0,
+                                          color: Colors.white,
+                                        ),
+                                      ),
+                                      Text(
+                                        listcours.coach.fullName,
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .bodyLarge!
+                                            .copyWith(color: Colors.white),
+                                      ),
+                                    ],
+                                  ),
+                                  RatingBar.readOnly(
+                                    isHalfAllowed: false,
+                                    filledIcon: FontAwesomeIcons.bolt,
+                                    size: 16,
+                                    emptyIcon: FontAwesomeIcons.bolt,
+                                    filledColor: Theme.of(context)
+                                        .colorScheme
+                                        .tertiaryContainer,
+                                    emptyColor: const Color.fromARGB(
+                                        255, 245, 245, 245),
+                                    initialRating:
+                                        double.parse(listcours.level),
+                                    maxRating: 3,
+                                  ),
+                                ],
+                              ),
+                            )
+                          ],
+                        ),
                       ),
                     ),
                   ),

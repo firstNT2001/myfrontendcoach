@@ -61,110 +61,107 @@ class _WidgetsearchState extends State<Widgetsearch> {
       body: SafeArea(
         child: Column(
           children: [
-            Center(
-              child: Padding(
-                padding: const EdgeInsets.only(top: 30),
-                child: Container(
-                  width: MediaQuery.of(context).size.width * 0.9,
-                  decoration: BoxDecoration(
-                      color: const Color.fromARGB(255, 243, 243, 244),
-                      borderRadius: BorderRadius.circular(15)),
-                  child: TextField(
-                    controller: myController,
-                    onChanged: (value) {
-                      if (myController.text.isNotEmpty) {
-                        //isVisibleSearch = true;
-                        isVisibleText = false;
-                        isVisibleSearch = false;
-                        setState(() {});
-                        log("contro ไม่ว่าง");
-                        coachService
-                            .coach(
-                                nameCoach: myController.text,
-                                cid: "",
-                                email: '')
-                            .then((coachdata) {
-                          var datacoach = coachdata.data;
-                          //var checkcoaches = coaches.length;
-                          coaches = datacoach;
-                          if (coaches.isNotEmpty) {
-                            log("coaches.isNotEmpty");
-                            setState(() {
-                              //isVisibleCoach = true;
-                              isVisibleSearch = false;
-                              isVisibleText = false;
-                            });
-
-                            //log(coaches.length.toString());
-                          } else {
-                            log("coaches.isEmpty");
-                            setState(() {
-                              //isVisibleCoach = false;
-                              isVisibleSearch =false;
-                              isVisibleText = true;
-                            });
-                          }
-                        });
-                        courseService
-                            .courseOpenSell(
-                                cid: '', coID: '', name: myController.text)
-                            .then((coursedata) {
-                          var datacourse = coursedata.data;
-                          courses = datacourse;
-                          if (courses.isNotEmpty) {
-                            log("courses.isNotEmpty");
-                            setState(() {
-                              isVisibleSearch = false;
-                              //isVisibleCoach = true;
-                              isVisibleText = false;
-                            });
-
-                            log(coaches.length.toString());
-                          } else {
-                            log("courses.isEmpty");
-                            setState(() {
-                              isVisibleSearch = false;
-                              //isVisibleCoach = false;
-                              isVisibleText = true;
-                            });
-                          }
-                        });
-                      } else {
-                        log("contro ว่าง");
-                        setState(() {
-                          isVisibleText = false;
-                          isVisibleSearch = true;
-                          isVisibleCoach = false;
-                          isVisibleCourse = false;
-                        });
-                      }
+            Padding(
+              padding: const EdgeInsets.only(top: 18),
+              child: Row(
+                children: [
+                  IconButton(
+                    icon: const Icon(
+                      FontAwesomeIcons.chevronLeft,
+                    ),
+                    onPressed: () {
+                      Navigator.pop(context);
                     },
-                    // onSubmitted: (value) {
-
-                    // },
-                    decoration: InputDecoration(
-                        border: InputBorder.none,
-                        enabledBorder: OutlineInputBorder(
-                          borderSide: BorderSide(
-                              width: 1,
-                              color: Theme.of(context)
-                                  .colorScheme
-                                  .tertiary), //<-- SEE HERE
-                          borderRadius: BorderRadius.circular(20.0),
-                        ),
-                        focusedBorder: OutlineInputBorder(
-                          borderSide: BorderSide(
-                              width: 1.5,
-                              color: Theme.of(context)
-                                  .colorScheme
-                                  .primary), //<-- SEE HERE
-                          borderRadius: BorderRadius.circular(20.0),
-                        ),
-                        prefixIcon: const Icon(FontAwesomeIcons.search),
-                        hintText: "ค้นหา",
-                        hintStyle: const TextStyle(color: Colors.grey)),
                   ),
-                ),
+                  Container(
+                    width: MediaQuery.of(context).size.width * 0.8,
+                    decoration: BoxDecoration(
+                        color: const Color.fromRGBO(244, 243, 243, 1),
+                        borderRadius: BorderRadius.circular(15)),
+                    child: TextField(
+                      controller: myController,
+                      autofocus: true,
+                      onChanged: (value) {
+                        if (myController.text.isNotEmpty) {
+                          //isVisibleSearch = true;
+                          isVisibleText = false;
+                          isVisibleSearch = false;
+                          setState(() {});
+                          log("contro ไม่ว่าง");
+                          coachService
+                              .coach(
+                                  nameCoach: myController.text,
+                                  cid: "",
+                                  email: '')
+                              .then((coachdata) {
+                            var datacoach = coachdata.data;
+                            //var checkcoaches = coaches.length;
+                            coaches = datacoach;
+                            if (coaches.isNotEmpty) {
+                              log("coaches.isNotEmpty");
+                              setState(() {
+                                //isVisibleCoach = true;
+                                isVisibleSearch = false;
+                                isVisibleText = false;
+                              });
+
+                              //log(coaches.length.toString());
+                            } else {
+                              log("coaches.isEmpty");
+                              setState(() {
+                                //isVisibleCoach = false;
+                                isVisibleSearch = false;
+                                isVisibleText = true;
+                              });
+                            }
+                          });
+                          courseService
+                              .courseOpenSell(
+                                  cid: '', coID: '', name: myController.text)
+                              .then((coursedata) {
+                            var datacourse = coursedata.data;
+                            courses = datacourse;
+                            if (courses.isNotEmpty) {
+                              log("courses.isNotEmpty");
+                              setState(() {
+                                isVisibleSearch = false;
+                                //isVisibleCoach = true;
+                                isVisibleText = false;
+                              });
+
+                              log(coaches.length.toString());
+                            } else {
+                              log("courses.isEmpty");
+                              setState(() {
+                                isVisibleSearch = false;
+                                //isVisibleCoach = false;
+                                isVisibleText = true;
+                              });
+                            }
+                          });
+                        } else {
+                          log("contro ว่าง");
+                          setState(() {
+                            isVisibleText = false;
+                            isVisibleSearch = true;
+                            isVisibleCoach = false;
+                            isVisibleCourse = false;
+                          });
+                        }
+                      },
+                      // onSubmitted: (value) {
+
+                      // },
+                      decoration: InputDecoration(
+                          border: InputBorder.none,
+                          enabledBorder: InputBorder.none,
+                          focusedBorder: InputBorder.none,
+                          prefixIcon: const Icon(FontAwesomeIcons.search),
+                          hintText: "ค้นหา",
+                          hintStyle: const TextStyle(color: Colors.grey)),
+                    ),
+                  ),
+                ],
               ),
             ),
             Row(
@@ -172,23 +169,23 @@ class _WidgetsearchState extends State<Widgetsearch> {
               children: [
                 FilledButton(
                     onPressed: () {
-                       if (courses.isEmpty) {
-                          log("coaEm");
-                          setState(() {
-                            isVisibleText = false;
-                            isVisibleSearch = true;
-                            isVisibleCoach = false;
-                            isVisibleCourse = false;
-                          });
-                        } else {
-
-                          log("notcoaEm");
-                          setState(() {
-                            isVisibleText = false;
-                            isVisibleCoach = false;
-                            isVisibleCourse = true;
-                            isVisibleSearch = false;
-                          });}
+                      if (courses.isEmpty) {
+                        log("coaEm");
+                        setState(() {
+                          isVisibleText = false;
+                          isVisibleSearch = true;
+                          isVisibleCoach = false;
+                          isVisibleCourse = false;
+                        });
+                      } else {
+                        log("notcoaEm");
+                        setState(() {
+                          isVisibleText = false;
+                          isVisibleCoach = false;
+                          isVisibleCourse = true;
+                          isVisibleSearch = false;
+                        });
+                      }
                     },
                     child: const Text("คอร์ส")),
                 Padding(
@@ -198,8 +195,8 @@ class _WidgetsearchState extends State<Widgetsearch> {
                         if (coaches.isEmpty) {
                           log("coaEm");
                           setState(() {
-                           // isVisibleSearch
-                           isVisibleText = false;
+                            // isVisibleSearch
+                            isVisibleText = false;
                             isVisibleSearch = true;
                             isVisibleCoach = false;
                             isVisibleCourse = false;
@@ -277,11 +274,11 @@ class _WidgetsearchState extends State<Widgetsearch> {
                           padding: const EdgeInsets.all(8.0),
                           child: InkWell(
                             onTap: () {
-                              pushNewScreen(
-                                context,
-                                screen: const showCousePage(),
-                                withNavBar: true,
-                              );
+                              // pushNewScreen(
+                              //   context,
+                              //   screen: const showCousePage(),
+                              //   withNavBar: true,
+                              // );
                             },
                             child: Container(
                               alignment: Alignment.center,
@@ -437,7 +434,7 @@ class _WidgetsearchState extends State<Widgetsearch> {
                   padding: const EdgeInsets.all(8),
                   child: InkWell(
                     onTap: () {
-                      Get.to(() => const showCousePage());
+                      //Get.to(() => const showCousePage());
                     },
                     child: Container(
                       alignment: Alignment.center,
@@ -520,7 +517,8 @@ class _WidgetsearchState extends State<Widgetsearch> {
                                     filledColor: Theme.of(context)
                                         .colorScheme
                                         .tertiaryContainer,
-                                    emptyColor: const Color.fromARGB(255, 37, 37, 37),
+                                    emptyColor:
+                                        const Color.fromARGB(255, 37, 37, 37),
                                     initialRating:
                                         double.parse(listcours.level),
                                     maxRating: 3,
