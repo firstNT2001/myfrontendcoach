@@ -167,7 +167,7 @@ class _FoodSelectTimePageState extends State<FoodSelectTimePage>
                         sequence: context.read<AppData>().sequence,
                         isVisible: widget.isVisible,
                       )),
-              ModalRoute.withName('/DaysCoursePage'),
+              ModalRoute.withName('/NavbarBottomCoach'),
             );
             // ignore: use_build_context_synchronously
             InAppNotification.show(
@@ -223,7 +223,10 @@ class _FoodSelectTimePageState extends State<FoodSelectTimePage>
                   label: 'Delete',
                 )
               ]),
-              child: food(foods, context, index),
+              child: Padding(
+                padding: const EdgeInsets.only(bottom: 10),
+                child: food(foods, context, index),
+              ),
             ),
           );
         },
@@ -233,6 +236,8 @@ class _FoodSelectTimePageState extends State<FoodSelectTimePage>
 
   Card food(ModelFoodList foods, BuildContext context, int index) {
     return Card(
+      elevation: 10,
+
       //color: colorFood[index],
       child: InkWell(
         onTap: () {

@@ -45,6 +45,7 @@ class _ShowCourseState extends State<ShowCourse> {
       onWillPop: () async => false,
       child: Scaffold(
         //resizeToAvoidBottomInset: false,
+
         body: SafeArea(
             child: ListView(
           children: [
@@ -88,6 +89,7 @@ class _ShowCourseState extends State<ShowCourse> {
               children: [
                 //เพิ่มรูป || แสดงรูป
                 inputImage(context),
+
                 show(context),
               ],
             );
@@ -104,87 +106,52 @@ class _ShowCourseState extends State<ShowCourse> {
           width: MediaQuery.of(context).size.width,
           height: MediaQuery.of(context).size.height * 0.4,
           decoration: BoxDecoration(
-              //borderRadius: BorderRadius.circular(20),
-              boxShadow: [
-                BoxShadow(
-                    spreadRadius: 2,
-                    blurRadius: 10,
-                    color: Colors.black.withOpacity(0.1))
-              ],
-              //shape: BoxShape.circle,
               image: DecorationImage(
-                fit: BoxFit.cover,
-                image: NetworkImage(courses.first.image),
-              )),
+            fit: BoxFit.cover,
+            image: NetworkImage(courses.first.image),
+          )),
         ),
         Padding(
           padding: const EdgeInsets.all(8.0),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Container(
-                decoration: BoxDecoration(
-                  boxShadow: [
-                    BoxShadow(
-                        color: Colors.grey.shade600,
-                        spreadRadius: 1,
-                        blurRadius: 15)
-                  ],
+              CircleAvatar(
+                backgroundColor: const Color.fromARGB(178, 220, 219, 219),
+                radius: 20,
+                child: IconButton(
+                  icon: const Icon(
+                    FontAwesomeIcons.chevronLeft,
+                  ),
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
                 ),
-                child: CircleAvatar(
-                  backgroundColor: Colors.white,
+              ),
+              CircleAvatar(
+                  backgroundColor: const Color.fromARGB(178, 220, 219, 219),
                   radius: 20,
                   child: IconButton(
                     icon: const Icon(
-                      FontAwesomeIcons.chevronLeft,
+                      FontAwesomeIcons.pen,
                     ),
                     onPressed: () {
-                      // Navigator.pushAndRemoveUntil<void>(
-                      //   context,
-                      //   MaterialPageRoute<void>(
-                      //       builder: (BuildContext context) =>
-                      //           const NavbarBottomCoach()),
-                      //   ModalRoute.withName('/'),
-                      // );
-                      Navigator.pop(context);
-                    },
-                  ),
-                ),
-              ),
-              Container(
-                decoration: BoxDecoration(
-                  boxShadow: [
-                    BoxShadow(
-                        color: Colors.grey.shade600,
-                        spreadRadius: 1,
-                        blurRadius: 15)
-                  ],
-                ),
-                child: CircleAvatar(
-                    backgroundColor: Colors.white,
-                    radius: 20,
-                    child: IconButton(
-                      icon: const Icon(
-                        FontAwesomeIcons.pen,
-                      ),
-                      onPressed: () {
-                        pushNewScreen(
-                          context,
-                          screen: CourseEditPage(
-                            coID: courses.first.coId.toString(),
-                            isVisible: true,
-                          ),
-                          withNavBar: true,
-                        ).then((value) {
-                          log('ponds');
-                          setState(() {
-                            loadDataMethod = loadDataAsync();
-                            loadReviewDataAsync();
-                          });
+                      pushNewScreen(
+                        context,
+                        screen: CourseEditPage(
+                          coID: courses.first.coId.toString(),
+                          isVisible: true,
+                        ),
+                        withNavBar: true,
+                      ).then((value) {
+                        log('ponds');
+                        setState(() {
+                          loadDataMethod = loadDataAsync();
+                          loadReviewDataAsync();
                         });
-                      },
-                    )),
-              ),
+                      });
+                    },
+                  )),
             ],
           ),
         ),
@@ -194,27 +161,19 @@ class _ShowCourseState extends State<ShowCourse> {
 
   Padding show(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.only(top: MediaQuery.of(context).size.height / 3),
+      padding: EdgeInsets.only(top: MediaQuery.of(context).size.height / 4),
       child: Container(
         width: MediaQuery.of(context).size.width,
         decoration: BoxDecoration(
             borderRadius: const BorderRadius.only(
-                topLeft: Radius.circular(20), topRight: Radius.circular(20)),
+                topLeft: Radius.circular(35), topRight: Radius.circular(35)),
             boxShadow: [
               BoxShadow(
                 color: Colors.grey.shade600,
                 spreadRadius: 1,
-                blurRadius: 5,
+                blurRadius: 15,
                 offset: const Offset(0, -7),
               ),
-              BoxShadow(
-                color: Colors.grey.shade300,
-                offset: const Offset(5, 0),
-              ),
-              BoxShadow(
-                color: Colors.grey.shade300,
-                offset: const Offset(-5, 0),
-              )
             ],
             color: Colors.white),
         child: Column(
@@ -246,15 +205,18 @@ class _ShowCourseState extends State<ShowCourse> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
-                        const Icon(
-                          FontAwesomeIcons.user,
-                          color: Colors.white,
+                        const Padding(
+                          padding: EdgeInsets.only(left: 8),
+                          child: Icon(
+                            FontAwesomeIcons.user,
+                            color: Colors.white,
+                          ),
                         ),
                         Expanded(
                           child: Padding(
-                            padding: const EdgeInsets.only(left: 8,right: 8),
+                            padding: const EdgeInsets.only(left: 8, right: 8),
                             child: FittedBox(
-                                fit: BoxFit.contain,
+                              fit: BoxFit.contain,
                               child: Text(context.read<AppData>().nameCoach,
                                   style: Theme.of(context)
                                       .textTheme

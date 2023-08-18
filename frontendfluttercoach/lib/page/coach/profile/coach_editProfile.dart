@@ -389,7 +389,7 @@ class _CoachEidtProfilePageState extends State<CoachEidtProfilePage> {
                       border: Border.all(width: 4, color: Colors.white),
                       color: const Color.fromARGB(255, 255, 151, 33)),
                   child: const Icon(
-                    Icons.camera_alt,
+                    FontAwesomeIcons.image,
                     color: Colors.white,
                   ),
                 ),

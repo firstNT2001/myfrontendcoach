@@ -129,52 +129,32 @@ class _DaysCoursePageState extends State<DaysCoursePage> {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Container(
-                    decoration: BoxDecoration(
-                      boxShadow: [
-                        BoxShadow(
-                            color: Colors.grey.shade600,
-                            spreadRadius: 1,
-                            blurRadius: 15)
-                      ],
-                    ),
-                    child: CircleAvatar(
-                      backgroundColor: Colors.white,
-                      radius: 20,
-                      child: IconButton(
-                        icon: const Icon(
-                          FontAwesomeIcons.chevronLeft,
-                        ),
-                        onPressed: () {
-                        
-                          Navigator.pop(context);
-                        },
+                  CircleAvatar(
+                    backgroundColor: const Color.fromARGB(178, 220, 219, 219),
+                    radius: 20,
+                    child: IconButton(
+                      icon: const Icon(
+                        FontAwesomeIcons.chevronLeft,
                       ),
+                      onPressed: () {
+                        Navigator.pop(context);
+                      },
                     ),
                   ),
                   Visibility(
                     visible: widget.isVisible,
-                    child: Container(
-                      decoration: BoxDecoration(
-                        boxShadow: [
-                          BoxShadow(
-                              color: Colors.grey.shade600,
-                              spreadRadius: 1,
-                              blurRadius: 15)
-                        ],
-                      ),
-                      child: CircleAvatar(
-                          backgroundColor: Colors.white,
-                          radius: 20,
-                          child: IconButton(
-                            icon: const Icon(
-                              FontAwesomeIcons.calendarPlus,
-                            ),
-                            onPressed: () {
-                              dialogInsertDay(context);
-                            },
-                          )),
-                    ),
+                    child: CircleAvatar(
+                        backgroundColor:
+                            const Color.fromARGB(178, 220, 219, 219),
+                        radius: 20,
+                        child: IconButton(
+                          icon: const Icon(
+                            FontAwesomeIcons.calendarPlus,
+                          ),
+                          onPressed: () {
+                            dialogInsertDay(context);
+                          },
+                        )),
                   ),
                 ],
               ),
@@ -193,22 +173,14 @@ class _DaysCoursePageState extends State<DaysCoursePage> {
         width: MediaQuery.of(context).size.width,
         decoration: BoxDecoration(
             borderRadius: const BorderRadius.only(
-                topLeft: Radius.circular(20), topRight: Radius.circular(20)),
+                topLeft: Radius.circular(35), topRight: Radius.circular(35)),
             boxShadow: [
               BoxShadow(
                 color: Colors.grey.shade600,
                 spreadRadius: 1,
-                blurRadius: 5,
+                blurRadius: 15,
                 offset: const Offset(0, -7),
               ),
-              BoxShadow(
-                color: Colors.grey.shade300,
-                offset: const Offset(5, 0),
-              ),
-              BoxShadow(
-                color: Colors.grey.shade300,
-                offset: const Offset(-5, 0),
-              )
             ],
             color: Colors.white),
         child: Column(

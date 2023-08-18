@@ -93,29 +93,20 @@ class _ClipEditCoachPageState extends State<ClipEditCoachPage> {
             return Column(
               children: [
                 video(),
-                Padding(
-                  padding: const EdgeInsets.only(
-                      bottom: 18, top: 28, left: 20, right: 20),
-                  child: WidgetTextFieldString(
-                    controller: name,
-                    labelText: 'ชื่อ',
-                  ),
+                const SizedBox(
+                  height: 20,
                 ),
-                Padding(
-                  padding:
-                      const EdgeInsets.only(bottom: 18, left: 20, right: 20),
-                  child: WidgetTextFieldString(
-                    controller: amountPerSet,
-                    labelText: 'จำนวนเซ็ท',
-                  ),
+                WidgetTextFieldString(
+                  controller: name,
+                  labelText: 'ชื่อ',
                 ),
-                Padding(
-                  padding:
-                      const EdgeInsets.only(bottom: 18, left: 20, right: 20),
-                  child: WidgetTextFieldLines(
-                    controller: details,
-                    labelText: 'รายละเอียดท่าออกกำลังกาย',
-                  ),
+                WidgetTextFieldString(
+                  controller: amountPerSet,
+                  labelText: 'จำนวนเซ็ท',
+                ),
+                WidgetTextFieldLines(
+                  controller: details,
+                  labelText: 'รายละเอียดท่าออกกำลังกาย',
                 ),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.end,
@@ -214,6 +205,9 @@ class _ClipEditCoachPageState extends State<ClipEditCoachPage> {
                         color: Colors.black,
                       ),
                       onPressed: () {
+                        // setState(() {
+                        //   loadClipDataMethod = loadClipData();
+                        // });
                         Navigator.pop(context);
                       },
                     ),

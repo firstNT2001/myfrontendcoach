@@ -179,100 +179,96 @@ class _ClipSelectPageState extends State<ClipSelectPage> {
             itemCount: listClips.length,
             itemBuilder: (context, index) {
               final listClip = listClips[index];
-              return SizedBox(
-                height: MediaQuery.of(context).size.height * 0.2,
-                child: Card(
-                  color: colorClips[index],
-                  child: InkWell(
-                    onTap: () {
-                      if (colorClips[index] !=
-                          context.read<AppData>().colorSelect) {
-                        setState(() {
-                          // เพิ่มเมนูอาหารนั้นเมือกกดเลือก
-                          ListClip request = ListClip(
-                              icpId: listClip.icpId,
-                              coachId: listClip.coachId,
-                              name: listClip.name,
-                              details: listClip.details,
-                              amountPerSet: listClip.amountPerSet,
-                              video: listClip.video);
-                          video = listClip.video;
-                          _dialog(context, request, colorClips, index);
-                          //เปลี่ยนสีเมือเลือกเมนู฿อาหาร
-                          // colorFood[index] = Colors.black12;
-                        });
-                      } else {
-                        setState(() {
-                          //กลับเป็นสีเดิมเมือเลือกเมนูอาหารซํ้า
-                          colorClips[index] =
-                              context.read<AppData>().colorNotSelect;
-                          //เอาเมนูอาหารที่เลือกออกจาก list model
-                          increaseClips.removeWhere(
-                              (item) => item.icpId == listClip.icpId);
-                          increaseClipDays.removeWhere(
-                              (item) => item.listClipId == listClip.icpId);
-                        });
-                      }
-                    },
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        if (listClip.video != '') ...{
-                          Padding(
-                            padding: const EdgeInsets.only(
-                                left: 8, right: 8, top: 5, bottom: 5),
-                            child: AspectRatio(
-                                aspectRatio: 16 / 16,
-                                child: Container(
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(26),
-                                  ),
-                                  child: VideoItem(
-                                    video: listClip.video,
-                                  ),
-                                )),
-                          )
-                        } else
-                          Padding(
-                            padding: const EdgeInsets.only(
-                                left: 8, right: 8, top: 5, bottom: 5),
-                            child: AspectRatio(
-                                aspectRatio: 16 / 16,
-                                child: Container(
-                                  decoration: BoxDecoration(
-                                    color: const Color.fromARGB(
-                                        255, 207, 208, 209),
-                                    borderRadius: BorderRadius.circular(20),
-                                  ),
-                                )),
-                          ),
-                        Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            SizedBox(
-                              width: MediaQuery.of(context).size.width * 0.34,
-                              child: AutoSizeText(
-                                listClip.name,
-                                maxLines: 5,
-                                style: Theme.of(context).textTheme.bodyLarge,
-                              ),
+              return Padding(
+                 padding: const EdgeInsets.only(bottom: 10),
+                child: SizedBox(
+                  height: MediaQuery.of(context).size.height * 0.2,
+                  child: Card(
+                    elevation: 10,
+                    color: colorClips[index],
+                    child: InkWell(
+                      onTap: () {
+                        if (colorClips[index] !=
+                            context.read<AppData>().colorSelect) {
+                          setState(() {
+                            // เพิ่มเมนูอาหารนั้นเมือกกดเลือก
+                            ListClip request = ListClip(
+                                icpId: listClip.icpId,
+                                coachId: listClip.coachId,
+                                name: listClip.name,
+                                details: listClip.details,
+                                amountPerSet: listClip.amountPerSet,
+                                video: listClip.video);
+                            video = listClip.video;
+                            _dialog(context, request, colorClips, index);
+                            //เปลี่ยนสีเมือเลือกเมนู฿อาหาร
+                            // colorFood[index] = Colors.black12;
+                          });
+                        } else {
+                          setState(() {
+                            //กลับเป็นสีเดิมเมือเลือกเมนูอาหารซํ้า
+                            colorClips[index] =
+                                context.read<AppData>().colorNotSelect;
+                            //เอาเมนูอาหารที่เลือกออกจาก list model
+                            increaseClips.removeWhere(
+                                (item) => item.icpId == listClip.icpId);
+                            increaseClipDays.removeWhere(
+                                (item) => item.listClipId == listClip.icpId);
+                          });
+                        }
+                      },
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          if (listClip.video != '') ...{
+                            Padding(
+                              padding: const EdgeInsets.only(
+                                  left: 8, right: 8, top: 5, bottom: 5),
+                              child: AspectRatio(
+                                  aspectRatio: 16 / 16,
+                                  child: Container(
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(26),
+                                    ),
+                                    child: VideoItem(
+                                      video: listClip.video,
+                                    ),
+                                  )),
+                            )
+                          } else
+                            Padding(
+                              padding: const EdgeInsets.only(
+                                  left: 8, right: 8, top: 5, bottom: 5),
+                              child: AspectRatio(
+                                  aspectRatio: 16 / 16,
+                                  child: Container(
+                                    decoration: BoxDecoration(
+                                      color: const Color.fromARGB(
+                                          255, 207, 208, 209),
+                                      borderRadius: BorderRadius.circular(20),
+                                    ),
+                                  )),
                             ),
-                            const SizedBox(height: 8),
-                            // SizedBox(
-                            //   width: MediaQuery.of(context).size.width * 0.4,
-                            //   child: AutoSizeText(
-                            //     'Calories: ${listFood.calories.toString()}',
-                            //     maxLines: 5,
-                            //     style: Theme.of(context).textTheme.bodyLarge,
-                            //   ),
-                            // ),
-                          ],
-                        ),
-                        const SizedBox(
-                          width: 50,
-                        )
-                      ],
+                          Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              SizedBox(
+                                width: MediaQuery.of(context).size.width * 0.34,
+                                child: AutoSizeText(
+                                  listClip.name,
+                                  maxLines: 5,
+                                  style: Theme.of(context).textTheme.bodyLarge,
+                                ),
+                              ),
+                              const SizedBox(height: 8),
+                            ],
+                          ),
+                          const SizedBox(
+                            width: 50,
+                          )
+                        ],
+                      ),
                     ),
                   ),
                 ),

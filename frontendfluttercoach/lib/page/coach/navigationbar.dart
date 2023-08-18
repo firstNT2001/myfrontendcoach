@@ -99,7 +99,7 @@ _controller = PersistentTabController(initialIndex: 0);
             curve: Curves.ease,
             duration: Duration(milliseconds: 200),
           ),
-          navBarStyle: NavBarStyle.style15, // Choose the nav bar style with this property.
+          navBarStyle: NavBarStyle.style1, // Choose the nav bar style with this property.
       ),
     );
   }
