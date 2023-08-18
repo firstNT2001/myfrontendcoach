@@ -74,9 +74,10 @@ class _WidgetsearchState extends State<Widgetsearch> {
                     onChanged: (value) {
                       if (myController.text.isNotEmpty) {
                         //isVisibleSearch = true;
+                        isVisibleText = false;
                         isVisibleSearch = false;
                         setState(() {});
-                        log("sert ");
+                        log("contro ไม่ว่าง");
                         coachService
                             .coach(
                                 nameCoach: myController.text,
@@ -87,16 +88,19 @@ class _WidgetsearchState extends State<Widgetsearch> {
                           //var checkcoaches = coaches.length;
                           coaches = datacoach;
                           if (coaches.isNotEmpty) {
-                            //log("message"+coaches.first);
+                            log("coaches.isNotEmpty");
                             setState(() {
                               //isVisibleCoach = true;
+                              isVisibleSearch = false;
                               isVisibleText = false;
                             });
 
-                            log(coaches.length.toString());
+                            //log(coaches.length.toString());
                           } else {
+                            log("coaches.isEmpty");
                             setState(() {
                               //isVisibleCoach = false;
+                              isVisibleSearch =false;
                               isVisibleText = true;
                             });
                           }
@@ -108,22 +112,25 @@ class _WidgetsearchState extends State<Widgetsearch> {
                           var datacourse = coursedata.data;
                           courses = datacourse;
                           if (courses.isNotEmpty) {
-                            //log("message"+coaches.first);
+                            log("courses.isNotEmpty");
                             setState(() {
+                              isVisibleSearch = false;
                               //isVisibleCoach = true;
                               isVisibleText = false;
                             });
 
                             log(coaches.length.toString());
                           } else {
+                            log("courses.isEmpty");
                             setState(() {
+                              isVisibleSearch = false;
                               //isVisibleCoach = false;
                               isVisibleText = true;
                             });
                           }
                         });
                       } else {
-                        log("55555555");
+                        log("contro ว่าง");
                         setState(() {
                           isVisibleText = false;
                           isVisibleSearch = true;
@@ -153,9 +160,9 @@ class _WidgetsearchState extends State<Widgetsearch> {
                                   .primary), //<-- SEE HERE
                           borderRadius: BorderRadius.circular(20.0),
                         ),
-                        prefixIcon: Icon(FontAwesomeIcons.search),
+                        prefixIcon: const Icon(FontAwesomeIcons.search),
                         hintText: "ค้นหา",
-                        hintStyle: TextStyle(color: Colors.grey)),
+                        hintStyle: const TextStyle(color: Colors.grey)),
                   ),
                 ),
               ),
@@ -168,6 +175,7 @@ class _WidgetsearchState extends State<Widgetsearch> {
                        if (courses.isEmpty) {
                           log("coaEm");
                           setState(() {
+                            isVisibleText = false;
                             isVisibleSearch = true;
                             isVisibleCoach = false;
                             isVisibleCourse = false;
@@ -176,12 +184,13 @@ class _WidgetsearchState extends State<Widgetsearch> {
 
                           log("notcoaEm");
                           setState(() {
+                            isVisibleText = false;
                             isVisibleCoach = false;
                             isVisibleCourse = true;
                             isVisibleSearch = false;
                           });}
                     },
-                    child: Text("คอร์ส")),
+                    child: const Text("คอร์ส")),
                 Padding(
                   padding: const EdgeInsets.all(10.0),
                   child: FilledButton(
@@ -189,6 +198,8 @@ class _WidgetsearchState extends State<Widgetsearch> {
                         if (coaches.isEmpty) {
                           log("coaEm");
                           setState(() {
+                           // isVisibleSearch
+                           isVisibleText = false;
                             isVisibleSearch = true;
                             isVisibleCoach = false;
                             isVisibleCourse = false;
@@ -196,6 +207,7 @@ class _WidgetsearchState extends State<Widgetsearch> {
                         } else {
                           log("notcoaEm");
                           setState(() {
+                            isVisibleText = false;
                             isVisibleCoach = true;
                             isVisibleCourse = false;
                             isVisibleSearch = false;
@@ -206,24 +218,24 @@ class _WidgetsearchState extends State<Widgetsearch> {
                         //   isVisibleCourse = false;
                         // });
                       },
-                      child: Text("โค้ช")),
+                      child: const Text("โค้ช")),
                 ),
               ],
             ),
             Visibility(
               visible: isVisibleText,
-              child: Container(
+              child: SizedBox(
                 height: 100,
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
-                    Text("ไม่พบผลลัพธ์สำหรับ",
+                    const Text("ไม่พบผลลัพธ์สำหรับ",
                         style: TextStyle(
                             fontSize: 18,
                             color: Color.fromARGB(96, 85, 85, 85))),
                     Text("''" + myController.text + "''",
-                        style: TextStyle(
+                        style: const TextStyle(
                             fontSize: 18,
                             color: Color.fromARGB(96, 85, 85, 85)))
                   ],
@@ -232,7 +244,7 @@ class _WidgetsearchState extends State<Widgetsearch> {
             ),
             Visibility(
               visible: isVisibleSearch,
-              child: Container(
+              child: const SizedBox(
                 height: 100,
                 child: Row(
                   crossAxisAlignment: CrossAxisAlignment.end,
@@ -241,7 +253,7 @@ class _WidgetsearchState extends State<Widgetsearch> {
                     Icon(FontAwesomeIcons.search,
                         color: Color.fromARGB(96, 85, 85, 85), size: 25),
                     Padding(
-                      padding: const EdgeInsets.only(left: 10),
+                      padding: EdgeInsets.only(left: 10),
                       child: Text("พิมพ์เพื่อค้นหา",
                           style: TextStyle(
                               fontSize: 18,
@@ -508,7 +520,7 @@ class _WidgetsearchState extends State<Widgetsearch> {
                                     filledColor: Theme.of(context)
                                         .colorScheme
                                         .tertiaryContainer,
-                                    emptyColor: Color.fromARGB(255, 37, 37, 37),
+                                    emptyColor: const Color.fromARGB(255, 37, 37, 37),
                                     initialRating:
                                         double.parse(listcours.level),
                                     maxRating: 3,

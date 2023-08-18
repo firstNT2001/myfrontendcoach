@@ -69,6 +69,7 @@ class _ShowDayMycourseState extends State<ShowDayMycourse> {
     // TODO: implement initState
   
     super.initState();
+   
     coachId =context.read<AppData>().cid;
     dayService = DayService(Dio(), baseUrl: context.read<AppData>().baseurl);
     courseService =
@@ -258,9 +259,8 @@ class _ShowDayMycourseState extends State<ShowDayMycourse> {
                                   context.read<AppData>().idcourse = widget.coID;
 
                                  log(" DID220:= ${day.sequence - 1}");
-                                      Get.to(() => showFood(indexSeq: days.first.sequence - 1));
+                                      Get.to(() => showFood(indexSeq: day.sequence - 1));
                                 }
-                                log("day.sequence" + day.sequence.toString());
                               },
                               child: Container(
                                 height: 50,
@@ -346,7 +346,15 @@ class _ShowDayMycourseState extends State<ShowDayMycourse> {
                       context.read<AppData>().idcourse = widget.coID;
                       log(days.first.did.toString());
                       SmartDialog.dismiss();
-                      Get.to(() => showFood(indexSeq: days.first.sequence - 1));
+                      widget.expirationDate = txtdateEX;
+                      log("new widget.expirationDate"+widget.expirationDate);
+                      Get.to(() => showFood(indexSeq: days.first.sequence - 1))!.then((value) {
+                        log("messageCheak");
+                     
+                        setState(() {
+                          
+                        loadDataMethod = loadData();
+                      });});
                     },
                     child: const Text('เริ่มเลย'),
                   ),
