@@ -44,30 +44,36 @@ class _WidgetloadeReviewState extends State<WidgetloadeReview> {
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.done) {
           return Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Column(
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: [
-                  const Text(
-                    "คะแนนจากผู้ซื้อ",
-                    style:
-                        TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-                  ),
-                  Text(
-                    calRating.toStringAsFixed(1),
-                    style:
-                        const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-                  ),
-                  FlutterRating(
-                    size: 20,
-                    starCount: 5,
-                    rating: calRating,
-                    allowHalfRating: true,
-                    color: Colors.amber,
-                    borderColor: Colors.grey,
-                    mainAxisAlignment: MainAxisAlignment.center,
-                  )
-                ],
+              Center(
+                child: const Text(
+                  "คะแนนจากผู้ซื้อ",
+                  style:
+                      TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                ),
+              ),
+              Center(
+                child: Text(
+                  calRating.toStringAsFixed(1),
+                  style:
+                      const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                ),
+              ),
+              Center(
+                child: FlutterRating(
+                  size: 20,
+                  starCount: 5,
+                  rating: calRating,
+                  allowHalfRating: true,
+                  color: Colors.amber,
+                  borderColor: Colors.grey,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.only(left: 15,bottom: 8),
+                child: Text("ความคิดเห็นจากผู้ซื้อ",style: TextStyle(fontSize: 16,fontWeight: FontWeight.w600),),
               ),
               Column(children: reviews.map((review) =>   Padding(
                 padding: const EdgeInsets.only(left: 10, right: 10, bottom: 20),
