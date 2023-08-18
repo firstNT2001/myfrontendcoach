@@ -2,6 +2,7 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:provider/provider.dart';
@@ -12,6 +13,7 @@ import '../../../service/provider/appdata.dart';
 import '../../../widget/dialogs.dart';
 import '../../../widget/textField/wg_textFieldLines.dart';
 import '../../../widget/textField/wg_textfile_show.dart';
+import '../../auth/login.dart';
 import '../../user/money/widgethistory/widget_history.dart';
 import 'coach_editProfile.dart';
 
@@ -90,6 +92,19 @@ class _CoachPageState extends State<CoachPage> {
                   Container(
                       color: Theme.of(context).colorScheme.secondaryContainer,
                       height: 170,
+                    ),
+                       Positioned(
+                      //<-- SEE HERE
+                      right: 5,
+                      top: 10,
+                      child: IconButton(
+                          onPressed: () {
+                            Get.to(() => const LoginPage());
+                          },
+                          icon: const Icon(
+                            FontAwesomeIcons.arrowRightFromBracket,
+                            size: 28,
+                          )),
                     ),
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.center,

@@ -59,246 +59,249 @@ class _LoginPageState extends State<LoginPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Container(
-        // padding: const EdgeInsets.symmetric(vertical: 30),
-        width: double.infinity,
-        decoration: const BoxDecoration(
-            gradient: LinearGradient(begin: Alignment.topCenter, colors: [
-          Color.fromARGB(255, 255, 115, 0),
-          Color.fromARGB(255, 255, 150, 12),
-          Color.fromARGB(255, 255, 165, 31)
-        ])),
-        child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-          const SizedBox(
-            height: 80,
-          ),
-          const Padding(
-            padding: EdgeInsets.all(20),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                Text("เข้าสู่ระบบ",
-                    style: TextStyle(color: Colors.white, fontSize: 40)),
-                SizedBox(
-                  height: 10,
-                ),
-                Text("ยินดีต้อนรับ",
-                    style: TextStyle(color: Colors.white, fontSize: 25)),
-              ],
+    return WillPopScope(
+      onWillPop: () async => false,
+      child: Scaffold(
+        body: Container(
+          // padding: const EdgeInsets.symmetric(vertical: 30),
+          width: double.infinity,
+          decoration: const BoxDecoration(
+              gradient: LinearGradient(begin: Alignment.topCenter, colors: [
+            Color.fromARGB(255, 255, 115, 0),
+            Color.fromARGB(255, 255, 150, 12),
+            Color.fromARGB(255, 255, 165, 31)
+          ])),
+          child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+            const SizedBox(
+              height: 80,
             ),
-          ),
-          const SizedBox(height: 40),
-          //Expanded(child: Container(color: Colors.cyan,))
-
-          Expanded(
-            child: Container(
-              decoration: const BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.only(
-                      topLeft: Radius.circular(60),
-                      topRight: Radius.circular(60))),
-              child: Padding(
-                padding: const EdgeInsets.only(top: 50),
-                child: SingleChildScrollView(
-                  child: Padding(
-                    padding: const EdgeInsets.all(5),
-                    child: Column(children: [
-                      Padding(
-                        padding:
-                            const EdgeInsets.only(left: 20, right: 20, top: 20),
-                        child: TextField(
-                          controller: email,
-                          //autofocus: true,
-                          onChanged: (String value) {
-                            setState(() => titleErr = '');
-                          },
-                          decoration: InputDecoration(
-                              filled: true, //<-- SEE HERE
-                              fillColor: Colors.white,
-                              border: InputBorder.none,
-                              focusedBorder: OutlineInputBorder(
-                                borderSide: BorderSide(
-                                    width: 1.5,
-                                    color: Theme.of(context)
-                                        .colorScheme
-                                        .primary), //<-- SEE HERE
-                                borderRadius: BorderRadius.circular(20.0),
-                              ),
-                              enabledBorder: OutlineInputBorder(
-                                borderSide: BorderSide(
-                                    width: 1,
-                                    color: Theme.of(context)
-                                        .colorScheme
-                                        .tertiary), //<-- SEE HERE
-                                borderRadius: BorderRadius.circular(20.0),
-                              ),
-                              prefixIcon:
-                                  const Icon(FontAwesomeIcons.solidUser),
-                              hintText: "อีเมลผู้ใช้ (email)",
-                              hintStyle: const TextStyle(
-                                color: Colors.grey,
-                              )),
-                        ),
-                      ),
-                      Padding(
-                        padding:
-                            const EdgeInsets.only(left: 20, right: 20, top: 16),
-                        child: TextField(
-                          textAlignVertical: TextAlignVertical.center,
-                          //textAlign: TextAlign.center,
-                          controller: password,
-                          obscureText: !showPassword,
-                          onChanged: (String value) {
-                            setState(() => chackNameAndPassword = "");
-                            setState(() => titleErr = '');
-                          },
-                          decoration: InputDecoration(
-                              filled: true, //<-- SEE HERE
-                              fillColor: Colors.white,
-                              border: InputBorder.none,
-                              focusedBorder: OutlineInputBorder(
-                                borderSide: BorderSide(
-                                    width: 1.5,
-                                    color: Theme.of(context)
-                                        .colorScheme
-                                        .primary), //<-- SEE HERE
-                                borderRadius: BorderRadius.circular(20.0),
-                              ),
-                              enabledBorder: OutlineInputBorder(
-                                borderSide: BorderSide(
-                                    width: 1,
-                                    color: Theme.of(context)
-                                        .colorScheme
-                                        .tertiary), //<-- SEE HERE
-                                borderRadius: BorderRadius.circular(20.0),
-                              ),
-                              prefixIcon: const Icon(FontAwesomeIcons.lock),
-                              hintText: "รหัสผ่าน (password)",
-                              hintStyle: const TextStyle(
-                                color: Colors.grey,
-                              )),
-                        ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.only(right: 20,top: 15),
-                        child: InkWell(
-                          onTap: () {
-                            Get.to(() => const EditPasswordPage());
-                          },
-                          child: Row(
-                              mainAxisAlignment: MainAxisAlignment.end,
-                              children: [                            
-                                Text('ลืมรหัสผ่าน',style: TextStyle(color:  Theme.of(context).colorScheme.primary,),),
-                                Padding(
-                                  padding: const EdgeInsets.only(left: 8),
-                                  child: Icon(
-                                        FontAwesomeIcons.solidCircleQuestion, color: Theme.of(context).colorScheme.primary,),
-                                ),
-                              ],
-                            ),
-                        ),
-                      ),
-                   
-                      Padding(
-                        padding: const EdgeInsets.only(
-                            left: 20, right: 20, top: 30, bottom: 22),
-                        child: SizedBox(
-                          width: double.infinity,
-                          child: FilledButton.icon(
-                              icon: const FaIcon(
-                                  FontAwesomeIcons.rightToBracket,
-                                  size: 16),
-                              onPressed: () async {
-                                AuthLoginPost request = AuthLoginPost(
-                                    email: email.text, password: password.text);
-                                log(jsonEncode(request));
-                                var response = await authService.login(request);
-                                authLoginRes = response.data;
-                                uid = authLoginRes.uid;
-                                cid = authLoginRes.cid;
-                                // log(authLoginRes.cid);
-                                //log(authLoginRes.uid.toString());
-                                if (authLoginRes.uid > 0 &&
-                                    authLoginRes.cid > 0) {
-                                  log("go");
-                                  // ignore: use_build_context_synchronously
-                                  _bindPage(context);
-                                  setState(() => titleErr = '');
-                                } else if (authLoginRes.cid > 0) {
-                                  // ignore: use_build_context_synchronously
-                                  context.read<AppData>().cid = cid;
-                                  Get.to(() => const NavbarBottomCoach());
-                                  setState(() => titleErr = '');
-                                } else if (authLoginRes.uid > 0) {
-                                  // ignore: use_build_context_synchronously
-                                  context.read<AppData>().uid = uid;
-                                  Get.to(() => const NavbarBottom());
-                                  setState(() => titleErr = '');
-                                } else {
-                                  log('ไม่พบ');
-
-                                  setState(() => titleErr =
-                                      'กรุณาใส่อีเมล์หรือรหัสผ่านให้ถูกต้อง');
-                                }
-                              },
-                              label: Text(
-                                'เข้าสู่ระบบ',
-                                style: Theme.of(context)
-                                    .textTheme
-                                    .titleMedium!
-                                    .copyWith(color: Colors.white),
-                              )),
-                        ),
-                      ),
-                      const Padding(
+            const Padding(
+              padding: EdgeInsets.all(20),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  Text("เข้าสู่ระบบ",
+                      style: TextStyle(color: Colors.white, fontSize: 40)),
+                  SizedBox(
+                    height: 10,
+                  ),
+                  Text("ยินดีต้อนรับ",
+                      style: TextStyle(color: Colors.white, fontSize: 25)),
+                ],
+              ),
+            ),
+            const SizedBox(height: 40),
+            //Expanded(child: Container(color: Colors.cyan,))
+    
+            Expanded(
+              child: Container(
+                decoration: const BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.only(
+                        topLeft: Radius.circular(60),
+                        topRight: Radius.circular(60))),
+                child: Padding(
+                  padding: const EdgeInsets.only(top: 50),
+                  child: SingleChildScrollView(
+                    child: Padding(
+                      padding: const EdgeInsets.all(5),
+                      child: Column(children: [
+                        Padding(
                           padding:
-                              EdgeInsets.only(left: 20, right: 20, bottom: 15),
-                          child: Divider()),
-                      const Text("เข้าสู่ระบบด้วยวิธีอื่น"),
-                      Padding(
-                        padding: const EdgeInsets.only(
-                            left: 20, right: 20, bottom: 10, top: 20),
-                        child: SizedBox(
-                          width: double.infinity,
-                          height: 45,
-                          child: ElevatedButton.icon(
-                              icon: const FaIcon(FontAwesomeIcons.facebookF,
-                                  size: 16),
-                              onPressed: () async {
-                                // await login(context);
-                              },
-                              style: ElevatedButton.styleFrom(
-                                  foregroundColor: Colors.white,
-                                  backgroundColor: const Color(
-                                      0xff39579A) // Text Color (Foreground color)
-                                  ),
-                              label: const Text(
-                                'Login with Facebook',
-                                //style: Theme.of(context).textTheme.titleMedium,
-                              )),
+                              const EdgeInsets.only(left: 20, right: 20, top: 20),
+                          child: TextField(
+                            controller: email,
+                            //autofocus: true,
+                            onChanged: (String value) {
+                              setState(() => titleErr = '');
+                            },
+                            decoration: InputDecoration(
+                                filled: true, //<-- SEE HERE
+                                fillColor: Colors.white,
+                                border: InputBorder.none,
+                                focusedBorder: OutlineInputBorder(
+                                  borderSide: BorderSide(
+                                      width: 1.5,
+                                      color: Theme.of(context)
+                                          .colorScheme
+                                          .primary), //<-- SEE HERE
+                                  borderRadius: BorderRadius.circular(20.0),
+                                ),
+                                enabledBorder: OutlineInputBorder(
+                                  borderSide: BorderSide(
+                                      width: 1,
+                                      color: Theme.of(context)
+                                          .colorScheme
+                                          .tertiary), //<-- SEE HERE
+                                  borderRadius: BorderRadius.circular(20.0),
+                                ),
+                                prefixIcon:
+                                    const Icon(FontAwesomeIcons.solidUser),
+                                hintText: "อีเมลผู้ใช้ (email)",
+                                hintStyle: const TextStyle(
+                                  color: Colors.grey,
+                                )),
+                          ),
                         ),
-                      ),
-                      TextButton(
-                          onPressed: () {
-                            register(context);
-                          },
-                          child: Text(
-                            " สมัครสมาชิก",
-                            style: TextStyle(
-                              color: Theme.of(context).colorScheme.error,
-                              decoration: TextDecoration.underline,
-                              decorationColor:
-                                  Theme.of(context).colorScheme.error,
-                            ),
-                          ))
-                    ]),
+                        Padding(
+                          padding:
+                              const EdgeInsets.only(left: 20, right: 20, top: 16),
+                          child: TextField(
+                            textAlignVertical: TextAlignVertical.center,
+                            //textAlign: TextAlign.center,
+                            controller: password,
+                            obscureText: !showPassword,
+                            onChanged: (String value) {
+                              setState(() => chackNameAndPassword = "");
+                              setState(() => titleErr = '');
+                            },
+                            decoration: InputDecoration(
+                                filled: true, //<-- SEE HERE
+                                fillColor: Colors.white,
+                                border: InputBorder.none,
+                                focusedBorder: OutlineInputBorder(
+                                  borderSide: BorderSide(
+                                      width: 1.5,
+                                      color: Theme.of(context)
+                                          .colorScheme
+                                          .primary), //<-- SEE HERE
+                                  borderRadius: BorderRadius.circular(20.0),
+                                ),
+                                enabledBorder: OutlineInputBorder(
+                                  borderSide: BorderSide(
+                                      width: 1,
+                                      color: Theme.of(context)
+                                          .colorScheme
+                                          .tertiary), //<-- SEE HERE
+                                  borderRadius: BorderRadius.circular(20.0),
+                                ),
+                                prefixIcon: const Icon(FontAwesomeIcons.lock),
+                                hintText: "รหัสผ่าน (password)",
+                                hintStyle: const TextStyle(
+                                  color: Colors.grey,
+                                )),
+                          ),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.only(right: 20,top: 15),
+                          child: InkWell(
+                            onTap: () {
+                              Get.to(() => const EditPasswordPage());
+                            },
+                            child: Row(
+                                mainAxisAlignment: MainAxisAlignment.end,
+                                children: [                            
+                                  Text('ลืมรหัสผ่าน',style: TextStyle(color:  Theme.of(context).colorScheme.primary,),),
+                                  Padding(
+                                    padding: const EdgeInsets.only(left: 8),
+                                    child: Icon(
+                                          FontAwesomeIcons.solidCircleQuestion, color: Theme.of(context).colorScheme.primary,),
+                                  ),
+                                ],
+                              ),
+                          ),
+                        ),
+                     
+                        Padding(
+                          padding: const EdgeInsets.only(
+                              left: 20, right: 20, top: 30, bottom: 22),
+                          child: SizedBox(
+                            width: double.infinity,
+                            child: FilledButton.icon(
+                                icon: const FaIcon(
+                                    FontAwesomeIcons.rightToBracket,
+                                    size: 16),
+                                onPressed: () async {
+                                  AuthLoginPost request = AuthLoginPost(
+                                      email: email.text, password: password.text);
+                                  log(jsonEncode(request));
+                                  var response = await authService.login(request);
+                                  authLoginRes = response.data;
+                                  uid = authLoginRes.uid;
+                                  cid = authLoginRes.cid;
+                                  // log(authLoginRes.cid);
+                                  //log(authLoginRes.uid.toString());
+                                  if (authLoginRes.uid > 0 &&
+                                      authLoginRes.cid > 0) {
+                                    log("go");
+                                    // ignore: use_build_context_synchronously
+                                    _bindPage(context);
+                                    setState(() => titleErr = '');
+                                  } else if (authLoginRes.cid > 0) {
+                                    // ignore: use_build_context_synchronously
+                                    context.read<AppData>().cid = cid;
+                                    Get.to(() => const NavbarBottomCoach());
+                                    setState(() => titleErr = '');
+                                  } else if (authLoginRes.uid > 0) {
+                                    // ignore: use_build_context_synchronously
+                                    context.read<AppData>().uid = uid;
+                                    Get.to(() => const NavbarBottom());
+                                    setState(() => titleErr = '');
+                                  } else {
+                                    log('ไม่พบ');
+    
+                                    setState(() => titleErr =
+                                        'กรุณาใส่อีเมล์หรือรหัสผ่านให้ถูกต้อง');
+                                  }
+                                },
+                                label: Text(
+                                  'เข้าสู่ระบบ',
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .titleMedium!
+                                      .copyWith(color: Colors.white),
+                                )),
+                          ),
+                        ),
+                        const Padding(
+                            padding:
+                                EdgeInsets.only(left: 20, right: 20, bottom: 15),
+                            child: Divider()),
+                        const Text("เข้าสู่ระบบด้วยวิธีอื่น"),
+                        Padding(
+                          padding: const EdgeInsets.only(
+                              left: 20, right: 20, bottom: 10, top: 20),
+                          child: SizedBox(
+                            width: double.infinity,
+                            height: 45,
+                            child: ElevatedButton.icon(
+                                icon: const FaIcon(FontAwesomeIcons.facebookF,
+                                    size: 16),
+                                onPressed: () async {
+                                  // await login(context);
+                                },
+                                style: ElevatedButton.styleFrom(
+                                    foregroundColor: Colors.white,
+                                    backgroundColor: const Color(
+                                        0xff39579A) // Text Color (Foreground color)
+                                    ),
+                                label: const Text(
+                                  'Login with Facebook',
+                                  //style: Theme.of(context).textTheme.titleMedium,
+                                )),
+                          ),
+                        ),
+                        TextButton(
+                            onPressed: () {
+                              register(context);
+                            },
+                            child: Text(
+                              " สมัครสมาชิก",
+                              style: TextStyle(
+                                color: Theme.of(context).colorScheme.error,
+                                decoration: TextDecoration.underline,
+                                decorationColor:
+                                    Theme.of(context).colorScheme.error,
+                              ),
+                            ))
+                      ]),
+                    ),
                   ),
                 ),
               ),
             ),
-          ),
-        ]),
+          ]),
+        ),
       ),
     );
   }
