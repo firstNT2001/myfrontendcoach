@@ -13,6 +13,7 @@ import 'package:frontendfluttercoach/service/request.dart';
 import 'package:get/get.dart';
 
 import 'package:flutter/material.dart';
+import 'package:in_app_notification/in_app_notification.dart';
 import 'package:persistent_bottom_nav_bar_v2/persistent-tab-view.dart';
 import 'package:provider/provider.dart';
 import 'package:switcher_button/switcher_button.dart';
@@ -26,7 +27,7 @@ import '../../service/course.dart';
 import '../../service/provider/appdata.dart';
 
 import '../../widget/dialogs.dart';
-import '../../widget/wg_menu.dart';
+import '../../widget/notificationBody.dart';
 import '../Request/request_page.dart';
 import '../search/search_course.dart';
 import 'course/course_show.dart';
@@ -95,18 +96,18 @@ class _HomePageCoachState extends State<HomePageCoach> {
       appBar: AppBar(
         //backgroundColor: Theme.of(context).colorScheme.primary,
         elevation: 0,
-        leading: IconButton(
-          icon: const Icon(
-            FontAwesomeIcons.barsStaggered,
-            //color: Colors.black,
-          ),
-          onPressed: () {
-            Get.to(() => SideMenu(
-                name: coachs.first.username,
-                price: coachs.first.price.toString(),
-                image: coachs.first.image));
-          },
-        ),
+        // leading: IconButton(
+        //   icon: const Icon(
+        //     FontAwesomeIcons.barsStaggered,
+        //     //color: Colors.black,
+        //   ),
+        //   onPressed: () {
+        //     Get.to(() => SideMenu(
+        //         name: coachs.first.username,
+        //         price: coachs.first.price.toString(),
+        //         image: coachs.first.image));
+        //   },
+        // ),
         actions: [
           Visibility(
             visible: isVisibles,
@@ -175,7 +176,17 @@ class _HomePageCoachState extends State<HomePageCoach> {
           padding: const EdgeInsets.all(8.0),
           child: GestureDetector(
             onTap: () {
-              Get.to(() => const SearchCoursePage());
+              pushNewScreen(
+                context,
+                screen: const SearchCoursePage(),
+                withNavBar: true,
+              ).then((value) {
+                log('ponds');
+                setState(() {
+                  loadCourseDataMethod = loadCourseData();
+                  loadRequestDataMethod = loadRequestData();
+                });
+              });
             },
             child: Container(
                 width: MediaQuery.of(context).size.width,
@@ -198,7 +209,14 @@ class _HomePageCoachState extends State<HomePageCoach> {
                           context,
                           screen: const SearchCoursePage(),
                           withNavBar: true,
-                        );
+                        ).then((value) {
+                          log('ponds');
+
+                          setState(() {
+                            loadCourseDataMethod = loadCourseData();
+                            loadRequestDataMethod = loadRequestData();
+                          });
+                        });
                       },
                       icon: const Icon(
                         FontAwesomeIcons.magnifyingGlass,
@@ -246,6 +264,18 @@ class _HomePageCoachState extends State<HomePageCoach> {
       var datas = await _RequestService.request(rqID: '', uid: '', cid: cid);
       requests = datas.data;
       log(requests.length.toString());
+      if (requests.length > 0) {
+        // ignore: use_build_context_synchronously
+        InAppNotification.show(
+          child: NotificationBody(
+            count: 1,
+            message: 'มีการขอเปลี่ยนท่า',
+          ),
+          context: context,
+          onTap: () => print('Notification tapped!'),
+          duration: const Duration(milliseconds: 1500),
+        );
+      }
     } catch (err) {
       log('Error: $err');
     }
@@ -275,10 +305,19 @@ class _HomePageCoachState extends State<HomePageCoach> {
           padding: const EdgeInsets.only(left: 10, right: 10, bottom: 20),
           child: InkWell(
             onTap: () {
-            
-              Get.to(() => ShowCourse(
-                    coID: courses[index].coId.toString(),
-                  ));
+              pushNewScreen(
+                context,
+                screen: ShowCourse(
+                  coID: courses[index].coId.toString(),
+                ),
+                withNavBar: true,
+              ).then((value) {
+                log('ponds');
+                setState(() {
+                  loadCourseDataMethod = loadCourseData();
+                  loadRequestDataMethod = loadRequestData();
+                });
+              });
             },
             child: Container(
               alignment: Alignment.center,
@@ -481,27 +520,27 @@ class _HomePageCoachState extends State<HomePageCoach> {
     log(coID);
     log(modelResult.result);
     if (modelResult.result == '0') {
-        // // ignore: use_build_context_synchronously
-        //   InAppNotification.show(
-        //     child: NotificationBody(
-        //       count: 1,
-        //       message: 'อัพเดทสถานะไม่สำเร็จ',
-        //     ),
-        //     context: context,
-        //     onTap: () => print('Notification tapped!'),
-        //     duration: const Duration(milliseconds: 1500),
-        //   );
+      // // ignore: use_build_context_synchronously
+      //   InAppNotification.show(
+      //     child: NotificationBody(
+      //       count: 1,
+      //       message: 'อัพเดทสถานะไม่สำเร็จ',
+      //     ),
+      //     context: context,
+      //     onTap: () => print('Notification tapped!'),
+      //     duration: const Duration(milliseconds: 1500),
+      //   );
     } else {
-        // // ignore: use_build_context_synchronously
-        //   InAppNotification.show(
-        //     child: NotificationBody(
-        //       count: 1,
-        //       message: 'อัพเดทสถานะสำเร็จ',
-        //     ),
-        //     context: context,
-        //     onTap: () => print('Notification tapped!'),
-        //     duration: const Duration(milliseconds: 1500),
-        //   );
+      // // ignore: use_build_context_synchronously
+      //   InAppNotification.show(
+      //     child: NotificationBody(
+      //       count: 1,
+      //       message: 'อัพเดทสถานะสำเร็จ',
+      //     ),
+      //     context: context,
+      //     onTap: () => print('Notification tapped!'),
+      //     duration: const Duration(milliseconds: 1500),
+      //   );
       setState(() {
         loadCourseDataMethod = loadCourseData();
       });

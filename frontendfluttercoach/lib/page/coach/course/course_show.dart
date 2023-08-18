@@ -2,7 +2,7 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:get/get.dart';
+import 'package:persistent_bottom_nav_bar_v2/persistent-tab-view.dart';
 import 'package:provider/provider.dart';
 
 import '../../../model/response/md_Review_get.dart';
@@ -13,7 +13,6 @@ import '../../../service/provider/appdata.dart';
 import '../../../service/review.dart';
 import '../../../widget/dialogs.dart';
 import '../../user/mycourse/Widget/widget_loadreview.dart';
-import '../navigationbar.dart';
 import 'course_edit_page.dart';
 
 class ShowCourse extends StatefulWidget {
@@ -42,14 +41,17 @@ class _ShowCourseState extends State<ShowCourse> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      //resizeToAvoidBottomInset: false,
-      body: SafeArea(
-          child: ListView(
-        children: [
-          showCourse(),
-        ],
-      )),
+    return WillPopScope(
+      onWillPop: () async => false,
+      child: Scaffold(
+        //resizeToAvoidBottomInset: false,
+        body: SafeArea(
+            child: ListView(
+          children: [
+            showCourse(),
+          ],
+        )),
+      ),
     );
   }
 
@@ -137,13 +139,14 @@ class _ShowCourseState extends State<ShowCourse> {
                       FontAwesomeIcons.chevronLeft,
                     ),
                     onPressed: () {
-                      Navigator.pushAndRemoveUntil<void>(
-                        context,
-                        MaterialPageRoute<void>(
-                            builder: (BuildContext context) =>
-                                const NavbarBottomCoach()),
-                        ModalRoute.withName('/NavbarBottomCoach'),
-                      );
+                      // Navigator.pushAndRemoveUntil<void>(
+                      //   context,
+                      //   MaterialPageRoute<void>(
+                      //       builder: (BuildContext context) =>
+                      //           const NavbarBottomCoach()),
+                      //   ModalRoute.withName('/'),
+                      // );
+                      Navigator.pop(context);
                     },
                   ),
                 ),
@@ -165,10 +168,20 @@ class _ShowCourseState extends State<ShowCourse> {
                         FontAwesomeIcons.pen,
                       ),
                       onPressed: () {
-                        Get.to(() => CourseEditPage(
-                              coID: courses.first.coId.toString(),
-                              isVisible: true,
-                            ));
+                        pushNewScreen(
+                          context,
+                          screen: CourseEditPage(
+                            coID: courses.first.coId.toString(),
+                            isVisible: true,
+                          ),
+                          withNavBar: true,
+                        ).then((value) {
+                          log('ponds');
+                          setState(() {
+                            loadDataMethod = loadDataAsync();
+                            loadReviewDataAsync();
+                          });
+                        });
                       },
                     )),
               ),
@@ -237,13 +250,18 @@ class _ShowCourseState extends State<ShowCourse> {
                           FontAwesomeIcons.user,
                           color: Colors.white,
                         ),
-                        Padding(
-                          padding: const EdgeInsets.only(left: 8),
-                          child: Text(context.read<AppData>().nameCoach,
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .bodyLarge!
-                                  .copyWith(color: Colors.white)),
+                        Expanded(
+                          child: Padding(
+                            padding: const EdgeInsets.only(left: 8,right: 8),
+                            child: FittedBox(
+                                fit: BoxFit.contain,
+                              child: Text(context.read<AppData>().nameCoach,
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .bodyLarge!
+                                      .copyWith(color: Colors.white)),
+                            ),
+                          ),
                         ),
                       ],
                     ),

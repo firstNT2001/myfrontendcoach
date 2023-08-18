@@ -34,9 +34,9 @@ class _CoachPageState extends State<CoachPage> {
   TextEditingController email = TextEditingController();
   TextEditingController phone = TextEditingController();
   TextEditingController birthday = TextEditingController();
-  TextEditingController gender = TextEditingController(); 
+  TextEditingController gender = TextEditingController();
   TextEditingController property = TextEditingController();
-  TextEditingController qualification= TextEditingController();
+  TextEditingController qualification = TextEditingController();
 
   @override
   void initState() {
@@ -61,12 +61,14 @@ class _CoachPageState extends State<CoachPage> {
     try {
       //Courses
       var datas = await _coachService.coach(
-          nameCoach: '', cid: context.read<AppData>().cid.toString(), email: '');
+          nameCoach: '',
+          cid: context.read<AppData>().cid.toString(),
+          email: '');
       coachs = datas.data;
       phone.text = coachs.first.phone;
       email.text = coachs.first.email;
       fullName.text = coachs.first.fullName.toString();
-      birthday.text = thaiDate(coachs.first.birthday);    
+      birthday.text = thaiDate(coachs.first.birthday);
       property.text = coachs.first.property.toString();
       qualification.text = coachs.first.qualification.toString();
       if (coachs.first.gender == "1") {
@@ -88,12 +90,13 @@ class _CoachPageState extends State<CoachPage> {
             return Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Stack(children: [
-                  Container(
+                Stack(
+                  children: [
+                    Container(
                       color: Theme.of(context).colorScheme.secondaryContainer,
                       height: 170,
                     ),
-                       Positioned(
+                    Positioned(
                       //<-- SEE HERE
                       right: 5,
                       top: 10,
@@ -121,72 +124,76 @@ class _CoachPageState extends State<CoachPage> {
                           ),
                         ),
                         Center(
-                          child: Column(children: [
+                            child: Column(
+                          children: [
                             Padding(
-                                padding: const EdgeInsets.only(top: 15),
-                                child: Text("@ " + coachs.first.username,
-                                    style: const TextStyle(
-                                        fontSize: 18,
-                                        fontWeight: FontWeight.bold)),
-                              ),
-                              Padding(
-                                padding:
-                                    const EdgeInsets.only(top: 8, bottom: 20),
-                                child: Text(coachs.first.fullName),
-                              ),
-                              WidgetTextFieldStringShow(
-                                controller: fullName,
-                                labelText: 'ชื่อ-นามสกุล',
-                              ),
-                              WidgetTextFieldStringShow(
-                                controller: email,
-                                labelText: 'Email',
-                              ),
-                              WidgetTextFieldStringShow(
-                                controller: phone,
-                                labelText: 'เบอร์โทรศัพท์',
-                              ),
-                               Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceAround,
-                                children: [
-                                  Expanded(
-                                    child: WidgetTextFieldStringShow(
-                                      controller: gender,
-                                      labelText: 'เพศ',
-                                    ),
-                                  ),Expanded(
-                                    child: WidgetTextFieldStringShow(
-                                      controller: birthday,
-                                      labelText: 'วันเกิด',
-                                    ),
+                              padding: const EdgeInsets.only(top: 15),
+                              child: Text("@ " + coachs.first.username,
+                                  style: const TextStyle(
+                                      fontSize: 18,
+                                      fontWeight: FontWeight.bold)),
+                            ),
+                            Padding(
+                              padding:
+                                  const EdgeInsets.only(top: 8, bottom: 20),
+                              child: Text(coachs.first.fullName),
+                            ),
+                            WidgetTextFieldStringShow(
+                              controller: fullName,
+                              labelText: 'ชื่อ-นามสกุล',
+                            ),
+                            WidgetTextFieldStringShow(
+                              controller: email,
+                              labelText: 'Email',
+                            ),
+                            WidgetTextFieldStringShow(
+                              controller: phone,
+                              labelText: 'เบอร์โทรศัพท์',
+                            ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceAround,
+                              children: [
+                                Expanded(
+                                  child: WidgetTextFieldStringShow(
+                                    controller: gender,
+                                    labelText: 'เพศ',
                                   ),
-
-                                ],
-                              ),
-                              WidgetTextFieldLines(
-                      controller: qualification,
-                      labelText: 'วุฒิการศึกษา',
-                    ),
-                              WidgetTextFieldLines(
-                      controller: property,
-                      labelText: 'ประวัติส่วนตัว',
-                    ),
-                    Padding(
-                                padding: const EdgeInsets.only(bottom: 30, left: 15, right: 15,top: 15),
-                                child: SizedBox(
-                                  width: 400,
-                                  child: FilledButton(onPressed: (){
-                                     Get.to(() => const CoachEidtProfilePage());
-                                  }, child: const Text("แก้ไขข้อมูล")),
                                 ),
-                              )
-                     
-                          ],)
-                        ),
-
-                    ],)
-                ],)
+                                Expanded(
+                                  child: WidgetTextFieldStringShow(
+                                    controller: birthday,
+                                    labelText: 'วันเกิด',
+                                  ),
+                                ),
+                              ],
+                            ),
+                            WidgetTextFieldLines(
+                              controller: qualification,
+                              labelText: 'วุฒิการศึกษา',
+                            ),
+                            WidgetTextFieldLines(
+                              controller: property,
+                              labelText: 'ประวัติส่วนตัว',
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.only(
+                                  bottom: 30, left: 15, right: 15, top: 15),
+                              child: SizedBox(
+                                width: 400,
+                                child: FilledButton(
+                                    onPressed: () {
+                                      Get.to(
+                                          () => const CoachEidtProfilePage());
+                                    },
+                                    child: const Text("แก้ไขข้อมูล")),
+                              ),
+                            )
+                          ],
+                        )),
+                      ],
+                    )
+                  ],
+                )
               ],
             );
           } else {

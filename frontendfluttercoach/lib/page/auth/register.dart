@@ -7,8 +7,10 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:frontendfluttercoach/model/request/registerCusDTO.dart';
+import 'package:frontendfluttercoach/page/auth/login.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
+import 'package:in_app_notification/in_app_notification.dart';
 import 'package:provider/provider.dart';
 
 import '../../model/request/registerCoachDTO.dart';
@@ -16,6 +18,7 @@ import '../../model/response/md_Result.dart';
 import '../../service/auth.dart';
 import '../../service/provider/appdata.dart';
 import '../../widget/dropdown/wg_dropdown_notValue_string.dart';
+import '../../widget/notificationBody.dart';
 import '../../widget/textField/wg_textField.dart';
 import '../../widget/textField/wg_textFieldLines.dart';
 import '../../widget/textField/wg_textField_int copy.dart';
@@ -103,8 +106,6 @@ class _RegisterPageState extends State<RegisterPage> {
 
   // ignore: non_constant_identifier_names
   Column InputREG() {
-    Size screenSize = MediaQuery.of(context).size;
-    double width = (screenSize.width > 550) ? 550 : screenSize.width;
     return Column(children: [
       Center(
         child: Stack(
@@ -297,6 +298,9 @@ class _RegisterPageState extends State<RegisterPage> {
         child: FilledButton(
           //style: style,
           onPressed: () async {
+            setState(() {
+              textErr = '';
+            });
             if (fullName.text == '' ||
                 name.text == '' ||
                 selectedValue.text == '' ||
@@ -372,6 +376,30 @@ class _RegisterPageState extends State<RegisterPage> {
                   var result = await _authService.regCoach(request);
                   modelResult = result.data;
                   log(modelResult.result);
+                  if (modelResult.result == '1') {
+                     // ignore: use_build_context_synchronously
+                     InAppNotification.show(
+                      child: NotificationBody(
+                        count: 1,
+                        message: 'สมัครสำเร็จ',
+                      ),
+                      context: context,
+                      onTap: () => print('Notification tapped!'),
+                      duration: const Duration(milliseconds: 1500),
+                    );
+                    Get.to(() => const LoginPage());
+                  } else {
+                    // ignore: use_build_context_synchronously
+                    InAppNotification.show(
+                      child: NotificationBody(
+                        count: 1,
+                        message: 'สมัครไม่สำเร็จ',
+                      ),
+                      context: context,
+                      onTap: () => print('Notification tapped!'),
+                      duration: const Duration(milliseconds: 1500),
+                    );
+                  }
                 } else {
                   setState(() {
                     textErr = 'กรุณากรอกข้อมูลให้ครบ';

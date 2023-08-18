@@ -227,6 +227,7 @@ class _CoachEidtProfilePageState extends State<CoachEidtProfilePage> {
                         //   withNavBar: true,
                         // );
                         onPressed: () {
+                          log(coachs.first.email);
                           Get.to(() => GoogleAuthenticatorPage(
                                 email: coachs.first.email,
                                 password: coachs.first.password,

@@ -33,7 +33,7 @@ _controller = PersistentTabController(initialIndex: 0);
                 icon: const Icon(FontAwesomeIcons.house),
                 title: "Home",
                 activeColorPrimary:Theme.of(context).colorScheme.primary,
-                inactiveColorPrimary:  Color.fromARGB(255, 0, 0, 0),
+                inactiveColorPrimary:  const Color.fromARGB(255, 0, 0, 0),
                 // activeColorPrimary: Color.fromARGB(255, 101, 6, 255),
                 // inactiveColorPrimary:  const Color.fromARGB(255, 255, 255, 255),
             ),
@@ -41,7 +41,7 @@ _controller = PersistentTabController(initialIndex: 0);
                 icon: const Icon(FontAwesomeIcons.utensils),
                 title: "History",
                 activeColorPrimary:Theme.of(context).colorScheme.primary,
-                inactiveColorPrimary:  Color.fromARGB(255, 0, 0, 0),
+                inactiveColorPrimary:  const Color.fromARGB(255, 0, 0, 0),
                 // activeColorPrimary: CupertinoColors.activeBlue,
                 // inactiveColorPrimary: CupertinoColors.systemGrey,
             ),
@@ -49,7 +49,7 @@ _controller = PersistentTabController(initialIndex: 0);
                 icon: const Icon(FontAwesomeIcons.plus,color: Colors.black,),
                 title: "Add",
                 activeColorPrimary: Theme.of(context).colorScheme.primary,
-                inactiveColorPrimary:  Color.fromARGB(255, 0, 0, 0),
+                inactiveColorPrimary:  const Color.fromARGB(255, 0, 0, 0),
                 // activeColorPrimary: CupertinoColors.activeBlue,
                 // inactiveColorPrimary: CupertinoColors.systemGrey,
             ),
@@ -57,7 +57,7 @@ _controller = PersistentTabController(initialIndex: 0);
                 icon: const Icon(FontAwesomeIcons.comment),
                 title: "Chat",
                 activeColorPrimary: Theme.of(context).colorScheme.primary,
-                inactiveColorPrimary: Color.fromARGB(255, 0, 0, 0),
+                inactiveColorPrimary: const Color.fromARGB(255, 0, 0, 0),
                 // activeColorPrimary: CupertinoColors.activeBlue,
                 // inactiveColorPrimary: CupertinoColors.systemGrey,
             ),
@@ -65,7 +65,7 @@ _controller = PersistentTabController(initialIndex: 0);
                 icon: const Icon(FontAwesomeIcons.solidUser),
                 title: "Profile",
                 activeColorPrimary: Theme.of(context).colorScheme.primary,
-                inactiveColorPrimary: Color.fromARGB(255, 0, 0, 0),
+                inactiveColorPrimary: const Color.fromARGB(255, 0, 0, 0),
                 // activeColorPrimary: CupertinoColors.activeBlue,
                 // inactiveColorPrimary: CupertinoColors.systemGrey,
             ),
@@ -84,17 +84,17 @@ _controller = PersistentTabController(initialIndex: 0);
           resizeToAvoidBottomInset: true, // This needs to be true if you want to move up the screen when keyboard appears. Default is true.
           stateManagement: true, // Default is true.
           hideNavigationBarWhenKeyboardShows: true, // Recommended to set 'resizeToAvoidBottomInset' as true while using this argument. Default is true.
-          decoration: NavBarDecoration(
+          decoration: const NavBarDecoration(
             //borderRadius: BorderRadius.circular(10.0),
             colorBehindNavBar: Colors.white,
           ),
           popAllScreensOnTapOfSelectedTab: true,
           popActionScreens: PopActionScreensType.all,
-          itemAnimationProperties: ItemAnimationProperties( // Navigation Bar's items animation properties.
+          itemAnimationProperties: const ItemAnimationProperties( // Navigation Bar's items animation properties.
             duration: Duration(milliseconds: 200),
             curve: Curves.ease,
           ),
-          screenTransitionAnimation: ScreenTransitionAnimation( // Screen transition animation on change of selected tab.
+          screenTransitionAnimation: const ScreenTransitionAnimation( // Screen transition animation on change of selected tab.
             animateTabTransition: true,
             curve: Curves.ease,
             duration: Duration(milliseconds: 200),

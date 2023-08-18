@@ -3,8 +3,8 @@ import 'dart:developer';
 import 'package:custom_rating_bar/custom_rating_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
+
+import 'package:persistent_bottom_nav_bar_v2/persistent-tab-view.dart';
 import 'package:provider/provider.dart';
 import 'package:switcher_button/switcher_button.dart';
 
@@ -14,8 +14,7 @@ import '../../model/response/md_coach_course_get.dart';
 import '../../service/course.dart';
 import '../../service/provider/appdata.dart';
 import '../../widget/dialogs.dart';
-import '../coach/course/course_edit_page.dart';
-import '../coach/navigationbar.dart';
+import '../coach/course/course_show.dart';
 
 class SearchCoursePage extends StatefulWidget {
   const SearchCoursePage({super.key});
@@ -71,13 +70,7 @@ class _SearchCoursePageState extends State<SearchCoursePage> {
               FontAwesomeIcons.chevronLeft,
             ),
             onPressed: () {
-             Navigator.pushAndRemoveUntil<void>(
-                        context,
-                        MaterialPageRoute<void>(
-                            builder: (BuildContext context) =>
-                                const NavbarBottomCoach()),
-                        ModalRoute.withName('/NavbarBottomCoach'),
-                      );
+              Navigator.pop(context);
             },
           ),
           Container(
@@ -163,10 +156,18 @@ class _SearchCoursePageState extends State<SearchCoursePage> {
           padding: const EdgeInsets.only(left: 10, right: 10, bottom: 20),
           child: InkWell(
             onTap: () {
-              Get.to(() => CourseEditPage(
-                    coID: courses[index].coId.toString(),
-                    isVisible: true,
-                  ));
+              pushNewScreen(
+                context,
+                screen: ShowCourse(
+                  coID: courses[index].coId.toString(),
+                ),
+                withNavBar: true,
+              ).then((value) {
+                log('ponds');
+                setState(() {
+                  loadCourseDataMethod = loadCourseData();
+                });
+              });
             },
             child: Container(
               alignment: Alignment.center,

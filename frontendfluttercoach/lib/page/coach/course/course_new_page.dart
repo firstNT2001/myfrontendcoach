@@ -8,7 +8,7 @@ import 'package:firebase_storage/firebase_storage.dart';
 
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:get/get.dart';
+import 'package:persistent_bottom_nav_bar_v2/persistent-tab-view.dart';
 
 import 'package:provider/provider.dart';
 
@@ -79,7 +79,7 @@ class _CourseNewPageState extends State<CourseNewPage> {
   }
 
   @override
-  Widget build(BuildContext context) {  
+  Widget build(BuildContext context) {
     return Scaffold(
       body: SafeArea(
         child: ListView(
@@ -213,7 +213,11 @@ class _CourseNewPageState extends State<CourseNewPage> {
           setState(() {
             textErr = 'กรุณากรอกข้อมูลให้ครบ';
           });
-        }  else {
+        } else if (pickedImg == null) {
+          setState(() {
+            textErr = 'กรุณาเพิ่มรูป';
+          });
+        } else {
           log("selectedValue${selectedValue.text}");
           if (selectedValue.text == 'ง่าย') {
             lavel = 1;
@@ -223,15 +227,15 @@ class _CourseNewPageState extends State<CourseNewPage> {
             lavel = 3;
           }
           log(selectedValue.text);
-         // if (pickedImg != null) await uploadfile();
-          //if (pickedImg == null) profile = courses.first.image;
+          if (pickedImg != null) await uploadfile();
+          // if (pickedImg == null) profile = courses.first.image;
           CourseCoachIdPost request = CourseCoachIdPost(
               bid: null,
               name: name.text,
               details: details.text,
               level: lavel.toString(),
               amount: int.parse(amount.text),
-              image: 'profile',
+              image: profile,
               days: int.parse(days.text),
               price: int.parse(price.text),
               status: status,
@@ -248,10 +252,31 @@ class _CourseNewPageState extends State<CourseNewPage> {
           } else {
             // ignore: use_build_context_synchronously
             success(context);
-            Get.to(() => DaysCoursePage(
-                  coID: moduleResult.result,
-                  isVisible: true,
-                ));
+            context.read<AppData>().img = profile;
+            // ignore: use_build_context_synchronously
+            pushNewScreen(
+              context,
+              screen: DaysCoursePage(
+                coID: moduleResult.result,
+                isVisible: true,
+              ),
+              withNavBar: true,
+            ).then((value) {
+              log('ponds');
+
+              setState(() {
+                name.text = '';
+                details.text = '';
+                amount.text = '';
+                days.text = '';
+                price.text = '';
+                lavel = 0;
+                selectedValue.text = '';
+                profile = '';
+                pickedImg = null;
+                status = '';
+              });
+            });
           }
         }
       },
