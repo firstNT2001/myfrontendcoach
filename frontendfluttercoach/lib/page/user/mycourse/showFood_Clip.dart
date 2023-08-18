@@ -6,6 +6,7 @@ import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:frontendfluttercoach/service/course.dart';
 import 'package:intl/intl.dart';
+import 'package:persistent_bottom_nav_bar_v2/persistent-tab-view.dart';
 import '../../../../model/response/clip_get_res.dart';
 import '../../../../service/clip.dart';
 import '../../../model/request/status_clip.dart';
@@ -223,13 +224,9 @@ class _showFoodState extends State<showFood> {
                                           .textTheme
                                           .bodyLarge)),
                             ),
-                            SizedBox(
-                              height: double.infinity,
-                              width: double.infinity,
-                              child: WidgetloadCilp(
-                                urlVideo: videoUrl,
-                                nameclip: listclip.listClip.name,
-                              ),
+                            WidgetloadCilp(
+                              urlVideo: videoUrl,
+                              nameclip: listclip.listClip.name,
                             ),
                             Padding(
                               padding: const EdgeInsets.only(left: 8),
@@ -507,7 +504,11 @@ class _showFoodState extends State<showFood> {
                       // context.read<AppData>().did = days.first.did;
                       // context.read<AppData>().idcourse = coID;
                       // log(days.first.did.toString());
-                      Get.to(() => const MyCouses());
+                      pushNewScreen(
+                          context,
+                          screen: const MyCouses(),
+                          withNavBar: true,
+                        );
                     },
                     //     widget.coID.toString()
                     child: const Text('ยืนยัน'),

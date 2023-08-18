@@ -53,11 +53,13 @@ class _getQrcodeState extends State<getQrcode> {
             FontAwesomeIcons.chevronLeft,
           ),
           onPressed: () {
-             pushNewScreen(
-              context,
-              screen: const HistoryWallet(),
-              withNavBar: true,
-            );
+            Navigator.pop(context);
+            Navigator.pop(context);
+            //  pushNewScreen(
+            //   context,
+            //   screen: const HistoryWallet(),
+            //   withNavBar: true,
+            // );
           },
         ),
       ),

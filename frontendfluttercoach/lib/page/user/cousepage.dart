@@ -8,6 +8,7 @@ import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:frontendfluttercoach/page/user/profilecoach.dart';
 import 'package:get/get.dart';
+import 'package:in_app_notification/in_app_notification.dart';
 import 'package:intl/intl.dart';
 import 'package:persistent_bottom_nav_bar_v2/persistent-tab-view.dart';
 import 'package:provider/provider.dart';
@@ -21,6 +22,7 @@ import '../../service/course.dart';
 import '../../service/day.dart';
 import '../../service/provider/appdata.dart';
 import '../../widget/dialogs.dart';
+import '../../widget/notificationBody.dart';
 import 'mycourse/Widget/widget_loadreview.dart';
 import 'mycourse/mycourse.dart';
 
@@ -37,7 +39,7 @@ class _showCousePageState extends State<showCousePage> {
   late CourseService courseService;
   late Future<void> loadDataMethod;
   late ModelAmountclip clipamount;
-  
+
   List<Course> courses = [];
   List<DayDetail> clip = [];
   late ModelResult moduleResult;
@@ -49,6 +51,9 @@ class _showCousePageState extends State<showCousePage> {
   int amountUser = 0;
   final now = DateTime.now();
   double value = 0.0;
+  int oldlimit = 0;
+  int newlimit = 0;
+  bool isvisible = false;
 
   @override
   void initState() {
@@ -77,7 +82,20 @@ class _showCousePageState extends State<showCousePage> {
             backgroundColor: Theme.of(context).colorScheme.primary,
             foregroundColor: Colors.white,
             onPressed: () {
-              _buycouse(context);
+              if (newlimit >= oldlimit) {
+                InAppNotification.show(
+                  child: NotificationBody(
+                    count: 1,
+                    message: 'ซื้อไม่สำเร็จ เนื่องจากจำนวนคนเต็ม',
+                  ),
+                  context: context,
+                  onTap: () => print('Notification tapped!'),
+                  duration: const Duration(milliseconds: 3000),
+                );
+              }else{
+                _buycouse(context);
+              }
+              
               // ignore: prefer_const_constructors
             },
             shape: const CircleBorder(),
@@ -98,7 +116,7 @@ class _showCousePageState extends State<showCousePage> {
               Navigator.pop(context);
             },
           ),
-      ),
+        ),
         body: SafeArea(
           child: ListView(
             children: [
@@ -128,10 +146,11 @@ class _showCousePageState extends State<showCousePage> {
       var dataclip = await dayService.day(
           did: '', coID: courseId.toString(), sequence: '');
       clip = dataclip.data;
-      var dataamount = await courseService.amoutclip(coID:  courseId.toString());
+      var dataamount = await courseService.amoutclip(coID: courseId.toString());
       clipamount = dataamount.data;
       amountclip = clipamount.amount;
-      var dataamountUser = await buyCourseService.amountUserinCourse(originalID: courseId.toString());
+      var dataamountUser = await buyCourseService.amountUserinCourse(
+          originalID: courseId.toString());
       amountUser = dataamountUser.data;
     } catch (err) {
       log('Error: $err');
@@ -143,6 +162,8 @@ class _showCousePageState extends State<showCousePage> {
         future: loadDataMethod, // 3.1 object ของ async method
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.done) {
+            oldlimit = courses.first.amount;
+            newlimit = amountUser;
             return Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -173,20 +194,20 @@ class _showCousePageState extends State<showCousePage> {
                       Text(courses.first.name,
                           style: const TextStyle(
                               fontSize: 22, fontWeight: FontWeight.bold)),
-                              SizedBox(width: 10,),
-                               RatingBar.readOnly(
-                                  isHalfAllowed: false,
-                                  filledIcon: FontAwesomeIcons.bolt,
-                                  size: 22,
-                                  emptyIcon: FontAwesomeIcons.bolt,
-                                  filledColor: Theme.of(context)
-                                      .colorScheme
-                                      .tertiaryContainer,
-                                  emptyColor:
-                                      Color.fromARGB(255, 179, 179, 179),
-                                  initialRating: double.parse(courses.first.level),
-                                  maxRating: 3,
-                                ),
+                      SizedBox(
+                        width: 10,
+                      ),
+                      RatingBar.readOnly(
+                        isHalfAllowed: false,
+                        filledIcon: FontAwesomeIcons.bolt,
+                        size: 22,
+                        emptyIcon: FontAwesomeIcons.bolt,
+                        filledColor:
+                            Theme.of(context).colorScheme.tertiaryContainer,
+                        emptyColor: Color.fromARGB(255, 179, 179, 179),
+                        initialRating: double.parse(courses.first.level),
+                        maxRating: 3,
+                      ),
                     ],
                   ),
                 ),
@@ -196,77 +217,125 @@ class _showCousePageState extends State<showCousePage> {
                       onPressed: () {
                         log("courses.first.coach.cid =" +
                             courses.first.coach.cid.toString());
-                       
-                            pushNewScreen(
-                      context,
-                      screen: ProfileCoachPage(
-                              coachID: courses.first.coach.cid,
-                            ),
-                      withNavBar: true,
-                    );
+
+                        pushNewScreen(
+                          context,
+                          screen: ProfileCoachPage(
+                            coachID: courses.first.coach.cid,
+                          ),
+                          withNavBar: true,
+                        );
                       },
                       icon: const Icon(
                         FontAwesomeIcons.solidUser,
                         size: 16,
                       ),
                       label: Text(courses.first.coach.fullName,
-                          style: const TextStyle(color: Colors.white,fontSize: 16))),
+                          style: const TextStyle(
+                              color: Colors.white, fontSize: 16))),
                 ),
-                
+
                 Padding(
-                  padding: const EdgeInsets.only(left: 15),
+                  padding: const EdgeInsets.only(left: 15, right: 15),
                   child: SizedBox(
-                    height:  MediaQuery.of(context).size.height * 0.1,width:  MediaQuery.of(context).size.width * 0.6,
-                    child: Column(children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.start,
+                      height: MediaQuery.of(context).size.height * 0.1,
+                      width: MediaQuery.of(context).size.width * 0.85,
+                      child: Column(
                         children: [
-                          SizedBox(
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: [
+                              SizedBox(
+                                child: Row(children: [
+                                  const Icon(FontAwesomeIcons.calendarCheck),
+                                  Padding(
+                                    padding:
+                                        const EdgeInsets.only(left: 5, top: 6),
+                                    child: Text(
+                                        courses.first.days.toString() + " วัน",
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .bodyLarge),
+                                  )
+                                ]),
+                              ),
+                              SizedBox(
+                                width: 60,
+                              ),
+                              SizedBox(
+                                child: Row(children: [
+                                  const Icon(FontAwesomeIcons.youtube),
+                                  Padding(
+                                    padding:
+                                        const EdgeInsets.only(left: 5, top: 6),
+                                    child: Text(amountclip.toString() + " คลิป",
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .bodyLarge),
+                                  )
+                                ]),
+                              ),
+                            ],
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.only(top: 8),
                             child: Row(
-                              children: [const Icon(FontAwesomeIcons.calendarCheck),
-                          Padding(
-                            padding: const EdgeInsets.only(left: 5,top: 6),
-                            child: Text(courses.first.days.toString()+" วัน",style: Theme.of(context).textTheme.bodyLarge),
-                          )]),),
-                          SizedBox(width: 60,),
-                          SizedBox(child: Row(children: [const Icon(FontAwesomeIcons.youtube),
-                          Padding(
-                            padding: const EdgeInsets.only(left: 5,top: 6),
-                            child: Text(amountclip.toString()+" คลิป",style: Theme.of(context).textTheme.bodyLarge),
-                          )]),),
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              children: [
+                                SizedBox(
+                                  child: Row(children: [
+                                    const Icon(FontAwesomeIcons.userPlus),
+                                    Padding(
+                                      padding: const EdgeInsets.only(
+                                          left: 10, top: 6),
+                                      child: Text(
+                                          courses.first.amount.toString() +
+                                              "/" +
+                                              amountUser.toString() +
+                                              " คน",
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .bodyLarge),
+                                    )
+                                  ]),
+                                ),
+                                SizedBox(
+                                  width: 38,
+                                ),
+                                SizedBox(
+                                  child: Row(children: [
+                                    const Icon(FontAwesomeIcons.coins),
+                                    Padding(
+                                      padding: const EdgeInsets.only(
+                                          left: 5, top: 6),
+                                      child: Text(
+                                          courses.first.price.toString() +
+                                              " บาท",
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .bodyLarge),
+                                    )
+                                  ]),
+                                ),
+                              ],
+                            ),
+                          ),
                         ],
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.only(top: 8),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          children: [
-                            SizedBox(
-                              child: Row(children: [const Icon(FontAwesomeIcons.userPlus),
-                            Padding(
-                              padding: const EdgeInsets.only(left: 10,top: 6),
-                              child: Text(courses.first.amount.toString()+"/"+amountUser.toString()+" คน",style: Theme.of(context).textTheme.bodyLarge),
-                            )]),),
-                            SizedBox(width: 38,),
-                            SizedBox(child: Row(children: [const Icon(FontAwesomeIcons.coins),
-                            Padding(
-                              padding: const EdgeInsets.only(left: 5,top: 6),
-                              child: Text(courses.first.price.toString()+" บาท",style: Theme.of(context).textTheme.bodyLarge),
-                            )]),),
-                          ],
-                        ),
-                      ),
-                    ],)),
-                ) ,                    
+                      )),
+                ),
                 const Padding(
-                  padding: EdgeInsets.only(left:12, ),
-                  child:
-                      Text("รายละเอียดคอร์ส", style: TextStyle(fontSize: 18,fontWeight: FontWeight.w600)),
+                  padding: EdgeInsets.only(
+                    left: 12,
+                  ),
+                  child: Text("รายละเอียดคอร์ส",
+                      style:
+                          TextStyle(fontSize: 18, fontWeight: FontWeight.w600)),
                 ),
                 Padding(
                   padding:
                       const EdgeInsets.only(left: 20, bottom: 12, right: 15),
-                  child: Text(courses.first.details,style: Theme.of(context).textTheme.bodyLarge),
+                  child: Text(courses.first.details,
+                      style: Theme.of(context).textTheme.bodyLarge),
                 ),
               ],
             );
@@ -337,6 +406,11 @@ class _showCousePageState extends State<showCousePage> {
                 ],
               ),
             ),
+            Visibility(
+                visible: isvisible,
+                child: Text("ไม่สามารถซื้อได้เนื่องจากจำนวนคนเต็ม",
+                    style:
+                        TextStyle(color: Theme.of(context).colorScheme.error))),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
@@ -349,31 +423,32 @@ class _showCousePageState extends State<showCousePage> {
                 ),
                 FilledButton(
                     onPressed: () async {
-                      startLoading(context);
-                      String cdate2 =
-                          DateFormat("yyyy-MM-dd").format(DateTime.now());
+                     
+                        startLoading(context);
+                        String cdate2 =
+                            DateFormat("yyyy-MM-dd").format(DateTime.now());
 
-                      var proposedDate = "${cdate2}T00:00:00.000Z";
-                      //log("Date time3 = $proposedDate");
-                      BuyCoursecoIdPost buyCoursecoIdPost = BuyCoursecoIdPost(
-                        customerId: cusID,
-                        buyDateTime: proposedDate,
-                      );
-                      log(jsonEncode(buyCoursecoIdPost));
-                      log(cusID.toString());
-                      buycourse = await buyCourseService.buyCourse(
-                          courseId.toString(), buyCoursecoIdPost);
-                      moduleResult = buycourse.data;
-                      if (moduleResult.result == "1") {
-                        SmartDialog.dismiss();
-                        stopLoading();
-                        pushNewScreen(
-                          context,
-                          screen: const MyCouses(),
-                          withNavBar: true,
+                        var proposedDate = "${cdate2}T00:00:00.000Z";
+                        //log("Date time3 = $proposedDate");
+                        BuyCoursecoIdPost buyCoursecoIdPost = BuyCoursecoIdPost(
+                          customerId: cusID,
+                          buyDateTime: proposedDate,
                         );
-                        
-                      }
+                        log(jsonEncode(buyCoursecoIdPost));
+                        log(cusID.toString());
+                        buycourse = await buyCourseService.buyCourse(
+                            courseId.toString(), buyCoursecoIdPost);
+                        moduleResult = buycourse.data;
+                        if (moduleResult.result == "1") {
+                          SmartDialog.dismiss();
+                          stopLoading();
+                          pushNewScreen(
+                            context,
+                            screen: const MyCouses(),
+                            withNavBar: true,
+                          );
+                        }
+                      
                     },
                     child: Text("ชำระเงิน",
                         style: Theme.of(context).textTheme.bodyLarge)),
@@ -384,5 +459,4 @@ class _showCousePageState extends State<showCousePage> {
       );
     });
   }
-    
 }

@@ -33,23 +33,41 @@ class _GoogleAuthenticatorPageState extends State<GoogleAuthenticatorPage> {
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+              
               Padding(
                 padding: const EdgeInsets.all(8.0),
-                child: IconButton(
-                  icon: const Icon(
-                    FontAwesomeIcons.chevronLeft,
-                  ),
-                  onPressed: () {
-                    Get.back();
-                  },
-                ),
+                child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        IconButton(
+                          icon: const Icon(
+                            FontAwesomeIcons.chevronLeft,
+                          ),
+                          onPressed: () {
+                            Get.back();
+                          },
+                        ),
+                        Padding(
+                          padding: EdgeInsets.only(top: 4,left: 15),
+                          child: Text(
+                            'สร้างรหัส',
+                            style: TextStyle(
+                                fontSize: 28, fontWeight: FontWeight.w500),
+                          ),
+                        ),
+                       
+                      ],
+                    ),
+              
               ),
+              SizedBox(height: 45,),
               Center(
                 child: Text(
                   'Google Authenticator',
                   style: Theme.of(context).textTheme.headlineMedium,
                 ),
               ),
+               
               Padding(
                 padding: const EdgeInsets.only(top:20 ,bottom: 18, left: 20, right: 20),
                 child: SizedBox(
@@ -97,6 +115,15 @@ class _GoogleAuthenticatorPageState extends State<GoogleAuthenticatorPage> {
                       ],
                     ),
                   ],
+                ),
+              ),
+              Center(
+                child: Padding(
+                  padding: const EdgeInsets.only(top: 10,left: 15,right: 15),
+                  child: Text(
+                    'ใช้ Google Authenticator เพื่อสร้างรหัสยืนยันตัวตนเมื่อลืมรหัสผ่าน',
+                    style: Theme.of(context).textTheme.bodyLarge,
+                  ),
                 ),
               ),
             ],
