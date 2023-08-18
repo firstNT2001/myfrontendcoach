@@ -6,9 +6,10 @@ import 'dart:io';
 import 'package:file_picker/file_picker.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:frontendfluttercoach/page/coach/home_coach_page.dart';
 
-import 'package:get/get.dart';
 import 'package:in_app_notification/in_app_notification.dart';
+import 'package:persistent_bottom_nav_bar_v2/persistent-tab-view.dart';
 import 'package:provider/provider.dart';
 import 'package:quickalert/models/quickalert_type.dart';
 import 'package:quickalert/widgets/quickalert_dialog.dart';
@@ -31,9 +32,8 @@ import '../../../widget/notificationBody.dart';
 import '../../../widget/textField/wg_textField.dart';
 import '../../../widget/textField/wg_textFieldLines.dart';
 import '../../../widget/textField/wg_textField_int copy.dart';
+import '../../../widget/textField/wg_textfile_show.dart';
 import '../daysCourse/days_course_page.dart';
-import '../navigationbar.dart';
-import 'course_show.dart';
 
 class CourseEditPage extends StatefulWidget {
   const CourseEditPage(
@@ -169,7 +169,7 @@ class _CourseEditPageState extends State<CourseEditPage> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            SizedBox(
+            const SizedBox(
               height: 28,
             ),
             WidgetTextFieldString(
@@ -189,15 +189,12 @@ class _CourseEditPageState extends State<CourseEditPage> {
                       maxLength: 2,
                     ),
                   ),
-                  SizedBox(
-                      width: (width - 16 - (3 * padding)) / 2,
-                      child: Column(
-                        children: [
-                          const SizedBox(height: 20),
-                          const Text('จำนวนวัน'),
-                          Text(days.text),
-                        ],
-                      )),
+                  Expanded(
+                    child: WidgetTextFieldStringShow(
+                      controller: days,
+                      labelText: 'จำนวนวัน',
+                    ),
+                  ),
                 ],
               ),
             ),
@@ -216,7 +213,7 @@ class _CourseEditPageState extends State<CourseEditPage> {
                   ),
                   Expanded(
                     child: Padding(
-                      padding: const EdgeInsets.only(right: 15),
+                      padding: const EdgeInsets.only(right: 15, left: 15),
                       child: WidgetDropdownString(
                         title: 'เลือกความยากง่าย',
                         selectedValue: selectedValue,
@@ -348,13 +345,7 @@ class _CourseEditPageState extends State<CourseEditPage> {
                       FontAwesomeIcons.chevronLeft,
                     ),
                     onPressed: () {
-                      Navigator.pushAndRemoveUntil<void>(
-                        context,
-                        MaterialPageRoute<void>(
-                            builder: (BuildContext context) =>
-                                ShowCourse(coID: widget.coID)),
-                        ModalRoute.withName('/NavbarBottomCoach'),
-                      );
+                      Navigator.pop(context);
                     },
                   ),
                 ),
@@ -433,25 +424,45 @@ class _CourseEditPageState extends State<CourseEditPage> {
             if (moduleResult.result == '0') {
               // ignore: use_build_context_synchronously
               context.read<AppData>().img = courses.first.image;
-              Get.to(() => DaysCoursePage(
-                    coID: widget.coID,
-                    isVisible: widget.isVisible,
-                  ));
+              // ignore: use_build_context_synchronously
+              pushNewScreen(
+                context,
+                screen: DaysCoursePage(
+                  coID: widget.coID,
+                  isVisible: widget.isVisible,
+                ),
+                withNavBar: true,
+              ).then((value) {
+                log('ponds');
+                setState(() {
+                  loadDataMethod = loadDataAsync();
+                });
+              });
             } else {
               // ignore: use_build_context_synchronously
-              InAppNotification.show(
-                child: NotificationBody(
-                  count: 1,
-                  message: 'แก้ไขสำเร็จ',
+              // InAppNotification.show(
+              //   child: NotificationBody(
+              //     count: 1,
+              //     message: 'แก้ไขสำเร็จ',
+              //   ),
+              //   context: context,
+              //   onTap: () => print('Notification tapped!'),
+              //   duration: const Duration(milliseconds: 1500),
+              // );
+              // ignore: use_build_context_synchronously
+              pushNewScreen(
+                context,
+                screen: DaysCoursePage(
+                  coID: widget.coID,
+                  isVisible: widget.isVisible,
                 ),
-                context: context,
-                onTap: () => print('Notification tapped!'),
-                duration: const Duration(milliseconds: 1500),
-              );
-              Get.to(() => DaysCoursePage(
-                    coID: widget.coID,
-                    isVisible: widget.isVisible,
-                  ));
+                withNavBar: true,
+              ).then((value) {
+                log('ponds');
+                setState(() {
+                  loadDataMethod = loadDataAsync();
+                });
+              });
             }
           }
         }
@@ -545,11 +556,11 @@ class _CourseEditPageState extends State<CourseEditPage> {
         Navigator.of(context, rootNavigator: true).pop();
         if (modelResult.result == '1') {
           // ignore: use_build_context_synchronously
-          Navigator.pushAndRemoveUntil<void>(
+          // Navigator.pop(context);
+          pushNewScreen(
             context,
-            MaterialPageRoute<void>(
-                builder: (BuildContext context) => NavbarBottomCoach()),
-            ModalRoute.withName('/'),
+            screen: HomePageCoach(),
+            withNavBar: true,
           );
           // ignore: use_build_context_synchronously
           InAppNotification.show(

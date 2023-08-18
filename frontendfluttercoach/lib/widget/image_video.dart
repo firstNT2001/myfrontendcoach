@@ -20,6 +20,7 @@ class _VideoItemState extends State<VideoItem> {
     super.initState();
     // ignore: deprecated_member_use
     _controller = VideoPlayerController.network(widget.video)
+    
       ..initialize().then((_) {
         setState(() {}); //when your thumbnail will show.
       });

@@ -282,13 +282,14 @@ class _ClipNewCoachPageState extends State<ClipNewCoachPage> {
     return FilledButton(
         onPressed: () async {
           log(pathVdieo);
+          log('message');
           if (name.text.isEmpty ||
               amountPerSet.text.isEmpty ||
               details.text.isEmpty) {
             setState(() {
               textErr = 'กรุณากรอกข้อมูลให้ครบ';
             });
-          } else if (pathVdieo.isEmpty) {
+          } else if (pickedFile == null) {
             setState(() {
               textErr = 'กรุณาเพิ่มวิดิโอ';
             });

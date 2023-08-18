@@ -25,7 +25,6 @@ import '../../../service/provider/appdata.dart';
 import '../../../widget/dialogs.dart';
 import '../../../widget/notificationBody.dart';
 import '../course/FoodAndClip/course_food_clip.dart';
-import '../course/course_edit_page.dart';
 
 class DaysCoursePage extends StatefulWidget {
   const DaysCoursePage(
@@ -119,7 +118,7 @@ class _DaysCoursePageState extends State<DaysCoursePage> {
                         blurRadius: 10,
                         color: Colors.black.withOpacity(0.1))
                   ],
-                  
+                  // shape: BoxShape.circle,
                   image: DecorationImage(
                     fit: BoxFit.cover,
                     image: NetworkImage(context.read<AppData>().img),
@@ -147,15 +146,8 @@ class _DaysCoursePageState extends State<DaysCoursePage> {
                           FontAwesomeIcons.chevronLeft,
                         ),
                         onPressed: () {
-                          Navigator.pushAndRemoveUntil<void>(
-                            context,
-                            MaterialPageRoute<void>(
-                                builder: (BuildContext context) =>
-                                    CourseEditPage(
-                                        coID: widget.coID,
-                                        isVisible: widget.isVisible)),
-                            ModalRoute.withName('/NavbarBottomCoach'),
-                          );
+                        
+                          Navigator.pop(context);
                         },
                       ),
                     ),
@@ -254,7 +246,7 @@ class _DaysCoursePageState extends State<DaysCoursePage> {
                               );
                             } else {
                               moveDayColor = Colors.black;
-                               InAppNotification.show(
+                              InAppNotification.show(
                                 child: NotificationBody(
                                   count: 1,
                                   message: 'เคลื่อนย้ายวัน / ปิด',
@@ -426,6 +418,7 @@ class _DaysCoursePageState extends State<DaysCoursePage> {
   //load
   Future<void> loadDaysDataAsync() async {
     try {
+      log(widget.coID);
       var res =
           await _daysService.days(did: '', coID: widget.coID, sequence: '');
       days = res.data;

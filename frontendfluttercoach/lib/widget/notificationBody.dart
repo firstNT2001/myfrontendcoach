@@ -26,7 +26,7 @@ class NotificationBody extends StatelessWidget {
     return ConstrainedBox(
       constraints: BoxConstraints(minHeight: minHeight),
       child: Padding(
-        padding: const EdgeInsets.fromLTRB(16, 4, 16, 0),
+        padding: const EdgeInsets.fromLTRB(16, 50, 16, 0),
         child: DecoratedBox(
           decoration: BoxDecoration(
             boxShadow: [

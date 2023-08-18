@@ -97,7 +97,7 @@ class _HomeFoodAndClipPageState extends State<HomeFoodAndClipPage> {
     _clipService = context.read<AppData>().clipServices;
     loadClipDataMethod = loadClipData();
 
-    title = "Day ${widget.sequence}";
+    title = "วันที่ ${widget.sequence}";
   }
 
   @override
@@ -148,7 +148,7 @@ class _HomeFoodAndClipPageState extends State<HomeFoodAndClipPage> {
               FontAwesomeIcons.chevronLeft,
             ),
             onPressed: () {
-              Get.back();
+              Navigator.pop(context);
             },
           ),
           bottom: TabBar(
@@ -571,9 +571,9 @@ class _HomeFoodAndClipPageState extends State<HomeFoodAndClipPage> {
       context: context,
       barrierDismissible: isVisibleQuickAlert,
       type: QuickAlertType.confirm,
-      text: 'Do you want to delete?',
-      confirmBtnText: 'Yes',
-      cancelBtnText: 'No',
+      text: 'ต้อกการลบเมนูอาหารหรือไม',
+      confirmBtnText: 'ตกลง',
+      cancelBtnText: 'ยกเลิก',
       confirmBtnColor: Theme.of(context).colorScheme.primary,
       onConfirmBtnTap: () async {
         var response = await _foodService.deleteFood(fid);
@@ -757,9 +757,9 @@ class _HomeFoodAndClipPageState extends State<HomeFoodAndClipPage> {
       context: context,
       barrierDismissible: isVisibleQuickAlert,
       type: QuickAlertType.confirm,
-      text: 'Do you want to delete?',
-      confirmBtnText: 'Yes',
-      cancelBtnText: 'No',
+      text: 'ต้องการลบคลิปหรือไม',
+      confirmBtnText: 'ตกลง',
+      cancelBtnText: 'ยกเลิก',
       confirmBtnColor: Theme.of(context).colorScheme.primary,
       onConfirmBtnTap: () async {
         var response = await _clipService.deleteClip(cpid);
