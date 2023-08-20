@@ -175,10 +175,7 @@ class _HomePageUserState extends State<HomePageUser> {
                 Visibility(
                   visible: isSuggestVisible,
                   child: Expanded(
-                    child: Padding(
-                      padding: const EdgeInsets.only(left: 8, right: 8),
-                      child: loadcourse(),
-                    ),
+                    child: loadcourse(),
                   ),
                 ),
               ],

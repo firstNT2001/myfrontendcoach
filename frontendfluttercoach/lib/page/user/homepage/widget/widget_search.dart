@@ -278,7 +278,7 @@ class _WidgetsearchState extends State<Widgetsearch> {
             children: courses
                 .map((listcours) => Padding(
                     padding:
-                        const EdgeInsets.only(left: 18, right: 18, bottom: 15),
+                        const EdgeInsets.only(left: 10, right: 10, bottom: 15),
                     child: InkWell(
                       onTap: () {
                         pushNewScreen(
