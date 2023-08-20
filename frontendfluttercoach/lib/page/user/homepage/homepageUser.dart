@@ -86,11 +86,11 @@ class _HomePageUserState extends State<HomePageUser> {
               ),
             ),
             Padding(
-                    padding: const EdgeInsets.only(top: 40, bottom: 20,left: 280,right: 15),
+                    padding:  EdgeInsets.only( top: MediaQuery.of(context).size.height * 0.048,bottom: 20,left: MediaQuery.of(context).size.width * 0.58,right: 15),
                     child: SizedBox(
                         width: MediaQuery.of(context).size.width * 0.4,
                         height: MediaQuery.of(context).size.height * 0.1,
-                        child: Image.asset("assets/images/dancing.png")),
+                        child: Image.asset("assets/images/yoga.png")),
                   ),
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -124,7 +124,7 @@ class _HomePageUserState extends State<HomePageUser> {
                         onTap: () {
                           pushNewScreen(
                             context,
-                            screen: const WidgetSearchtext(),
+                            screen: const Widgetsearch(),
                             withNavBar: true,
                           );
                         },

@@ -11,13 +11,14 @@ import 'package:provider/provider.dart';
 import 'package:retrofit/retrofit.dart';
 
 import '../../../../model/response/md_Coach_get.dart';
-import '../../../../model/response/md_Customer_get.dart';
+
 import '../../../../model/response/md_coach_course_get.dart';
 import '../../../../service/coach.dart';
 import '../../../../service/course.dart';
-import '../../../../service/customer.dart';
+
 import '../../../../service/provider/appdata.dart';
 import '../../cousepage.dart';
+import '../../profilecoach.dart';
 
 class Widgetsearch extends StatefulWidget {
   const Widgetsearch({super.key});
@@ -31,15 +32,13 @@ class _WidgetsearchState extends State<Widgetsearch> {
   late CoachService coachService;
   late CourseService courseService;
 
-  late CustomerService customerService;
-  List<Customer> customer = [];
   List<Coach> coaches = [];
   List<Course> courses = [];
   TextEditingController myController = TextEditingController();
-  bool isVisibleCoach = false;
+  bool isVisibleCoach = true;
   bool isVisibleCourse = true;
   bool isVisibleText = false;
-  bool isVisibleSearch = false;
+  // bool isVisibleSearch = false;
   int uid = 0;
   @override
   void initState() {
@@ -50,8 +49,6 @@ class _WidgetsearchState extends State<Widgetsearch> {
         CourseService(Dio(), baseUrl: context.read<AppData>().baseurl);
     coachService =
         CoachService(Dio(), baseUrl: context.read<AppData>().baseurl);
-    customerService =
-        CustomerService(Dio(), baseUrl: context.read<AppData>().baseurl);
     loadDataMethod = loadData();
   }
 
@@ -60,6 +57,7 @@ class _WidgetsearchState extends State<Widgetsearch> {
     return Scaffold(
       body: SafeArea(
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Padding(
               padding: const EdgeInsets.only(top: 18),
@@ -85,7 +83,6 @@ class _WidgetsearchState extends State<Widgetsearch> {
                         if (myController.text.isNotEmpty) {
                           //isVisibleSearch = true;
                           isVisibleText = false;
-                          isVisibleSearch = false;
                           setState(() {});
                           log("contro ไม่ว่าง");
                           coachService
@@ -100,19 +97,11 @@ class _WidgetsearchState extends State<Widgetsearch> {
                             if (coaches.isNotEmpty) {
                               log("coaches.isNotEmpty");
                               setState(() {
-                                //isVisibleCoach = true;
-                                isVisibleSearch = false;
+                                isVisibleCoach = true;
                                 isVisibleText = false;
                               });
 
                               //log(coaches.length.toString());
-                            } else {
-                              log("coaches.isEmpty");
-                              setState(() {
-                                //isVisibleCoach = false;
-                                isVisibleSearch = false;
-                                isVisibleText = true;
-                              });
                             }
                           });
                           courseService
@@ -124,29 +113,64 @@ class _WidgetsearchState extends State<Widgetsearch> {
                             if (courses.isNotEmpty) {
                               log("courses.isNotEmpty");
                               setState(() {
-                                isVisibleSearch = false;
                                 //isVisibleCoach = true;
+                                isVisibleCourse = true;
                                 isVisibleText = false;
                               });
 
                               log(coaches.length.toString());
-                            } else {
-                              log("courses.isEmpty");
-                              setState(() {
-                                isVisibleSearch = false;
-                                //isVisibleCoach = false;
-                                isVisibleText = true;
-                              });
                             }
                           });
                         } else {
                           log("contro ว่าง");
-                          setState(() {
-                            isVisibleText = false;
-                            isVisibleSearch = true;
-                            isVisibleCoach = false;
-                            isVisibleCourse = false;
+                          coachService
+                              .coach(
+                                  nameCoach: '',
+                                  cid: "",
+                                  email: '')
+                              .then((coachdata) {
+                            var datacoach = coachdata.data;
+                            //var checkcoaches = coaches.length;
+                            coaches = datacoach;
+                            if (coaches.isNotEmpty) {
+                              log("coaches.isNotEmpty");
+                              setState(() {
+                                isVisibleCoach = true;
+                                isVisibleText = false;
+                              });
+
+                              //log(coaches.length.toString());
+                            }
                           });
+                          courseService
+                              .courseOpenSell(
+                                  cid: '', coID: '', name: '')
+                              .then((coursedata) {
+                            var datacourse = coursedata.data;
+                            courses = datacourse;
+                            if (courses.isNotEmpty) {
+                              log("courses.isNotEmpty");
+                              setState(() {
+                                //isVisibleCoach = true;
+                                isVisibleCourse = true;
+                                isVisibleText = false;
+                              });
+
+                              log(coaches.length.toString());
+                            }
+                          });
+                          // setState(() {
+                          //   isVisibleText = false;
+
+                          //   isVisibleCourse = true;
+                          // });
+                        }
+                        if (courses.isEmpty && coaches.isEmpty) {
+                          setState(() {
+                            isVisibleText = true;
+                          });
+
+                          log(coaches.length.toString());
                         }
                       },
                       // onSubmitted: (value) {
@@ -154,244 +178,73 @@ class _WidgetsearchState extends State<Widgetsearch> {
                       // },
                       decoration: InputDecoration(
                           border: InputBorder.none,
-                          enabledBorder: InputBorder.none,
-                          focusedBorder: InputBorder.none,
-                          prefixIcon: const Icon(FontAwesomeIcons.search),
-                          hintText: "ค้นหา",
+                          enabledBorder: OutlineInputBorder(
+                            borderSide: BorderSide(
+                                width: 1,
+                                color: Colors.grey.shade100), //<-- SEE HERE
+                            borderRadius: BorderRadius.circular(15.0),
+                          ),
+                          focusedBorder: OutlineInputBorder(
+                            borderSide: const BorderSide(
+                                width: 1.5,
+                                color: Colors.orange), //<-- SEE HERE
+                            borderRadius: BorderRadius.circular(15.0),
+                          ),
+                          prefixIcon: const Icon(
+                            FontAwesomeIcons.search,
+                            color: Colors.grey,
+                          ),
+                          hintText: "ค้นหาโค้ชหรือคอร์ส",
                           hintStyle: const TextStyle(color: Colors.grey)),
                     ),
                   ),
                 ],
               ),
             ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                FilledButton(
-                    onPressed: () {
-                      if (courses.isEmpty) {
-                        log("coaEm");
-                        setState(() {
-                          isVisibleText = false;
-                          isVisibleSearch = true;
-                          isVisibleCoach = false;
-                          isVisibleCourse = false;
-                        });
-                      } else {
-                        log("notcoaEm");
-                        setState(() {
-                          isVisibleText = false;
-                          isVisibleCoach = false;
-                          isVisibleCourse = true;
-                          isVisibleSearch = false;
-                        });
-                      }
-                    },
-                    child: const Text("คอร์ส")),
-                Padding(
-                  padding: const EdgeInsets.all(10.0),
-                  child: FilledButton(
-                      onPressed: () {
-                        if (coaches.isEmpty) {
-                          log("coaEm");
-                          setState(() {
-                            // isVisibleSearch
-                            isVisibleText = false;
-                            isVisibleSearch = true;
-                            isVisibleCoach = false;
-                            isVisibleCourse = false;
-                          });
-                        } else {
-                          log("notcoaEm");
-                          setState(() {
-                            isVisibleText = false;
-                            isVisibleCoach = true;
-                            isVisibleCourse = false;
-                            isVisibleSearch = false;
-                          });
-                        }
-                        // setState(() {
-                        //   isVisibleCoach = true;
-                        //   isVisibleCourse = false;
-                        // });
-                      },
-                      child: const Text("โค้ช")),
-                ),
-              ],
-            ),
-            Visibility(
-              visible: isVisibleText,
-              child: SizedBox(
-                height: 100,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
-                    const Text("ไม่พบผลลัพธ์สำหรับ",
-                        style: TextStyle(
-                            fontSize: 18,
-                            color: Color.fromARGB(96, 85, 85, 85))),
-                    Text("''" + myController.text + "''",
-                        style: const TextStyle(
-                            fontSize: 18,
-                            color: Color.fromARGB(96, 85, 85, 85)))
-                  ],
-                ),
+            Padding(
+              padding: EdgeInsets.only(left: 10, top: 20),
+              child: Text(
+                "คอร์สและโค้ชทั้งหมด",
+                style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
               ),
             ),
-            Visibility(
-              visible: isVisibleSearch,
-              child: const SizedBox(
-                height: 100,
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.end,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Icon(FontAwesomeIcons.search,
-                        color: Color.fromARGB(96, 85, 85, 85), size: 25),
-                    Padding(
-                      padding: EdgeInsets.only(left: 10),
-                      child: Text("พิมพ์เพื่อค้นหา",
+            Center(
+              child: Visibility(
+                visible: isVisibleText,
+                child: SizedBox(
+                  height: 100,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      const Text("ไม่พบผลลัพธ์สำหรับ",
                           style: TextStyle(
                               fontSize: 18,
                               color: Color.fromARGB(96, 85, 85, 85))),
+                      Text('" ' + myController.text + ' "',
+                          style: const TextStyle(
+                              fontSize: 18,
+                              color: Color.fromARGB(96, 85, 85, 85)))
+                    ],
+                  ),
+                ),
+              ),
+            ),
+            Expanded(
+              child: SingleChildScrollView(
+                child: Column(
+                  children: [
+                    Visibility(
+                      visible: isVisibleCourse,
+                      child: loadcourse(),
+                    ),
+                    //showCoach
+                    Visibility(
+                      visible: isVisibleCoach,
+                      child: loadcoach(),
                     ),
                   ],
                 ),
-              ),
-            ),
-            Visibility(
-              visible: isVisibleCoach,
-              child: Expanded(
-                child: Padding(
-                  padding: const EdgeInsets.only(left: 10, right: 10),
-                  child: ListView.builder(
-                      shrinkWrap: true,
-                      itemCount: coaches.length,
-                      itemBuilder: (context, index) {
-                        final coach = coaches[index];
-                        return Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: InkWell(
-                            onTap: () {
-                              // pushNewScreen(
-                              //   context,
-                              //   screen: const showCousePage(),
-                              //   withNavBar: true,
-                              // );
-                            },
-                            child: Container(
-                              alignment: Alignment.center,
-                              width: double.infinity,
-                              child: AspectRatio(
-                                aspectRatio: 16 / 9,
-                                child: Stack(
-                                  children: <Widget>[
-                                    Container(
-                                      alignment: Alignment.topCenter,
-                                      child: AspectRatio(
-                                          aspectRatio: 16 / 9,
-                                          child: Container(
-                                            decoration: BoxDecoration(
-                                              color: Theme.of(context)
-                                                  .colorScheme
-                                                  .onPrimary,
-                                              image: DecorationImage(
-                                                  image:
-                                                      NetworkImage(coach.image),
-                                                  fit: BoxFit.cover),
-                                              borderRadius:
-                                                  BorderRadius.circular(20),
-                                            ),
-                                          )),
-                                      //color: Colors.white,
-                                    ),
-                                    Container(
-                                      padding: const EdgeInsets.all(5.0),
-                                      alignment: Alignment.bottomCenter,
-                                      decoration: BoxDecoration(
-                                        gradient: LinearGradient(
-                                          begin: Alignment.topCenter,
-                                          end: Alignment.bottomCenter,
-                                          colors: <Color>[
-                                            const Color.fromARGB(255, 0, 0, 0)
-                                                .withAlpha(0),
-                                            const Color.fromARGB(49, 0, 0, 0),
-                                            const Color.fromARGB(127, 0, 0, 0)
-                                            // const Color.fromARGB(255, 255, 255, 255)
-                                            //     .withAlpha(0),
-                                            // Color.fromARGB(39, 255, 255, 255),
-                                            // Color.fromARGB(121, 255, 255, 255)
-                                          ],
-                                        ),
-                                        borderRadius: BorderRadius.circular(20),
-                                      ),
-                                    ),
-                                    Padding(
-                                      padding: const EdgeInsets.all(8.0),
-                                      child: Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.end,
-                                        children: [
-                                          Text(coach.fullName,
-                                              style: Theme.of(context)
-                                                  .textTheme
-                                                  .titleLarge!
-                                                  .copyWith(
-                                                      color: Colors.white)),
-                                          Row(
-                                            children: [
-                                              const Padding(
-                                                padding:
-                                                    EdgeInsets.only(right: 8),
-                                                child: Icon(
-                                                  FontAwesomeIcons.solidUser,
-                                                  size: 16.0,
-                                                  color: Colors.white,
-                                                ),
-                                              ),
-                                              Text(coach.username,
-                                                  style: Theme.of(context)
-                                                      .textTheme
-                                                      .bodyLarge!
-                                                      .copyWith(
-                                                          color: Colors.white)),
-                                            ],
-                                          ),
-                                        ],
-                                      ),
-                                    )
-                                  ],
-                                ),
-                              ),
-                            ),
-                          ),
-                        );
-                        // Card(
-                        //   color: Theme.of(context).colorScheme.outline,
-                        //   child: ListTile(
-                        //     leading: CircleAvatar(
-                        //       radius: 50,
-                        //       backgroundImage: NetworkImage(coach.image),
-                        //     ),
-                        //     title: Text(coach.username.toString(),
-                        //         style: Theme.of(context).textTheme.bodyLarge),
-                        //     subtitle: Text(coach.fullName,
-                        //         style: Theme.of(context).textTheme.bodyLarge),
-                        //     trailing: const Icon(Icons.arrow_forward),
-                        //   ),
-                        // );
-                      }),
-                ),
-              ),
-            ),
-            //showCourse
-            Visibility(
-              visible: isVisibleCourse,
-              child: Expanded(
-                child: loadcourse(),
               ),
             ),
           ],
@@ -405,9 +258,10 @@ class _WidgetsearchState extends State<Widgetsearch> {
       var datacourse =
           await courseService.courseOpenSell(coID: '', cid: '', name: '');
       courses = datacourse.data;
-      var result =
-          await customerService.customer(uid: uid.toString(), email: '');
-      customer = result.data;
+   
+      var datacoach =
+          await coachService.coach(cid: '', email: '', nameCoach: '');
+      coaches = datacoach.data;
     } catch (err) {
       log('Error: $err');
     }
@@ -420,120 +274,234 @@ class _WidgetsearchState extends State<Widgetsearch> {
         if (snapshot.connectionState != ConnectionState.done) {
           return const Center(child: CircularProgressIndicator());
         } else {
-          return Padding(
-            padding: const EdgeInsets.only(
-              left: 10,
-              right: 10,
-            ),
-            child: ListView.builder(
-              shrinkWrap: true,
-              itemCount: courses.length,
-              itemBuilder: (context, index) {
-                final listcours = courses[index];
-                return Padding(
-                  padding: const EdgeInsets.all(8),
-                  child: InkWell(
-                    onTap: () {
-                      //Get.to(() => const showCousePage());
-                    },
-                    child: Container(
-                      alignment: Alignment.center,
-                      width: double.infinity,
-                      child: AspectRatio(
-                        aspectRatio: 16 / 9,
-                        child: Stack(
-                          children: <Widget>[
-                            Container(
-                              alignment: Alignment.topCenter,
-                              child: AspectRatio(
-                                  aspectRatio: 16 / 9,
-                                  child: Container(
-                                    decoration: BoxDecoration(
-                                      color: Theme.of(context)
-                                          .colorScheme
-                                          .onPrimary,
-                                      image: DecorationImage(
-                                          image: NetworkImage(listcours.image),
-                                          fit: BoxFit.cover),
-                                      borderRadius: BorderRadius.circular(20),
-                                    ),
-                                  )),
-                              //color: Colors.white,
-                            ),
-                            Container(
-                              padding: const EdgeInsets.all(5.0),
-                              alignment: Alignment.bottomCenter,
-                              decoration: BoxDecoration(
-                                gradient: LinearGradient(
-                                  begin: Alignment.topCenter,
-                                  end: Alignment.bottomCenter,
-                                  colors: <Color>[
-                                    const Color.fromARGB(255, 0, 0, 0)
-                                        .withAlpha(0),
-                                    const Color.fromARGB(49, 0, 0, 0),
-                                    const Color.fromARGB(127, 0, 0, 0)
-                                    // const Color.fromARGB(255, 255, 255, 255)
-                                    //     .withAlpha(0),
-                                    // Color.fromARGB(39, 255, 255, 255),
-                                    // Color.fromARGB(121, 255, 255, 255)
-                                  ],
-                                ),
-                                borderRadius: BorderRadius.circular(20),
-                              ),
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                mainAxisAlignment: MainAxisAlignment.end,
-                                children: [
-                                  Text(listcours.name,
-                                      style: Theme.of(context)
-                                          .textTheme
-                                          .titleLarge!
-                                          .copyWith(color: Colors.white)),
-                                  Row(
-                                    children: [
-                                      const Padding(
-                                        padding: EdgeInsets.only(right: 8),
-                                        child: Icon(
-                                          FontAwesomeIcons.solidUser,
-                                          size: 16.0,
-                                          color: Colors.white,
+          return Column(
+            children: courses
+                .map((listcours) => Padding(
+                    padding:
+                        const EdgeInsets.only(left: 18, right: 18, bottom: 15),
+                    child: InkWell(
+                      onTap: () {
+                        pushNewScreen(
+                          context,
+                          screen: showCousePage(namecourse: listcours.name),
+                          withNavBar: true,
+                        );
+                      },
+                      child: Card(
+                        elevation: 10,
+                        child: Container(
+                          alignment: Alignment.center,
+                          width: double.infinity,
+                          child: AspectRatio(
+                            aspectRatio: 16 / 9,
+                            child: Stack(
+                              children: <Widget>[
+                                Container(
+                                  alignment: Alignment.topCenter,
+                                  child: AspectRatio(
+                                      aspectRatio: 16 / 9,
+                                      child: Container(
+                                        decoration: BoxDecoration(
+                                          color: Theme.of(context)
+                                              .colorScheme
+                                              .onPrimary,
+                                          image: DecorationImage(
+                                              image:
+                                                  NetworkImage(listcours.image),
+                                              fit: BoxFit.cover),
+                                          borderRadius:
+                                              BorderRadius.circular(20),
                                         ),
-                                      ),
-                                      Text(listcours.coach.fullName,
+                                      )),
+                                  //color: Colors.white,
+                                ),
+                                Container(
+                                  padding: const EdgeInsets.all(5.0),
+                                  alignment: Alignment.bottomCenter,
+                                  decoration: BoxDecoration(
+                                    gradient: LinearGradient(
+                                      begin: Alignment.topCenter,
+                                      end: Alignment.bottomCenter,
+                                      colors: <Color>[
+                                        const Color.fromARGB(255, 0, 0, 0)
+                                            .withAlpha(0),
+                                        const Color.fromARGB(49, 0, 0, 0),
+                                        const Color.fromARGB(127, 0, 0, 0)
+                                        // const Color.fromARGB(255, 255, 255, 255)
+                                        //     .withAlpha(0),
+                                        // Color.fromARGB(39, 255, 255, 255),
+                                        // Color.fromARGB(121, 255, 255, 255)
+                                      ],
+                                    ),
+                                    borderRadius: BorderRadius.circular(20),
+                                  ),
+                                ),
+                                Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    mainAxisAlignment: MainAxisAlignment.end,
+                                    children: [
+                                      Text(listcours.name,
                                           style: Theme.of(context)
                                               .textTheme
-                                              .bodyLarge!
+                                              .titleLarge!
                                               .copyWith(color: Colors.white)),
+                                      Row(
+                                        children: [
+                                          const Padding(
+                                            padding: EdgeInsets.only(right: 8),
+                                            child: Icon(
+                                              FontAwesomeIcons.solidUser,
+                                              size: 16.0,
+                                              color: Colors.white,
+                                            ),
+                                          ),
+                                          Text(listcours.coach.fullName,
+                                              style: Theme.of(context)
+                                                  .textTheme
+                                                  .bodyLarge!
+                                                  .copyWith(
+                                                      color: Colors.white)),
+                                        ],
+                                      ),
+                                      RatingBar.readOnly(
+                                        isHalfAllowed: false,
+                                        filledIcon: FontAwesomeIcons.bolt,
+                                        size: 16,
+                                        emptyIcon: FontAwesomeIcons.bolt,
+                                        filledColor: Theme.of(context)
+                                            .colorScheme
+                                            .tertiaryContainer,
+                                        emptyColor: const Color.fromARGB(
+                                            255, 37, 37, 37),
+                                        initialRating:
+                                            double.parse(listcours.level),
+                                        maxRating: 3,
+                                      ),
                                     ],
                                   ),
-                                  RatingBar.readOnly(
-                                    isHalfAllowed: false,
-                                    filledIcon: FontAwesomeIcons.bolt,
-                                    size: 16,
-                                    emptyIcon: FontAwesomeIcons.bolt,
-                                    filledColor: Theme.of(context)
-                                        .colorScheme
-                                        .tertiaryContainer,
-                                    emptyColor:
-                                        const Color.fromARGB(255, 37, 37, 37),
-                                    initialRating:
-                                        double.parse(listcours.level),
-                                    maxRating: 3,
-                                  ),
-                                ],
-                              ),
-                            )
-                          ],
+                                )
+                              ],
+                            ),
+                          ),
                         ),
                       ),
-                    ),
-                  ),
-                );
-              },
-            ),
+                    )))
+                .toList(),
+          );
+        }
+      },
+    );
+  }
+
+
+  Widget loadcoach() {
+    return FutureBuilder(
+      future: loadDataMethod,
+      builder: (context, snapshot) {
+        if (snapshot.connectionState != ConnectionState.done) {
+          return const Center(child: CircularProgressIndicator());
+        } else {
+          return Column(
+            children: coaches
+                .map((coach) => Padding(
+                    padding:
+                        const EdgeInsets.only(left: 18, right: 18, bottom: 15),
+                    child: InkWell(
+                      onTap: () {
+                        pushNewScreen(
+                          context,
+                          screen: ProfileCoachPage(coachID: coach.cid),
+                          withNavBar: true,
+                        );
+                      },
+                      child: Card(
+                        elevation: 10,
+                        child: Container(
+                          alignment: Alignment.center,
+                          width: double.infinity,
+                          child: AspectRatio(
+                            aspectRatio: 16 / 9,
+                            child: Stack(
+                              children: <Widget>[
+                                Container(
+                                  alignment: Alignment.topCenter,
+                                  child: AspectRatio(
+                                      aspectRatio: 16 / 9,
+                                      child: Container(
+                                        decoration: BoxDecoration(
+                                          color: Theme.of(context)
+                                              .colorScheme
+                                              .onPrimary,
+                                          image: DecorationImage(
+                                              image: NetworkImage(coach.image),
+                                              fit: BoxFit.cover),
+                                          borderRadius: BorderRadius.circular(20),
+                                        ),
+                                      )),
+                                  //color: Colors.white,
+                                ),
+                                Container(
+                                  padding: const EdgeInsets.all(5.0),
+                                  alignment: Alignment.bottomCenter,
+                                  decoration: BoxDecoration(
+                                    gradient: LinearGradient(
+                                      begin: Alignment.topCenter,
+                                      end: Alignment.bottomCenter,
+                                      colors: <Color>[
+                                        const Color.fromARGB(255, 0, 0, 0)
+                                            .withAlpha(0),
+                                        const Color.fromARGB(49, 0, 0, 0),
+                                        const Color.fromARGB(127, 0, 0, 0)
+                                        // const Color.fromARGB(255, 255, 255, 255)
+                                        //     .withAlpha(0),
+                                        // Color.fromARGB(39, 255, 255, 255),
+                                        // Color.fromARGB(121, 255, 255, 255)
+                                      ],
+                                    ),
+                                    borderRadius: BorderRadius.circular(20),
+                                  ),
+                                ),
+                                Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    mainAxisAlignment: MainAxisAlignment.end,
+                                    children: [
+                                      Text(coach.fullName,
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .titleLarge!
+                                              .copyWith(color: Colors.white)),
+                                      Row(
+                                        children: [
+                                          const Padding(
+                                            padding: EdgeInsets.only(right: 8),
+                                            child: Icon(
+                                              FontAwesomeIcons.solidUser,
+                                              size: 16.0,
+                                              color: Colors.white,
+                                            ),
+                                          ),
+                                          Text(coach.username,
+                                              style: Theme.of(context)
+                                                  .textTheme
+                                                  .bodyLarge!
+                                                  .copyWith(color: Colors.white)),
+                                        ],
+                                      ),
+                                    ],
+                                  ),
+                                )
+                              ],
+                            ),
+                          ),
+                        ),
+                      ),
+                    )))
+                .toList(),
           );
         }
       },

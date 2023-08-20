@@ -4,6 +4,7 @@ import 'package:custom_rating_bar/custom_rating_bar.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:get/get_connect/http/src/utils/utils.dart';
 import 'package:persistent_bottom_nav_bar_v2/persistent-tab-view.dart';
 import 'package:provider/provider.dart';
 
@@ -49,8 +50,6 @@ class _WidgetSearchtextState extends State<WidgetSearchtext> {
         CourseService(Dio(), baseUrl: context.read<AppData>().baseurl);
     coachService =
         CoachService(Dio(), baseUrl: context.read<AppData>().baseurl);
-
-    
   }
 
   @override
@@ -83,7 +82,12 @@ class _WidgetSearchtextState extends State<WidgetSearchtext> {
                       onChanged: (value) {
                         if (myController.text.isNotEmpty) {
                           log("contro ไม่ว่าง");
-                          setState(() {});
+
+                          setState(() {
+                            myController.text;
+                            log("myController.text1" + myController.text);
+                          });
+                          log("myController.text2" + myController.text);
                           coachService
                               .coach(
                                   nameCoach: myController.text,
@@ -99,6 +103,8 @@ class _WidgetSearchtextState extends State<WidgetSearchtext> {
                                 isVisibleSearch = false;
                                 isVisibleText = false;
                                 isVisibleTextCourseCoach = true;
+                                isVisibleTextCourse = false;
+                                isVisibleTextCoach = false;
                               });
                             } else {
                               log("coaches.isEmpty");
@@ -108,6 +114,8 @@ class _WidgetSearchtextState extends State<WidgetSearchtext> {
                                 isVisibleSearch = false;
                                 isVisibleText = true;
                                 isVisibleTextCourseCoach = false;
+                                isVisibleTextCourse = false;
+                                isVisibleTextCoach = false;
                               });
                             }
                           });
@@ -124,6 +132,8 @@ class _WidgetSearchtextState extends State<WidgetSearchtext> {
                                 isVisibleSearch = false;
                                 isVisibleText = false;
                                 isVisibleTextCourseCoach = true;
+                                isVisibleTextCourse = false;
+                                isVisibleTextCoach = false;
                               });
 
                               log(coaches.length.toString());
@@ -135,18 +145,24 @@ class _WidgetSearchtextState extends State<WidgetSearchtext> {
                                 isVisibleSearch = false;
                                 isVisibleText = true;
                                 isVisibleTextCourseCoach = false;
+
+                                isVisibleTextCourse = false;
+                                isVisibleTextCoach = false;
                               });
                             }
                           });
                         } else {
                           log("contro ว่าง");
-                          setState(() {
-                            isVisibleCourse = false;
-                            isVisibleCoach = false;
-                            isVisibleSearch = true;
-                            isVisibleText = false;
-                            isVisibleTextCourseCoach = false;
-                          });
+                          
+                          // setState(() {
+                          //   isVisibleCourse = false;
+                          //   isVisibleCoach = false;
+                          //   isVisibleSearch = true;
+                          //   isVisibleText = false;
+                          //   isVisibleTextCourseCoach = false;
+                          //   isVisibleTextCourse = false;
+                          //   isVisibleTextCoach = false;
+                          // });
                         }
                       },
                       decoration: InputDecoration(
@@ -192,64 +208,178 @@ class _WidgetSearchtextState extends State<WidgetSearchtext> {
                                     if (category == 'คอร์ส') {
                                       log("messageคอร์ส");
 
-                                      isVisibleSearch = false;
-                                      isVisibleCourse = true;
-                                      isVisibleCoach = false;
-                                      isVisibleText = false;
-                                      isVisibleTextCourse = true;
-                                      isVisibleTextCoach = false;
-                                      isVisibleTextCourseCoach = false;
-                                      if (courses.isEmpty) {
-                                        log("courses.isEmpty2");
-                                        setState(() {
+                                      if (myController.text.isNotEmpty) {
+                                        log("myControllerคอร์สisNotEmpty");
+                                        if (courses.isEmpty) {
+                                          log("coursesเพิ่ม.isEmpty2");
                                           isVisibleSearch = false;
-                                          isVisibleCourse = true;
+                                          isVisibleCourse = false;
                                           isVisibleCoach = false;
                                           isVisibleText = true;
                                           isVisibleTextCourse = true;
                                           isVisibleTextCoach = false;
                                           isVisibleTextCourseCoach = false;
-                                        });
-                                      }
-                                    } else if (category == 'โค้ช') {
-                                      log("messageโค้ช");
-
-                                      isVisibleSearch = false;
-                                      isVisibleCourse = false;
-                                      isVisibleCoach = true;
-                                      isVisibleText = false;
-                                      isVisibleTextCourse = false;
-                                      isVisibleTextCoach = true;
-                                      isVisibleTextCourseCoach = false;
-                                      if (coaches.isEmpty) {
-                                        setState(() {
+                                        } else {
+                                          log("coursesเพิ่ม.isnotEmpty2");
                                           isVisibleSearch = false;
                                           isVisibleCourse = true;
                                           isVisibleCoach = false;
-                                          isVisibleText = true;
-                                          isVisibleTextCourse = false;
-                                          isVisibleTextCoach = true;
+                                          isVisibleText = false;
+                                          isVisibleTextCourse = true;
+                                          isVisibleTextCoach = false;
                                           isVisibleTextCourseCoach = false;
+                                        }
+                                      } else {
+                                        courseService
+                                            .courseOpenSell(
+                                                cid: '', coID: '', name: '')
+                                            .then((coursedata) {
+                                          var datacourse = coursedata.data;
+                                          courses = datacourse;
+                                          if (courses.isNotEmpty) {
+                                            log("courses2.isNotEmpty");
+                                            setState(() {
+                                              isVisibleCourse = true;
+                                              isVisibleSearch = false;
+                                              isVisibleText = false;
+                                              isVisibleTextCourseCoach = false;
+                                              isVisibleTextCourse = true;
+                                              isVisibleTextCoach = false;
+                                            });
+                                          }
                                         });
+
+                                        // log("myControllerคอร์สisEmpty");
+                                        // isVisibleSearch = true;
+                                        // isVisibleCourse = false;
+
+                                        // isVisibleCoach = false;
+                                        // isVisibleText = false;
+                                        // isVisibleTextCourse = true;
+                                        // isVisibleTextCoach = false;
+                                        // isVisibleTextCourseCoach = false;
                                       }
-                                    } else if (category == 'คอร์สโค้ช' ||
-                                        category == 'โค้ชคอร์ส') {
-                                      isVisibleSearch = false;
-                                      isVisibleCourse = true;
-                                      isVisibleCoach = true;
-                                      isVisibleText = false;
-                                      isVisibleTextCourse = false;
-                                      isVisibleTextCoach = false;
-                                      isVisibleTextCourseCoach = true;
-                                      if (courses.isEmpty && coaches.isEmpty) {
-                                        setState(() {
+                                    } else if (category == 'โค้ช') {
+                                      log("messageโค้ช");
+                                      if (myController.text.isNotEmpty) {
+                                        log("myControllerคอร์สisNotEmpty");
+                                        if (coaches.isEmpty) {
+                                          log("coachesเพิ่ม.isEmpty2");
                                           isVisibleSearch = false;
                                           isVisibleCourse = false;
                                           isVisibleCoach = false;
                                           isVisibleText = true;
                                           isVisibleTextCourse = false;
+                                          isVisibleTextCoach = true;
+                                          isVisibleTextCourseCoach = false;
+                                        } else {
+                                          log("coachesเพิ่ม.isnotEmpty2");
+                                          isVisibleSearch = false;
+                                          isVisibleCourse = false;
+                                          isVisibleCoach = true;
+                                          isVisibleText = false;
+                                          isVisibleTextCourse = false;
+                                          isVisibleTextCoach = true;
+                                          isVisibleTextCourseCoach = false;
+                                        }
+                                      } else {
+                                        coachService
+                                            .coach(
+                                                nameCoach: '',
+                                                cid: "",
+                                                email: '')
+                                            .then((coachdata) {
+                                          var datacoach = coachdata.data;
+                                          coaches = datacoach;
+                                          if (coaches.isNotEmpty) {
+                                            log("coaches2.isNotEmpty");
+                                            setState(() {
+                                              isVisibleCoach = true;
+                                              isVisibleSearch = false;
+                                              isVisibleText = false;
+                                              isVisibleTextCourseCoach = false;
+                                              isVisibleTextCourse = false;
+                                              isVisibleTextCoach = true;
+                                            });
+                                          }
+                                        });
+                                        // log("myControllerโค้ชisEmpty");
+
+                                        // isVisibleSearch = true;
+                                        // isVisibleCourse = false;
+
+                                        // isVisibleCoach = false;
+                                        // isVisibleText = false;
+                                        // isVisibleTextCourse = false;
+                                        // isVisibleTextCoach = true;
+                                        // isVisibleTextCourseCoach = false;
+                                      }
+                                    } else if (category == 'คอร์สโค้ช' ||
+                                        category == 'โค้ชคอร์ส') {
+                                      log("category" + category);
+                                      if (myController.text.isNotEmpty) {
+                                        log("myControllerโค้ชคอร์สisNotEmpty");
+                                        if (courses.isEmpty &&
+                                            coaches.isEmpty) {
+                                          log("โค้ชคอร์สเพิ่ม.isEmpty2");
+                                          setState(() {
+                                            isVisibleSearch = true;
+                                            isVisibleCourse = false;
+                                            isVisibleCoach = false;
+                                            isVisibleText = false;
+                                            isVisibleTextCourse = false;
+                                            isVisibleTextCoach = false;
+                                            isVisibleTextCourseCoach = true;
+                                          });
+                                        } else {
+                                          isVisibleSearch = false;
+                                          isVisibleCourse = true;
+                                          isVisibleCoach = true;
+                                          isVisibleText = false;
+                                          isVisibleTextCourse = false;
                                           isVisibleTextCoach = false;
                                           isVisibleTextCourseCoach = true;
+                                        }
+                                      } else {
+                                        coachService
+                                            .coach(
+                                                nameCoach: '',
+                                                cid: "",
+                                                email: '')
+                                            .then((coachdata) {
+                                          var datacoach = coachdata.data;
+                                          coaches = datacoach;
+                                          if (coaches.isNotEmpty) {
+                                            log("coaches2.isNotEmpty");
+                                            setState(() {
+                                              isVisibleCoach = true;
+                                              isVisibleSearch = false;
+                                              isVisibleText = false;
+                                              isVisibleTextCourseCoach = true;
+                                              isVisibleTextCourse = false;
+                                              isVisibleTextCoach = false;
+                                            });
+                                          }
+                                        });
+                                        courseService
+                                            .courseOpenSell(
+                                                cid: '', coID: '', name: '')
+                                            .then((coursedata) {
+                                          var datacourse = coursedata.data;
+                                          courses = datacourse;
+                                          if (courses.isNotEmpty) {
+                                            log("courses2.isNotEmpty");
+                                            setState(() {
+                                              isVisibleCourse = true;
+                                              isVisibleSearch = false;
+                                              isVisibleText = false;
+                                              isVisibleTextCourseCoach = true;
+                                              isVisibleTextCourse = false;
+                                              isVisibleTextCoach = false;
+                                            });
+
+                                            log(coaches.length.toString());
+                                          }
                                         });
                                       }
                                     }
@@ -259,15 +389,8 @@ class _WidgetSearchtextState extends State<WidgetSearchtext> {
                                     log(category);
                                     if (category == 'โค้ช') {
                                       log("messageลบโค้ช");
-                                      isVisibleSearch = false;
-                                      isVisibleCourse = false;
-                                      isVisibleCoach = true;
-                                      isVisibleText = false;
-                                      isVisibleTextCourse = false;
-                                      isVisibleTextCoach = true;
-                                      isVisibleTextCourseCoach = false;
-                                      if (coaches.isEmpty) {
-                                        setState(() {
+                                      if (myController.text.isNotEmpty) {
+                                        if (coaches.isEmpty) {
                                           isVisibleSearch = false;
                                           isVisibleCourse = false;
                                           isVisibleCoach = false;
@@ -275,29 +398,78 @@ class _WidgetSearchtextState extends State<WidgetSearchtext> {
                                           isVisibleTextCourse = true;
                                           isVisibleTextCoach = false;
                                           isVisibleTextCourseCoach = false;
+                                        } else {
+                                          isVisibleSearch = false;
+                                          isVisibleCourse = false;
+                                          isVisibleCoach = true;
+                                          isVisibleText = false;
+                                          isVisibleTextCourse = false;
+                                          isVisibleTextCoach = true;
+                                          isVisibleTextCourseCoach = false;
+                                        }
+                                      } else {
+                                        coachService
+                                            .coach(
+                                                nameCoach: '',
+                                                cid: "",
+                                                email: '')
+                                            .then((coachdata) {
+                                          var datacoach = coachdata.data;
+                                          coaches = datacoach;
+                                          if (coaches.isNotEmpty) {
+                                            log("coaches2.isNotEmpty");
+                                            setState(() {
+                                              isVisibleCoach = true;
+                                              isVisibleSearch = false;
+                                              isVisibleText = false;
+                                              isVisibleTextCourseCoach = true;
+                                              isVisibleTextCourse = false;
+                                              isVisibleTextCoach = false;
+                                            });
+                                          }
                                         });
                                       }
                                     } else if (category == 'คอร์ส') {
                                       log("messageลบคอร์ส");
-
-                                      isVisibleSearch = false;
-                                      isVisibleCourse = true;
-                                      isVisibleCoach = false;
-                                      isVisibleText = false;
-                                      isVisibleTextCourse = true;
-                                      isVisibleTextCoach = false;
-                                      isVisibleTextCourseCoach = false;
-                                      if (courses.isEmpty) {
-                                        log("courses.isEmpty2");
-                                        setState(() {
+                                      if (myController.text.isNotEmpty) {
+                                        if (courses.isEmpty) {
+                                          log("coursesลบ.isEmpty2");
                                           isVisibleSearch = false;
                                           isVisibleCourse = false;
                                           isVisibleCoach = false;
                                           isVisibleText = true;
-                                          isVisibleTextCourse = true;
-                                          isVisibleTextCoach = false;
+                                          isVisibleTextCourse = false;
+                                          isVisibleTextCoach = true;
                                           isVisibleTextCourseCoach = false;
-                                        });
+                                        } else {
+                                          isVisibleSearch = false;
+                                          isVisibleCourse = false;
+                                          isVisibleCoach = false;
+                                          isVisibleText = false;
+                                          isVisibleTextCourse = false;
+                                          isVisibleTextCoach = true;
+                                          isVisibleTextCourseCoach = false;
+                                        }
+                                      } else {
+                                       courseService
+                              .courseOpenSell(cid: '', coID: '', name: '')
+                              .then((coursedata) {
+                            var datacourse = coursedata.data;
+                            courses = datacourse;
+                            if (courses.isNotEmpty) {
+                              log("courses2.isNotEmpty");
+                              setState(() {
+                                isVisibleCourse = true;
+                                isVisibleSearch = false;
+                                isVisibleText = false;
+                                isVisibleTextCourseCoach = true;
+                                isVisibleTextCourse = false;
+                                isVisibleTextCoach = false;
+                              });
+
+                              log(coaches.length.toString());
+                            }
+                          });
                                       }
                                     } else {
                                       log("messageลบคอร์สโค้ช");
@@ -310,10 +482,10 @@ class _WidgetSearchtextState extends State<WidgetSearchtext> {
                                       isVisibleTextCourseCoach = true;
                                       if (courses.isEmpty && coaches.isEmpty) {
                                         setState(() {
-                                          isVisibleSearch = false;
+                                          isVisibleSearch = true;
                                           isVisibleCourse = false;
                                           isVisibleCoach = false;
-                                          isVisibleText = true;
+                                          isVisibleText = false;
                                           isVisibleTextCourse = false;
                                           isVisibleTextCoach = false;
                                           isVisibleTextCourseCoach = true;
@@ -454,7 +626,7 @@ class _WidgetSearchtextState extends State<WidgetSearchtext> {
                       onTap: () {
                         pushNewScreen(
                           context,
-                          screen:  showCousePage(namecourse:listcours.name),
+                          screen: showCousePage(namecourse: listcours.name),
                           withNavBar: true,
                         );
                       },
@@ -578,12 +750,12 @@ class _WidgetSearchtextState extends State<WidgetSearchtext> {
             children: coaches
                 .map((coach) => Padding(
                     padding:
-                       const EdgeInsets.only(left: 18, right: 18, bottom: 15),
+                        const EdgeInsets.only(left: 18, right: 18, bottom: 15),
                     child: InkWell(
                       onTap: () {
                         pushNewScreen(
                           context,
-                          screen:  ProfileCoachPage(coachID: coach.cid),
+                          screen: ProfileCoachPage(coachID: coach.cid),
                           withNavBar: true,
                         );
                       },
@@ -674,5 +846,4 @@ class _WidgetSearchtextState extends State<WidgetSearchtext> {
       },
     );
   }
-
 }

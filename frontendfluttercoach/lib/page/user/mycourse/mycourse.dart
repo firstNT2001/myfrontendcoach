@@ -147,118 +147,121 @@ class _MyCousesState extends State<MyCouses> {
                       withNavBar: true,
                     );    
                   },
-                  child: Container(
-                    alignment: Alignment.center,
-                    width: double.infinity,
-                    child: AspectRatio(
-                      aspectRatio: 16 / 9,
-                      child: Stack(
-                        children: <Widget>[
-                          Container(
-                            alignment: Alignment.topCenter,
-                            child: AspectRatio(
-                                aspectRatio: 16 / 9,
-                                child: Container(
-                                  decoration: BoxDecoration(
-                                    color: const Color(0xff7c94b6),
-                                    image: DecorationImage(
-                                        image: NetworkImage(
-                                            listcours.course.image),
-                                        fit: BoxFit.cover),
-                                    borderRadius: BorderRadius.circular(20),
-                                  ),
-                                )),
-                            //color: Colors.white,
-                          ),
-                          Container(
-                            padding: const EdgeInsets.all(5.0),
-                            alignment: Alignment.bottomCenter,
-                            decoration: BoxDecoration(
-                              gradient: LinearGradient(
-                                begin: Alignment.topCenter,
-                                end: Alignment.bottomCenter,
-                                colors: <Color>[
-                                  const Color.fromARGB(255, 0, 0, 0)
-                                      .withAlpha(0),
-                                  const Color.fromARGB(49, 0, 0, 0),
-                                  const Color.fromARGB(127, 0, 0, 0)
-                                ],
-                              ),
-                              borderRadius: BorderRadius.circular(20),
+                  child: Card(
+                    elevation: 10,
+                    child: Container(
+                      alignment: Alignment.center,
+                      width: double.infinity,
+                      child: AspectRatio(
+                        aspectRatio: 16 / 9,
+                        child: Stack(
+                          children: <Widget>[
+                            Container(
+                              alignment: Alignment.topCenter,
+                              child: AspectRatio(
+                                  aspectRatio: 16 / 9,
+                                  child: Container(
+                                    decoration: BoxDecoration(
+                                      color: const Color(0xff7c94b6),
+                                      image: DecorationImage(
+                                          image: NetworkImage(
+                                              listcours.course.image),
+                                          fit: BoxFit.cover),
+                                      borderRadius: BorderRadius.circular(20),
+                                    ),
+                                  )),
+                              //color: Colors.white,
                             ),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              mainAxisAlignment: MainAxisAlignment.end,
-                              children: [
-                                Text(
-                                  listcours.course.name,
-                                  style: Theme.of(context)
-                                      .textTheme
-                                      .titleLarge!
-                                      .copyWith(color: Colors.white),
-                                ),
-                                Row(
-                                  children: [
-                                    const Padding(
-                                      padding: EdgeInsets.only(right: 8),
-                                      child: Icon(
-                                        FontAwesomeIcons.solidUser,
-                                        size: 16.0,
-                                        color: Colors.white,
-                                      ),
-                                    ),
-                                    Text(
-                                      listcours.course.coach.fullName,
-                                      style: Theme.of(context)
-                                          .textTheme
-                                          .bodyLarge!
-                                          .copyWith(color: Colors.white),
-                                    ),
+                            Container(
+                              padding: const EdgeInsets.all(5.0),
+                              alignment: Alignment.bottomCenter,
+                              decoration: BoxDecoration(
+                                gradient: LinearGradient(
+                                  begin: Alignment.topCenter,
+                                  end: Alignment.bottomCenter,
+                                  colors: <Color>[
+                                    const Color.fromARGB(255, 0, 0, 0)
+                                        .withAlpha(0),
+                                    const Color.fromARGB(49, 0, 0, 0),
+                                    const Color.fromARGB(127, 0, 0, 0)
                                   ],
                                 ),
-                                Padding(
-                                  padding:
-                                      EdgeInsets.only(bottom: 4.0, top: 4.0),
-                                  child: FittedBox(
-                                    child: LinearPercentIndicator(
-                                      width: MediaQuery.of(context).size.width *
-                                          0.65,
-                                      fillColor:
-                                          Color.fromARGB(0, 255, 255, 255),
-                                      lineHeight: 10.0,
-                                      percent: listpercents,
-                                      trailing: Text(
-                                        listshowpercents.toString()+"%",
-                                        style: TextStyle(
-                                            fontSize: 16.0,
-                                            color: Colors.white),
+                                borderRadius: BorderRadius.circular(20),
+                              ),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                mainAxisAlignment: MainAxisAlignment.end,
+                                children: [
+                                  Text(
+                                    listcours.course.name,
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .titleLarge!
+                                        .copyWith(color: Colors.white),
+                                  ),
+                                  Row(
+                                    children: [
+                                      const Padding(
+                                        padding: EdgeInsets.only(right: 8),
+                                        child: Icon(
+                                          FontAwesomeIcons.solidUser,
+                                          size: 16.0,
+                                          color: Colors.white,
+                                        ),
                                       ),
-                                      barRadius: Radius.circular(7),
-                                      backgroundColor: Colors.grey,
-                                      progressColor:
-                                          Theme.of(context).colorScheme.primary,
+                                      Text(
+                                        listcours.course.coach.fullName,
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .bodyLarge!
+                                            .copyWith(color: Colors.white),
+                                      ),
+                                    ],
+                                  ),
+                                  Padding(
+                                    padding:
+                                        EdgeInsets.only(bottom: 4.0, top: 4.0),
+                                    child: FittedBox(
+                                      child: LinearPercentIndicator(
+                                        width: MediaQuery.of(context).size.width *
+                                            0.65,
+                                        fillColor:
+                                            Color.fromARGB(0, 255, 255, 255),
+                                        lineHeight: 10.0,
+                                        percent: listpercents,
+                                        trailing: Text(
+                                          listshowpercents.toString()+"%",
+                                          style: TextStyle(
+                                              fontSize: 16.0,
+                                              color: Colors.white),
+                                        ),
+                                        barRadius: Radius.circular(7),
+                                        backgroundColor: Colors.grey,
+                                        progressColor:
+                                            Theme.of(context).colorScheme.primary,
+                                      ),
                                     ),
                                   ),
-                                ),
-                                // Padding(
-                                //   padding: const EdgeInsets.only(
-                                //       bottom: 4.0, top: 4.0),
-                                //   child: LinearPercentIndicator(
-                                //     width: 280.0,
-                                //     lineHeight: 8.0,
-                                //     percent: 0.1,
-                                //     backgroundColor:
-                                //         const Color.fromRGBO(255, 249, 249, 1),
-                                //     progressColor: Colors.greenAccent,
-                                //   ),
-                                // ),
-                              ],
-                            ),
-                          )
-                        ],
+                                  // Padding(
+                                  //   padding: const EdgeInsets.only(
+                                  //       bottom: 4.0, top: 4.0),
+                                  //   child: LinearPercentIndicator(
+                                  //     width: 280.0,
+                                  //     lineHeight: 8.0,
+                                  //     percent: 0.1,
+                                  //     backgroundColor:
+                                  //         const Color.fromRGBO(255, 249, 249, 1),
+                                  //     progressColor: Colors.greenAccent,
+                                  //   ),
+                                  // ),
+                                ],
+                              ),
+                            )
+                          ],
+                        ),
                       ),
                     ),
                   ),
