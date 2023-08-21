@@ -519,13 +519,15 @@ class _CourseEditPageState extends State<CourseEditPage> {
     QuickAlert.show(
       context: context,
       type: QuickAlertType.confirm,
-      text: 'Do you want to delete?',
-      confirmBtnText: 'Yes',
-      cancelBtnText: 'No',
+      text: 'จ้องการลบคอร์สหรือไม',
+      confirmBtnText: 'ตกลง',
+      cancelBtnText: 'ยกเลิก',
       confirmBtnColor: Theme.of(context).colorScheme.primary,
       onConfirmBtnTap: () async {
+        startLoading(context);
         var response = await _courseService.deleteCourse(widget.coID);
         modelResult = response.data;
+        stopLoading();
         Navigator.of(context, rootNavigator: true).pop();
         if (modelResult.result == '1') {
           // ignore: use_build_context_synchronously

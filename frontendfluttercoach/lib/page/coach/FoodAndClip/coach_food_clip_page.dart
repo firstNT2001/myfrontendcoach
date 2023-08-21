@@ -71,103 +71,167 @@ class _FoodCoachPageState extends State<FoodCoachPage> {
     return DefaultTabController(
       length: 2,
       child: Scaffold(
-        floatingActionButton: SpeedDial(
-          backgroundColor: Theme.of(context).colorScheme.primary,
-          animatedIcon: AnimatedIcons.menu_close,
-          overlayOpacity: 0.4,
-          children: [
-            SpeedDialChild(
-                child: const Icon(FontAwesomeIcons.bowlFood),
-                label: 'เพิ่มเมนู',
-                onTap: () {
-                  // pushNewScreen(
-                  //   context,
-                  //   screen: const FoodNewCoachPage(),
-                  //   withNavBar: true,
-                  // );
-                  Get.to(() => const FoodNewCoachPage());
-                }),
-            SpeedDialChild(
-                child: const Icon(FontAwesomeIcons.dumbbell),
-                label: 'เพิ่มคลิป',
-                onTap: () {
-                  //  pushNewScreen(
-                  //   context,
-                  //   screen: const ClipNewCoachPage(),
-                  //   withNavBar: true,
-                  // );
-                  Get.to(() => const ClipNewCoachPage());
-                }),
-          ],
-        ),
-        resizeToAvoidBottomInset: false,
-        appBar: AppBar(
-          automaticallyImplyLeading: false,
-          backgroundColor: Colors.transparent,
-          title: Center(
-            child: TextButton(
-                onPressed: () {},
-                child: Text(
-                  'อาหารและคลิป',
-                  style: Theme.of(context).textTheme.headlineSmall,
-                )),
+          floatingActionButton: SpeedDial(
+            backgroundColor: Theme.of(context).colorScheme.primary,
+            animatedIcon: AnimatedIcons.menu_close,
+            overlayOpacity: 0.4,
+            foregroundColor: Colors.white,
+            children: [
+              SpeedDialChild(
+                  child: const Icon(FontAwesomeIcons.bowlFood),
+                  label: 'เพิ่มเมนู',
+                  onTap: () {
+                    Get.to(() => const FoodNewCoachPage())?.then((value) {
+                      setState(() {
+                        loadFoodDataMethod = loadFoodData();
+                      });
+                    });
+                  }),
+              SpeedDialChild(
+                  child: const Icon(FontAwesomeIcons.dumbbell),
+                  label: 'เพิ่มคลิป',
+                  onTap: () {
+                    //  pushNewScreen(
+                    //   context,
+                    //   screen: const ClipNewCoachPage(),
+                    //   withNavBar: true,
+                    // );
+                    Get.to(() => const ClipNewCoachPage())?.then((value) {
+                      setState(() {
+                        loadClipDataMethod = loadClipData();
+                      });
+                    });
+                  }),
+            ],
           ),
-          bottom: TabBar(
-              labelColor: Theme.of(context)
-                  .colorScheme
-                  .primary, //<-- selected text color
-              unselectedLabelColor: Theme.of(context)
-                  .colorScheme
-                  .primaryContainer, //<-- Unselected text
-              tabs: const [
-                Tab(
-                  icon: Icon(
-                    FontAwesomeIcons.utensils,
-                  ),
+          resizeToAvoidBottomInset: false,
+          body: Column(
+            children: [
+              showAppBar(context),
+              Expanded(
+                child: TabBarView(
+                  children: [
+                    Column(
+                      children: [
+                        const SizedBox(
+                          height: 10,
+                        ),
+                        searchFood(context),
+                        Expanded(
+                          child: showFood(),
+                        ),
+                      ],
+                    ),
+                    Column(
+                      children: [
+                        const SizedBox(
+                          height: 10,
+                        ),
+                        searchClip(context),
+                        Expanded(
+                          child: showClips(),
+                        ),
+                      ],
+                    ),
+                  ],
                 ),
-                Tab(
-                  icon: Icon(
-                    FontAwesomeIcons.dumbbell,
-                  ),
-                )
-              ]),
-          centerTitle: true,
-        ),
-        body: TabBarView(
-          children: [
-            Column(
-              children: [
-                const SizedBox(
-                  height: 10,
+              )
+            ],
+          )),
+    );
+  }
+
+  Stack showAppBar(BuildContext context) {
+    return Stack(
+      children: [
+        Container(
+          decoration: const BoxDecoration(
+            boxShadow: [
+              BoxShadow(
+                color: Color.fromARGB(255, 196, 196, 196),
+                blurRadius: 20.0,
+                spreadRadius: 1,
+                offset: Offset(
+                  0,
+                  1,
                 ),
-                searchFood(context),
-                Expanded(
-                  child: Padding(
-                    padding: const EdgeInsets.only(
-                        left: 8, right: 8, top: 5, bottom: 5),
-                    child: showFood(),
-                  ),
-                ),
-              ],
+              )
+            ],
+          ),
+          child: ClipRRect(
+            borderRadius: const BorderRadius.only(
+              bottomRight: Radius.circular(30.0),
+              bottomLeft: Radius.circular(30.0),
             ),
-            Column(
-              children: [
-                const SizedBox(
-                  height: 10,
-                ),
-                searchClip(context),
-                Expanded(
-                  child: Padding(
-                    padding: const EdgeInsets.only(
-                        left: 8, right: 8, top: 5, bottom: 5),
-                    child: showClips(),
+            child: Container(
+              decoration: const BoxDecoration(
+                  gradient: LinearGradient(begin: Alignment.topCenter, colors: [
+                Color.fromARGB(227, 84, 84, 84),
+                Color.fromARGB(227, 84, 84, 84),
+                Color.fromARGB(227, 84, 84, 84),
+              ])),
+              height: MediaQuery.of(context).size.height * 0.218,
+            ),
+          ),
+        ),
+        Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const Center(
+                child: Padding(
+              padding: EdgeInsets.only(left: 15, top: 70),
+              child: Text("เมนูและคลิป",
+                  style: TextStyle(
+                      fontSize: 30,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white)),
+            )),
+            Center(
+              child: Padding(
+                padding: const EdgeInsets.only(top: 15),
+                child: Container(
+                  width: MediaQuery.of(context).size.width * 0.9,
+                  decoration: BoxDecoration(
+                      color: const Color.fromARGB(255, 243, 243, 244),
+                      borderRadius: BorderRadius.circular(15)),
+                  child: Column(
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.all(5.0),
+                        child: TabBar(
+                            indicatorWeight: 2,
+                            indicatorColor:
+                                Theme.of(context).colorScheme.primary,
+                            labelColor: Theme.of(context)
+                                .colorScheme
+                                .primary, //<-- selected text color
+                            unselectedLabelColor: Theme.of(context)
+                                .colorScheme
+                                .tertiary, //<-- Unselected text
+                            // indicator: BoxDecoration(
+                            //     color: Theme.of(context).colorScheme.primary,
+                            //     borderRadius: BorderRadius.circular(15)),
+                            tabs: const [
+                              Tab(
+                                icon: Icon(
+                                  FontAwesomeIcons.utensils,
+                                ),
+                              ),
+                              Tab(
+                                icon: Icon(
+                                  FontAwesomeIcons.dumbbell,
+                                ),
+                              )
+                            ]),
+                      ),
+                    ],
                   ),
                 ),
-              ],
+              ),
             ),
           ],
-        ),
-      ),
+        )
+      ],
     );
   }
 
@@ -188,17 +252,17 @@ class _FoodCoachPageState extends State<FoodCoachPage> {
           });
         },
         child: Container(
-            width: MediaQuery.of(context).size.width,
-            height: 45,
+            width: MediaQuery.of(context).size.width * 0.9,
             decoration: BoxDecoration(
-                boxShadow: const <BoxShadow>[
-                  BoxShadow(
-                      color: Colors.grey,
-                      blurRadius: 5.0,
-                      offset: Offset(0.0, 0.75))
-                ],
-                color: const Color.fromRGBO(244, 243, 243, 1),
-                borderRadius: BorderRadius.circular(30)),
+              color: const Color.fromARGB(255, 243, 243, 244),
+              borderRadius: BorderRadius.circular(15),
+              boxShadow: const <BoxShadow>[
+                BoxShadow(
+                    color: Colors.grey,
+                    blurRadius: 5.0,
+                    offset: Offset(0.0, 0.75))
+              ],
+            ),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
@@ -217,7 +281,7 @@ class _FoodCoachPageState extends State<FoodCoachPage> {
                   },
                   icon: const Icon(
                     FontAwesomeIcons.magnifyingGlass,
-                    color: Colors.black,
+                    color: Colors.grey,
                   ),
                   label: const Text(
                     "ค้นหารายการคลิปท่าออกกำลังกาย...",
@@ -247,17 +311,17 @@ class _FoodCoachPageState extends State<FoodCoachPage> {
           });
         },
         child: Container(
-            width: MediaQuery.of(context).size.width,
-            height: 45,
+            width: MediaQuery.of(context).size.width * 0.9,
             decoration: BoxDecoration(
-                boxShadow: const <BoxShadow>[
-                  BoxShadow(
-                      color: Colors.grey,
-                      blurRadius: 5.0,
-                      offset: Offset(0.0, 0.75))
-                ],
-                color: const Color.fromRGBO(244, 243, 243, 1),
-                borderRadius: BorderRadius.circular(30)),
+              color: const Color.fromARGB(255, 243, 243, 244),
+              borderRadius: BorderRadius.circular(15),
+              boxShadow: const <BoxShadow>[
+                BoxShadow(
+                    color: Colors.grey,
+                    blurRadius: 5.0,
+                    offset: Offset(0.0, 0.75))
+              ],
+            ),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
@@ -276,7 +340,7 @@ class _FoodCoachPageState extends State<FoodCoachPage> {
                   },
                   icon: const Icon(
                     FontAwesomeIcons.magnifyingGlass,
-                    color: Colors.black,
+                    color: Colors.grey,
                   ),
                   label: const Text(
                     "ค้นหารายการอาหาร...",
@@ -318,79 +382,75 @@ class _FoodCoachPageState extends State<FoodCoachPage> {
       itemBuilder: (context, index) {
         final listfood = foods[index];
         return Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: SizedBox(
-            //height: MediaQuery.of(context).size.height * 0.4,
-            child: InkWell(
-              onTap: () {
-                // pushNewScreen(
-                //   context,
-                //   screen: FoodEditCoachPage(ifid: listfood.ifid),
-                //   withNavBar: true,
-                // );
-                Get.to(() => FoodEditCoachPage(ifid: listfood.ifid));
-              },
-              child: Column(
-                children: [
-                  Stack(
-                    children: [
-                      if (listfood.image != '') ...{
-                        AspectRatio(
-                            aspectRatio: 16 / 13,
-                            child: Container(
-                              decoration: BoxDecoration(
-                                color: const Color.fromARGB(255, 207, 208, 209),
-                                image: DecorationImage(
-                                    image: NetworkImage(listfood.image),
-                                    fit: BoxFit.cover),
-                                borderRadius: BorderRadius.circular(20),
-                              ),
-                            )),
-                        //color: Colors.white,
-                      } else
-                        AspectRatio(
-                            aspectRatio: 16 / 13,
-                            child: Container(
-                              decoration: BoxDecoration(
-                                color: const Color.fromARGB(255, 207, 208, 209),
-                                borderRadius: BorderRadius.circular(20),
-                              ),
-                            )),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.end,
-                        children: [
-                          IconButton(
-                            onPressed: () {
-                              dialogDeleteFood(
-                                  context, listfood.ifid.toString());
-                            },
-                            icon: const Icon(
-                              FontAwesomeIcons.trash,
-                              color: Color.fromARGB(255, 93, 93, 93),
+          padding: const EdgeInsets.only(right: 8, left: 8),
+          child: InkWell(
+            onTap: () {
+              // pushNewScreen(
+              //   context,
+              //   screen: FoodEditCoachPage(ifid: listfood.ifid),
+              //   withNavBar: true,
+              // );
+              Get.to(() => FoodEditCoachPage(ifid: listfood.ifid));
+            },
+            child: Column(
+              children: [
+                Stack(
+                  children: [
+                    if (listfood.image != '') ...{
+                      AspectRatio(
+                          aspectRatio: 16 / 13,
+                          child: Container(
+                            decoration: BoxDecoration(
+                              color: const Color.fromARGB(255, 207, 208, 209),
+                              image: DecorationImage(
+                                  image: NetworkImage(listfood.image),
+                                  fit: BoxFit.cover),
+                              borderRadius: BorderRadius.circular(20),
                             ),
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.only(left: 16, top: 8),
-                        child: SizedBox(
-                          width: MediaQuery.of(context).size.width * 0.35,
-                          child: Text(
-                            listfood.name,
-                            maxLines: 2,
-                            style: Theme.of(context).textTheme.titleMedium,
+                          )),
+                      //color: Colors.white,
+                    } else
+                      AspectRatio(
+                          aspectRatio: 16 / 13,
+                          child: Container(
+                            decoration: BoxDecoration(
+                              color: const Color.fromARGB(255, 207, 208, 209),
+                              borderRadius: BorderRadius.circular(20),
+                            ),
+                          )),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        IconButton(
+                          onPressed: () {
+                            dialogDeleteFood(context, listfood.ifid.toString());
+                          },
+                          icon: Icon(
+                            FontAwesomeIcons.trash,
+                            color: Theme.of(context).colorScheme.primary,
                           ),
                         ),
+                      ],
+                    ),
+                  ],
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.only(left: 16, top: 8),
+                      child: SizedBox(
+                        width: MediaQuery.of(context).size.width * 0.35,
+                        child: Text(
+                          listfood.name,
+                          maxLines: 2,
+                          style: Theme.of(context).textTheme.titleMedium,
+                        ),
                       ),
-                    ],
-                  )
-                ],
-              ),
+                    ),
+                  ],
+                )
+              ],
             ),
           ),
         );
@@ -430,7 +490,7 @@ class _FoodCoachPageState extends State<FoodCoachPage> {
       itemBuilder: (context, index) {
         final listClips = clips[index];
         return Padding(
-          padding: const EdgeInsets.all(8.0),
+          padding: const EdgeInsets.only(right: 8, left: 8),
           child: SizedBox(
             height: MediaQuery.of(context).size.height * 0.4,
             child: InkWell(
@@ -474,9 +534,9 @@ class _FoodCoachPageState extends State<FoodCoachPage> {
                               dialogDeleteClip(
                                   context, listClips.icpId.toString());
                             },
-                            icon: const Icon(
+                            icon: Icon(
                               FontAwesomeIcons.trash,
-                              color: Color.fromARGB(255, 93, 93, 93),
+                              color: Theme.of(context).colorScheme.primary,
                             ),
                           ),
                         ],

@@ -24,7 +24,6 @@ import '../../../../widget/notificationBody.dart';
 import '../../../../widget/showCilp.dart';
 import '../../../../widget/textField/wg_textField.dart';
 import '../../../../widget/textField/wg_textFieldLines.dart';
-import '../../navigationbar.dart';
 
 class ClipEditCoachPage extends StatefulWidget {
   final int icpId;
@@ -181,13 +180,13 @@ class _ClipEditCoachPageState extends State<ClipEditCoachPage> {
                   child: Container(
                     height: 40,
                     width: 40,
-                    decoration: const BoxDecoration(
+                    decoration:  BoxDecoration(
                         shape: BoxShape.circle,
                         //border: Border.all(width: 4, color: Colors.white),
-                        color: Colors.white),
+                        color: Theme.of(context).colorScheme.primary),
                     child: const Icon(
                       FontAwesomeIcons.camera,
-                      color: Colors.black,
+                      color: Colors.white,
                     ),
                   ),
                 )),
@@ -249,7 +248,7 @@ class _ClipEditCoachPageState extends State<ClipEditCoachPage> {
             modelResult = insertClip.data;
             log(jsonEncode(modelResult.result));
             stopLoading();
-            if (modelResult.result == '0') {
+            if (modelResult.result == '1') {
               // ignore: use_build_context_synchronously
               InAppNotification.show(
                 child: NotificationBody(
@@ -260,14 +259,7 @@ class _ClipEditCoachPageState extends State<ClipEditCoachPage> {
                 onTap: () => print('Notification tapped!'),
                 duration: const Duration(milliseconds: 1500),
               );
-              // ignore: use_build_context_synchronously
-              Navigator.pushAndRemoveUntil<void>(
-                context,
-                MaterialPageRoute<void>(
-                    builder: (BuildContext context) =>
-                        const NavbarBottomCoach()),
-                ModalRoute.withName('/NavbarBottomCoach'),
-              );
+              Navigator.pop(context);
             } else {
               // ignore: use_build_context_synchronously
               InAppNotification.show(

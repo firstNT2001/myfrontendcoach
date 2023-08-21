@@ -30,6 +30,7 @@ import '../../widget/dialogs.dart';
 import '../../widget/notificationBody.dart';
 import '../Request/request_page.dart';
 import '../search/search_course.dart';
+import 'course/course_new_page.dart';
 import 'course/course_show.dart';
 
 class HomePageCoach extends StatefulWidget {
@@ -92,30 +93,33 @@ class _HomePageCoachState extends State<HomePageCoach> {
   Widget build(BuildContext context) {
     return Scaffold(
       resizeToAvoidBottomInset: false,
-      //backgroundColor: const Color.fromRGBO(244, 243, 243, 1),
-      appBar: AppBar(
-        //backgroundColor: Theme.of(context).colorScheme.primary,
-        elevation: 0,
-        // leading: IconButton(
-        //   icon: const Icon(
-        //     FontAwesomeIcons.barsStaggered,
-        //     //color: Colors.black,
-        //   ),
-        //   onPressed: () {
-        //     Get.to(() => SideMenu(
-        //         name: coachs.first.username,
-        //         price: coachs.first.price.toString(),
-        //         image: coachs.first.image));
-        //   },
-        // ),
-        actions: [
-          Visibility(
-            visible: isVisibles,
-            child: Container(
-                padding: const EdgeInsets.only(top: 10, right: 15),
-                child: showRequest()),
+      floatingActionButton: SizedBox(
+        width: 150,
+        height: 50,
+        child: FilledButton(
+          onPressed: () {
+            pushNewScreen(
+              context,
+              screen: const CourseNewPage(),
+              withNavBar: true,
+            ).then((value) {
+              log('ponds');
+              setState(() {
+                loadCourseDataMethod = loadCourseData();
+                loadRequestDataMethod = loadRequestData();
+              });
+            });
+          },
+          child: const Row(
+            children: [
+              Icon(FontAwesomeIcons.pencil),
+              SizedBox(
+                width: 10,
+              ),
+              Text('เพิ่มคอร์ส'),
+            ],
           ),
-        ],
+        ),
       ),
       body: SafeArea(
         child: Column(
@@ -155,81 +159,132 @@ class _HomePageCoachState extends State<HomePageCoach> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+        Stack(
           children: [
-            Padding(
-              padding: EdgeInsets.only(left: 15),
-              child: Text("DAILY WORKOUT",
-                  style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold)),
+            Container(
+              decoration: const BoxDecoration(
+                boxShadow: [
+                  BoxShadow(
+                    color: Color.fromARGB(255, 196, 196, 196),
+                    blurRadius: 20.0,
+                    spreadRadius: 1,
+                    offset: Offset(
+                      0,
+                      1,
+                    ),
+                  )
+                ],
+              ),
+              child: ClipRRect(
+                borderRadius: const BorderRadius.only(
+                  bottomRight: Radius.circular(30.0),
+                  bottomLeft: Radius.circular(30.0),
+                ),
+                child: Container(
+                  decoration: const BoxDecoration(
+                      gradient:
+                          LinearGradient(begin: Alignment.topCenter, colors: [
+                    Color.fromARGB(227, 84, 84, 84),
+                    Color.fromARGB(227, 84, 84, 84),
+                    Color.fromARGB(227, 84, 84, 84),
+                  ])),
+                  height: MediaQuery.of(context).size.height * 0.218,
+                ),
+              ),
             ),
-            Padding(
-              padding: EdgeInsets.only(left: 15),
-              child: Text("COACHING",
-                  style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold)),
+            // Padding(
+            //   padding: EdgeInsets.only(
+            //       top: MediaQuery.of(context).size.height * 0.048,
+            //       bottom: 20,
+            //       left: MediaQuery.of(context).size.width * 0.58,
+            //       right: 15),
+            //   child: SizedBox(
+            //       width: MediaQuery.of(context).size.width * 0.4,
+            //       height: MediaQuery.of(context).size.height * 0.1,
+            //       child: Image.asset("assets/images/yoga.png")),
+            // ),
+            Positioned(
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  Visibility(
+                    visible: isVisibles,
+                    child: Container(
+                        padding: const EdgeInsets.only(top: 10, right: 15),
+                        child: showRequest()),
+                  ),
+                ],
+              ),
             ),
-          ],
-        ),
-
-        //search course
-        Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: GestureDetector(
-            onTap: () {
-              pushNewScreen(
-                context,
-                screen: const SearchCoursePage(),
-                withNavBar: true,
-              ).then((value) {
-                log('ponds');
-                setState(() {
-                  loadCourseDataMethod = loadCourseData();
-                  loadRequestDataMethod = loadRequestData();
-                });
-              });
-            },
-            child: Container(
-                width: MediaQuery.of(context).size.width,
-                height: 45,
-                decoration: BoxDecoration(
-                    boxShadow: const <BoxShadow>[
-                      BoxShadow(
-                          color: Colors.grey,
-                          blurRadius: 5.0,
-                          offset: Offset(0.0, 0.75))
-                    ],
-                    color: const Color.fromRGBO(244, 243, 243, 1),
-                    borderRadius: BorderRadius.circular(30)),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    TextButton.icon(
-                      onPressed: () {
-                        pushNewScreen(
-                          context,
-                          screen: const SearchCoursePage(),
-                          withNavBar: true,
-                        ).then((value) {
-                          log('ponds');
-
-                          setState(() {
-                            loadCourseDataMethod = loadCourseData();
-                            loadRequestDataMethod = loadRequestData();
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const Padding(
+                  padding: EdgeInsets.only(left: 15, top: 20),
+                  child: Text("DAILY WORKOUT",
+                      style: TextStyle(
+                          fontSize: 30,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white)),
+                ),
+                const Padding(
+                  padding: EdgeInsets.only(left: 15),
+                  child: Text("COACHING",
+                      style: TextStyle(
+                          fontSize: 30,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white)),
+                ),
+                Center(
+                  child: Padding(
+                    padding: const EdgeInsets.only(top: 15),
+                    child: Container(
+                      width: MediaQuery.of(context).size.width * 0.9,
+                      decoration: BoxDecoration(
+                          color: const Color.fromARGB(255, 243, 243, 244),
+                          borderRadius: BorderRadius.circular(15)),
+                      child: TextField(
+                        readOnly: true,
+                        onTap: () {
+                          pushNewScreen(
+                            context,
+                            screen: const SearchCoursePage(),
+                            withNavBar: true,
+                          ).then((value) {
+                            log('ponds');
+                            setState(() {
+                              loadCourseDataMethod = loadCourseData();
+                              loadRequestDataMethod = loadRequestData();
+                            });
                           });
-                        });
-                      },
-                      icon: const Icon(
-                        FontAwesomeIcons.magnifyingGlass,
-                        color: Colors.black,
-                      ),
-                      label: const Text(
-                        "ค้นหาคอร์สของฉัน...",
-                        style: TextStyle(color: Colors.grey),
+                        },
+                        decoration: InputDecoration(
+                            border: InputBorder.none,
+                            enabledBorder: OutlineInputBorder(
+                              borderSide: BorderSide(
+                                  width: 1,
+                                  color: Colors.grey.shade100), //<-- SEE HERE
+                              borderRadius: BorderRadius.circular(20.0),
+                            ),
+                            focusedBorder: OutlineInputBorder(
+                              borderSide: BorderSide(
+                                  width: 1.5,
+                                  color: Colors.grey.shade100), //<-- SEE HERE
+                              borderRadius: BorderRadius.circular(20.0),
+                            ),
+                            prefixIcon: const Icon(
+                              FontAwesomeIcons.search,
+                              color: Colors.grey,
+                            ),
+                            hintText: "ค้นหา",
+                            hintStyle: const TextStyle(color: Colors.grey)),
                       ),
                     ),
-                  ],
-                )),
-          ),
+                  ),
+                ),
+              ],
+            )
+          ],
         ),
       ],
     );
@@ -474,35 +529,42 @@ class _HomePageCoachState extends State<HomePageCoach> {
             return Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                badges.Badge(
-                  position: badges.BadgePosition.topEnd(),
-                  showBadge: true,
-                  ignorePointer: false,
-                  badgeAnimation: const BadgeAnimation.slide(
-                    toAnimate: true,
-                    animationDuration: Duration(seconds: 1),
-                  ),
-                  badgeContent: Row(
-                    children: [
-                      if (requests.isNotEmpty)
-                        Text(
-                          requests.length.toString(),
-                          style: const TextStyle(color: Colors.white),
-                        ),
-                    ],
-                  ),
+                InkWell(
                   onTap: () {
                     Get.to(() => const RequestPage());
                   },
-                  badgeStyle: badges.BadgeStyle(
-                    //shape: badges.BadgeShape.square,
-                    badgeColor: Theme.of(context).colorScheme.error,
-                    borderSide: const BorderSide(color: Colors.white, width: 2),
-                    elevation: 0,
-                  ),
-                  child: const Icon(
-                    FontAwesomeIcons.bell,
-                    // color: Colors.black,
+                  child: badges.Badge(
+                    position: badges.BadgePosition.topEnd(),
+                    showBadge: true,
+                    ignorePointer: false,
+                    badgeAnimation: const BadgeAnimation.slide(
+                      toAnimate: true,
+                      animationDuration: Duration(seconds: 1),
+                    ),
+                    badgeContent: Row(
+                      children: [
+                        if (requests.isNotEmpty)
+                          Text(
+                            requests.length.toString(),
+                            style: const TextStyle(color: Colors.white),
+                          ),
+                      ],
+                    ),
+                    onTap: () {
+                      Get.to(() => const RequestPage());
+                    },
+                    badgeStyle: badges.BadgeStyle(
+                      //shape: badges.BadgeShape.square,
+                      badgeColor: Theme.of(context).colorScheme.error,
+                      borderSide:
+                          const BorderSide(color: Colors.white, width: 2),
+                      elevation: 0,
+                    ),
+                    child: const Icon(
+                      FontAwesomeIcons.bell,
+                      size: 30,
+                      color: Colors.white,
+                    ),
                   ),
                 )
               ],

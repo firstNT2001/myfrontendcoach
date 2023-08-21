@@ -6,7 +6,6 @@ import 'package:frontendfluttercoach/page/coach/usersBuyCourses/show_user_page.d
 import 'package:persistent_bottom_nav_bar_v2/persistent-tab-view.dart';
 
 import 'FoodAndClip/coach_food_clip_page.dart';
-import 'course/course_new_page.dart';
 import 'home_coach_page.dart';
 
 
@@ -22,7 +21,6 @@ _controller = PersistentTabController(initialIndex: 0);
         return [
           const HomePageCoach(),
           const FoodCoachPage(),
-          const CourseNewPage(),
           const ShowUserByCoursePage(),
           const CoachPage()
         ];
@@ -45,14 +43,7 @@ _controller = PersistentTabController(initialIndex: 0);
                 // activeColorPrimary: CupertinoColors.activeBlue,
                 // inactiveColorPrimary: CupertinoColors.systemGrey,
             ),
-            PersistentBottomNavBarItem(
-                icon: const Icon(FontAwesomeIcons.plus,color: Colors.black,),
-                title: "Add",
-                activeColorPrimary: Theme.of(context).colorScheme.primary,
-                inactiveColorPrimary:  const Color.fromARGB(255, 0, 0, 0),
-                // activeColorPrimary: CupertinoColors.activeBlue,
-                // inactiveColorPrimary: CupertinoColors.systemGrey,
-            ),
+          
             PersistentBottomNavBarItem(
                 icon: const Icon(FontAwesomeIcons.comment),
                 title: "Chat",

@@ -59,7 +59,6 @@ class _ClipSelectPageState extends State<ClipSelectPage> {
     super.initState();
     _listClipService = context.read<AppData>().listClipServices;
     loadListClipDataMethod = loadListClipsData();
-   
   }
 
   @override
@@ -77,7 +76,7 @@ class _ClipSelectPageState extends State<ClipSelectPage> {
               // color: Colors.white,
             ),
             onPressed: () {
-              Get.back();
+              Navigator.pop(context);
             },
           ),
           actions: [
@@ -180,7 +179,7 @@ class _ClipSelectPageState extends State<ClipSelectPage> {
             itemBuilder: (context, index) {
               final listClip = listClips[index];
               return Padding(
-                 padding: const EdgeInsets.only(bottom: 10),
+                padding: const EdgeInsets.only(bottom: 10),
                 child: SizedBox(
                   height: MediaQuery.of(context).size.height * 0.2,
                   child: Card(

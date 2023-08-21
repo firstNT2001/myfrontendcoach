@@ -71,12 +71,7 @@ class _FoodNewCoursePageState extends State<FoodNewCoursePage> {
               color: Colors.black,
             ),
             onPressed: () {
-              // Get.to(() => HomeFoodAndClipPage(
-              //       did: widget.did,
-              //       sequence: context.read<AppData>().sequence,
-              //       isVisible: widget.isVisible,
-              //     ));
-              Get.back();
+              Navigator.pop(context);
             },
           ),
           actions: [
@@ -139,7 +134,7 @@ class _FoodNewCoursePageState extends State<FoodNewCoursePage> {
                   visible: true,
                   child: Padding(
                     padding: const EdgeInsets.all(8.0),
-                    child: showFood(contexts),
+                    child: showFood(),
                   ),
                 ),
               ),
@@ -165,20 +160,20 @@ class _FoodNewCoursePageState extends State<FoodNewCoursePage> {
     }
   }
 
-  Widget showFood(BuildContext contexts) {
+  Widget showFood() {
     return FutureBuilder(
       future: loadListFoodDataMethod,
       builder: (context, snapshot) {
         if (snapshot.connectionState != ConnectionState.done) {
           return Center(child: load(context));
         } else {
-          return listViewFood(contexts);
+          return listViewFood();
         }
       },
     );
   }
 
-  ListView listViewFood(BuildContext contexts) {
+  ListView listViewFood() {
     return ListView.builder(
       shrinkWrap: true,
       itemCount: listFoods.length,
@@ -207,7 +202,7 @@ class _FoodNewCoursePageState extends State<FoodNewCoursePage> {
                       // colorFood[index] = Colors.black12;
                     });
 
-                    _dialog(contexts, request, colorFood, index);
+                    _dialog(context, colorFood, index);
                   } else {
                     setState(() {
                       //กลับเป็นสีเดิมเมือเลือกเมนูอาหารซํ้า
@@ -278,10 +273,9 @@ class _FoodNewCoursePageState extends State<FoodNewCoursePage> {
     );
   }
 
-  void _dialog(BuildContext ctx, ModelFoodList listFood, List<Color> colorList,
-      int index) {
+  void _dialog(BuildContext context, List<Color> colorList, int index) {
     //target widget
-    SmartDialog.show(builder: (ctx) {
+    SmartDialog.show(builder: (context) {
       return Container(
         width: MediaQuery.of(context).size.width * 0.9,
         height: 600,
@@ -300,11 +294,11 @@ class _FoodNewCoursePageState extends State<FoodNewCoursePage> {
                 child: Text("เมนูอาหาร",
                     style: Theme.of(context).textTheme.headlineSmall),
               ),
-              if (listFood.image != '') ...{
+              if (request.image != '') ...{
                 ClipRRect(
                     borderRadius: BorderRadius.circular(15),
                     child: Image.network(
-                      listFood.image,
+                      request.image,
                       width: MediaQuery.of(context).size.width * 0.7,
                       height: MediaQuery.of(context).size.height * 0.2,
                       fit: BoxFit.cover,
@@ -323,7 +317,7 @@ class _FoodNewCoursePageState extends State<FoodNewCoursePage> {
               Padding(
                 padding: const EdgeInsets.only(
                     top: 10, bottom: 8, right: 20, left: 20),
-                child: Text(listFood.name,
+                child: Text(request.name,
                     maxLines: 5,
                     style:
                         TextStyle(fontSize: 16, fontWeight: FontWeight.w600)),
@@ -338,7 +332,7 @@ class _FoodNewCoursePageState extends State<FoodNewCoursePage> {
                         style: TextStyle(
                             fontSize: 16, fontWeight: FontWeight.w600)),
                     Text(
-                      '   ${listFood.details}',
+                      '   ${request.details}',
                       maxLines: 5,
                       style: Theme.of(context).textTheme.bodyLarge,
                     ),
@@ -353,7 +347,7 @@ class _FoodNewCoursePageState extends State<FoodNewCoursePage> {
                     child: SizedBox(
                         //width: MediaQuery.of(context).size.width * 0.7,
                         child: Text(
-                      'แคลอรี่ ${listFood.calories.toString()}',
+                      'แคลอรี่ ${request.calories.toString()}',
                       style: Theme.of(context).textTheme.bodyLarge,
                     )),
                   ),
@@ -363,51 +357,43 @@ class _FoodNewCoursePageState extends State<FoodNewCoursePage> {
                 mainAxisAlignment: MainAxisAlignment.end,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  // Expanded(
-                  //   child: Padding(
-                  //     padding: const EdgeInsets.only(left: 15, right: 15),
-                  //     child: WidgetDropdownStringNotValue(
-                  //       title: 'เลือกมืออาหาร',
-                  //       selectedValue: selectedValuehand,
-                  //       ListItems: listhand,
-                  //     ),
-                  //   ),
-                  // ),
+                  Expanded(
+                    child: Padding(
+                      padding: const EdgeInsets.only(left: 15, right: 15),
+                      child: WidgetDropdownStringNotValue(
+                        title: 'เลือกมืออาหาร',
+                        selectedValue: selectedValuehand,
+                        ListItems: listhand,
+                      ),
+                    ),
+                  ),
                   Padding(
                     padding: const EdgeInsets.only(top: 20, right: 30),
                     child: FilledButton(
                         onPressed: () {
-                          // log(selectedValuehand.text);
-                          
-                          
-                          // if (selectedValuehand.text.isEmpty) {
-                          //   warningFood(context);
-                          // } else {
-                           
-                            setState(() {
-                              increaseFood.add(listFood);
+                          setState(() {
+                            increaseFood.add(request);
 
-                              FoodDayIdPost requestFoodPost = FoodDayIdPost(
-                                listFoodId: listFood.ifid,
-                                time: selectedValuehand.text == 'มื้อเช้า'
-                                    ? '1'
-                                    : selectedValuehand.text == 'มื้อเที่ยง'
-                                        ? '2'
-                                        : selectedValuehand.text == 'มื้อเย็น'
-                                            ? '3'
-                                            : '1',
-                              );
-                              increaseFoodDay.add(requestFoodPost);
-                              log(jsonEncode(requestFoodPost));
-                              selectedValuehand.text = 'มื้อเช้า';
-                              //เปลี่ยนสีเมือเลือกเมนู฿อาหาร
-                              colorList[index] =
-                                  context.read<AppData>().colorSelect;
-                              selectedValuehand.text = '';
-                            });
+                            FoodDayIdPost requestFoodPost = FoodDayIdPost(
+                              listFoodId: request.ifid,
+                              time: selectedValuehand.text == 'มื้อเช้า'
+                                  ? '1'
+                                  : selectedValuehand.text == 'มื้อเที่ยง'
+                                      ? '2'
+                                      : selectedValuehand.text == 'มื้อเย็น'
+                                          ? '3'
+                                          : '1',
+                            );
+                            increaseFoodDay.add(requestFoodPost);
+                            log(jsonEncode(requestFoodPost));
+                            selectedValuehand.text = 'มื้อเช้า';
+                            //เปลี่ยนสีเมือเลือกเมนู฿อาหาร
+                            colorList[index] =
+                                context.read<AppData>().colorSelect;
+                            selectedValuehand.text = '';
+                          });
 
-                            SmartDialog.dismiss();
-                          
+                          SmartDialog.dismiss();
                         },
                         child: const Text('ยืนยัน')),
                   ),

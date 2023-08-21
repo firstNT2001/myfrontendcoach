@@ -55,18 +55,18 @@ class _HomePageUserState extends State<HomePageUser> {
           children: [
             Container(
               decoration: const BoxDecoration(
-    boxShadow: [
-      BoxShadow(
-        color: Color.fromARGB(255, 196, 196, 196),
-        blurRadius: 20.0,
-        spreadRadius: 1,
-        offset: Offset(
-          0,
-          1,
-        ),
-      )
-    ],
-  ),
+                boxShadow: [
+                  BoxShadow(
+                    color: Color.fromARGB(255, 196, 196, 196),
+                    blurRadius: 20.0,
+                    spreadRadius: 1,
+                    offset: Offset(
+                      0,
+                      1,
+                    ),
+                  )
+                ],
+              ),
               child: ClipRRect(
                 borderRadius: const BorderRadius.only(
                   bottomRight: Radius.circular(30.0),
@@ -74,24 +74,27 @@ class _HomePageUserState extends State<HomePageUser> {
                 ),
                 child: Container(
                   decoration: const BoxDecoration(
-                      
                       gradient:
                           LinearGradient(begin: Alignment.topCenter, colors: [
-                        Color.fromARGB(228, 255, 122, 13),
-                        Color.fromARGB(255, 255, 150, 12),
-                        Color.fromARGB(255, 255, 158, 31)
-                      ])),
+                    Color.fromARGB(228, 255, 122, 13),
+                    Color.fromARGB(255, 255, 150, 12),
+                    Color.fromARGB(255, 255, 158, 31)
+                  ])),
                   height: MediaQuery.of(context).size.height * 0.218,
                 ),
               ),
             ),
             Padding(
-                    padding:  EdgeInsets.only( top: MediaQuery.of(context).size.height * 0.048,bottom: 20,left: MediaQuery.of(context).size.width * 0.58,right: 15),
-                    child: SizedBox(
-                        width: MediaQuery.of(context).size.width * 0.4,
-                        height: MediaQuery.of(context).size.height * 0.1,
-                        child: Image.asset("assets/images/yoga.png")),
-                  ),
+              padding: EdgeInsets.only(
+                  top: MediaQuery.of(context).size.height * 0.048,
+                  bottom: 20,
+                  left: MediaQuery.of(context).size.width * 0.58,
+                  right: 15),
+              child: SizedBox(
+                  width: MediaQuery.of(context).size.width * 0.4,
+                  height: MediaQuery.of(context).size.height * 0.1,
+                  child: Image.asset("assets/images/yoga.png")),
+            ),
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -225,7 +228,7 @@ class _HomePageUserState extends State<HomePageUser> {
                     context.read<AppData>().money = customer.first.price;
                     pushNewScreen(
                       context,
-                      screen:  showCousePage(namecourse:listcours.name ),
+                      screen: showCousePage(namecourse: listcours.name),
                       withNavBar: true,
                     );
                   },

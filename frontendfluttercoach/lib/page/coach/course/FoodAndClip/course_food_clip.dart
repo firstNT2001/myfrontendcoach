@@ -114,24 +114,21 @@ class _HomeFoodAndClipPageState extends State<HomeFoodAndClipPage> {
           backgroundColor: Theme.of(context).colorScheme.primary,
           visible: widget.isVisible,
           animatedIcon: AnimatedIcons.menu_close,
+          foregroundColor: Colors.white,
           overlayOpacity: 0.4,
           children: [
             SpeedDialChild(
                 child: const Icon(FontAwesomeIcons.bowlFood),
                 label: 'เพิ่มเมนู',
                 onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => FoodNewCoursePage(
-                              did: widget.did,
-                              isVisible: widget.isVisible,
-                            )),
-                  );
-                  // Get.to(() => FoodNewCoursePage(
-                  //       did: widget.did,
-                  //       isVisible: widget.isVisible,
-                  //     ));
+                  Get.to(() => FoodNewCoursePage(
+                        did: widget.did,
+                        isVisible: widget.isVisible,
+                      ))?.then((value) {
+                    setState(() {
+                      loadFoodDataMethod = loadFoodData();
+                    });
+                  });
                 }),
             SpeedDialChild(
                 child: const Icon(FontAwesomeIcons.dumbbell),
@@ -140,138 +137,195 @@ class _HomeFoodAndClipPageState extends State<HomeFoodAndClipPage> {
                   Get.to(() => ClipSelectPage(
                         did: widget.did,
                         isVisible: widget.isVisible,
-                      ));
+                      ))?.then((value) {
+                    setState(() {
+                      loadClipDataMethod = loadClipData();
+                    });
+                  });
                 }),
           ],
         ),
         resizeToAvoidBottomInset: false,
-        appBar: AppBar(
-          backgroundColor: Theme.of(context).colorScheme.primaryContainer,
-          title: Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                "วันที่ ${widget.sequence}",
-                style: Theme.of(context).textTheme.headlineMedium,
-              ),
-            ],
-          ),
-          leading: IconButton(
-            icon: const Icon(
-              FontAwesomeIcons.chevronLeft,
-            ),
-            onPressed: () {
-              Navigator.pop(context);
-            },
-          ),
-          bottom: TabBar(
-              labelColor: Theme.of(context)
-                  .colorScheme
-                  .primary, //<-- selected text color
-              unselectedLabelColor:
-                  Theme.of(context).colorScheme.tertiary, //<-- Unselected text
-              tabs: const [
-                Tab(
-                  icon: Icon(
-                    FontAwesomeIcons.dumbbell,
-                  ),
-                  text: 'คลิปออกกำลังกาย',
-                ),
-                Tab(
-                  icon: Icon(
-                    FontAwesomeIcons.utensils,
-                  ),
-                  text: 'เมนูอาหาร',
-                ),
-              ]),
-          centerTitle: true,
-        ),
-        body: TabBarView(
+        // appBar: AppBar(
+        //   elevation: 5000000,
+        //   backgroundColor: Theme.of(context).colorScheme.primaryContainer,
+        //   title: Row(
+        //     crossAxisAlignment: CrossAxisAlignment.start,
+        //     children: [
+        //       Text(
+        //         "วันที่ ${widget.sequence}",
+        //         style: Theme.of(context).textTheme.headlineMedium,
+        //       ),
+        //     ],
+        //   ),
+        //   leading: IconButton(
+        //     icon: const Icon(
+        //       FontAwesomeIcons.chevronLeft,
+        //     ),
+        //     onPressed: () {
+        //       Navigator.pop(context);
+        //     },
+        //   ),
+        //   bottom: TabBar(
+        //       labelColor: Theme.of(context)
+        //           .colorScheme
+        //           .primary, //<-- selected text color
+        //       unselectedLabelColor:
+        //           Theme.of(context).colorScheme.tertiary, //<-- Unselected text
+        //       tabs: const [
+        //         Tab(
+        //           icon: Icon(
+        //             FontAwesomeIcons.dumbbell,
+        //           ),
+        //           text: 'คลิปออกกำลังกาย',
+        //         ),
+        //         Tab(
+        //           icon: Icon(
+        //             FontAwesomeIcons.utensils,
+        //           ),
+        //           text: 'เมนูอาหาร',
+        //         ),
+        //       ]),
+        //   centerTitle: true,
+        // ),
+        body: Column(
           children: [
-            //Clip
-            Column(
-              children: [
-                const SizedBox(
-                  height: 10,
-                ),
-                // ignore: prefer_is_empty
+            showAppBar(context),
+            Expanded(
+              child: TabBarView(
+                children: [
+                  //Clip
+                  Column(
+                    children: [
+                      const SizedBox(
+                        height: 10,
+                      ),
+                      // ignore: prefer_is_empty
 
-                Expanded(
-                  child: Padding(
-                    padding: const EdgeInsets.only(
-                        left: 8, right: 8, top: 5, bottom: 5),
-                    child: showClip(),
+                      Expanded(
+                        child: showClip(),
+                      )
+                    ],
                   ),
-                )
-              ],
-            ),
-            //Food
-            Column(
-              children: [
-                const SizedBox(
-                  height: 10,
-                ),
-                Expanded(
-                  child: Padding(
-                    padding: const EdgeInsets.only(
-                        left: 8, right: 8, top: 5, bottom: 5),
-                    child: showFood(),
+                  //Food
+                  Column(
+                    children: [
+                      const SizedBox(
+                        height: 10,
+                      ),
+                      Expanded(
+                        child: showFood(),
+                      ),
+                    ],
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
           ],
         ));
   }
 
-  Padding searchButter(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(8.0),
-      child: GestureDetector(
-        onTap: () {
-          Get.to(() => WidgetSearchFood(
-                searchName: searchName,
-                did: widget.did,
-                sequence: widget.sequence,
-                isVisible: widget.isVisible,
-              ));
-        },
-        child: Container(
-            width: MediaQuery.of(context).size.width,
-            height: 45,
-            decoration: BoxDecoration(
-                boxShadow: const <BoxShadow>[
-                  BoxShadow(
-                      color: Colors.grey,
-                      blurRadius: 5.0,
-                      offset: Offset(0.0, 0.75))
-                ],
-                color: const Color.fromRGBO(244, 243, 243, 1),
-                borderRadius: BorderRadius.circular(30)),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                TextButton.icon(
-                  onPressed: () {
-                    Get.to(() => WidgetSearchFood(
-                          searchName: searchName,
-                          did: widget.did,
-                          sequence: widget.sequence,
-                          isVisible: widget.isVisible,
-                        ));
-                  },
-                  icon: const Icon(
-                    FontAwesomeIcons.magnifyingGlass,
-                    color: Colors.black,
-                  ),
-                  label: const Text(
-                    "ค้นหารายการอาหาร...",
-                    style: TextStyle(color: Colors.grey),
+  Stack showAppBar(BuildContext context) {
+    return Stack(
+      children: [
+        Container(
+          decoration: const BoxDecoration(
+            boxShadow: [
+              BoxShadow(
+                color: Color.fromARGB(255, 196, 196, 196),
+                blurRadius: 20.0,
+                spreadRadius: 1,
+                offset: Offset(
+                  0,
+                  1,
+                ),
+              )
+            ],
+          ),
+          child: ClipRRect(
+            borderRadius: const BorderRadius.only(
+              bottomRight: Radius.circular(30.0),
+              bottomLeft: Radius.circular(30.0),
+            ),
+            child: Container(
+              decoration: const BoxDecoration(
+                  gradient: LinearGradient(begin: Alignment.topCenter, colors: [
+                Color.fromARGB(227, 84, 84, 84),
+                Color.fromARGB(227, 84, 84, 84),
+                Color.fromARGB(227, 84, 84, 84),
+              ])),
+              height: MediaQuery.of(context).size.height * 0.218,
+            ),
+          ),
+        ),
+        Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Padding(
+              padding: const EdgeInsets.only(left: 15, top: 30),
+              child: IconButton(
+                icon: const Icon(
+                  FontAwesomeIcons.chevronLeft,
+                  color: Colors.white,
+                ),
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+              ),
+            ),
+            Center(
+                child: Padding(
+              padding: const EdgeInsets.only(left: 15, top: 0),
+              child: Text("วันที่ ${widget.sequence}",
+                  style: const TextStyle(
+                      fontSize: 30,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white)),
+            )),
+            Center(
+              child: Padding(
+                padding: const EdgeInsets.only(top: 15),
+                child: Container(
+                  width: MediaQuery.of(context).size.width * 0.9,
+                  decoration: BoxDecoration(
+                      color: const Color.fromARGB(255, 243, 243, 244),
+                      borderRadius: BorderRadius.circular(15)),
+                  child: Column(
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.all(5.0),
+                        child: TabBar(
+                            indicatorWeight: 2,
+                            indicatorColor:
+                                Theme.of(context).colorScheme.primary,
+                            labelColor: Theme.of(context)
+                                .colorScheme
+                                .primary, //<-- selected text color
+                            unselectedLabelColor: Theme.of(context)
+                                .colorScheme
+                                .tertiary, //<-- Unselected text
+
+                            tabs: const [
+                              Tab(
+                                icon: Icon(
+                                  FontAwesomeIcons.dumbbell,
+                                ),
+                              ),
+                              Tab(
+                                icon: Icon(
+                                  FontAwesomeIcons.utensils,
+                                ),
+                              ),
+                            ]),
+                      ),
+                    ],
                   ),
                 ),
-              ],
-            )),
-      ),
+              ),
+            ),
+          ],
+        )
+      ],
     );
   }
 
@@ -342,9 +396,8 @@ class _HomeFoodAndClipPageState extends State<HomeFoodAndClipPage> {
   Column cardFood(BuildContext context, ModelFood listfood) {
     return Column(
       children: [
-        const SizedBox(height: 10),
         SizedBox(
-          height: MediaQuery.of(context).size.height * 0.15,
+          height: MediaQuery.of(context).size.height * 0.17,
           child: InkWell(
             onTap: () {
               dialogFoodEditInCourse(
@@ -637,144 +690,137 @@ class _HomeFoodAndClipPageState extends State<HomeFoodAndClipPage> {
         } else {
           return Column(
             children: [
-              if (clips.isEmpty) ...{
-                Image.asset(
-                  'assets/images/coaching_PNG.png',
-                  color: Colors.white.withOpacity(0.8),
-                  colorBlendMode: BlendMode.lighten,
-                )
-              } else
-                GridView.builder(
-                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: 2,
-                    mainAxisExtent: 230,
-                  ),
-                  shrinkWrap: true,
-                  itemCount: clips.length,
-                  itemBuilder: (context, index) {
-                    final listClip = clips[index];
-                    return SizedBox(
-                      height: MediaQuery.of(context).size.height * 0.2,
-                      child: InkWell(
-                        onTap: () {
-                          ListClip request = ListClip(
-                              icpId: listClip.listClip.icpId,
-                              coachId: listClip.listClip.coachId,
-                              name: listClip.listClip.name,
-                              video: listClip.listClip.video,
-                              details: listClip.listClip.details,
-                              amountPerSet: listClip.listClip.amountPerSet);
-                          log(listClip.cpId.toString());
-                          dialogClipEditInCourse(
-                              context,
-                              request,
-                              listClip.cpId.toString(),
-                              listClip.dayOfCouseId.toString(),
-                              widget.sequence,
-                              int.parse(listClip.status),
-                              widget.isVisible);
-                        },
-                        child: Column(
-                          //mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Stack(
-                              children: [
-                                if (listClip.listClip.video != '') ...{
-                                  Padding(
-                                    padding: const EdgeInsets.only(
-                                        left: 8, right: 8, top: 5, bottom: 5),
-                                    child: AspectRatio(
-                                        aspectRatio: 16 / 13,
-                                        child: Container(
-                                          decoration: BoxDecoration(
-                                            borderRadius:
-                                                BorderRadius.circular(26),
-                                          ),
-                                          child: VideoItem(
-                                            video: listClip.listClip.video,
-                                          ),
-                                        )),
-                                  )
-                                } else
-                                  Padding(
-                                    padding: const EdgeInsets.only(
-                                        left: 8, right: 8, top: 5, bottom: 5),
-                                    child: AspectRatio(
-                                        aspectRatio: 16 / 13,
-                                        child: Container(
-                                          decoration: BoxDecoration(
-                                            color: const Color.fromARGB(
-                                                255, 207, 208, 209),
-                                            borderRadius:
-                                                BorderRadius.circular(20),
-                                          ),
-                                        )),
-                                  ),
-                                Visibility(
-                                  visible: widget.isVisible,
-                                  child: Row(
-                                    mainAxisAlignment: MainAxisAlignment.end,
-                                    children: [
-                                      IconButton(
-                                        onPressed: () {
-                                          dialogDeleteClip(context,
-                                              listClip.cpId.toString());
-                                        },
-                                        icon: const Icon(
-                                          FontAwesomeIcons.trash,
-                                          color:
-                                              Color.fromARGB(255, 93, 93, 93),
+              GridView.builder(
+                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: 2,
+                  mainAxisExtent: 230,
+                ),
+                shrinkWrap: true,
+                itemCount: clips.length,
+                itemBuilder: (context, index) {
+                  final listClip = clips[index];
+                  return SizedBox(
+                    height: MediaQuery.of(context).size.height * 0.2,
+                    child: InkWell(
+                      onTap: () {
+                        ListClip request = ListClip(
+                            icpId: listClip.listClip.icpId,
+                            coachId: listClip.listClip.coachId,
+                            name: listClip.listClip.name,
+                            video: listClip.listClip.video,
+                            details: listClip.listClip.details,
+                            amountPerSet: listClip.listClip.amountPerSet);
+                        log(listClip.cpId.toString());
+                        dialogClipEditInCourse(
+                            context,
+                            request,
+                            listClip.cpId.toString(),
+                            listClip.dayOfCouseId.toString(),
+                            widget.sequence,
+                            int.parse(listClip.status),
+                            widget.isVisible);
+                      },
+                      child: Column(
+                        //mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Stack(
+                            children: [
+                              if (listClip.listClip.video != '') ...{
+                                Padding(
+                                  padding: const EdgeInsets.only(
+                                      left: 8, right: 8, top: 5, bottom: 5),
+                                  child: AspectRatio(
+                                      aspectRatio: 16 / 13,
+                                      child: Container(
+                                        decoration: BoxDecoration(
+                                          borderRadius:
+                                              BorderRadius.circular(26),
                                         ),
-                                      ),
-                                    ],
-                                  ),
+                                        child: VideoItem(
+                                          video: listClip.listClip.video,
+                                        ),
+                                      )),
+                                )
+                              } else
+                                Padding(
+                                  padding: const EdgeInsets.only(
+                                      left: 8, right: 8, top: 5, bottom: 5),
+                                  child: AspectRatio(
+                                      aspectRatio: 16 / 13,
+                                      child: Container(
+                                        decoration: BoxDecoration(
+                                          color: const Color.fromARGB(
+                                              255, 207, 208, 209),
+                                          borderRadius:
+                                              BorderRadius.circular(20),
+                                        ),
+                                      )),
                                 ),
-                                if (widget.isVisible == false) ...{
-                                  Row(
-                                      mainAxisAlignment: MainAxisAlignment.end,
-                                      children: [
-                                        MSHCheckbox(
-                                          size: 30,
-                                          value: listClip.status == '1'
-                                              ? true
-                                              : listClip.status == '0'
-                                                  ? false
-                                                  : false,
-                                          colorConfig: MSHColorConfig
-                                              .fromCheckedUncheckedDisabled(
-                                            checkedColor: Colors.blue,
-                                          ),
-                                          style: MSHCheckboxStyle.fillFade,
-                                          onChanged: (selected) {
-                                            setState(() {
-                                              //isChecked = selected;
-                                            });
-                                          },
-                                        ),
-                                      ])
-                                }
-                              ],
-                            ),
-                            Center(
-                              child: SizedBox(
-                                child: AutoSizeText(
-                                  listClip.listClip.name,
-                                  maxLines: 2,
-                                  style:
-                                      Theme.of(context).textTheme.titleMedium,
+                              Visibility(
+                                visible: widget.isVisible,
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.end,
+                                  children: [
+                                    IconButton(
+                                      onPressed: () {
+                                        dialogDeleteClip(
+                                            context, listClip.cpId.toString());
+                                      },
+                                      icon: Icon(
+                                        FontAwesomeIcons.trash,
+                                        color: Theme.of(context)
+                                            .colorScheme
+                                            .primary,
+                                      ),
+                                    ),
+                                  ],
                                 ),
                               ),
+                              if (widget.isVisible == false) ...{
+                                Row(
+                                    mainAxisAlignment: MainAxisAlignment.end,
+                                    children: [
+                                      MSHCheckbox(
+                                        size: 30,
+                                        value: listClip.status == '1'
+                                            ? true
+                                            : listClip.status == '0'
+                                                ? false
+                                                : false,
+                                        colorConfig: MSHColorConfig
+                                            .fromCheckedUncheckedDisabled(
+                                          checkedColor: Colors.blue,
+                                        ),
+                                        style: MSHCheckboxStyle.fillFade,
+                                        onChanged: (selected) {
+                                          setState(() {
+                                            //isChecked = selected;
+                                          });
+                                        },
+                                      ),
+                                    ])
+                              }
+                            ],
+                          ),
+                          Center(
+                            child: SizedBox(
+                              child: AutoSizeText(
+                                listClip.listClip.name,
+                                maxLines: 2,
+                                style: Theme.of(context).textTheme.titleMedium,
+                              ),
                             ),
-                            const SizedBox(
-                              width: 50,
-                            ),
-                          ],
-                        ),
+                          ),
+                          const SizedBox(
+                            width: 50,
+                          ),
+                        ],
                       ),
-                    );
-                  },
-                ),
+                    ),
+                  );
+                },
+              ),
             ],
           );
         }

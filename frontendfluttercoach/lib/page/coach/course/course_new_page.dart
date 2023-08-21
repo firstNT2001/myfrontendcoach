@@ -8,6 +8,8 @@ import 'package:firebase_storage/firebase_storage.dart';
 
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:frontendfluttercoach/widget/dialogs.dart';
+import 'package:in_app_notification/in_app_notification.dart';
 import 'package:persistent_bottom_nav_bar_v2/persistent-tab-view.dart';
 
 import 'package:provider/provider.dart';
@@ -20,6 +22,7 @@ import '../../../service/provider/appdata.dart';
 import '../../../widget/PopUp/popUp.dart';
 import '../../../widget/dropdown/wg_dropdown_notValue_string.dart';
 
+import '../../../widget/notificationBody.dart';
 import '../../../widget/textField/wg_textField.dart';
 import '../../../widget/textField/wg_textFieldLines.dart';
 
@@ -204,6 +207,7 @@ class _CourseNewPageState extends State<CourseNewPage> {
     return FilledButton(
       //style: style,
       onPressed: () async {
+        startLoading(context);
         if (name.text.isEmpty ||
             details.text.isEmpty ||
             lavel.toString().isEmpty ||
@@ -213,10 +217,12 @@ class _CourseNewPageState extends State<CourseNewPage> {
           setState(() {
             textErr = 'กรุณากรอกข้อมูลให้ครบ';
           });
+          stopLoading();
         } else if (pickedImg == null) {
           setState(() {
             textErr = 'กรุณาเพิ่มรูป';
           });
+          stopLoading();
         } else {
           log("selectedValue${selectedValue.text}");
           if (selectedValue.text == 'ง่าย') {
@@ -246,12 +252,31 @@ class _CourseNewPageState extends State<CourseNewPage> {
               await courseService.insetCourseByCoachID(cid.toString(), request);
           moduleResult = response.data;
           log(moduleResult.result);
+          stopLoading();
+
           if (moduleResult.result == '0') {
-            // ignore: use_build_context_synchronously
-            warning(context);
+            stopLoading();
+
+            InAppNotification.show(
+              child: NotificationBody(
+                count: 1,
+                message: 'เพิ่มคอร์สไม่สำเร็ส',
+              ),
+              context: context,
+              onTap: () => print('Notification tapped!'),
+              duration: const Duration(milliseconds: 1500),
+            );
           } else {
             // ignore: use_build_context_synchronously
-            success(context);
+            InAppNotification.show(
+              child: NotificationBody(
+                count: 1,
+                message: 'เพิ่มคอร์สสำเร็ส',
+              ),
+              context: context,
+              onTap: () => print('Notification tapped!'),
+              duration: const Duration(milliseconds: 1500),
+            );
             context.read<AppData>().img = profile;
             // ignore: use_build_context_synchronously
             pushNewScreen(
@@ -262,20 +287,7 @@ class _CourseNewPageState extends State<CourseNewPage> {
               ),
               withNavBar: true,
             ).then((value) {
-              log('ponds');
-
-              setState(() {
-                name.text = '';
-                details.text = '';
-                amount.text = '';
-                days.text = '';
-                price.text = '';
-                lavel = 0;
-                selectedValue.text = '';
-                profile = '';
-                pickedImg = null;
-                status = '';
-              });
+              Navigator.pop(context);
             });
           }
         }
@@ -346,13 +358,28 @@ class _CourseNewPageState extends State<CourseNewPage> {
                     ],
                     shape: BoxShape.circle,
                     //border: Border.all(width: 4, color: Colors.white),
-                    color: Colors.white),
+                    color: Theme.of(context).colorScheme.primary),
                 child: const Icon(
-                  FontAwesomeIcons.camera,
-                  color: Colors.black,
+                  FontAwesomeIcons.image,
+                  color: Colors.white,
                 ),
               ),
             )),
+        Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: CircleAvatar(
+            backgroundColor: const Color.fromARGB(178, 220, 219, 219),
+            radius: 20,
+            child: IconButton(
+              icon: const Icon(
+                FontAwesomeIcons.chevronLeft,
+              ),
+              onPressed: () {
+                Navigator.pop(context);
+              },
+            ),
+          ),
+        ),
       ],
     );
   }

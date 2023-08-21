@@ -116,7 +116,6 @@ class _CoachEidtProfilePageState extends State<CoachEidtProfilePage> {
             if (newbirht.isEmpty) {
               newbirht = oldbirht;
             }
-            log("newbirht" + newbirht);
             RegisterCoachDto request = RegisterCoachDto(
                 fullName: fullName.text,
                 username: name.text,

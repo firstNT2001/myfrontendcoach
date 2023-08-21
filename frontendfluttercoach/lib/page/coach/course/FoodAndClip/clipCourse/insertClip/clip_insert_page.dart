@@ -5,6 +5,7 @@ import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:frontendfluttercoach/widget/dialogs.dart';
 
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
@@ -66,7 +67,7 @@ class _ClipInsertPageState extends State<ClipInsertPage> {
             color: Colors.black,
           ),
           onPressed: () {
-            Get.back();
+            Navigator.pop(context);
           },
         ),
         title: const Text('เพิ่มคลิป'),
@@ -122,7 +123,7 @@ class _ClipInsertPageState extends State<ClipInsertPage> {
                             child: FilledButton(
                                 onPressed: () async {
                                   log(jsonEncode(widget.increaseClip));
-
+                                  startLoading(context);
                                   //loop insertClip in list
                                   for (var index in widget.increaseClip) {
                                     log('id :${index.listClipId}');
@@ -130,24 +131,17 @@ class _ClipInsertPageState extends State<ClipInsertPage> {
                                         .insertClipByDayID(widget.did, index);
                                     modelResult = response.data;
                                   }
+                                  stopLoading();
                                   log("result:${modelResult.result}");
                                   log('message');
                                   if (modelResult.result == '1') {
                                     widget.increaseClip.clear();
-                                    // ignore: use_build_context_synchronously
-                                    Navigator.pushAndRemoveUntil<void>(
-                                      context,
-                                      MaterialPageRoute<void>(
-                                          builder: (BuildContext context) =>
-                                              HomeFoodAndClipPage(
-                                                did: widget.did,
-                                                sequence: context
-                                                    .read<AppData>()
-                                                    .sequence,
-                                                isVisible: widget.isVisible,
-                                              )),
-                                      ModalRoute.withName('/NavbarBottomCoach'),
-                                    );
+
+                                    Navigator.popUntil(
+                                        context,
+                                        ModalRoute.withName(
+                                            '/NavbarBottomCoach'));
+
                                     // ignore: use_build_context_synchronously
                                     InAppNotification.show(
                                       child: NotificationBody(

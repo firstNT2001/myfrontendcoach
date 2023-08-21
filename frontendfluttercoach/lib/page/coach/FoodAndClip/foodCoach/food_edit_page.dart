@@ -21,7 +21,6 @@ import '../../../../widget/notificationBody.dart';
 import '../../../../widget/textField/wg_textField.dart';
 import '../../../../widget/textField/wg_textFieldLines.dart';
 import '../../../../widget/textField/wg_textField_int copy.dart';
-import '../../navigationbar.dart';
 
 class FoodEditCoachPage extends StatefulWidget {
   final int ifid;
@@ -102,30 +101,20 @@ class _FoodEditCoachPageState extends State<FoodEditCoachPage> {
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Padding(
-                                padding: const EdgeInsets.only(
-                                    bottom: 18, top: 28, left: 20, right: 20),
-                                child: WidgetTextFieldString(
-                                  controller: name,
-                                  labelText: 'ขื่อเมนู',
-                                ),
+                              SizedBox(height: 20,),
+                              WidgetTextFieldString(
+                                controller: name,
+                                labelText: 'ขื่อเมนู',
                               ),
-                              Padding(
-                                padding: const EdgeInsets.only(
-                                    bottom: 18, left: 20, right: 20),
-                                child: WidgetTextFieldInt(
-                                  controller: calories,
-                                  labelText: 'Calories',
-                                  maxLength: 4,
-                                ),
+                              WidgetTextFieldInt(
+                                controller: calories,
+                                labelText: 'Calories',
+                                maxLength: 4,
                               ),
-                              Padding(
-                                  padding: const EdgeInsets.only(
-                                      bottom: 18, left: 20, right: 20),
-                                  child: WidgetTextFieldLines(
-                                    controller: details,
-                                    labelText: 'ส่วนผสม',
-                                  )),
+                              WidgetTextFieldLines(
+                                controller: details,
+                                labelText: 'ส่วนผสม',
+                              ),
                               Row(
                                 mainAxisAlignment: MainAxisAlignment.end,
                                 children: [
@@ -145,7 +134,7 @@ class _FoodEditCoachPageState extends State<FoodEditCoachPage> {
                               Center(
                                 child: Padding(
                                   padding: const EdgeInsets.only(
-                                      bottom: 18, left: 20, right: 20),
+                                      bottom: 18, left: 15, right: 15),
                                   child: SizedBox(
                                       width: MediaQuery.of(context).size.width,
                                       child: button(context)),
@@ -161,12 +150,14 @@ class _FoodEditCoachPageState extends State<FoodEditCoachPage> {
   FilledButton button(BuildContext context) {
     return FilledButton(
         onPressed: () async {
+          startLoading(context);
           if (name.text.isEmpty ||
               details.text.isEmpty ||
               calories.text.isEmpty) {
             setState(() {
               textErr = 'กรุณากรอกข้อมูลให้ครบ';
             });
+            stopLoading();
           } else {
             setState(() {
               textErr = '';
@@ -187,6 +178,7 @@ class _FoodEditCoachPageState extends State<FoodEditCoachPage> {
                 widget.ifid.toString(), request);
             modelResult = editFood.data;
             log(jsonEncode(modelResult.result));
+            stopLoading();
             if (modelResult.result == '1') {
               // ignore: use_build_context_synchronously
               InAppNotification.show(
@@ -198,14 +190,7 @@ class _FoodEditCoachPageState extends State<FoodEditCoachPage> {
                 onTap: () => print('Notification tapped!'),
                 duration: const Duration(milliseconds: 1500),
               );
-              // ignore: use_build_context_synchronously
-              Navigator.pushAndRemoveUntil<void>(
-                context,
-                MaterialPageRoute<void>(
-                    builder: (BuildContext context) =>
-                        const NavbarBottomCoach()),
-                ModalRoute.withName('/NavbarBottomCoach'),
-              );
+              Navigator.pop(context);
             } else {
               // ignore: use_build_context_synchronously
               InAppNotification.show(
@@ -327,13 +312,13 @@ class _FoodEditCoachPageState extends State<FoodEditCoachPage> {
               child: Container(
                 height: 40,
                 width: 40,
-                decoration: const BoxDecoration(
+                decoration:  BoxDecoration(
                     shape: BoxShape.circle,
                     //border: Border.all(width: 4, color: Colors.white),
-                    color: Colors.white),
+                    color: Theme.of(context).colorScheme.primary),
                 child: const Icon(
-                  FontAwesomeIcons.camera,
-                  color: Colors.black,
+                  FontAwesomeIcons.image,
+                  color: Colors.white,
                 ),
               ),
             )),

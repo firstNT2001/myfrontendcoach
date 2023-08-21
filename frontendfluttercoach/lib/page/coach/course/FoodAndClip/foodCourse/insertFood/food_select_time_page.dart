@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:frontendfluttercoach/service/food.dart';
+import 'package:frontendfluttercoach/widget/dialogs.dart';
 import 'package:in_app_notification/in_app_notification.dart';
 
 import 'package:provider/provider.dart';
@@ -80,7 +81,7 @@ class _FoodSelectTimePageState extends State<FoodSelectTimePage>
             color: Colors.black,
           ),
           onPressed: () {
-            Navigator.of(context).pop();
+            Navigator.pop(context);
           },
         ),
         iconTheme: const IconThemeData(
@@ -148,6 +149,7 @@ class _FoodSelectTimePageState extends State<FoodSelectTimePage>
   FilledButton button(BuildContext context) {
     return FilledButton(
         onPressed: () async {
+          startLoading(context);
           for (var index in widget.increaseFood) {
             log('id :${index.listFoodId}');
             log(jsonEncode(index));
@@ -156,19 +158,12 @@ class _FoodSelectTimePageState extends State<FoodSelectTimePage>
             modelResult = response.data;
           }
           log("result:${modelResult.result}");
+          stopLoading();
           if (modelResult.result == '1') {
             widget.increaseFood.clear();
-            // ignore: use_build_context_synchronously
-            Navigator.pushAndRemoveUntil<void>(
-              context,
-              MaterialPageRoute<void>(
-                  builder: (BuildContext context) => HomeFoodAndClipPage(
-                        did: widget.did,
-                        sequence: context.read<AppData>().sequence,
-                        isVisible: widget.isVisible,
-                      )),
-              ModalRoute.withName('/NavbarBottomCoach'),
-            );
+            Navigator.popUntil(
+                context, ModalRoute.withName('/NavbarBottomCoach'));
+
             // ignore: use_build_context_synchronously
             InAppNotification.show(
               child: NotificationBody(

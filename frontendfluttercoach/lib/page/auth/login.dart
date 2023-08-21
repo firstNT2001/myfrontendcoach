@@ -16,6 +16,7 @@ import '../../model/response/auth_login_res.dart';
 import '../../service/auth.dart';
 
 import '../../service/provider/appdata.dart';
+import '../../widget/dialogs.dart';
 import '../coach/navigationbar.dart';
 import '../user/navigationbar.dart';
 import 'register.dart';
@@ -71,7 +72,8 @@ class _LoginPageState extends State<LoginPage> {
             Color.fromARGB(255, 255, 150, 12),
             Color.fromARGB(255, 255, 165, 31)
           ])),
-          child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+          child:
+              Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
             const SizedBox(
               height: 80,
             ),
@@ -92,7 +94,7 @@ class _LoginPageState extends State<LoginPage> {
             ),
             const SizedBox(height: 40),
             //Expanded(child: Container(color: Colors.cyan,))
-    
+
             Expanded(
               child: Container(
                 decoration: const BoxDecoration(
@@ -107,8 +109,8 @@ class _LoginPageState extends State<LoginPage> {
                       padding: const EdgeInsets.all(5),
                       child: Column(children: [
                         Padding(
-                          padding:
-                              const EdgeInsets.only(left: 20, right: 20, top: 20),
+                          padding: const EdgeInsets.only(
+                              left: 20, right: 20, top: 20),
                           child: TextField(
                             controller: email,
                             //autofocus: true,
@@ -144,8 +146,8 @@ class _LoginPageState extends State<LoginPage> {
                           ),
                         ),
                         Padding(
-                          padding:
-                              const EdgeInsets.only(left: 20, right: 20, top: 16),
+                          padding: const EdgeInsets.only(
+                              left: 20, right: 20, top: 16),
                           child: TextField(
                             textAlignVertical: TextAlignVertical.center,
                             //textAlign: TextAlign.center,
@@ -183,25 +185,33 @@ class _LoginPageState extends State<LoginPage> {
                           ),
                         ),
                         Padding(
-                          padding: const EdgeInsets.only(right: 20,top: 15),
+                          padding: const EdgeInsets.only(right: 20, top: 15),
                           child: InkWell(
                             onTap: () {
                               Get.to(() => const EditPasswordPage());
                             },
                             child: Row(
-                                mainAxisAlignment: MainAxisAlignment.end,
-                                children: [                            
-                                  Text('ลืมรหัสผ่าน',style: TextStyle(color:  Theme.of(context).colorScheme.primary,),),
-                                  Padding(
-                                    padding: const EdgeInsets.only(left: 8),
-                                    child: Icon(
-                                          FontAwesomeIcons.solidCircleQuestion, color: Theme.of(context).colorScheme.primary,),
+                              mainAxisAlignment: MainAxisAlignment.end,
+                              children: [
+                                Text(
+                                  'ลืมรหัสผ่าน',
+                                  style: TextStyle(
+                                    color:
+                                        Theme.of(context).colorScheme.primary,
                                   ),
-                                ],
-                              ),
+                                ),
+                                Padding(
+                                  padding: const EdgeInsets.only(left: 8),
+                                  child: Icon(
+                                    FontAwesomeIcons.solidCircleQuestion,
+                                    color:
+                                        Theme.of(context).colorScheme.primary,
+                                  ),
+                                ),
+                              ],
+                            ),
                           ),
                         ),
-                     
                         Padding(
                           padding: const EdgeInsets.only(
                               left: 20, right: 20, top: 30, bottom: 22),
@@ -211,38 +221,8 @@ class _LoginPageState extends State<LoginPage> {
                                 icon: const FaIcon(
                                     FontAwesomeIcons.rightToBracket,
                                     size: 16),
-                                onPressed: () async {
-                                  AuthLoginPost request = AuthLoginPost(
-                                      email: email.text, password: password.text);
-                                  log(jsonEncode(request));
-                                  var response = await authService.login(request);
-                                  authLoginRes = response.data;
-                                  uid = authLoginRes.uid;
-                                  cid = authLoginRes.cid;
-                                  // log(authLoginRes.cid);
-                                  //log(authLoginRes.uid.toString());
-                                  if (authLoginRes.uid > 0 &&
-                                      authLoginRes.cid > 0) {
-                                    log("go");
-                                    // ignore: use_build_context_synchronously
-                                    _bindPage(context);
-                                    setState(() => titleErr = '');
-                                  } else if (authLoginRes.cid > 0) {
-                                    // ignore: use_build_context_synchronously
-                                    context.read<AppData>().cid = cid;
-                                    Get.to(() => const NavbarBottomCoach());
-                                    setState(() => titleErr = '');
-                                  } else if (authLoginRes.uid > 0) {
-                                    // ignore: use_build_context_synchronously
-                                    context.read<AppData>().uid = uid;
-                                    Get.to(() => const NavbarBottom());
-                                    setState(() => titleErr = '');
-                                  } else {
-                                    log('ไม่พบ');
-    
-                                    setState(() => titleErr =
-                                        'กรุณาใส่อีเมล์หรือรหัสผ่านให้ถูกต้อง');
-                                  }
+                                onPressed: () {
+                                  login(context);
                                 },
                                 label: Text(
                                   'เข้าสู่ระบบ',
@@ -254,8 +234,8 @@ class _LoginPageState extends State<LoginPage> {
                           ),
                         ),
                         const Padding(
-                            padding:
-                                EdgeInsets.only(left: 20, right: 20, bottom: 15),
+                            padding: EdgeInsets.only(
+                                left: 20, right: 20, bottom: 15),
                             child: Divider()),
                         const Text("เข้าสู่ระบบด้วยวิธีอื่น"),
                         Padding(
@@ -306,6 +286,47 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 
+  void login(BuildContext context) async {
+    startLoading(context);
+    AuthLoginPost request =
+        AuthLoginPost(email: email.text, password: password.text);
+    log(jsonEncode(request));
+    var response = await authService.login(request);
+    authLoginRes = response.data;
+    uid = authLoginRes.uid;
+    cid = authLoginRes.cid;
+    // log(authLoginRes.cid);
+    //log(authLoginRes.uid.toString());
+    if (authLoginRes.uid > 0 && authLoginRes.cid > 0) {
+      stopLoading();
+
+      log("go");
+      // ignore: use_build_context_synchronously
+      _bindPage(context);
+      setState(() => titleErr = '');
+    } else if (authLoginRes.cid > 0) {
+      stopLoading();
+
+      // ignore: use_build_context_synchronously
+      context.read<AppData>().cid = cid;
+      Get.to(() => const NavbarBottomCoach());
+      setState(() => titleErr = '');
+    } else if (authLoginRes.uid > 0) {
+      stopLoading();
+
+      // ignore: use_build_context_synchronously
+      context.read<AppData>().uid = uid;
+      Get.to(() => const NavbarBottom());
+      setState(() => titleErr = '');
+    } else {
+      stopLoading();
+
+      log('ไม่พบ');
+
+      setState(() => titleErr = 'กรุณาใส่อีเมล์หรือรหัสผ่านให้ถูกต้อง');
+    }
+  }
+
   void _bindPage(BuildContext ctx) {
     //target widget
     SmartDialog.show(builder: (_) {
@@ -336,8 +357,6 @@ class _LoginPageState extends State<LoginPage> {
                   InkWell(
                     onTap: () {
                       Get.to(() => const NavbarBottomCoach());
-                      //Navigator.of(context).pushReplacementNamed(context, '/NavbarBottomCoach');
-
                       context.read<AppData>().cid = cid;
                     },
                     child: Column(
