@@ -8,6 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:frontendfluttercoach/model/request/registerCusDTO.dart';
 import 'package:frontendfluttercoach/page/auth/login.dart';
+import 'package:frontendfluttercoach/widget/dialogs.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:in_app_notification/in_app_notification.dart';
@@ -27,6 +28,7 @@ import '../../widget/textField/wg_textField_password.dart';
 class RegisterPage extends StatefulWidget {
   const RegisterPage({super.key, required this.isVisible});
   final bool isVisible;
+
   @override
   State<RegisterPage> createState() => _RegisterPageState();
 }
@@ -285,8 +287,150 @@ class _RegisterPageState extends State<RegisterPage> {
           ),
         ],
       ),
-      button(),
+      Padding(
+        padding: const EdgeInsets.only(bottom: 18, left: 20, right: 20),
+        child: SizedBox(
+          width: MediaQuery.of(context).size.width,
+          // height: MediaQuery.of(context).size.height ,
+          child: FilledButton(
+            //style: style,
+            onPressed: () {
+              reg(context);
+            },
+            child: const Text('สมัครสมาชิก'),
+          ),
+        ),
+      ),
     ]);
+  }
+
+  void reg(BuildContext context) async {
+    setState(() {
+      textErr = '';
+    });
+    startLoading(context);
+    if (fullName.text == '' ||
+        name.text == '' ||
+        selectedValue.text == '' ||
+        phone.text == '' ||
+        email.text == '' ||
+        password1.text == '' ||
+        password2.text == '') {
+      setState(() {
+        textErr = 'กรุณากรอกข้อมูลให้ครบ';
+      });
+      stopLoading();
+    } else if (phone.text.length != 10) {
+      setState(() {
+        textErr = 'กรุณากรอกเบอร์โทรศัพท์ให้ถูกต้อง';
+      });
+      stopLoading();
+    } else if (password1.text != password2.text) {
+      setState(() {
+        textErr = 'รหัสไม่ตรงกัน';
+      });
+      stopLoading();
+    } else if (validate(email.text) == false) {
+      setState(() {
+        textErr = 'อีมลไม่ถูกต้อง';
+      });
+      stopLoading();
+    } else {
+      if (pickedImg != null) await uploadfile();
+      if (pickedImg == null) {
+        profile =
+            'https://t3.ftcdn.net/jpg/03/46/83/96/360_F_346839683_6nAPzbhpSkIpb8pmAwufkC7c5eD7wYws.jpg';
+      }
+      if (widget.isVisible == true) {
+        if (height.text != '' || weight.text != '') {
+          RegisterCusDto request = RegisterCusDto(
+            fullName: fullName.text,
+            username: name.text,
+            email: email.text,
+            password: password1.text,
+            image: profile,
+            gender: (selectedValue.text) == 'ชาย'
+                ? '2'
+                : (selectedValue.text == 'หญิง')
+                    ? '1'
+                    : '1',
+            phone: phone.text,
+            birthday: '2002-02-14T00:00:00Z',
+            height: int.parse(height.text),
+            weight: int.parse(weight.text),
+          );
+          var result = await _authService.regCus(request);
+          modelResult = result.data;
+          log(modelResult.result);
+          stopLoading();
+          if (modelResult.result == '1') {
+            Get.to(() => const LoginPage());
+          } else {
+            InAppNotification.show(
+              child: NotificationBody(
+                count: 1,
+                message: 'สมัครไม่สำเร็จ',
+              ),
+              context: context,
+              onTap: () => print('Notification tapped!'),
+              duration: const Duration(milliseconds: 1500),
+            );
+          }
+        } else {
+           InAppNotification.show(
+              child: NotificationBody(
+                count: 1,
+                message: 'สมัครไม่สำเร็จ',
+              ),
+              context: context,
+              onTap: () => print('Notification tapped!'),
+              duration: const Duration(milliseconds: 1500),
+            );
+          stopLoading();
+        }
+      } else {
+        if (property.text != '' || qualification.text != '') {
+          RegisterCoachDto request = RegisterCoachDto(
+              fullName: fullName.text,
+              username: name.text,
+              email: email.text,
+              password: password1.text,
+              image: profile,
+              gender: (selectedValue.text) == 'ชาย'
+                  ? '2'
+                  : (selectedValue.text == 'หญิง')
+                      ? '1'
+                      : '1',
+              phone: phone.text,
+              birthday: '2002-02-14T00:00:00Z',
+              property: property.text,
+              qualification: qualification.text,
+              facebookId: '');
+          var result = await _authService.regCoach(request);
+          modelResult = result.data;
+          log(modelResult.result);
+          stopLoading();
+
+          if (modelResult.result == '1') {
+            Get.to(() => const LoginPage());
+          } else {
+            InAppNotification.show(
+              child: NotificationBody(
+                count: 1,
+                message: 'สมัครไม่สำเร็จ',
+              ),
+              context: context,
+              onTap: () => print('Notification tapped!'),
+              duration: const Duration(milliseconds: 1500),
+            );
+          }
+        } else {
+          setState(() {
+            textErr = 'กรุณากรอกข้อมูลให้ครบ';
+          });
+        }
+      }
+    }
   }
 
   Widget button() {
@@ -331,6 +475,7 @@ class _RegisterPageState extends State<RegisterPage> {
               }
               if (widget.isVisible == true) {
                 if (height.text != '' || weight.text != '') {
+                  startLoading(context);
                   RegisterCusDto request = RegisterCusDto(
                     fullName: fullName.text,
                     username: name.text,
@@ -350,6 +495,20 @@ class _RegisterPageState extends State<RegisterPage> {
                   var result = await _authService.regCus(request);
                   modelResult = result.data;
                   log(modelResult.result);
+                  stopLoading();
+                  if (modelResult.result == '1') {
+                    Get.to(() => const LoginPage());
+                  } else {
+                    InAppNotification.show(
+                      child: NotificationBody(
+                        count: 1,
+                        message: 'สมัครไม่สำเร็จ',
+                      ),
+                      context: context,
+                      onTap: () => print('Notification tapped!'),
+                      duration: const Duration(milliseconds: 1500),
+                    );
+                  }
                 } else {
                   setState(() {
                     textErr = 'กรุณากรอกข้อมูลให้ครบ';
@@ -357,6 +516,7 @@ class _RegisterPageState extends State<RegisterPage> {
                 }
               } else {
                 if (property.text != '' || qualification.text != '') {
+                  startLoading(context);
                   RegisterCoachDto request = RegisterCoachDto(
                       fullName: fullName.text,
                       username: name.text,
@@ -377,16 +537,6 @@ class _RegisterPageState extends State<RegisterPage> {
                   modelResult = result.data;
                   log(modelResult.result);
                   if (modelResult.result == '1') {
-                     // ignore: use_build_context_synchronously
-                     InAppNotification.show(
-                      child: NotificationBody(
-                        count: 1,
-                        message: 'สมัครสำเร็จ',
-                      ),
-                      context: context,
-                      onTap: () => print('Notification tapped!'),
-                      duration: const Duration(milliseconds: 1500),
-                    );
                     Get.to(() => const LoginPage());
                   } else {
                     // ignore: use_build_context_synchronously
