@@ -91,7 +91,7 @@ class _WidgetHistoryState extends State<WidgetHistory> {
                           return Padding(
                             padding: const EdgeInsets.only(bottom: 8),
                             child: Card(
-                              color: Color.fromARGB(255, 255, 208, 165),
+                              color: Color.fromARGB(255, 255, 215, 177),
                               elevation: 5,
                               child: ListTile(
                                 leading: Icon(FontAwesomeIcons.clockRotateLeft),

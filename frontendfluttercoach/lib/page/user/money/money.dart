@@ -62,84 +62,146 @@ class _addCoinState extends State<addCoin> {
             FontAwesomeIcons.chevronLeft,
           ),
           onPressed: () {
-            // Get.to(() => DaysCoursePage(
-            //       coID: context.read<AppData>().coID.toString(),
-            //       isVisible: widget.isVisible,
-            //     ));
             Navigator.pop(context);
           },
         ),
+        title: Text(
+          "เติมเงิน",
+          style: Theme.of(context).textTheme.headlineMedium,
+        ),
       ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Text("กรุณาใส่จำนวนเงิน",
-                style: Theme.of(context).textTheme.titleLarge),
-            Padding(
-              padding: const EdgeInsets.only(right: 20, left: 20),
-              child:
-                  WidgetTextFieldIntnotmax(controller: _money, labelText: ''),
-            ),
-            Visibility(
-              visible: _isvisible,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: [
-                  Padding(
-                    padding:
-                        const EdgeInsets.only(bottom: 10, left: 20, right: 23),
-                    child: Text(
-                      "ขั้นต่ำ 1 บาท",
-                      style: TextStyle(
-                          color: Theme.of(context).colorScheme.error,
-                          fontSize: 16),
-                    ),
+      body: Stack(
+        children: [
+          Container(
+            height: double.infinity,
+            width: double.infinity,
+            color: Color.fromARGB(255, 255, 225, 194),
+            // decoration: BoxDecoration(
+            //   image: DecorationImage(
+            //     image: ExactAssetImage("assets/images/wall.jpg"),
+            //     fit: BoxFit.fitWidth,
+            //   ),
+            // ),
+          ),
+
+          Padding(
+            padding: EdgeInsets.only(
+                top: MediaQuery.of(context).size.height * 0.2,
+                left: 25,
+                right: 25),
+            child: Container(
+              height: MediaQuery.of(context).size.height * 0.35,
+              decoration: BoxDecoration(
+                  boxShadow: [
+                    BoxShadow(
+                      color: Color.fromARGB(255, 196, 196, 196),
+                      blurRadius: 20.0,
+                      spreadRadius: 1,
+                      offset: Offset(
+                        0,
+                        1,
+                      ),
+                    )
+                  ],
+                  color: Color.fromARGB(255, 255, 183, 106),
+                  borderRadius: BorderRadius.circular(40)
+                  //more than 50% of width makes circle
                   ),
-                ],
+              child: SingleChildScrollView(
+                child: Column(
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.only(top: 20),
+                      child: Container(
+                        width: MediaQuery.of(context).size.width * 0.35,
+                        height: MediaQuery.of(context).size.height * 0.12,
+                        decoration: BoxDecoration(
+                          image: DecorationImage(
+                            image: ExactAssetImage("assets/images/money.png"),
+                            fit: BoxFit.cover,
+                          ),
+                        ),
+                      ),
+                    ),
+                    // SizedBox(
+                    //       width: MediaQuery.of(context).size.width * 0.45,
+                    //       height: MediaQuery.of(context).size.height * 0.18,
+                    //       child: Image.asset("assets/images/money.png")),
+
+                    Padding(
+                      padding: const EdgeInsets.only(top: 15),
+                      child: Text("กรุณาใส่จำนวนเงิน",
+                          style: Theme.of(context).textTheme.titleLarge),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(right: 20, left: 20),
+                      child: WidgetTextFieldIntnotmax(
+                          controller: _money, labelText: ''),
+                    ),
+                    Visibility(
+                      visible: _isvisible,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.only(
+                                bottom: 10, left: 20, right: 23),
+                            child: Text(
+                              "ขั้นต่ำ 1 บาท",
+                              style: TextStyle(
+                                  color: Theme.of(context).colorScheme.error,
+                                  fontSize: 16),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(top: 15),
+                      child: FilledButton(
+                          onPressed: () async {
+                            //Double money = double.parse(_money.text);
+                            log("inputmoneyT" + _money.text);
+                            double inputmoney = double.parse(_money.text);
+                            log("inputmoney" + inputmoney.toString());
+                            if (inputmoney < 1 || _money.text.isEmpty) {
+                              setState(() {
+                                _isvisible = true;
+                              });
+                            } else {
+                              WalletUser walletUser = WalletUser(
+                                  money: double.parse(_money.text),
+                                  referenceNo: referenceNo);
+                              log(jsonEncode(walletUser));
+                              insertWallet = await walletService.insertWallet(
+                                  uid.toString(), walletUser);
+                              moduleResult = insertWallet.data;
+                              log(jsonEncode(moduleResult.result));
+                              if (moduleResult.result == "1") {
+                                // ignore: use_build_context_synchronously
+                                //showDialogRowsAffected(context, "บันทึกสำเร็จ");
+                                pushNewScreen(
+                                  context,
+                                  screen: getQrcode(
+                                    money: double.parse(_money.text),
+                                    refNo: referenceNo,
+                                  ),
+                                  withNavBar: true,
+                                );
+                              } else {
+                                CircularProgressIndicator();
+                              }
+                            }
+                          },
+                          child:
+                              Text("เติมเงิน", style: TextStyle(fontSize: 16))),
+                    ),
+                  ],
+                ),
               ),
             ),
-            Padding(
-              padding: const EdgeInsets.only(top: 18),
-              child: FilledButton(
-                  onPressed: () async {
-                    //Double money = double.parse(_money.text);
-                    log("inputmoneyT" + _money.text);
-                    double inputmoney = double.parse(_money.text);
-                    log("inputmoney" + inputmoney.toString());
-                    if (inputmoney < 1 || _money.text.isEmpty) {
-                      setState(() {
-                        _isvisible = true;
-                      });
-                    } else {
-                      WalletUser walletUser = WalletUser(
-                          money: double.parse(_money.text),
-                          referenceNo: referenceNo);
-                      log(jsonEncode(walletUser));
-                      insertWallet = await walletService.insertWallet(
-                          uid.toString(), walletUser);
-                      moduleResult = insertWallet.data;
-                      log(jsonEncode(moduleResult.result));
-                      if (moduleResult.result == "1") {
-                        // ignore: use_build_context_synchronously
-                        //showDialogRowsAffected(context, "บันทึกสำเร็จ");
-                        pushNewScreen(
-                          context,
-                          screen: getQrcode(
-                            money: double.parse(_money.text),
-                            refNo: referenceNo,
-                          ),
-                          withNavBar: true,
-                        );
-                      } else {
-                        CircularProgressIndicator();
-                      }
-                    }
-                  },
-                  child: Text("เติมเงิน", style: TextStyle(fontSize: 16))),
-            ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }

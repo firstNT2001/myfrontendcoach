@@ -4,11 +4,8 @@ import 'package:custom_rating_bar/custom_rating_bar.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
 import 'package:persistent_bottom_nav_bar_v2/persistent-tab-view.dart';
 import 'package:provider/provider.dart';
-import 'package:retrofit/retrofit.dart';
 
 import '../../../../model/response/md_Coach_get.dart';
 
@@ -402,7 +399,7 @@ class _WidgetsearchState extends State<Widgetsearch> {
       future: loadDataMethod,
       builder: (context, snapshot) {
         if (snapshot.connectionState != ConnectionState.done) {
-          return const Center(child: CircularProgressIndicator());
+          return Container();
         } else {
           return Column(
             children: coaches

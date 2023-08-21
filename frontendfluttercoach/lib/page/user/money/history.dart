@@ -158,18 +158,18 @@ class _HistoryWalletState extends State<HistoryWallet> {
                           ),
                         ),
                         Padding(
-                          padding:  EdgeInsets.only(left: 100,top: MediaQuery.of(context).size.height * 0.035),
+                          padding:  EdgeInsets.only(left: 100,top: MediaQuery.of(context).size.height * 0.04),
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text("ยอดเงินคงเหลือ",
                                 style: const TextStyle(
-                                    fontSize: 25, fontWeight: FontWeight.w900, color: Color.fromARGB(255, 255, 255, 255),),
+                                    fontSize: 20, fontWeight: FontWeight.w900, color: Color.fromARGB(255, 255, 255, 255),),
                               ),
                               Text(
                                 customer.first.price.toString()+" บาท",
                                 style: const TextStyle(
-                                    fontSize: 45, fontWeight: FontWeight.w900, color: Color.fromARGB(255, 255, 255, 255),),
+                                    fontSize: 43, fontWeight: FontWeight.w900, color: Color.fromARGB(255, 255, 255, 255),),
                               ),
                             ],
                           ),

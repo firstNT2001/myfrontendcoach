@@ -7,7 +7,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:frontendfluttercoach/page/user/profilecoach.dart';
-import 'package:get/get.dart';
 import 'package:in_app_notification/in_app_notification.dart';
 import 'package:intl/intl.dart';
 import 'package:persistent_bottom_nav_bar_v2/persistent-tab-view.dart';
@@ -26,7 +25,6 @@ import '../../widget/notificationBody.dart';
 import 'money/money.dart';
 import 'mycourse/Widget/widget_loadScore.dart';
 import 'mycourse/Widget/widget_loadreview.dart';
-import 'mycourse/mycourse.dart';
 
 class showCousePage extends StatefulWidget {
   showCousePage({super.key, required this.namecourse});
@@ -434,32 +432,6 @@ class _showCousePageState extends State<showCousePage> {
 
                                           //   )
                                           // ]),
-                                        ),
-                                      ),
-                                      Padding(
-                                        padding: EdgeInsets.only(
-                                            left: MediaQuery.of(context)
-                                                    .size
-                                                    .width *
-                                                0.37),
-                                        child: SizedBox(
-                                          child: Row(children: [
-                                            const Icon(
-                                                FontAwesomeIcons.coins),
-                                            Padding(
-                                              padding:
-                                                  const EdgeInsets.only(
-                                                      left: 5, top: 6),
-                                              child: Text(
-                                                  courses.first.price
-                                                          .toString() +
-                                                      " บาท",
-                                                  style: const TextStyle(
-                                                      fontSize: 16,
-                                                      fontWeight:
-                                                          FontWeight.w600)),
-                                            )
-                                          ]),
                                         ),
                                       ),
                                     ],
