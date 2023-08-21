@@ -52,34 +52,61 @@ class _WidgetHistoryState extends State<WidgetHistory> {
         future: loadDataMethod, // 3.1 object ของ async method
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.done) {
-            return Padding(
-              padding: const EdgeInsets.only(left: 18,right: 18),
-              child: ListView.builder(
-                  shrinkWrap: true,
-                  itemCount: history.length,
-                  itemBuilder: (context, index) {
-                    money = history[index].amount*1000;
-                    String day = history[index].date.substring(0, 2);
-
-                    String month = history[index].date.substring(2, 4);
-                    String year = history[index].date.substring(4);
-
-                    DateTime dateTime =
-                        DateTime.parse("$year-$month-$day");
-                    thaiDate(dateTime.toString());
-                    //DateTime time =  DateFormat("ddMMyyyy").parse(history[index].date);
-                    final listhis = history[index];
-                    return Card(
-                      child: ListTile(
-                        leading: Icon(FontAwesomeIcons.clockRotateLeft),
-                        title: Text(thaiDate(dateTime.toString())),
-                        subtitle: Text(
-                          "+ ${money} บาท",
-                          style: TextStyle(color: Colors.green),
-                        ),
-                      ),
-                    );
-                  }),
+            return Container(
+              width: MediaQuery.of(context).size.width,
+              height:MediaQuery.of(context).size.height,
+                decoration: const BoxDecoration(
+                    borderRadius: BorderRadius.only(
+                        topLeft: Radius.circular(40),
+                        topRight: Radius.circular(40)),
+                    color: Colors.white),
+              child: Padding(
+                padding: const EdgeInsets.only(left: 18,right: 18),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const Padding(
+                padding: EdgeInsets.only( top: 20,bottom: 8),
+                child: Text(
+                  "ประวัติการชำระเงิน",
+                  style: TextStyle(
+                      fontSize: 20, fontWeight: FontWeight.bold),
+                ),
+              ),
+                    ListView.builder(
+                        shrinkWrap: true,
+                        itemCount: history.length,
+                        itemBuilder: (context, index) {
+                          money = history[index].amount*1000;
+                          String day = history[index].date.substring(0, 2);
+            
+                          String month = history[index].date.substring(2, 4);
+                          String year = history[index].date.substring(4);
+            
+                          DateTime dateTime =
+                              DateTime.parse("$year-$month-$day");
+                          thaiDate(dateTime.toString());
+                          //DateTime time =  DateFormat("ddMMyyyy").parse(history[index].date);
+                          final listhis = history[index];
+                          return Padding(
+                            padding: const EdgeInsets.only(bottom: 8),
+                            child: Card(
+                              color: Color.fromARGB(255, 255, 208, 165),
+                              elevation: 5,
+                              child: ListTile(
+                                leading: Icon(FontAwesomeIcons.clockRotateLeft),
+                                title: Text(thaiDate(dateTime.toString()),style: TextStyle(fontSize: 16,fontWeight: FontWeight.w600)),
+                                subtitle: Text(
+                                  "+ ${money} บาท",
+                                  style: TextStyle(color: Colors.green,fontSize: 16),
+                                ),
+                              ),
+                            ),
+                          );
+                        }),
+                  ],
+                ),
+              ),
             );
           } else {
             return const Center(child: CircularProgressIndicator());
