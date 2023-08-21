@@ -45,11 +45,14 @@ class _MyCousesState extends State<MyCouses> {
   void initState() {
     // TODO: implement initState
     super.initState();
+  
+      
+  
     progessService =
         ProgessbarService(Dio(), baseUrl: context.read<AppData>().baseurl);
     _courseService = context.read<AppData>().courseService;
-    loadDataMethod = loadData();
     
+    loadDataMethod = loadData();
     today = DateTime(nows.year, nows.month, nows.day);
   }
 
@@ -116,155 +119,165 @@ class _MyCousesState extends State<MyCouses> {
         if (snapshot.connectionState != ConnectionState.done) {
           return const Center(child: CircularProgressIndicator());
         } else {
-          return ListView.builder(
-            shrinkWrap: true,
-            itemCount: courses.length,
-            itemBuilder: (context, index) {
-              final listcours = courses[index];
-              final listpercents = listpercent[index];
-              final listshowpercents = listpercent[index]*100;
-              
-              return Padding(
-                padding: const EdgeInsets.only(left: 10, right: 10, bottom: 20),
-                child: InkWell(
-                  onTap: () {
-                    context.read<AppData>().cid = listcours.course.coachId;
-                    log(listcours.customerId.toString());
-                    log(listcours.course.image);
-                    String stExpirationDay = listcours.course.expirationDate;
-                    context.read<AppData>().idcourse = listcours.course.coId;
-                    //context.read<AppData>().cid = listcours.coach.cid;
-                    pushNewScreen(
-                      context,
-                      screen: ShowDayMycourse(
-                        coID: listcours.course.coId,
-                        img: listcours.course.image,
-                        namecourse: listcours.course.name,
-                        namecoach: listcours.course.coach.fullName,
-                        detail: listcours.course.details,
-                        expirationDate: stExpirationDay,
-                        dayincourse: listcours.course.days) ,
-                      withNavBar: true,
-                    );    
-                  },
-                  child: Container(
-                    alignment: Alignment.center,
-                    width: double.infinity,
-                    child: AspectRatio(
-                      aspectRatio: 16 / 9,
-                      child: Stack(
-                        children: <Widget>[
-                          Container(
-                            alignment: Alignment.topCenter,
-                            child: AspectRatio(
-                                aspectRatio: 16 / 9,
-                                child: Container(
-                                  decoration: BoxDecoration(
-                                    color: const Color(0xff7c94b6),
-                                    image: DecorationImage(
-                                        image: NetworkImage(
-                                            listcours.course.image),
-                                        fit: BoxFit.cover),
-                                    borderRadius: BorderRadius.circular(20),
-                                  ),
-                                )),
-                            //color: Colors.white,
-                          ),
-                          Container(
-                            padding: const EdgeInsets.all(5.0),
-                            alignment: Alignment.bottomCenter,
-                            decoration: BoxDecoration(
-                              gradient: LinearGradient(
-                                begin: Alignment.topCenter,
-                                end: Alignment.bottomCenter,
-                                colors: <Color>[
-                                  const Color.fromARGB(255, 0, 0, 0)
-                                      .withAlpha(0),
-                                  const Color.fromARGB(49, 0, 0, 0),
-                                  const Color.fromARGB(127, 0, 0, 0)
-                                ],
-                              ),
-                              borderRadius: BorderRadius.circular(20),
-                            ),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              mainAxisAlignment: MainAxisAlignment.end,
-                              children: [
-                                Text(
-                                  listcours.course.name,
-                                  style: Theme.of(context)
-                                      .textTheme
-                                      .titleLarge!
-                                      .copyWith(color: Colors.white),
-                                ),
-                                Row(
-                                  children: [
-                                    const Padding(
-                                      padding: EdgeInsets.only(right: 8),
-                                      child: Icon(
-                                        FontAwesomeIcons.solidUser,
-                                        size: 16.0,
-                                        color: Colors.white,
+          return RefreshIndicator(
+            onRefresh: () async{
+              setState(() {
+                loadDataMethod = loadData();
+              });
+            },
+            child: ListView.builder(
+              shrinkWrap: true,
+              itemCount: courses.length,
+              itemBuilder: (context, index) {
+                final listcours = courses[index];
+                final listpercents = listpercent[index];
+                final listshowpercents = listpercent[index]*100;
+                
+                return Padding(
+                  padding: const EdgeInsets.only(left: 10, right: 10, bottom: 20),
+                  child: InkWell(
+                    onTap: () {
+                      context.read<AppData>().cid = listcours.course.coachId;
+                      log(listcours.customerId.toString());
+                      log(listcours.course.image);
+                      String stExpirationDay = listcours.course.expirationDate;
+                      context.read<AppData>().idcourse = listcours.course.coId;
+                      //context.read<AppData>().cid = listcours.coach.cid;
+                      pushNewScreen(
+                        context,
+                        screen: ShowDayMycourse(
+                          coID: listcours.course.coId,
+                          img: listcours.course.image,
+                          namecourse: listcours.course.name,
+                          namecoach: listcours.course.coach.fullName,
+                          detail: listcours.course.details,
+                          expirationDate: stExpirationDay,
+                          dayincourse: listcours.course.days) ,
+                        withNavBar: true,
+                      );    
+                    },
+                    child: Card(
+                      elevation: 10,
+                      child: Container(
+                        alignment: Alignment.center,
+                        width: double.infinity,
+                        child: AspectRatio(
+                          aspectRatio: 16 / 9,
+                          child: Stack(
+                            children: <Widget>[
+                              Container(
+                                alignment: Alignment.topCenter,
+                                child: AspectRatio(
+                                    aspectRatio: 16 / 9,
+                                    child: Container(
+                                      decoration: BoxDecoration(
+                                        color: const Color(0xff7c94b6),
+                                        image: DecorationImage(
+                                            image: NetworkImage(
+                                                listcours.course.image),
+                                            fit: BoxFit.cover),
+                                        borderRadius: BorderRadius.circular(20),
                                       ),
-                                    ),
+                                    )),
+                                //color: Colors.white,
+                              ),
+                              Container(
+                                padding: const EdgeInsets.all(5.0),
+                                alignment: Alignment.bottomCenter,
+                                decoration: BoxDecoration(
+                                  gradient: LinearGradient(
+                                    begin: Alignment.topCenter,
+                                    end: Alignment.bottomCenter,
+                                    colors: <Color>[
+                                      const Color.fromARGB(255, 0, 0, 0)
+                                          .withAlpha(0),
+                                      const Color.fromARGB(49, 0, 0, 0),
+                                      const Color.fromARGB(127, 0, 0, 0)
+                                    ],
+                                  ),
+                                  borderRadius: BorderRadius.circular(20),
+                                ),
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  mainAxisAlignment: MainAxisAlignment.end,
+                                  children: [
                                     Text(
-                                      listcours.course.coach.fullName,
+                                      listcours.course.name,
                                       style: Theme.of(context)
                                           .textTheme
-                                          .bodyLarge!
+                                          .titleLarge!
                                           .copyWith(color: Colors.white),
                                     ),
+                                    Row(
+                                      children: [
+                                        const Padding(
+                                          padding: EdgeInsets.only(right: 8),
+                                          child: Icon(
+                                            FontAwesomeIcons.solidUser,
+                                            size: 16.0,
+                                            color: Colors.white,
+                                          ),
+                                        ),
+                                        Text(
+                                          listcours.course.coach.fullName,
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .bodyLarge!
+                                              .copyWith(color: Colors.white),
+                                        ),
+                                      ],
+                                    ),
+                                    Padding(
+                                      padding:
+                                          EdgeInsets.only(bottom: 4.0, top: 4.0),
+                                      child: FittedBox(
+                                        child: LinearPercentIndicator(
+                                          width: MediaQuery.of(context).size.width *
+                                              0.65,
+                                          fillColor:
+                                              Color.fromARGB(0, 255, 255, 255),
+                                          lineHeight: 10.0,
+                                          percent: listpercents,
+                                          trailing: Text(
+                                            listshowpercents.toString()+"%",
+                                            style: TextStyle(
+                                                fontSize: 16.0,
+                                                color: Colors.white),
+                                          ),
+                                          barRadius: Radius.circular(7),
+                                          backgroundColor: Colors.grey,
+                                          progressColor:
+                                              Theme.of(context).colorScheme.primary,
+                                        ),
+                                      ),
+                                    ),
+                                    // Padding(
+                                    //   padding: const EdgeInsets.only(
+                                    //       bottom: 4.0, top: 4.0),
+                                    //   child: LinearPercentIndicator(
+                                    //     width: 280.0,
+                                    //     lineHeight: 8.0,
+                                    //     percent: 0.1,
+                                    //     backgroundColor:
+                                    //         const Color.fromRGBO(255, 249, 249, 1),
+                                    //     progressColor: Colors.greenAccent,
+                                    //   ),
+                                    // ),
                                   ],
                                 ),
-                                Padding(
-                                  padding:
-                                      EdgeInsets.only(bottom: 4.0, top: 4.0),
-                                  child: FittedBox(
-                                    child: LinearPercentIndicator(
-                                      width: MediaQuery.of(context).size.width *
-                                          0.65,
-                                      fillColor:
-                                          Color.fromARGB(0, 255, 255, 255),
-                                      lineHeight: 10.0,
-                                      percent: listpercents,
-                                      trailing: Text(
-                                        listshowpercents.toString()+"%",
-                                        style: TextStyle(
-                                            fontSize: 16.0,
-                                            color: Colors.white),
-                                      ),
-                                      barRadius: Radius.circular(7),
-                                      backgroundColor: Colors.grey,
-                                      progressColor:
-                                          Theme.of(context).colorScheme.primary,
-                                    ),
-                                  ),
-                                ),
-                                // Padding(
-                                //   padding: const EdgeInsets.only(
-                                //       bottom: 4.0, top: 4.0),
-                                //   child: LinearPercentIndicator(
-                                //     width: 280.0,
-                                //     lineHeight: 8.0,
-                                //     percent: 0.1,
-                                //     backgroundColor:
-                                //         const Color.fromRGBO(255, 249, 249, 1),
-                                //     progressColor: Colors.greenAccent,
-                                //   ),
-                                // ),
-                              ],
-                            ),
-                          )
-                        ],
+                              )
+                            ],
+                          ),
+                        ),
                       ),
                     ),
                   ),
-                ),
-              );
-            },
+                );
+              },
+            ),
           );
         }
       },

@@ -71,10 +71,10 @@ class _showFoodState extends State<showFood> {
     super.initState();
     coachID = context.read<AppData>().cid;
     uid = context.read<AppData>().uid;
-    
+
     did = context.read<AppData>().did;
     log("did$did");
-    log("indexSeq"+widget.indexSeq.toString());
+    log("indexSeq" + widget.indexSeq.toString());
     coID = context.read<AppData>().idcourse;
     requestService =
         RequestService(Dio(), baseUrl: context.read<AppData>().baseurl);
@@ -94,30 +94,34 @@ class _showFoodState extends State<showFood> {
         child: Scaffold(
           appBar: AppBar(
             leading: IconButton(
-          icon: const Icon(
-            FontAwesomeIcons.chevronLeft,
-          ),
-          onPressed: () {
-            // Get.to(() => DaysCoursePage(
-            //       coID: context.read<AppData>().coID.toString(),
-            //       isVisible: widget.isVisible,
-            //     ));
-            Navigator.pop(context);
-          },
-        ),
-        title: Text(
-          "วันที่ "+(widget.indexSeq+1).toString(),
-          style: Theme.of(context).textTheme.headlineMedium,
-        ),
+              icon: const Icon(
+                FontAwesomeIcons.chevronLeft,
+              ),
+              onPressed: () {
+                // Get.to(() => DaysCoursePage(
+                //       coID: context.read<AppData>().coID.toString(),
+                //       isVisible: widget.isVisible,
+                //     ));
+                Navigator.pop(context);
+              },
+            ),
+            title: Text(
+              "วันที่ " + (widget.indexSeq + 1).toString(),
+              style: Theme.of(context).textTheme.headlineMedium,
+            ),
             automaticallyImplyLeading: false,
             bottom: const TabBar(tabs: [
               Tab(
-                icon: Icon(Icons.fitness_center_sharp),
-                text: "คลิปออกกำลังกาย",
+                icon: Icon(
+                  FontAwesomeIcons.dumbbell,
+                ),
+                text: 'คลิปออกกำลังกาย',
               ),
               Tab(
-                icon: Icon(Icons.fastfood_outlined),
-                text: "เมนูอาหาร",
+                icon: Icon(
+                  FontAwesomeIcons.utensils,
+                ),
+                text: 'เมนูอาหาร',
               ),
             ]),
           ),
@@ -150,40 +154,59 @@ class _showFoodState extends State<showFood> {
             Padding(
               padding: const EdgeInsets.all(8.0),
               child: ListView(
-              
-               
                 children: [
                   const Padding(
-                    padding: EdgeInsets.only(left: 8,top: 15),
-                    child: Text("มื้อเช้า",style: TextStyle(fontSize:20 ,fontWeight: FontWeight.w600),),
+                    padding: EdgeInsets.only(left: 8, top: 15),
+                    child: Text(
+                      "มื้อเช้า",
+                      style:
+                          TextStyle(fontSize: 20, fontWeight: FontWeight.w600),
+                    ),
                   ),
                   SizedBox(
                     height: 200,
                     child: Padding(
                       padding: const EdgeInsets.all(8.0),
-                      child: Widgetloadfood(did: did, time: '1',),
+                      child: Widgetloadfood(
+                        did: did,
+                        time: '1',
+                      ),
                     ),
                   ),
                   const Padding(
-                    padding:  EdgeInsets.only(left: 8,top: 15),
-                    child: Text("มื้อเที่ยง",style: TextStyle(fontSize:20 ,fontWeight: FontWeight.w600),),
+                    padding: EdgeInsets.only(left: 8, top: 15),
+                    child: Text(
+                      "มื้อเที่ยง",
+                      style:
+                          TextStyle(fontSize: 20, fontWeight: FontWeight.w600),
+                    ),
                   ),
                   SizedBox(
                     height: 200,
                     child: Padding(
                       padding: const EdgeInsets.all(8.0),
-                      child: Widgetloadfood(did: did, time: '2',),
+                      child: Widgetloadfood(
+                        did: did,
+                        time: '2',
+                      ),
                     ),
                   ),
                   const Padding(
-                    padding:  EdgeInsets.only(left: 8,top: 15),
-                    child: Text("มื้อเย็น",style: TextStyle(fontSize:20 ,fontWeight: FontWeight.w600),),
+                    padding: EdgeInsets.only(left: 8, top: 15),
+                    child: Text(
+                      "มื้อเย็น",
+                      style:
+                          TextStyle(fontSize: 20, fontWeight: FontWeight.w600),
+                    ),
                   ),
                   SizedBox(
                     height: 200,
                     child: Padding(
                       padding: const EdgeInsets.all(8.0),
-                      child: Widgetloadfood(did: did, time: '3',),
+                      child: Widgetloadfood(
+                        did: did,
+                        time: '3',
+                      ),
                     ),
                   ),
                 ],
@@ -431,6 +454,7 @@ class _showFoodState extends State<showFood> {
           }
         });
   }
+
   void _bindPage(BuildContext ctx) {
     //target widget
     SmartDialog.show(builder: (_) {
@@ -464,7 +488,8 @@ class _showFoodState extends State<showFood> {
                 decoration: InputDecoration(
                   hintText: "กรุณาใส่ข้อความ",
                   focusedBorder: OutlineInputBorder(
-                    borderSide: const BorderSide(width: 2, color: Colors.redAccent),
+                    borderSide:
+                        const BorderSide(width: 2, color: Colors.redAccent),
                     borderRadius: BorderRadius.circular(12.0),
                   ),
                   enabledBorder: OutlineInputBorder(
@@ -505,10 +530,10 @@ class _showFoodState extends State<showFood> {
                       // context.read<AppData>().idcourse = coID;
                       // log(days.first.did.toString());
                       pushNewScreen(
-                          context,
-                          screen: const MyCouses(),
-                          withNavBar: true,
-                        );
+                        context,
+                        screen: const MyCouses(),
+                        withNavBar: true,
+                      );
                     },
                     //     widget.coID.toString()
                     child: const Text('ยืนยัน'),

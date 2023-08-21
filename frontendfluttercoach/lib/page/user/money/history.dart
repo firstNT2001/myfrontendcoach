@@ -43,49 +43,62 @@ class _HistoryWalletState extends State<HistoryWallet> {
   @override
   Widget build(BuildContext context) {
     return SafeArea(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+      child: Stack(
         children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.end,
+          Container(
+            height: double.infinity,
+            color: const Color.fromARGB(255, 255, 233, 169),
+          ),
+          // Container(
+          //   height: MediaQuery.of(context).size.height * 0.25,
+          //   decoration: const BoxDecoration(),
+          //   child: ClipRRect(
+          //     borderRadius: const BorderRadius.only(
+          //       bottomLeft: Radius.circular(40.0),
+          //       bottomRight: Radius.circular(40.0),
+          //     ),
+          //     child: Container(
+          //       decoration:
+          //           BoxDecoration(color: Color.fromARGB(255, 247, 142, 30)),
+          //       height: MediaQuery.of(context).size.height * 0.218,
+          //     ),
+          //   ),
+          // ),
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: IconButton(
-                    onPressed: () {
-                     pushNewScreen(
-              context,
-              screen: const addCoin(),
-              withNavBar: true,
-            );
-                     
-                    },
-                    icon: Icon(
-                      FontAwesomeIcons.circlePlus,
-                      size: 40,
-                      color: Theme.of(context).colorScheme.primary,
-                    )),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: IconButton(
+                        onPressed: () {
+                          pushNewScreen(
+                            context,
+                            screen: const addCoin(),
+                            withNavBar: true,
+                          );
+                        },
+                        icon: const Icon(
+                          FontAwesomeIcons.circlePlus,
+                          size: 40,color: Color.fromARGB(255, 247, 142, 30),
+                        )),
+                  ),
+                ],
               ),
+              Padding(
+                padding: const EdgeInsets.only(top: 1),
+                child: showMoney(),
+              ),
+              
+              Expanded(
+                child: WidgetHistory(
+                  uid: uid,
+                ),
+              )
             ],
           ),
-          Padding(
-            padding: const EdgeInsets.only(top: 12),
-            child: showMoney(),
-          ),
-          const Padding(
-            padding: EdgeInsets.only(left: 10, top: 15),
-            child: Row(
-              children: [
-                Padding(
-                  padding: EdgeInsets.only(left: 8,bottom: 8),
-                  child: Text("ประวัติการชำระเงิน",style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),),
-                ),
-              ],
-            ),
-          ),
-          WidgetHistory(
-            uid: uid,
-          )
         ],
       ),
     );
@@ -111,16 +124,18 @@ class _HistoryWalletState extends State<HistoryWallet> {
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.done) {
             return Padding(
-              padding: const EdgeInsets.only(left: 30, right: 30, bottom: 20),
-              child: Container(
+              padding: const EdgeInsets.only(left: 20, right: 30, bottom: 20),
+              child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Container(
                 height: 158.0,
                 width: 400.0,
-                decoration: BoxDecoration(
-                  color: Theme.of(context).colorScheme.secondaryContainer,
-                  borderRadius: const BorderRadius.all(
+                decoration: const BoxDecoration(
+                  color: Color.fromARGB(255, 247, 142, 30),
+                  borderRadius: BorderRadius.all(
                     Radius.circular(30),
                   ),
-                  boxShadow: const [
+                  boxShadow: [
                     BoxShadow(
                       color: Colors.grey,
                       blurRadius: 4.0, // soften the shadow
@@ -132,41 +147,64 @@ class _HistoryWalletState extends State<HistoryWallet> {
                     ),
                   ],
                 ),
-                child: Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      const Padding(
-                        padding:
-                            EdgeInsets.only(left: 30, right: 15, bottom: 15),
-                        child: Text(
-                          "ยอดเงินคงเหลือ",
-                          style: TextStyle(
-                              fontSize: 16, fontWeight: FontWeight.bold),
+                    child: Stack(
+                      children: [
+                         Padding(
+                          padding: EdgeInsets.only(top:MediaQuery.of(context).size.height * 0.03),
+                          child: Icon(
+                            FontAwesomeIcons.bahtSign,
+                            size: 100,
+                            color: Color.fromARGB(227, 255, 255, 255),
+                          ),
                         ),
-                      ),
-                      Row(
-                        children: [
-                          const Padding(
-                            padding: EdgeInsets.only(left: 30, right: 5),
-                            child: Icon(
-                              FontAwesomeIcons.bahtSign,
-                              size: 35,
-                            ),
+                        Padding(
+                          padding:  EdgeInsets.only(left: 100,top: MediaQuery.of(context).size.height * 0.04),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text("ยอดเงินคงเหลือ",
+                                style: const TextStyle(
+                                    fontSize: 20, fontWeight: FontWeight.w900, color: Color.fromARGB(255, 255, 255, 255),),
+                              ),
+                              Text(
+                                customer.first.price.toString()+" บาท",
+                                style: const TextStyle(
+                                    fontSize: 43, fontWeight: FontWeight.w900, color: Color.fromARGB(255, 255, 255, 255),),
+                              ),
+                            ],
                           ),
-                          Text(
-                            customer.first.price.toString(),
-                            style: const TextStyle(
-                                fontSize: 35, fontWeight: FontWeight.bold),
-                          ),
-                        ],
-                      ),
-                    ],
+                        ),
+                      ],
+                    ),
+                  )
+                  // Column(
+                  //   mainAxisAlignment: MainAxisAlignment.center,
+                  //   crossAxisAlignment: CrossAxisAlignment.start,
+                  //   children: [
+                  //     const Padding(
+                  //       padding:
+                  //           EdgeInsets.only(left: 30, right: 15, bottom: 15),
+                  //       child: Text(
+                  //         "ยอดเงินคงเหลือ",
+                  //         style: TextStyle(
+                  //             fontSize: 16, fontWeight: FontWeight.bold),
+                  //       ),
+                  //     ),
+                  //     Row(
+                  //       children: [
+                  //         const Padding(
+                  //           padding: EdgeInsets.only(left: 30, right: 5),
+                  //           child: Icon(
+                  //             FontAwesomeIcons.bahtSign,
+                  //             size: 35,
+                  //           ),
+                  //         ),
+
+                  //       ],
+                  //     ),
+                  //   ],
+                  // ),
                   ),
-                ),
-              ),
             );
           } else {
             return const Center(child: CircularProgressIndicator());
