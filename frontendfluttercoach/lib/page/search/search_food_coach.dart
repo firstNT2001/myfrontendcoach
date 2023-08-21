@@ -1,8 +1,8 @@
 import 'dart:developer';
 
-import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:frontendfluttercoach/model/response/md_FoodList_get.dart';
@@ -40,17 +40,20 @@ class _SearchFoodCoachPageState extends State<SearchFoodCoachPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: SafeArea(
-          child: Column(
-        children: [
-          searchBar(context),
-          const SizedBox(height: 20),
-          Expanded(
-            child: showFood(),
-          ),
-        ],
-      )),
+    return WillPopScope(
+      onWillPop: () async => false,
+      child: Scaffold(
+        body: SafeArea(
+            child: Column(
+          children: [
+            searchBar(context),
+            const SizedBox(height: 20),
+            Expanded(
+              child: showFood(),
+            ),
+          ],
+        )),
+      ),
     );
   }
 
@@ -65,7 +68,7 @@ class _SearchFoodCoachPageState extends State<SearchFoodCoachPage> {
               FontAwesomeIcons.chevronLeft,
             ),
             onPressed: () {
-              Get.back();
+              Navigator.pop(context);
             },
           ),
           Container(
@@ -122,7 +125,6 @@ class _SearchFoodCoachPageState extends State<SearchFoodCoachPage> {
           cid: context.read<AppData>().cid.toString(),
           name: searchName.text);
       foods = datas.data;
-      
     } catch (err) {
       log('Error: $err');
     }
@@ -147,83 +149,90 @@ class _SearchFoodCoachPageState extends State<SearchFoodCoachPage> {
       itemCount: foods.length,
       itemBuilder: (context, index) {
         final listfood = foods[index];
-        return Column(
-          children: [
-            SizedBox(
-              height: MediaQuery.of(context).size.height * 0.2,
-              width: MediaQuery.of(context).size.width,
-              child: InkWell(
-                onTap: () {
-                  // pushNewScreen(
-                  //   context,
-                  //   screen: ,
-                  //   withNavBar: true,
-                  // );
-                  Get.to(() => FoodEditCoachPage(ifid: listfood.ifid));
-                },
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    if (listfood.image != '') ...{
-                      Padding(
-                          padding: const EdgeInsets.only(
-                              left: 8, right: 8, top: 5, bottom: 5),
-                          child: Center(
-                            child: ClipRRect(
-                              borderRadius:
-                                  BorderRadius.circular(20), // Image border
-                              child: SizedBox.fromSize(
-                                size: const Size.fromRadius(55), // Image radius
-                                child: Image.network(listfood.image,
-                                    fit: BoxFit.cover),
+        return Slidable(
+          endActionPane: ActionPane(motion: const StretchMotion(), children: [
+            SlidableAction(
+              onPressed: (contexts) {
+                dialogDeleteFood(context, listfood.ifid.toString());
+
+                // Navigator.pop(context);
+              },
+              backgroundColor: Theme.of(context).colorScheme.error,
+              icon: Icons.delete,
+              label: 'Delete',
+            )
+          ]),
+          child: Column(
+            children: [
+              SizedBox(
+                //height: MediaQuery.of(context).size.height * 0.2,
+                width: MediaQuery.of(context).size.width,
+                child: InkWell(
+                  onTap: () {
+                    Get.to(() => FoodEditCoachPage(ifid: listfood.ifid));
+                  },
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      if (listfood.image != '') ...{
+                        Padding(
+                            padding: const EdgeInsets.only(
+                                left: 15, right: 15, top: 5, bottom: 5),
+                            child: Center(
+                              child: ClipRRect(
+                                borderRadius:
+                                    BorderRadius.circular(20), // Image border
+                                child: SizedBox.fromSize(
+                                  size:
+                                      const Size.fromRadius(55), // Image radius
+                                  child: Image.network(listfood.image,
+                                      fit: BoxFit.cover),
+                                ),
                               ),
+                            )),
+                      } else
+                        Padding(
+                          padding: const EdgeInsets.all(10.0),
+                          child: Container(
+                              width: MediaQuery.of(context).size.width * 0.3,
+                              height: MediaQuery.of(context).size.height,
+                              decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(8),
+                                  color: Colors.pink)),
+                        ),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          SizedBox(
+                            width: MediaQuery.of(context).size.width * 0.5,
+                            child: Text(
+                              listfood.name,
+                              maxLines: 5,
+                              style: Theme.of(context).textTheme.titleMedium,
                             ),
-                          )),
-                    } else
-                      Padding(
-                        padding: const EdgeInsets.all(10.0),
-                        child: Container(
-                            width: MediaQuery.of(context).size.width * 0.3,
-                            height: MediaQuery.of(context).size.height,
-                            decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(8),
-                                color: Colors.pink)),
-                      ),
-                    Center(
-                      child: SizedBox(
-                        width: MediaQuery.of(context).size.width * 0.4,
-                        child: AutoSizeText(
-                          listfood.name,
-                          maxLines: 5,
-                          style: Theme.of(context).textTheme.titleMedium,
-                        ),
-                      ),
-                    ),
-                    const SizedBox(height: 20),
-                    Column(
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      crossAxisAlignment: CrossAxisAlignment.end,
-                      children: [
-                        IconButton(
-                          onPressed: () {
-                            dialogDeleteFood(context, listfood.ifid.toString());
-                          },
-                          icon: const Icon(
-                            FontAwesomeIcons.trash,
                           ),
-                        ),
-                      ],
-                    ),
-                  ],
+                          const SizedBox(height: 10,),
+                          Text(
+                              'แคลอรี่ ${listfood.calories.toString()}',
+                              maxLines: 5,
+                              style: const TextStyle(fontSize: 16,color: Colors.black38),
+                            ),
+                        ],
+                      ),
+                    ],
+                  ),
                 ),
               ),
-            ),
-            const Padding(
-              padding: EdgeInsets.all(16),
-              child: Divider(),
-            ),
-          ],
+              const Padding(
+                padding: EdgeInsets.only(top: 10, bottom: 10),
+                child: Divider(
+                  endIndent: 15,
+                  indent: 15,
+                ),
+              ),
+            ],
+          ),
         );
       },
     );

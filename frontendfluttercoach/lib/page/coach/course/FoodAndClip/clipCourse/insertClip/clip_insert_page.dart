@@ -146,7 +146,7 @@ class _ClipInsertPageState extends State<ClipInsertPage> {
                                                     .sequence,
                                                 isVisible: widget.isVisible,
                                               )),
-                                      ModalRoute.withName('/DaysCoursePage'),
+                                      ModalRoute.withName('/NavbarBottomCoach'),
                                     );
                                     // ignore: use_build_context_synchronously
                                     InAppNotification.show(

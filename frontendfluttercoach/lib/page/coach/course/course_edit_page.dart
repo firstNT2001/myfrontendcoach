@@ -148,22 +148,15 @@ class _CourseEditPageState extends State<CourseEditPage> {
         width: MediaQuery.of(context).size.width,
         decoration: BoxDecoration(
             borderRadius: const BorderRadius.only(
-                topLeft: Radius.circular(20), topRight: Radius.circular(20)),
+                topLeft: Radius.circular(35), topRight: Radius.circular(35)),
             boxShadow: [
               BoxShadow(
                 color: Colors.grey.shade600,
                 spreadRadius: 1,
-                blurRadius: 5,
+                blurRadius: 15,
                 offset: const Offset(0, -7),
               ),
-              BoxShadow(
-                color: Colors.grey.shade300,
-                offset: const Offset(5, 0),
-              ),
-              BoxShadow(
-                color: Colors.grey.shade300,
-                offset: const Offset(-5, 0),
-              )
+            
             ],
             color: Colors.white),
         child: Column(
@@ -316,10 +309,10 @@ class _CourseEditPageState extends State<CourseEditPage> {
                     ],
                     shape: BoxShape.circle,
                     //border: Border.all(width: 4, color: Colors.white),
-                    color: Colors.white),
+                    color: Theme.of(context).colorScheme.primary),
                 child: const Icon(
-                  FontAwesomeIcons.camera,
-                  color: Colors.black,
+                  FontAwesomeIcons.image,
+                  color: Colors.white,
                 ),
               ),
             )),
@@ -328,49 +321,29 @@ class _CourseEditPageState extends State<CourseEditPage> {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Container(
-                decoration: BoxDecoration(
-                  boxShadow: [
-                    BoxShadow(
-                        color: Colors.grey.shade600,
-                        spreadRadius: 1,
-                        blurRadius: 15)
-                  ],
+              CircleAvatar(
+                  backgroundColor: const Color.fromARGB(178, 220, 219, 219),
+                radius: 20,
+                child: IconButton(
+                  icon: const Icon(
+                    FontAwesomeIcons.chevronLeft,
+                  ),
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
                 ),
-                child: CircleAvatar(
-                  backgroundColor: Colors.white,
+              ),
+              CircleAvatar(
+                  backgroundColor: const Color.fromARGB(178, 220, 219, 219),
                   radius: 20,
                   child: IconButton(
                     icon: const Icon(
-                      FontAwesomeIcons.chevronLeft,
+                      FontAwesomeIcons.trash,
                     ),
                     onPressed: () {
-                      Navigator.pop(context);
+                      dialogCourse(context);
                     },
-                  ),
-                ),
-              ),
-              Container(
-                decoration: BoxDecoration(
-                  boxShadow: [
-                    BoxShadow(
-                        color: Colors.grey.shade600,
-                        spreadRadius: 1,
-                        blurRadius: 15)
-                  ],
-                ),
-                child: CircleAvatar(
-                    backgroundColor: Colors.white,
-                    radius: 20,
-                    child: IconButton(
-                      icon: const Icon(
-                        FontAwesomeIcons.trash,
-                      ),
-                      onPressed: () {
-                        dialogCourse(context);
-                      },
-                    )),
-              ),
+                  )),
             ],
           ),
         ),

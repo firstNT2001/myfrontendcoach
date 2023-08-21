@@ -324,7 +324,7 @@ class _LoginPageState extends State<LoginPage> {
             Padding(
               padding: const EdgeInsets.only(
                   left: 20, right: 20, top: 50, bottom: 16),
-              child: Text("Select Type ?",
+              child: Text("เลือกประเภทผู้ใช้",
                   style: Theme.of(context).textTheme.headlineSmall),
             ),
             Padding(
@@ -347,7 +347,7 @@ class _LoginPageState extends State<LoginPage> {
                             height: 100,
                             child: Image.asset("assets/images/football.png")),
                         Text(
-                          'Coach',
+                          'โค้ช',
                           style: Theme.of(context).textTheme.titleMedium,
                         ),
                       ],
@@ -366,7 +366,7 @@ class _LoginPageState extends State<LoginPage> {
                             child:
                                 Image.asset("assets/images/single-person.png")),
                         Text(
-                          'User',
+                          'ผู้ใช้ทั้วไป',
                           style: Theme.of(context).textTheme.titleMedium,
                         ),
                       ],
@@ -421,7 +421,7 @@ class _LoginPageState extends State<LoginPage> {
                             height: 100,
                             child: Image.asset("assets/images/football.png")),
                         Text(
-                          'Coach',
+                          'โค้ช',
                           style: Theme.of(context).textTheme.titleMedium,
                         ),
                       ],
@@ -441,7 +441,7 @@ class _LoginPageState extends State<LoginPage> {
                             child:
                                 Image.asset("assets/images/single-person.png")),
                         Text(
-                          'User',
+                          'ผู้ใช้ทั้วไป',
                           style: Theme.of(context).textTheme.titleMedium,
                         ),
                       ],

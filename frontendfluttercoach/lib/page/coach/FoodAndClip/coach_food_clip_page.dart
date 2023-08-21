@@ -6,6 +6,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:in_app_notification/in_app_notification.dart';
+import 'package:persistent_bottom_nav_bar_v2/persistent-tab-view.dart';
 
 import 'package:provider/provider.dart';
 import 'package:quickalert/models/quickalert_type.dart';
@@ -175,7 +176,16 @@ class _FoodCoachPageState extends State<FoodCoachPage> {
       padding: const EdgeInsets.all(8.0),
       child: GestureDetector(
         onTap: () {
-          Get.to(() => const SearchClipCoachPage());
+          pushNewScreen(
+            context,
+            screen: const SearchClipCoachPage(),
+            withNavBar: true,
+          ).then((value) {
+            log('ponds');
+            setState(() {
+              loadClipDataMethod = loadClipData();
+            });
+          });
         },
         child: Container(
             width: MediaQuery.of(context).size.width,
@@ -194,7 +204,16 @@ class _FoodCoachPageState extends State<FoodCoachPage> {
               children: [
                 TextButton.icon(
                   onPressed: () {
-                    Get.to(() => const SearchClipCoachPage());
+                    pushNewScreen(
+                      context,
+                      screen: const SearchClipCoachPage(),
+                      withNavBar: true,
+                    ).then((value) {
+                      log('ponds');
+                      setState(() {
+                        loadClipDataMethod = loadClipData();
+                      });
+                    });
                   },
                   icon: const Icon(
                     FontAwesomeIcons.magnifyingGlass,
@@ -216,7 +235,16 @@ class _FoodCoachPageState extends State<FoodCoachPage> {
       padding: const EdgeInsets.all(8.0),
       child: GestureDetector(
         onTap: () {
-          Get.to(() => const SearchFoodCoachPage());
+          pushNewScreen(
+            context,
+            screen: const SearchFoodCoachPage(),
+            withNavBar: true,
+          ).then((value) {
+            log('ponds');
+            setState(() {
+              loadFoodDataMethod = loadFoodData();
+            });
+          });
         },
         child: Container(
             width: MediaQuery.of(context).size.width,
@@ -235,7 +263,16 @@ class _FoodCoachPageState extends State<FoodCoachPage> {
               children: [
                 TextButton.icon(
                   onPressed: () {
-                    Get.to(() => const SearchFoodCoachPage());
+                    pushNewScreen(
+                      context,
+                      screen: const SearchFoodCoachPage(),
+                      withNavBar: true,
+                    ).then((value) {
+                      log('ponds');
+                      setState(() {
+                        loadFoodDataMethod = loadFoodData();
+                      });
+                    });
                   },
                   icon: const Icon(
                     FontAwesomeIcons.magnifyingGlass,
@@ -495,9 +532,9 @@ class _FoodCoachPageState extends State<FoodCoachPage> {
     QuickAlert.show(
       context: context,
       type: QuickAlertType.confirm,
-      text: 'Do you want to delete?',
-      confirmBtnText: 'Yes',
-      cancelBtnText: 'No',
+      text: 'ต้องการลบเมนูอาหารหรือไม',
+      confirmBtnText: 'ตกลง',
+      cancelBtnText: 'ยกเลิก',
       confirmBtnColor: Theme.of(context).colorScheme.primary,
       onConfirmBtnTap: () async {
         var response = await _listfoodService.deleteListFood(ifid);
@@ -527,9 +564,9 @@ class _FoodCoachPageState extends State<FoodCoachPage> {
     QuickAlert.show(
       context: context,
       type: QuickAlertType.confirm,
-      text: 'Do you want to delete?',
-      confirmBtnText: 'Yes',
-      cancelBtnText: 'No',
+      text: 'ต้องการลบคลิปหรือไม',
+      confirmBtnText: 'ตกลง',
+      cancelBtnText: 'ยกเลิก',
       confirmBtnColor: Theme.of(context).colorScheme.primary,
       onConfirmBtnTap: () async {
         var response = await _listClipService.deleteListClip(iCpid);
