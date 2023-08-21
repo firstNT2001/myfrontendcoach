@@ -51,16 +51,15 @@ Future<void> main() async {
       }
     }
     runApp(InAppNotification(
-      child: GetMaterialApp(
-        home: MultiProvider(
+      child:  MultiProvider(
           providers: [
             ChangeNotifierProvider(
               create: (context) => AppData(),
             ),
           ],
-          child: const LoginPage()
-        ),
-        title: 'Application Daily Workout Coaching',
+          child: GetMaterialApp(home: const LoginPage(),
+
+           title: 'Application Daily Workout Coaching',
                   debugShowCheckedModeBanner: false,
                   builder: FlutterSmartDialog.init(
                     builder: (context, child) {
@@ -94,8 +93,13 @@ Future<void> main() async {
                   supportedLocales: const [
                     Locale('th', 'TH'),
                   ],
+          
+          
+          )
+        ),
+       
               
-      ),
+  
     ));
   });
 }
