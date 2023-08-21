@@ -27,6 +27,7 @@ class _addCoinState extends State<addCoin> {
   late ModelResult moduleResult;
   int uid = 0;
   bool _isvisible = false;
+  bool _isvisibleText = false;
   var insertWallet;
 
   final _money = TextEditingController();
@@ -90,7 +91,7 @@ class _addCoinState extends State<addCoin> {
                 left: 25,
                 right: 25),
             child: Container(
-              height: MediaQuery.of(context).size.height * 0.35,
+              height: MediaQuery.of(context).size.height * 0.4,
               decoration: BoxDecoration(
                   boxShadow: [
                     BoxShadow(
@@ -156,19 +157,48 @@ class _addCoinState extends State<addCoin> {
                         ],
                       ),
                     ),
+                    
+                    Visibility(
+                      visible: _isvisibleText,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.only(
+                                bottom: 10, left: 20, right: 23),
+                            child: Text(
+                              "กรุณากรอกข้อมูลให้ครบ",
+                              style: TextStyle(
+                                  color: Theme.of(context).colorScheme.error,
+                                  fontSize: 16),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+
                     Padding(
-                      padding: const EdgeInsets.only(top: 15),
+                      padding: const EdgeInsets.only(top: 10),
                       child: FilledButton(
                           onPressed: () async {
                             //Double money = double.parse(_money.text);
+                           
                             log("inputmoneyT" + _money.text);
-                            double inputmoney = double.parse(_money.text);
+                             double inputmoney = double.tryParse(_money.text) ?? 0;
                             log("inputmoney" + inputmoney.toString());
                             if (inputmoney < 1 || _money.text.isEmpty) {
                               setState(() {
                                 _isvisible = true;
+                                _isvisibleText =false;
                               });
-                            } else {
+                            }else if( _money.text.isEmpty){
+                              log("AA");
+                              setState(() {
+                                _isvisible = false;
+                                _isvisibleText =true;
+                              });
+                            } else if(_money.text.isNotEmpty) {
+                              log("BB");
                               WalletUser walletUser = WalletUser(
                                   money: double.parse(_money.text),
                                   referenceNo: referenceNo);
