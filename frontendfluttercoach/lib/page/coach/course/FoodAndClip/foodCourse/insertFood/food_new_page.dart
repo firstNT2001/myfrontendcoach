@@ -44,7 +44,7 @@ class _FoodNewCoursePageState extends State<FoodNewCoursePage> {
   //มืออาหาร
   final selectedValuehand = TextEditingController();
   final List<String> listhand = ['มื้อเช้า', 'มื้อเที่ยง', 'มื้อเย็น'];
-
+  late ModelFoodList request;
   String textErr = '';
 
   @override
@@ -53,14 +53,11 @@ class _FoodNewCoursePageState extends State<FoodNewCoursePage> {
 
     _listFoodService = context.read<AppData>().listfoodServices;
     loadListFoodDataMethod = loadListFoodData();
-    
   }
 
   @override
   Widget build(BuildContext context) {
-    return WillPopScope(
-        onWillPop: () async => false,
-        child:  scaffold(context));
+    return WillPopScope(onWillPop: () async => false, child: scaffold(context));
   }
 
   Scaffold scaffold(BuildContext context) {
@@ -162,7 +159,6 @@ class _FoodNewCoursePageState extends State<FoodNewCoursePage> {
         colorFood.add(context.read<AppData>().colorNotSelect);
       }
       log("image${listFoods[2].image}");
-      
     } catch (err) {
       log('Error: $err');
     }
@@ -187,87 +183,91 @@ class _FoodNewCoursePageState extends State<FoodNewCoursePage> {
       itemCount: listFoods.length,
       itemBuilder: (context, index) {
         final listFood = listFoods[index];
-        return SizedBox(
-          height: MediaQuery.of(context).size.height * 0.2,
-          child: Card(
-            color: colorFood[index],
-            child: InkWell(
-              onTap: () {
-                if (colorFood[index] != context.read<AppData>().colorSelect) {
-                  setState(() {
-                    // เพิ่มเมนูอาหารนั้นเมือกกดเลือก
-                    ModelFoodList request = ModelFoodList(
-                        ifid: listFood.ifid,
-                        name: listFood.name,
-                        image: listFood.image,
-                        details: listFood.details,
-                        calories: listFood.calories);
+        return Padding(
+          padding: const EdgeInsets.only(bottom: 10),
+          child: SizedBox(
+            height: MediaQuery.of(context).size.height * 0.2,
+            child: Card(
+              color: colorFood[index],
+              elevation: 10,
+              child: InkWell(
+                onTap: () {
+                  if (colorFood[index] != context.read<AppData>().colorSelect) {
+                    setState(() {
+                      // เพิ่มเมนูอาหารนั้นเมือกกดเลือก
+                      request = ModelFoodList(
+                          ifid: listFood.ifid,
+                          name: listFood.name,
+                          image: listFood.image,
+                          details: listFood.details,
+                          calories: listFood.calories);
 
+                      //เปลี่ยนสีเมือเลือกเมนู฿อาหาร
+                      // colorFood[index] = Colors.black12;
+                    });
                     _dialog(context, request, colorFood, index);
-                    //เปลี่ยนสีเมือเลือกเมนู฿อาหาร
-                    // colorFood[index] = Colors.black12;
-                  });
-                } else {
-                  setState(() {
-                    //กลับเป็นสีเดิมเมือเลือกเมนูอาหารซํ้า
-                    colorFood[index] = context.read<AppData>().colorNotSelect;
+                  } else {
+                    setState(() {
+                      //กลับเป็นสีเดิมเมือเลือกเมนูอาหารซํ้า
+                      colorFood[index] = context.read<AppData>().colorNotSelect;
 
-                    //เอาเมนูอาหารที่เลือกออกจาก list model
-                    increaseFoodDay.removeWhere(
-                        (item) => item.listFoodId == listFood.ifid);
+                      //เอาเมนูอาหารที่เลือกออกจาก list model
+                      increaseFoodDay.removeWhere(
+                          (item) => item.listFoodId == listFood.ifid);
 
-                    increaseFood
-                        .removeWhere((item) => item.ifid == listFood.ifid);
-                  });
-                }
-              },
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  if (listFood.image != '') ...{
-                    SizedBox(
-                      width: MediaQuery.of(context).size.width * 0.4,
-                      height: MediaQuery.of(context).size.height * 0.2,
-                      child: Padding(
-                        padding: const EdgeInsets.all(20.0),
-                        child: ClipRRect(
-                          borderRadius: BorderRadius.circular(8.0),
-                          child: Image.network(
-                            listFood.image,
-                            fit: BoxFit.fill,
+                      increaseFood
+                          .removeWhere((item) => item.ifid == listFood.ifid);
+                    });
+                  }
+                },
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    if (listFood.image != '') ...{
+                      SizedBox(
+                        width: MediaQuery.of(context).size.width * 0.4,
+                        height: MediaQuery.of(context).size.height * 0.2,
+                        child: Padding(
+                          padding: const EdgeInsets.all(20.0),
+                          child: ClipRRect(
+                            borderRadius: BorderRadius.circular(8.0),
+                            child: Image.network(
+                              listFood.image,
+                              fit: BoxFit.fill,
+                            ),
                           ),
                         ),
                       ),
-                    ),
-                  } else
-                    Container(
-                        width: MediaQuery.of(context).size.width * 0.4,
-                        height: MediaQuery.of(context).size.height * 0.2,
-                        padding: const EdgeInsets.all(8.0),
-                        decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(8),
-                            color: Colors.white)),
-                  const SizedBox(width: 10),
-                  Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      SizedBox(
-                        width: MediaQuery.of(context).size.width * 0.5,
-                        child: AutoSizeText(
-                          listFood.name,
-                          maxLines: 5,
-                          style: Theme.of(context).textTheme.titleMedium,
+                    } else
+                      Container(
+                          width: MediaQuery.of(context).size.width * 0.4,
+                          height: MediaQuery.of(context).size.height * 0.2,
+                          padding: const EdgeInsets.all(8.0),
+                          decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(8),
+                              color: Colors.white)),
+                    const SizedBox(width: 10),
+                    Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        SizedBox(
+                          width: MediaQuery.of(context).size.width * 0.5,
+                          child: AutoSizeText(
+                            listFood.name,
+                            maxLines: 5,
+                            style: Theme.of(context).textTheme.titleMedium,
+                          ),
                         ),
-                      ),
-                      const SizedBox(height: 10),
-                      Text(
-                        "Calories : ${listFood.calories}",
-                        style: Theme.of(context).textTheme.titleMedium,
-                      )
-                    ],
-                  ),
-                ],
+                        const SizedBox(height: 10),
+                        Text(
+                          "Calories : ${listFood.calories}",
+                          style: Theme.of(context).textTheme.titleMedium,
+                        )
+                      ],
+                    ),
+                  ],
+                ),
               ),
             ),
           ),
@@ -279,7 +279,7 @@ class _FoodNewCoursePageState extends State<FoodNewCoursePage> {
   void _dialog(BuildContext ctx, ModelFoodList listFood, List<Color> colorList,
       int index) {
     //target widget
-    SmartDialog.show(builder: (_) {
+    SmartDialog.show(builder: (ctx) {
       return Container(
         width: MediaQuery.of(context).size.width * 0.9,
         height: 600,
@@ -319,19 +319,28 @@ class _FoodNewCoursePageState extends State<FoodNewCoursePage> {
                 ),
               },
               Padding(
-                padding: const EdgeInsets.only(top: 10, bottom: 8, right: 20, left: 20),
-                child: Text(
-                  'ชื่อเมนู: ${listFood.name}',
-                  maxLines: 5,
-                  style: Theme.of(context).textTheme.bodyLarge,
-                ),
+                padding: const EdgeInsets.only(
+                    top: 10, bottom: 8, right: 20, left: 20),
+                child: Text(listFood.name,
+                    maxLines: 5,
+                    style:
+                        TextStyle(fontSize: 16, fontWeight: FontWeight.w600)),
               ),
               Padding(
                 padding: const EdgeInsets.only(bottom: 8, right: 20, left: 20),
-                child: Text(
-                  'รายละเอียด: ${listFood.details}',
-                  maxLines: 5,
-                  style: Theme.of(context).textTheme.bodyLarge,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const Text('รายละเอียด',
+                        maxLines: 5,
+                        style: TextStyle(
+                            fontSize: 16, fontWeight: FontWeight.w600)),
+                    Text(
+                      '   ${listFood.details}',
+                      maxLines: 5,
+                      style: Theme.of(context).textTheme.bodyLarge,
+                    ),
+                  ],
                 ),
               ),
               Row(
@@ -342,7 +351,7 @@ class _FoodNewCoursePageState extends State<FoodNewCoursePage> {
                     child: SizedBox(
                         //width: MediaQuery.of(context).size.width * 0.7,
                         child: Text(
-                      'Calories: ${listFood.calories.toString()}',
+                      'แคลอรี่ ${listFood.calories.toString()}',
                       style: Theme.of(context).textTheme.bodyLarge,
                     )),
                   ),
@@ -352,11 +361,9 @@ class _FoodNewCoursePageState extends State<FoodNewCoursePage> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Padding(
-                    padding: const EdgeInsets.only(left: 30),
-                    child: SizedBox(
-                      width: MediaQuery.of(context).size.width * 0.4,
-                      //height: MediaQuery.of(context).size.height * 0.2,
+                  Expanded(
+                    child: Padding(
+                      padding: const EdgeInsets.only(left: 15, right: 15),
                       child: WidgetDropdownStringNotValue(
                         title: 'เลือกมืออาหาร',
                         selectedValue: selectedValuehand,
@@ -365,7 +372,7 @@ class _FoodNewCoursePageState extends State<FoodNewCoursePage> {
                     ),
                   ),
                   Padding(
-                    padding: const EdgeInsets.only(top: 15, right: 30),
+                    padding: const EdgeInsets.only(top: 20, right: 30),
                     child: FilledButton(
                         onPressed: () {
                           log(selectedValuehand.text);
@@ -374,7 +381,7 @@ class _FoodNewCoursePageState extends State<FoodNewCoursePage> {
                           } else {
                             setState(() {
                               increaseFood.add(listFood);
-        
+
                               FoodDayIdPost requestFoodPost = FoodDayIdPost(
                                 listFoodId: listFood.ifid,
                                 time: selectedValuehand.text == 'มื้อเช้า'
@@ -393,7 +400,7 @@ class _FoodNewCoursePageState extends State<FoodNewCoursePage> {
                                   context.read<AppData>().colorSelect;
                               selectedValuehand.text = '';
                             });
-        
+
                             SmartDialog.dismiss();
                           }
                         },
@@ -401,7 +408,9 @@ class _FoodNewCoursePageState extends State<FoodNewCoursePage> {
                   ),
                 ],
               ),
-              const SizedBox(width: 20,),
+              const SizedBox(
+                width: 20,
+              ),
             ],
           ),
         ),

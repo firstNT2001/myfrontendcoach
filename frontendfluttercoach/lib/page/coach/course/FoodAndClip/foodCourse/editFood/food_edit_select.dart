@@ -271,7 +271,7 @@ class _FoodEditSelectPageState extends State<FoodEditSelectPage> {
                                               context.read<AppData>().sequence,
                                           isVisible: widget.isVisible,
                                         )),
-                                ModalRoute.withName('/DaysCoursePage'),
+                                ModalRoute.withName('/NavbarBottomCoach'),
                               );
                               // ignore: use_build_context_synchronously
                               InAppNotification.show(

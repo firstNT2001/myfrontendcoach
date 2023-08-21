@@ -120,10 +120,18 @@ class _HomeFoodAndClipPageState extends State<HomeFoodAndClipPage> {
                 child: const Icon(FontAwesomeIcons.bowlFood),
                 label: 'เพิ่มเมนู',
                 onTap: () {
-                  Get.to(() => FoodNewCoursePage(
-                        did: widget.did,
-                        isVisible: widget.isVisible,
-                      ));
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => FoodNewCoursePage(
+                              did: widget.did,
+                              isVisible: widget.isVisible,
+                            )),
+                  );
+                  // Get.to(() => FoodNewCoursePage(
+                  //       did: widget.did,
+                  //       isVisible: widget.isVisible,
+                  //     ));
                 }),
             SpeedDialChild(
                 child: const Icon(FontAwesomeIcons.dumbbell),
@@ -138,10 +146,15 @@ class _HomeFoodAndClipPageState extends State<HomeFoodAndClipPage> {
         ),
         resizeToAvoidBottomInset: false,
         appBar: AppBar(
-          backgroundColor: Colors.white,
-          title: Text(
-            title,
-            style: Theme.of(context).textTheme.headlineMedium,
+          backgroundColor: Theme.of(context).colorScheme.primaryContainer,
+          title: Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                "วันที่ ${widget.sequence}",
+                style: Theme.of(context).textTheme.headlineMedium,
+              ),
+            ],
           ),
           leading: IconButton(
             icon: const Icon(
@@ -155,19 +168,20 @@ class _HomeFoodAndClipPageState extends State<HomeFoodAndClipPage> {
               labelColor: Theme.of(context)
                   .colorScheme
                   .primary, //<-- selected text color
-              unselectedLabelColor: Theme.of(context)
-                  .colorScheme
-                  .primaryContainer, //<-- Unselected text
+              unselectedLabelColor:
+                  Theme.of(context).colorScheme.tertiary, //<-- Unselected text
               tabs: const [
                 Tab(
                   icon: Icon(
                     FontAwesomeIcons.dumbbell,
                   ),
+                  text: 'คลิปออกกำลังกาย',
                 ),
                 Tab(
                   icon: Icon(
                     FontAwesomeIcons.utensils,
                   ),
+                  text: 'เมนูอาหาร',
                 ),
               ]),
           centerTitle: true,
@@ -180,6 +194,8 @@ class _HomeFoodAndClipPageState extends State<HomeFoodAndClipPage> {
                 const SizedBox(
                   height: 10,
                 ),
+                // ignore: prefer_is_empty
+
                 Expanded(
                   child: Padding(
                     padding: const EdgeInsets.only(
@@ -301,7 +317,7 @@ class _HomeFoodAndClipPageState extends State<HomeFoodAndClipPage> {
               final listfood = foods[index];
               return (widget.isVisible)
                   ? Slidable(
-                      startActionPane:
+                      endActionPane:
                           ActionPane(motion: const StretchMotion(), children: [
                         SlidableAction(
                           onPressed: (contexts) {
@@ -619,132 +635,147 @@ class _HomeFoodAndClipPageState extends State<HomeFoodAndClipPage> {
         if (snapshot.connectionState != ConnectionState.done) {
           return Center(child: load(context));
         } else {
-          return GridView.builder(
-            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: 2,
-              mainAxisExtent: 230,
-            ),
-            shrinkWrap: true,
-            itemCount: clips.length,
-            itemBuilder: (context, index) {
-              final listClip = clips[index];
-              return SizedBox(
-                height: MediaQuery.of(context).size.height * 0.2,
-                child: InkWell(
-                  onTap: () {
-                    ListClip request = ListClip(
-                        icpId: listClip.listClip.icpId,
-                        coachId: listClip.listClip.coachId,
-                        name: listClip.listClip.name,
-                        video: listClip.listClip.video,
-                        details: listClip.listClip.details,
-                        amountPerSet: listClip.listClip.amountPerSet);
-                    log(listClip.cpId.toString());
-                    dialogClipEditInCourse(
-                        context,
-                        request,
-                        listClip.cpId.toString(),
-                        listClip.dayOfCouseId.toString(),
-                        widget.sequence,
-                        int.parse(listClip.status),
-                        widget.isVisible);
-                  },
-                  child: Column(
-                    //mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Stack(
-                        children: [
-                          if (listClip.listClip.video != '') ...{
-                            Padding(
-                              padding: const EdgeInsets.only(
-                                  left: 8, right: 8, top: 5, bottom: 5),
-                              child: AspectRatio(
-                                  aspectRatio: 16 / 13,
-                                  child: Container(
-                                    decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(26),
-                                    ),
-                                    child: VideoItem(
-                                      video: listClip.listClip.video,
-                                    ),
-                                  )),
-                            )
-                          } else
-                            Padding(
-                              padding: const EdgeInsets.only(
-                                  left: 8, right: 8, top: 5, bottom: 5),
-                              child: AspectRatio(
-                                  aspectRatio: 16 / 13,
-                                  child: Container(
-                                    decoration: BoxDecoration(
-                                      color: const Color.fromARGB(
-                                          255, 207, 208, 209),
-                                      borderRadius: BorderRadius.circular(20),
-                                    ),
-                                  )),
-                            ),
-                          Visibility(
-                            visible: widget.isVisible,
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.end,
+          return Column(
+            children: [
+              if (clips.isEmpty) ...{
+                Image.asset(
+                  'assets/images/coaching_PNG.png',
+                  color: Colors.white.withOpacity(0.8),
+                  colorBlendMode: BlendMode.lighten,
+                )
+              } else
+                GridView.builder(
+                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: 2,
+                    mainAxisExtent: 230,
+                  ),
+                  shrinkWrap: true,
+                  itemCount: clips.length,
+                  itemBuilder: (context, index) {
+                    final listClip = clips[index];
+                    return SizedBox(
+                      height: MediaQuery.of(context).size.height * 0.2,
+                      child: InkWell(
+                        onTap: () {
+                          ListClip request = ListClip(
+                              icpId: listClip.listClip.icpId,
+                              coachId: listClip.listClip.coachId,
+                              name: listClip.listClip.name,
+                              video: listClip.listClip.video,
+                              details: listClip.listClip.details,
+                              amountPerSet: listClip.listClip.amountPerSet);
+                          log(listClip.cpId.toString());
+                          dialogClipEditInCourse(
+                              context,
+                              request,
+                              listClip.cpId.toString(),
+                              listClip.dayOfCouseId.toString(),
+                              widget.sequence,
+                              int.parse(listClip.status),
+                              widget.isVisible);
+                        },
+                        child: Column(
+                          //mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Stack(
                               children: [
-                                IconButton(
-                                  onPressed: () {
-                                    dialogDeleteClip(
-                                        context, listClip.cpId.toString());
-                                  },
-                                  icon: const Icon(
-                                    FontAwesomeIcons.trash,
-                                    color: Color.fromARGB(255, 93, 93, 93),
+                                if (listClip.listClip.video != '') ...{
+                                  Padding(
+                                    padding: const EdgeInsets.only(
+                                        left: 8, right: 8, top: 5, bottom: 5),
+                                    child: AspectRatio(
+                                        aspectRatio: 16 / 13,
+                                        child: Container(
+                                          decoration: BoxDecoration(
+                                            borderRadius:
+                                                BorderRadius.circular(26),
+                                          ),
+                                          child: VideoItem(
+                                            video: listClip.listClip.video,
+                                          ),
+                                        )),
+                                  )
+                                } else
+                                  Padding(
+                                    padding: const EdgeInsets.only(
+                                        left: 8, right: 8, top: 5, bottom: 5),
+                                    child: AspectRatio(
+                                        aspectRatio: 16 / 13,
+                                        child: Container(
+                                          decoration: BoxDecoration(
+                                            color: const Color.fromARGB(
+                                                255, 207, 208, 209),
+                                            borderRadius:
+                                                BorderRadius.circular(20),
+                                          ),
+                                        )),
+                                  ),
+                                Visibility(
+                                  visible: widget.isVisible,
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.end,
+                                    children: [
+                                      IconButton(
+                                        onPressed: () {
+                                          dialogDeleteClip(context,
+                                              listClip.cpId.toString());
+                                        },
+                                        icon: const Icon(
+                                          FontAwesomeIcons.trash,
+                                          color:
+                                              Color.fromARGB(255, 93, 93, 93),
+                                        ),
+                                      ),
+                                    ],
                                   ),
                                 ),
+                                if (widget.isVisible == false) ...{
+                                  Row(
+                                      mainAxisAlignment: MainAxisAlignment.end,
+                                      children: [
+                                        MSHCheckbox(
+                                          size: 30,
+                                          value: listClip.status == '1'
+                                              ? true
+                                              : listClip.status == '0'
+                                                  ? false
+                                                  : false,
+                                          colorConfig: MSHColorConfig
+                                              .fromCheckedUncheckedDisabled(
+                                            checkedColor: Colors.blue,
+                                          ),
+                                          style: MSHCheckboxStyle.fillFade,
+                                          onChanged: (selected) {
+                                            setState(() {
+                                              //isChecked = selected;
+                                            });
+                                          },
+                                        ),
+                                      ])
+                                }
                               ],
                             ),
-                          ),
-                          if (widget.isVisible == false) ...{
-                            Row(
-                                mainAxisAlignment: MainAxisAlignment.end,
-                                children: [
-                                  MSHCheckbox(
-                                    size: 30,
-                                    value: listClip.status == '1'
-                                        ? true
-                                        : listClip.status == '0'
-                                            ? false
-                                            : false,
-                                    colorConfig: MSHColorConfig
-                                        .fromCheckedUncheckedDisabled(
-                                      checkedColor: Colors.blue,
-                                    ),
-                                    style: MSHCheckboxStyle.fillFade,
-                                    onChanged: (selected) {
-                                      setState(() {
-                                        //isChecked = selected;
-                                      });
-                                    },
-                                  ),
-                                ])
-                          }
-                        ],
-                      ),
-                      Center(
-                        child: SizedBox(
-                          child: AutoSizeText(
-                            listClip.listClip.name,
-                            maxLines: 2,
-                            style: Theme.of(context).textTheme.titleMedium,
-                          ),
+                            Center(
+                              child: SizedBox(
+                                child: AutoSizeText(
+                                  listClip.listClip.name,
+                                  maxLines: 2,
+                                  style:
+                                      Theme.of(context).textTheme.titleMedium,
+                                ),
+                              ),
+                            ),
+                            const SizedBox(
+                              width: 50,
+                            ),
+                          ],
                         ),
                       ),
-                      const SizedBox(
-                        width: 50,
-                      ),
-                    ],
-                  ),
+                    );
+                  },
                 ),
-              );
-            },
+            ],
           );
         }
       },

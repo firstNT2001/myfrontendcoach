@@ -1,10 +1,9 @@
 import 'dart:developer';
 
-import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
+
 import 'package:in_app_notification/in_app_notification.dart';
 import 'package:provider/provider.dart';
 import 'package:quickalert/models/quickalert_type.dart';
@@ -15,6 +14,7 @@ import '../../model/response/md_Result.dart';
 import '../../service/listClip.dart';
 import '../../service/provider/appdata.dart';
 import '../../widget/dialogs.dart';
+import '../../widget/image_video.dart';
 import '../../widget/notificationBody.dart';
 
 class SearchClipCoachPage extends StatefulWidget {
@@ -71,7 +71,7 @@ class _SearchClipCoachPageState extends State<SearchClipCoachPage> {
               FontAwesomeIcons.chevronLeft,
             ),
             onPressed: () {
-              Get.back();
+              Navigator.pop(context);
             },
           ),
           Container(
@@ -178,78 +178,103 @@ class _SearchClipCoachPageState extends State<SearchClipCoachPage> {
             itemCount: clips.length,
             itemBuilder: (context, index) {
               final listClips = clips[index];
-              return Column(
-                children: [
-                  SizedBox(
-                    height: MediaQuery.of(context).size.height * 0.2,
-                    child: InkWell(
-                      onTap: () {
-                        //Get.to(() => FoodEditCoachPage(ifid: listClips.ifid));
-                      },
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Container(
-                                width: MediaQuery.of(context).size.width * 0.3,
-                                height: MediaQuery.of(context).size.height,
-                                decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(8),
-                                    color: Colors.pink)),
-                          ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Column(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  SizedBox(
-                                    width:
-                                        MediaQuery.of(context).size.width * 0.4,
-                                    child: AutoSizeText(
-                                      listClips.name,
-                                      maxLines: 5,
-                                      style: Theme.of(context)
-                                          .textTheme
-                                          .titleMedium,
-                                    ),
+              return Slidable(
+                endActionPane:
+                    ActionPane(motion: const StretchMotion(), children: [
+                  SlidableAction(
+                    onPressed: (contexts) {
+                      dialogDeleteClip(context, listClips.icpId.toString());
+                      // Navigator.pop(context);
+                    },
+                    backgroundColor: Theme.of(context).colorScheme.error,
+                    icon: Icons.delete,
+                    label: 'Delete',
+                  )
+                ]),
+                child: Column(
+                  children: [
+                    SizedBox(
+                      height: MediaQuery.of(context).size.height * 0.2,
+                      child: InkWell(
+                        onTap: () {
+                          //Get.to(() => FoodEditCoachPage(ifid: listClips.ifid));
+                        },
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            if (listClips.video != '') ...{
+                              Padding(
+                                padding: const EdgeInsets.only(
+                                    left: 15, right: 15, top: 5, bottom: 5),
+                                child: AspectRatio(
+                                    aspectRatio: 16 / 16,
+                                    child: Container(
+                                      decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(26),
+                                      ),
+                                      child: VideoItem(
+                                        video: listClips.video,
+                                      ),
+                                    )),
+                              )
+                            } else
+                              Padding(
+                                padding: const EdgeInsets.only(
+                                    left: 15, right: 15, top: 5, bottom: 5),
+                                child: AspectRatio(
+                                    aspectRatio: 16 / 16,
+                                    child: Container(
+                                      decoration: BoxDecoration(
+                                        color: const Color.fromARGB(
+                                            255, 207, 208, 209),
+                                        borderRadius: BorderRadius.circular(20),
+                                      ),
+                                    )),
+                              ),
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                SizedBox(
+                                  width:
+                                      MediaQuery.of(context).size.width * 0.5,
+                                  child: Text(
+                                    listClips.name,
+                                    maxLines: 5,
+                                    style:
+                                        Theme.of(context).textTheme.titleMedium,
                                   ),
-                                  const SizedBox(height: 20),
-                                ],
-                              ),
-                              Column(
-                                mainAxisAlignment: MainAxisAlignment.end,
-                                crossAxisAlignment: CrossAxisAlignment.end,
-                                children: [
-                                  IconButton(
-                                    onPressed: () {
-                                      dialogDeleteClip(
-                                          context, listClips.icpId.toString());
-                                    },
-                                    icon: const Icon(
-                                      FontAwesomeIcons.trash,
-                                    ),
+                                ),
+                                const SizedBox(
+                                  height: 10,
+                                ),
+                                SizedBox(
+                                  width:
+                                      MediaQuery.of(context).size.width * 0.5,
+                                  child: Text(
+                                    'จำนวนเซต ${listClips.amountPerSet}',
+                                    maxLines: 5,
+                                    style: const TextStyle(
+                                        fontSize: 16, color: Colors.black38),
                                   ),
-                                ],
-                              ),
-                              const SizedBox(
-                                width: 50,
-                              ),
-                            ],
-                          ),
-                        ],
+                                ),
+                              ],
+                            ),
+                            const SizedBox(height: 20),
+                          ],
+                        ),
                       ),
                     ),
-                  ),
-                  const Padding(
-                    padding: EdgeInsets.all(16),
-                    child: Divider(),
-                  ),
-                ],
+                    const Padding(
+                      padding: EdgeInsets.only(top: 10, bottom: 10),
+                      child: Divider(
+                        endIndent: 15,
+                        indent: 15,
+                      ),
+                    ),
+                  ],
+                ),
               );
             },
           );
