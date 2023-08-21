@@ -126,6 +126,16 @@ class _ShowDayMycourseState extends State<ShowDayMycourse> {
           widget.namecourse,
           style: Theme.of(context).textTheme.headlineMedium,
         ),
+         actions: <Widget>[
+    IconButton(
+      icon: Icon(
+       FontAwesomeIcons.ellipsisVertical
+      ),
+      onPressed: () {
+         dialogCourse(context);
+      },
+    )
+  ],
       ),
       body: SafeArea(
         child: Stack(
