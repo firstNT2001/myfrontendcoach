@@ -21,7 +21,6 @@ import '../../../../widget/notificationBody.dart';
 import '../../../../widget/textField/wg_textField.dart';
 import '../../../../widget/textField/wg_textFieldLines.dart';
 import '../../../../widget/textField/wg_textField_int copy.dart';
-import '../../navigationbar.dart';
 
 class FoodNewCoachPage extends StatefulWidget {
   const FoodNewCoachPage({super.key});
@@ -141,6 +140,7 @@ class _FoodNewCoachPageState extends State<FoodNewCoachPage> {
   FilledButton button(BuildContext context) {
     return FilledButton(
         onPressed: () async {
+
           if (name.text.isEmpty ||
               details.text.isEmpty ||
               calories.text.isEmpty) {
@@ -181,13 +181,7 @@ class _FoodNewCoachPageState extends State<FoodNewCoachPage> {
                 duration: const Duration(milliseconds: 1500),
               );
               // ignore: use_build_context_synchronously
-              Navigator.pushAndRemoveUntil<void>(
-                context,
-                MaterialPageRoute<void>(
-                    builder: (BuildContext context) =>
-                        const NavbarBottomCoach()),
-                ModalRoute.withName('/NavbarBottomCoach'),
-              );
+              Navigator.pop(context);
             } else {
               // ignore: use_build_context_synchronously
               InAppNotification.show(
@@ -291,13 +285,13 @@ class _FoodNewCoachPageState extends State<FoodNewCoachPage> {
               child: Container(
                 height: 40,
                 width: 40,
-                decoration: const BoxDecoration(
+                decoration: BoxDecoration(
                     shape: BoxShape.circle,
                     //border: Border.all(width: 4, color: Colors.white),
-                    color: Colors.white),
+                    color: Theme.of(context).colorScheme.primary),
                 child: const Icon(
-                  FontAwesomeIcons.camera,
-                  color: Colors.black,
+                  FontAwesomeIcons.image,
+                  color: Colors.white,
                 ),
               ),
             )),

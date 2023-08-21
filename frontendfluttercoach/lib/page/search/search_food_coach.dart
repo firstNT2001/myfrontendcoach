@@ -3,17 +3,20 @@ import 'dart:developer';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
-import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:frontendfluttercoach/model/response/md_FoodList_get.dart';
 import 'package:frontendfluttercoach/model/response/md_Result.dart';
 import 'package:frontendfluttercoach/service/listFood.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
+import 'package:in_app_notification/in_app_notification.dart';
 import 'package:provider/provider.dart';
+import 'package:quickalert/models/quickalert_type.dart';
+import 'package:quickalert/widgets/quickalert_dialog.dart';
 
 import '../../service/provider/appdata.dart';
 import '../../widget/dialogs.dart';
+import '../../widget/notificationBody.dart';
 import '../coach/FoodAndClip/foodCoach/food_edit_page.dart';
 
 class SearchFoodCoachPage extends StatefulWidget {
@@ -169,7 +172,10 @@ class _SearchFoodCoachPageState extends State<SearchFoodCoachPage> {
                 width: MediaQuery.of(context).size.width,
                 child: InkWell(
                   onTap: () {
-                    Get.to(() => FoodEditCoachPage(ifid: listfood.ifid));
+                    Get.to(() => FoodEditCoachPage(ifid: listfood.ifid))?.then((value) {
+                                    Navigator.pop(context);
+
+                    });
                   },
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.start,
@@ -212,12 +218,15 @@ class _SearchFoodCoachPageState extends State<SearchFoodCoachPage> {
                               style: Theme.of(context).textTheme.titleMedium,
                             ),
                           ),
-                          const SizedBox(height: 10,),
+                          const SizedBox(
+                            height: 10,
+                          ),
                           Text(
-                              'แคลอรี่ ${listfood.calories.toString()}',
-                              maxLines: 5,
-                              style: const TextStyle(fontSize: 16,color: Colors.black38),
-                            ),
+                            'แคลอรี่ ${listfood.calories.toString()}',
+                            maxLines: 5,
+                            style: const TextStyle(
+                                fontSize: 16, color: Colors.black38),
+                          ),
                         ],
                       ),
                     ],
@@ -240,54 +249,36 @@ class _SearchFoodCoachPageState extends State<SearchFoodCoachPage> {
 
   //Dialog Delete
   void dialogDeleteFood(BuildContext context, String ifid) {
-    //target widget
-    SmartDialog.show(builder: (_) {
-      return Container(
-        width: MediaQuery.of(context).size.width * 0.8,
-        height: MediaQuery.of(context).size.height * 0.3,
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(20),
-          color: Theme.of(context).colorScheme.primaryContainer,
-        ),
-        alignment: Alignment.center,
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          //crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Padding(
-              padding: const EdgeInsets.only(
-                  left: 20, right: 20, top: 50, bottom: 16),
-              child: Text("คุณต้องการลบหรือไม",
-                  style: Theme.of(context).textTheme.headlineSmall),
-            ),
-            Padding(
-              padding: const EdgeInsets.only(top: 20),
-              child: Row(
-                //mainAxisSize: MainAxisSize.max,
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  FilledButton(
-                      onPressed: () {
-                        SmartDialog.dismiss();
-                      },
-                      child: const Text("ยกเลิก")),
-                  FilledButton(
-                      onPressed: () async {
-                        var response = await _foodService.deleteListFood(ifid);
-                        modelResult = response.data;
-                        log(modelResult.result);
-                        setState(() {
-                          loadFoodDataMethod = loadFoodData();
-                        });
-                        SmartDialog.dismiss();
-                      },
-                      child: const Text("ตกลง"))
-                ],
-              ),
-            ),
-          ],
-        ),
-      );
-    });
+    QuickAlert.show(
+      context: context,
+      type: QuickAlertType.confirm,
+      text: 'ต้องการลบเมนูอาหารหรือไม',
+      confirmBtnText: 'ตกลง',
+      cancelBtnText: 'ยกเลิก',
+      confirmBtnColor: Theme.of(context).colorScheme.primary,
+      onConfirmBtnTap: () async {
+        startLoading(context);
+        var response = await _foodService.deleteListFood(ifid);
+        modelResult = response.data;
+        log(modelResult.result);
+        stopLoading();
+
+        Navigator.of(context, rootNavigator: true).pop();
+        log('onConfirmBtnTap');
+        InAppNotification.show(
+          child: NotificationBody(
+            count: 1,
+            message: 'ลบเมนูอาหารเรียบร้อยแล้ว',
+          ),
+          context: context,
+          onTap: () => print('Notification tapped!'),
+          duration: const Duration(milliseconds: 1500),
+        );
+        setState(() {
+          loadFoodDataMethod = loadFoodData();
+        });
+      },
+    );
+
   }
 }

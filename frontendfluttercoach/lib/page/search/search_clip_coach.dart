@@ -3,6 +3,9 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:frontendfluttercoach/page/coach/FoodAndClip/clipCoach/clip_edit_page.dart';
+import 'package:get/get.dart';
+import 'package:get/get_core/src/get_main.dart';
 
 import 'package:in_app_notification/in_app_notification.dart';
 import 'package:provider/provider.dart';
@@ -124,17 +127,14 @@ class _SearchClipCoachPageState extends State<SearchClipCoachPage> {
     QuickAlert.show(
       context: context,
       type: QuickAlertType.confirm,
-      text: 'Do you want to delete?',
-      confirmBtnText: 'Yes',
-      cancelBtnText: 'No',
+      text: 'ต้องการลบคลิปหรือไม',
+      confirmBtnText: 'ตกลง',
+      cancelBtnText: 'ยกเลิก',
       confirmBtnColor: Theme.of(context).colorScheme.primary,
       onConfirmBtnTap: () async {
         var response = await _listClipService.deleteListClip(icpID);
         modelResult = response.data;
         log(modelResult.result);
-        setState(() {
-          loadClipDataMethod = loadClipData();
-        });
 
         Navigator.of(context, rootNavigator: true).pop();
         // ignore: use_build_context_synchronously
@@ -147,6 +147,9 @@ class _SearchClipCoachPageState extends State<SearchClipCoachPage> {
           onTap: () => print('Notification tapped!'),
           duration: const Duration(milliseconds: 1500),
         );
+        setState(() {
+          loadClipDataMethod = loadClipData();
+        });
       },
     );
   }
@@ -197,7 +200,11 @@ class _SearchClipCoachPageState extends State<SearchClipCoachPage> {
                       height: MediaQuery.of(context).size.height * 0.2,
                       child: InkWell(
                         onTap: () {
-                          //Get.to(() => FoodEditCoachPage(ifid: listClips.ifid));
+                          Get.to(() =>
+                                  ClipEditCoachPage(icpId: listClips.icpId))
+                              ?.then((value) {
+                            Navigator.pop(context);
+                          });
                         },
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.start,

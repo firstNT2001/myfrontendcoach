@@ -112,6 +112,7 @@ dependencies:
   reorderable_grid_view: ^2.2.7
   chewie: ^1.7.0
   in_app_notification: ^1.1.2
+  floating_tabbar: ^0.0.9
 
   # video_thumbnail: ^0.5.3
    
