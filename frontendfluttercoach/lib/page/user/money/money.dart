@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:developer';
+import 'dart:ffi';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -103,7 +104,10 @@ class _addCoinState extends State<addCoin> {
               child: FilledButton(
                   onPressed: () async {
                     //Double money = double.parse(_money.text);
-                    if (_money.text == '0'||_money.text.isEmpty) {
+                    log("inputmoneyT" + _money.text);
+                    double inputmoney = double.parse(_money.text);
+                    log("inputmoney" + inputmoney.toString());
+                    if (inputmoney < 1 || _money.text.isEmpty) {
                       setState(() {
                         _isvisible = true;
                       });
@@ -119,24 +123,20 @@ class _addCoinState extends State<addCoin> {
                       if (moduleResult.result == "1") {
                         // ignore: use_build_context_synchronously
                         //showDialogRowsAffected(context, "บันทึกสำเร็จ");
-                         pushNewScreen(
-              context,
-              screen: getQrcode(
-                              money: double.parse(_money.text),
-                              refNo: referenceNo,
-                            ),
-              withNavBar: true,
-            );
-                       
+                        pushNewScreen(
+                          context,
+                          screen: getQrcode(
+                            money: double.parse(_money.text),
+                            refNo: referenceNo,
+                          ),
+                          withNavBar: true,
+                        );
                       } else {
                         CircularProgressIndicator();
                       }
                     }
                   },
-                  child: Text(
-                    "เติมเงิน",
-                    style: TextStyle(fontSize: 16)
-                  )),
+                  child: Text("เติมเงิน", style: TextStyle(fontSize: 16))),
             ),
           ],
         ),
