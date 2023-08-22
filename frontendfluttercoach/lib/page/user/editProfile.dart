@@ -153,10 +153,7 @@ class _editProfileCusState extends State<editProfileCus> {
     }
   }
 
-
-
-  txtfildBirth(
-      final TextEditingController _controller, String txtTop) {
+  txtfildBirth(final TextEditingController _controller, String txtTop) {
     return Padding(
       padding: const EdgeInsets.only(bottom: 10, left: 15, right: 15),
       child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
@@ -312,7 +309,7 @@ class _editProfileCusState extends State<editProfileCus> {
                                     color: const Color.fromARGB(
                                         255, 255, 151, 33)),
                                 child: const Icon(
-                                  Icons.camera_alt,
+                                  FontAwesomeIcons.image,
                                   color: Colors.white,
                                 ),
                               ),
@@ -324,13 +321,13 @@ class _editProfileCusState extends State<editProfileCus> {
                     height: 10,
                   ),
                   WidgetTextFieldString(
-                            controller: username,
-                            labelText: 'ชื่อผู้ใช้',
-                          ),
-                          WidgetTextFieldString(
-                      controller: email,
-                      labelText: 'Email',
-                    ),
+                    controller: username,
+                    labelText: 'ชื่อผู้ใช้',
+                  ),
+                  WidgetTextFieldString(
+                    controller: email,
+                    labelText: 'Email',
+                  ),
                   WidgetTextFieldString(
                     controller: fullName,
                     labelText: 'ชื่อ-นามสกุล',
@@ -348,29 +345,30 @@ class _editProfileCusState extends State<editProfileCus> {
                               listItems: genders),
                         ),
                       ),
-                        Expanded(
+                      Expanded(
                         child: Padding(
-                          padding: const EdgeInsets.only(bottom: 10, left: 15, right: 15),
+                          padding: const EdgeInsets.only(
+                              bottom: 10, left: 15, right: 15),
                           child: WidgetTextFieldInt(
-                              controller: phone,
-                              labelText: 'เบอร์โทรศัพท์',
-                              maxLength: 10,
-                            ),
+                            controller: phone,
+                            labelText: 'เบอร์โทรศัพท์',
+                            maxLength: 10,
+                          ),
                         ),
                       ),
                     ],
                   ),
-                  
                   txtfildBirth(birthday, "วันเกิด"),
-
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children: [
                       Expanded(
-                        child: WidgetTextFieldIntnotmax(controller: weight, labelText: 'น้ำหนัก'),                   
+                        child: WidgetTextFieldIntnotmax(
+                            controller: weight, labelText: 'น้ำหนัก'),
                       ),
                       Expanded(
-                        child: WidgetTextFieldIntnotmax(controller: height, labelText: 'ส่วนสูง'),                       
+                        child: WidgetTextFieldIntnotmax(
+                            controller: height, labelText: 'ส่วนสูง'),
                       ),
                     ],
                   ),
@@ -417,8 +415,7 @@ class _editProfileCusState extends State<editProfileCus> {
                           FontAwesomeIcons.chevronRight,
                         ),
                         onPressed: () {
-                         
-                           Get.to(() => CoachEditPassword(
+                          Get.to(() => CoachEditPassword(
                                 password: password.text,
                                 id: context.read<AppData>().cid.toString(),
                                 visible: true,
@@ -436,9 +433,7 @@ class _editProfileCusState extends State<editProfileCus> {
                     child: SizedBox(
                       width: 350,
                       child: FilledButton(
-                  
-                            child: Text("บันทึก"),
-                         
+                          child: Text("บันทึก"),
                           onPressed: () async {
                             if (pickedImg != null) await uploadfile();
                             if (pickedImg == null) profile = _image;
@@ -499,7 +494,6 @@ class _editProfileCusState extends State<editProfileCus> {
                                 // ignore: use_build_context_synchronously
                                 success(context);
                               }
-                             
                             }
 
                             // Put your code here, which you want to execute when Text Field is NOT Empty.

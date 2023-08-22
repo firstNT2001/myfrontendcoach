@@ -43,63 +43,70 @@ class _HistoryWalletState extends State<HistoryWallet> {
   @override
   Widget build(BuildContext context) {
     return SafeArea(
-      child: Stack(
-        children: [
-          Container(
-            height: double.infinity,
-            color: const Color.fromARGB(255, 255, 233, 169),
-          ),
-          // Container(
-          //   height: MediaQuery.of(context).size.height * 0.25,
-          //   decoration: const BoxDecoration(),
-          //   child: ClipRRect(
-          //     borderRadius: const BorderRadius.only(
-          //       bottomLeft: Radius.circular(40.0),
-          //       bottomRight: Radius.circular(40.0),
-          //     ),
-          //     child: Container(
-          //       decoration:
-          //           BoxDecoration(color: Color.fromARGB(255, 247, 142, 30)),
-          //       height: MediaQuery.of(context).size.height * 0.218,
-          //     ),
-          //   ),
-          // ),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: IconButton(
-                        onPressed: () {
-                          pushNewScreen(
-                            context,
-                            screen: const addCoin(),
-                            withNavBar: true,
-                          );
-                        },
-                        icon: const Icon(
-                          FontAwesomeIcons.circlePlus,
-                          size: 40,color: Color.fromARGB(255, 247, 142, 30),
-                        )),
-                  ),
-                ],
-              ),
-              Padding(
-                padding: const EdgeInsets.only(top: 1),
-                child: showMoney(),
-              ),
-              
-              Expanded(
-                child: WidgetHistory(
-                  uid: uid,
+      child: RefreshIndicator(
+        onRefresh: () async{
+              setState(() {
+                loadDataMethod = loadData();
+              });
+            },
+        child: Stack(
+          children: [
+            Container(
+              height: double.infinity,
+              color: const Color.fromARGB(255, 255, 233, 169),
+            ),
+            // Container(
+            //   height: MediaQuery.of(context).size.height * 0.25,
+            //   decoration: const BoxDecoration(),
+            //   child: ClipRRect(
+            //     borderRadius: const BorderRadius.only(
+            //       bottomLeft: Radius.circular(40.0),
+            //       bottomRight: Radius.circular(40.0),
+            //     ),
+            //     child: Container(
+            //       decoration:
+            //           BoxDecoration(color: Color.fromARGB(255, 247, 142, 30)),
+            //       height: MediaQuery.of(context).size.height * 0.218,
+            //     ),
+            //   ),
+            // ),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: IconButton(
+                          onPressed: () {
+                            pushNewScreen(
+                              context,
+                              screen: const addCoin(),
+                              withNavBar: true,
+                            );
+                          },
+                          icon: const Icon(
+                            FontAwesomeIcons.circlePlus,
+                            size: 40,color: Color.fromARGB(255, 247, 142, 30),
+                          )),
+                    ),
+                  ],
                 ),
-              )
-            ],
-          ),
-        ],
+                Padding(
+                  padding: const EdgeInsets.only(top: 1),
+                  child: showMoney(),
+                ),
+                
+                Expanded(
+                  child: WidgetHistory(
+                    uid: uid,
+                  ),
+                )
+              ],
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -158,7 +165,7 @@ class _HistoryWalletState extends State<HistoryWallet> {
                           ),
                         ),
                         Padding(
-                          padding:  EdgeInsets.only(left: 100,top: MediaQuery.of(context).size.height * 0.04),
+                          padding:  EdgeInsets.only(left:  MediaQuery.of(context).size.height * 0.12,top:50),
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
@@ -169,7 +176,7 @@ class _HistoryWalletState extends State<HistoryWallet> {
                               Text(
                                 customer.first.price.toString()+" บาท",
                                 style: const TextStyle(
-                                    fontSize: 43, fontWeight: FontWeight.w900, color: Color.fromARGB(255, 255, 255, 255),),
+                                    fontSize: 30, fontWeight: FontWeight.w900, color: Color.fromARGB(255, 255, 255, 255),),
                               ),
                             ],
                           ),

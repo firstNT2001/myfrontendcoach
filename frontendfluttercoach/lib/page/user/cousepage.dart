@@ -12,12 +12,14 @@ import 'package:intl/intl.dart';
 import 'package:persistent_bottom_nav_bar_v2/persistent-tab-view.dart';
 import 'package:provider/provider.dart';
 import '../../model/request/buycourse_coID_post.dart';
+import '../../model/response/md_Customer_get.dart';
 import '../../model/response/md_Day_showmycourse.dart';
 import '../../model/response/md_Result.dart';
 import '../../model/response/md_amoutclip.dart';
 import '../../model/response/md_coach_course_get.dart';
 import '../../service/buy.dart';
 import '../../service/course.dart';
+import '../../service/customer.dart';
 import '../../service/day.dart';
 import '../../service/provider/appdata.dart';
 import '../../widget/dialogs.dart';
@@ -40,13 +42,15 @@ class _showCousePageState extends State<showCousePage> {
   late Future<void> loadDataMethod;
   late ModelAmountclip clipamount;
 
+  late CustomerService customerService;
+
+  List<Customer> customer = [];
   List<Course> courses = [];
   List<DayDetail> clip = [];
   late ModelResult moduleResult;
   int amountclip = 0;
   int courseId = 0;
   int cusID = 0;
-  int moneycus = 0;
   var buycourse;
   int amountUser = 0;
   final now = DateTime.now();
@@ -61,13 +65,15 @@ class _showCousePageState extends State<showCousePage> {
     super.initState();
     courseId = context.read<AppData>().idcourse;
     cusID = context.read<AppData>().uid;
-    moneycus = context.read<AppData>().money;
     courseService =
         CourseService(Dio(), baseUrl: context.read<AppData>().baseurl);
     dayService = DayService(Dio(), baseUrl: context.read<AppData>().baseurl);
 
     buyCourseService =
         BuyCourseService(Dio(), baseUrl: context.read<AppData>().baseurl);
+
+    customerService =
+        CustomerService(Dio(), baseUrl: context.read<AppData>().baseurl);
     loadDataMethod = loadData();
   }
 
@@ -118,11 +124,18 @@ class _showCousePageState extends State<showCousePage> {
           ),
         ),
         body: SafeArea(
-          child: Stack(
-            children: [
-              loadImgCourse(),
-              loadCourse(),
-            ],
+          child: RefreshIndicator(
+            onRefresh: () async {
+              setState(() {
+                loadDataMethod = loadData();
+              });
+            },
+            child: Stack(
+              children: [
+                loadImgCourse(),
+                loadCourse(),
+              ],
+            ),
           ),
         ));
   }
@@ -141,7 +154,10 @@ class _showCousePageState extends State<showCousePage> {
       var dataamountUser = await buyCourseService.amountUserinCourse(
           originalID: courseId.toString());
       amountUser = dataamountUser.data;
-      if (moneycus < courses.first.price) {
+      var result =
+          await customerService.customer(uid: cusID.toString(), email: '');
+      customer = result.data;
+      if (customer.first.price < courses.first.price) {
         log("เงินไม่พอ");
         setState(() {
           isvisible = true;
@@ -160,9 +176,9 @@ class _showCousePageState extends State<showCousePage> {
             oldlimit = courses.first.amount;
             newlimit = amountUser;
             log(courses.first.price.toString());
-            return  Padding(
-              padding: EdgeInsets.only(
-                  top: MediaQuery.of(context).size.height / 4),
+            return Padding(
+              padding:
+                  EdgeInsets.only(top: MediaQuery.of(context).size.height / 4),
               child: Container(
                 width: MediaQuery.of(context).size.width,
                 decoration: const BoxDecoration(
@@ -177,8 +193,7 @@ class _showCousePageState extends State<showCousePage> {
                       Stack(
                         children: [
                           Padding(
-                            padding:
-                                const EdgeInsets.only(right: 25, top: 15),
+                            padding: const EdgeInsets.only(right: 25, top: 15),
                             child: Align(
                               alignment: Alignment.topRight,
                               child: WidgetShowScore(
@@ -206,8 +221,8 @@ class _showCousePageState extends State<showCousePage> {
                                   filledColor: Theme.of(context)
                                       .colorScheme
                                       .tertiaryContainer,
-                                  emptyColor: const Color.fromARGB(
-                                      255, 179, 179, 179),
+                                  emptyColor:
+                                      const Color.fromARGB(255, 179, 179, 179),
                                   initialRating:
                                       double.parse(courses.first.level),
                                   maxRating: 3,
@@ -245,8 +260,7 @@ class _showCousePageState extends State<showCousePage> {
                       Padding(
                         padding: const EdgeInsets.only(left: 15, right: 15),
                         child: SizedBox(
-                            height:
-                                MediaQuery.of(context).size.height * 0.1,
+                            height: MediaQuery.of(context).size.height * 0.1,
                             width: MediaQuery.of(context).size.width * 0.85,
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
@@ -257,14 +271,13 @@ class _showCousePageState extends State<showCousePage> {
                                     children: [
                                       SizedBox(
                                         child: Row(children: [
-                                          const Icon(FontAwesomeIcons
-                                              .calendarCheck),
+                                          const Icon(
+                                              FontAwesomeIcons.calendarCheck),
                                           Padding(
                                             padding: const EdgeInsets.only(
                                                 left: 10, top: 6),
                                             child: Text(
-                                                courses.first.days
-                                                        .toString() +
+                                                courses.first.days.toString() +
                                                     " วัน",
                                                 style: const TextStyle(
                                                     fontSize: 16,
@@ -284,9 +297,8 @@ class _showCousePageState extends State<showCousePage> {
                                             const Icon(
                                                 FontAwesomeIcons.youtube),
                                             Padding(
-                                              padding:
-                                                  const EdgeInsets.only(
-                                                      left: 7, top: 6),
+                                              padding: const EdgeInsets.only(
+                                                  left: 7, top: 6),
                                               child: Text(
                                                   amountclip.toString() +
                                                       " คลิป",
@@ -306,35 +318,29 @@ class _showCousePageState extends State<showCousePage> {
                                   child: Stack(
                                     children: [
                                       SizedBox(
-                                        child: courses.first.amount >
-                                                amountUser
+                                        child: courses.first.amount > amountUser
                                             ? Row(
                                                 children: [
                                                   const Padding(
-                                                    padding:
-                                                        EdgeInsets.only(
-                                                            right: 10),
-                                                    child: Icon(
-                                                        FontAwesomeIcons
-                                                            .userPlus),
+                                                    padding: EdgeInsets.only(
+                                                        right: 10),
+                                                    child: Icon(FontAwesomeIcons
+                                                        .userPlus),
                                                   ),
                                                   Text(
                                                     courses.first.amount
                                                             .toString() +
                                                         "/" +
-                                                        amountUser
-                                                            .toString() +
+                                                        amountUser.toString() +
                                                         " คน",
                                                     style: const TextStyle(
                                                         fontSize: 16,
                                                         fontWeight:
-                                                            FontWeight
-                                                                .w600),
+                                                            FontWeight.w600),
                                                   )
                                                 ],
                                               )
-                                            : courses.first.amount <=
-                                                    amountUser
+                                            : courses.first.amount <= amountUser
                                                 ? Row(
                                                     children: [
                                                       const Padding(
@@ -352,20 +358,17 @@ class _showCousePageState extends State<showCousePage> {
                                                             amountUser
                                                                 .toString() +
                                                             " คน",
-                                                        style:
-                                                            const TextStyle(
-                                                                fontSize:
-                                                                    16,
-                                                                fontWeight:
-                                                                    FontWeight
-                                                                        .w600,
-                                                                color: Color
-                                                                    .fromARGB(
-                                                                  255,
-                                                                  157,
-                                                                  10,
-                                                                  0,
-                                                                )),
+                                                        style: const TextStyle(
+                                                            fontSize: 16,
+                                                            fontWeight:
+                                                                FontWeight.w600,
+                                                            color:
+                                                                Color.fromARGB(
+                                                              255,
+                                                              157,
+                                                              10,
+                                                              0,
+                                                            )),
                                                       )
                                                     ],
                                                   )
@@ -382,17 +385,13 @@ class _showCousePageState extends State<showCousePage> {
                                               ? Row(
                                                   children: [
                                                     const Icon(
-                                                        FontAwesomeIcons
-                                                            .coins),
+                                                        FontAwesomeIcons.coins),
                                                     Padding(
                                                       padding:
-                                                          const EdgeInsets
-                                                                  .only(
-                                                              left: 5,
-                                                              top: 6),
+                                                          const EdgeInsets.only(
+                                                              left: 5, top: 6),
                                                       child: Text(
-                                                          courses.first
-                                                                  .price
+                                                          courses.first.price
                                                                   .toString() +
                                                               " บาท",
                                                           style: const TextStyle(
@@ -406,19 +405,16 @@ class _showCousePageState extends State<showCousePage> {
                                               : courses.first.price <= 0
                                                   ? const Row(
                                                       children: [
-                                                        Icon(
-                                                            FontAwesomeIcons
-                                                                .coins),
+                                                        Icon(FontAwesomeIcons
+                                                            .coins),
                                                         Padding(
-                                                          padding: EdgeInsets
-                                                              .only(
+                                                          padding:
+                                                              EdgeInsets.only(
                                                                   left: 5,
                                                                   top: 6),
-                                                          child: Text(
-                                                              " ฟรี",
+                                                          child: Text(" ฟรี",
                                                               style: TextStyle(
-                                                                  fontSize:
-                                                                      16,
+                                                                  fontSize: 16,
                                                                   fontWeight:
                                                                       FontWeight
                                                                           .w600)),
@@ -506,9 +502,8 @@ class _showCousePageState extends State<showCousePage> {
                       //color: Colors.white,
                     ),
                     Container(
-                      
-              width: MediaQuery.of(context).size.width,
-              height: MediaQuery.of(context).size.height * 0.4,
+                      width: MediaQuery.of(context).size.width,
+                      height: MediaQuery.of(context).size.height * 0.4,
                       padding: const EdgeInsets.all(5.0),
                       alignment: Alignment.bottomCenter,
                       decoration: BoxDecoration(
@@ -517,8 +512,8 @@ class _showCousePageState extends State<showCousePage> {
                           end: Alignment.bottomCenter,
                           colors: <Color>[
                             const Color.fromARGB(255, 0, 0, 0).withAlpha(0),
-                            Color.fromARGB(102, 0, 0, 0),
-                            Color.fromARGB(162, 0, 0, 0)
+                            const Color.fromARGB(102, 0, 0, 0),
+                            const Color.fromARGB(162, 0, 0, 0)
                             // const Color.fromARGB(255, 255, 255, 255)
                             //     .withAlpha(0),
                             // Color.fromARGB(70, 255, 255, 255),
@@ -572,9 +567,15 @@ class _showCousePageState extends State<showCousePage> {
                   Text(courses.first.name,
                       style: const TextStyle(
                           fontSize: 16, fontWeight: FontWeight.w600)),
-                  Text(courses.first.price.toString(),
-                      style: const TextStyle(
-                          fontSize: 16, fontWeight: FontWeight.w600)),
+                  (courses.first.price <= 0)
+                      ? const Text("ฟรี",
+                          style: TextStyle(
+                              fontSize: 16, fontWeight: FontWeight.w600))
+                      : (courses.first.price > 0)
+                          ? Text(courses.first.price.toString(),
+                              style: const TextStyle(
+                                  fontSize: 16, fontWeight: FontWeight.w600))
+                          : Container(),
                 ],
               ),
             ),
@@ -592,7 +593,7 @@ class _showCousePageState extends State<showCousePage> {
                 const Text("ยอดคงเหลือ",
                     style:
                         TextStyle(fontSize: 16, fontWeight: FontWeight.w600)),
-                Text(moneycus.toString(),
+                Text(customer.first.price.toString(),
                     style: const TextStyle(
                         fontSize: 16, fontWeight: FontWeight.w600)),
               ],
@@ -605,9 +606,15 @@ class _showCousePageState extends State<showCousePage> {
                   const Text("ยอดสุทธิ",
                       style:
                           TextStyle(fontSize: 16, fontWeight: FontWeight.w600)),
-                  Text(courses.first.price.toString(),
-                      style: const TextStyle(
-                          fontSize: 16, fontWeight: FontWeight.w600)),
+                  (courses.first.price <= 0)
+                      ? const Text("ฟรี",
+                          style: TextStyle(
+                              fontSize: 16, fontWeight: FontWeight.w600))
+                      : (courses.first.price > 0)
+                          ? Text(courses.first.price.toString(),
+                              style: const TextStyle(
+                                  fontSize: 16, fontWeight: FontWeight.w600))
+                          : Container(),
                 ],
               ),
             ),
@@ -657,7 +664,7 @@ class _showCousePageState extends State<showCousePage> {
                   FilledButton(
                       onPressed: () async {
                         SmartDialog.dismiss();
-                        if (moneycus < courses.first.price) {
+                        if (customer.first.price < courses.first.price) {
                           _close(ctx);
                         } else {
                           setState(() {
