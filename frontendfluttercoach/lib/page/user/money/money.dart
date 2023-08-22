@@ -10,6 +10,7 @@ import 'package:provider/provider.dart';
 import '../../../model/request/wallet_uid.dart';
 import '../../../model/response/md_Result.dart';
 import '../../../service/provider/appdata.dart';
+import '../../../widget/textField/wg_textField_int copy.dart';
 import '../../../widget/textField/wg_textField_int.dart';
 import 'moneyQrcode.dart';
 
@@ -134,8 +135,8 @@ class _addCoinState extends State<addCoin> {
                     ),
                     Padding(
                       padding: const EdgeInsets.only(right: 20, left: 20),
-                      child: WidgetTextFieldIntnotmax(
-                          controller: _money, labelText: ''),
+                      child: WidgetTextFieldInt(
+                          controller: _money, labelText: '',maxLength: 4),
                     ),
                     Visibility(
                       visible: _isvisible,

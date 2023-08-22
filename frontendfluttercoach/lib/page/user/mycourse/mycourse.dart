@@ -59,13 +59,9 @@ class _MyCousesState extends State<MyCouses> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: SafeArea(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-          Align(
-            alignment: Alignment.topRight,
-            child: IconButton(
+      appBar: AppBar(
+        backgroundColor: Colors.white,
+        actions: [IconButton(
                 icon: const Icon(
                   Icons.history_rounded,
                   size: 40,
@@ -76,8 +72,11 @@ class _MyCousesState extends State<MyCouses> {
                       screen: const HistoryPage(),
                       withNavBar: true,
                     );    
-                }),
-          ),
+                }),]),
+      body: SafeArea(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
           Padding(
             padding: const EdgeInsets.only(left: 10,bottom: 10),
             child: Text("รายการซื้อของฉัน",

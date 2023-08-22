@@ -2,6 +2,7 @@ import 'package:custom_rating_bar/custom_rating_bar.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:frontendfluttercoach/page/user/homepage/widget/widget_search.dart';
+import 'package:frontendfluttercoach/page/user/mycourse/Widget/widget_loadScore.dart';
 
 import 'package:persistent_bottom_nav_bar_v2/persistent-tab-view.dart';
 import 'package:provider/provider.dart';
@@ -11,6 +12,8 @@ import '../../../model/response/md_coach_course_get.dart';
 import '../../../service/course.dart';
 import '../../../service/provider/appdata.dart';
 import '../cousepage.dart';
+import '../../../../service/review.dart';
+import 'package:collection/collection.dart';
 
 class HomePageUser extends StatefulWidget {
   const HomePageUser({super.key});
@@ -22,6 +25,8 @@ class HomePageUser extends StatefulWidget {
 class _HomePageUserState extends State<HomePageUser> {
   late Future<void> loadDataMethod;
   late CourseService courseService;
+  late ReviewService reviewService;
+  late List<CourseWithRating> courseWithRatings;
 
   List<Course> courses = [];
   int uid = 0;
@@ -35,8 +40,8 @@ class _HomePageUserState extends State<HomePageUser> {
     uid = context.read<AppData>().uid;
     courseService =
         CourseService(Dio(), baseUrl: context.read<AppData>().baseurl);
-    // reviewService =
-    //     ReviewService(Dio(), baseUrl: context.read<AppData>().baseurl);
+    reviewService =
+        ReviewService(Dio(), baseUrl: context.read<AppData>().baseurl);
 
     loadDataMethod = loadData();
   }
@@ -155,7 +160,8 @@ class _HomePageUserState extends State<HomePageUser> {
                               color: Colors.grey,
                             ),
                             hintText: "ค้นหา",
-                            hintStyle: const TextStyle(color: Colors.grey,fontSize: 16)),
+                            hintStyle: const TextStyle(
+                                color: Colors.grey, fontSize: 16)),
                       ),
                     ),
                   ),
@@ -200,19 +206,46 @@ class _HomePageUserState extends State<HomePageUser> {
 
       var datacourse =
           await courseService.courseOpenSell(coID: '', cid: '', name: '');
-
       courses = datacourse.data;
-      for (int i = 0; i <= courses.length - 1; i++) {
-        // listcoID.add(courses[i].coId);
-        log(courses[i].coId.toString());
-        
-        // }
-      }     
+
+      // Get rating of all courses
+      courseWithRatings = await getSortedCoursesWithRating(courses);
+      // Sort by score
+      courseWithRatings.sort(
+        (a, b) => b.score.compareTo(a.score),
+      );
     } catch (err) {
       log('Error: $err');
     }
   }
 
+  // Get rating of all courses
+  Future<List<CourseWithRating>> getSortedCoursesWithRating(
+      List<Course> courses) async {
+    List<CourseWithRating> courseWithRatings = [];
+    for (var course in courses) {
+      double calRating = 0;
+      double sumscore = 0;
+      try {
+        var datareview =
+            await reviewService.review(coID: course.coId.toString());
+        var reviews = datareview.data;
+        if (reviews.isNotEmpty) {
+          final summ = reviews.map((e) => e.score as int).toList();
+          calRating = summ.average;
+        } else {
+          calRating = 0.0;
+          sumscore = 0;
+        }
+      } catch (err) {
+        log('Error: $err');
+      }
+
+      var courseWithRating = CourseWithRating(course: course, score: calRating);
+      courseWithRatings.add(courseWithRating);
+    }
+    return courseWithRatings;
+  }
 
   Widget loadcourse() {
     return FutureBuilder(
@@ -229,22 +262,28 @@ class _HomePageUserState extends State<HomePageUser> {
 
           //courses.sort((a, b) => a.someProperty.compareTo(b.someProperty));
 
-          return RefreshIndicator(onRefresh: () async{
-          setState(() {
-            loadDataMethod = loadData();
-          });
-        },
+          return RefreshIndicator(
+            onRefresh: () async {
+              setState(() {
+                loadDataMethod = loadData();
+              });
+            },
             child: ListView.builder(
               shrinkWrap: true,
-              itemCount: courses.length,
+              // Use Sorted courses
+              itemCount: courseWithRatings.length,
               itemBuilder: (context, index) {
                 bool isVisibleText = false;
-                if(courses[index].price <=0){
-                  isVisibleText=true;
+                // Use Sorted courses
+                if (courseWithRatings[index].course.price <= 0) {
+                  isVisibleText = true;
                 }
-                final listcours = courses[index];
+                // Use Sorted courses
+                final listcours = courseWithRatings[index].course;
+
                 return Padding(
-                  padding: const EdgeInsets.only(left: 10, right: 10, bottom: 20),
+                  padding:
+                      const EdgeInsets.only(left: 10, right: 10, bottom: 20),
                   child: InkWell(
                     onTap: () {
                       context.read<AppData>().idcourse = listcours.coId;
@@ -273,7 +312,8 @@ class _HomePageUserState extends State<HomePageUser> {
                                             .colorScheme
                                             .onPrimary,
                                         image: DecorationImage(
-                                            image: NetworkImage(listcours.image),
+                                            image:
+                                                NetworkImage(listcours.image),
                                             fit: BoxFit.cover),
                                         borderRadius: BorderRadius.circular(20),
                                       ),
@@ -284,30 +324,34 @@ class _HomePageUserState extends State<HomePageUser> {
                                 visible: isVisibleText,
                                 child: Padding(
                                   padding: EdgeInsets.only(
-                                    left:
-                                        MediaQuery.of(context).size.width * 0.78,
+                                    left: MediaQuery.of(context).size.width *
+                                        0.78,
                                   ),
-                                  child: Container(
-                                    height: 65,
-                                    width: 65,
-                                    decoration: const BoxDecoration(
-                                      gradient: LinearGradient(
-                                        stops: [.5, .5],
-                                        begin: Alignment.topRight,
-                                        end: Alignment.bottomLeft,
-                                        colors: [
-                                          Color.fromARGB(255, 185, 0, 0),
-                                          Colors.transparent, // top Right part
-                                        ],
+                                  child: Align(
+                                    alignment: Alignment.topRight,
+                                    child: Container(
+                                      height: 65,
+                                      width: 65,
+                                      decoration: const BoxDecoration(
+                                        gradient: LinearGradient(
+                                          stops: [.5, .5],
+                                          begin: Alignment.topRight,
+                                          end: Alignment.bottomLeft,
+                                          colors: [
+                                            Color.fromARGB(255, 185, 0, 0),
+                                            Colors.transparent, // top Right part
+                                          ],
+                                        ),
                                       ),
-                                    ),
-                                    child: const Padding(
-                                      padding: EdgeInsets.only(left: 28, top: 7),
-                                      child: Text("ฟรี",
-                                          style: TextStyle(
-                                              fontSize: 18,
-                                              fontWeight: FontWeight.w600,
-                                              color: Colors.white)),
+                                      child:  Padding(
+                                        padding:
+                                            EdgeInsets.only(left: MediaQuery.of(context).size.width * 0.075, top: 7),
+                                        child: Text("ฟรี",
+                                            style: TextStyle(
+                                                fontSize: 18,
+                                                fontWeight: FontWeight.w600,
+                                                color: Colors.white)),
+                                      ),
                                     ),
                                   ),
                                 ),
@@ -333,61 +377,87 @@ class _HomePageUserState extends State<HomePageUser> {
                                   borderRadius: BorderRadius.circular(20),
                                 ),
                               ),
-                              Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  mainAxisAlignment: MainAxisAlignment.end,
-                                  children: [
-                                    // WidgetShowScore(
-                                    //   couseID: listcours.coId.toString(),
-                                    // ),
-                                    Row(
+                              Stack(
+                                children: [
+                                  Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      mainAxisAlignment: MainAxisAlignment.end,
                                       children: [
-                                        Text(
-                                          listcours.name,
-                                          style: Theme.of(context)
-                                              .textTheme
-                                              .titleLarge!
-                                              .copyWith(color: Colors.white),
+                                        Row(
+                                          children: [
+                                            Text(
+                                              listcours.name,
+                                              style: Theme.of(context)
+                                                  .textTheme
+                                                  .titleLarge!
+                                                  .copyWith(
+                                                      color: Colors.white),
+                                            ),
+                                          ],
+                                        ),
+                                        Row(
+                                          children: [
+                                            const Padding(
+                                              padding:
+                                                  EdgeInsets.only(right: 8),
+                                              child: Icon(
+                                                FontAwesomeIcons.solidUser,
+                                                size: 16.0,
+                                                color: Colors.white,
+                                              ),
+                                            ),
+                                            Text(
+                                              listcours.coach.fullName,
+                                              style: Theme.of(context)
+                                                  .textTheme
+                                                  .bodyLarge!
+                                                  .copyWith(
+                                                      color: Colors.white),
+                                            ),
+                                          ],
+                                        ),
+                                        RatingBar.readOnly(
+                                          isHalfAllowed: false,
+                                          filledIcon: FontAwesomeIcons.bolt,
+                                          size: 16,
+                                          emptyIcon: FontAwesomeIcons.bolt,
+                                          filledColor: Theme.of(context)
+                                              .colorScheme
+                                              .tertiaryContainer,
+                                          emptyColor: const Color.fromARGB(
+                                              255, 245, 245, 245),
+                                          initialRating:
+                                              double.parse(listcours.level),
+                                          maxRating: 3,
                                         ),
                                       ],
                                     ),
-                                    Row(
-                                      children: [
-                                        const Padding(
-                                          padding: EdgeInsets.only(right: 8),
-                                          child: Icon(
-                                            FontAwesomeIcons.solidUser,
-                                            size: 16.0,
-                                            color: Colors.white,
-                                          ),
+                                  ),
+                                  Container(
+                                      alignment: Alignment.bottomRight,
+                                      child: Container(
+                                        height: 45,
+                                        width: 45,
+                                        child: WidgetShowScore(
+                                          couseID: listcours.coId.toString(),
                                         ),
-                                        Text(
-                                          listcours.coach.fullName,
-                                          style: Theme.of(context)
-                                              .textTheme
-                                              .bodyLarge!
-                                              .copyWith(color: Colors.white),
-                                        ),
-                                      ],
-                                    ),
-                                    RatingBar.readOnly(
-                                      isHalfAllowed: false,
-                                      filledIcon: FontAwesomeIcons.bolt,
-                                      size: 16,
-                                      emptyIcon: FontAwesomeIcons.bolt,
-                                      filledColor: Theme.of(context)
-                                          .colorScheme
-                                          .tertiaryContainer,
-                                      emptyColor: const Color.fromARGB(
-                                          255, 245, 245, 245),
-                                      initialRating:
-                                          double.parse(listcours.level),
-                                      maxRating: 3,
-                                    ),
-                                  ],
-                                ),
+                                      )),
+                                  // Positioned(
+                                  //   top: double.infinity,
+                                  //   child: WidgetShowScore(
+                                  //       couseID: listcours.coId.toString(),
+                                  //     ),)
+
+                                  //     Align(
+                                  //   alignment: Alignment.bottomRight,
+                                  //   child: WidgetShowScore(
+                                  //           couseID: listcours.coId.toString(),
+                                  //         ),
+                                  // ),
+                                ],
                               )
                             ],
                           ),
@@ -404,6 +474,14 @@ class _HomePageUserState extends State<HomePageUser> {
     );
   }
 }
+
+// Class for Course + Rating
+class CourseWithRating {
+  Course course;
+  double score;
+  CourseWithRating({required this.course, required this.score});
+}
+
 // การทำมุมโค้งบางจุด
 //  ClipRRect(
 //                               borderRadius: const BorderRadius.only(
