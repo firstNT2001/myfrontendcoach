@@ -34,7 +34,6 @@ import '../../../../widget/image_video.dart';
 import '../../../../widget/notificationBody.dart';
 import '../../../../widget/wg_editClip_Dialog.dart';
 import '../../../../widget/wg_editFood_Dialog.dart';
-import '../../../../widget/wg_search_food.dart';
 import 'clipCourse/insertClip/clip_select_page.dart';
 import 'foodCourse/insertFood/food_new_page.dart';
 
@@ -146,48 +145,6 @@ class _HomeFoodAndClipPageState extends State<HomeFoodAndClipPage> {
           ],
         ),
         resizeToAvoidBottomInset: false,
-        // appBar: AppBar(
-        //   elevation: 5000000,
-        //   backgroundColor: Theme.of(context).colorScheme.primaryContainer,
-        //   title: Row(
-        //     crossAxisAlignment: CrossAxisAlignment.start,
-        //     children: [
-        //       Text(
-        //         "วันที่ ${widget.sequence}",
-        //         style: Theme.of(context).textTheme.headlineMedium,
-        //       ),
-        //     ],
-        //   ),
-        //   leading: IconButton(
-        //     icon: const Icon(
-        //       FontAwesomeIcons.chevronLeft,
-        //     ),
-        //     onPressed: () {
-        //       Navigator.pop(context);
-        //     },
-        //   ),
-        //   bottom: TabBar(
-        //       labelColor: Theme.of(context)
-        //           .colorScheme
-        //           .primary, //<-- selected text color
-        //       unselectedLabelColor:
-        //           Theme.of(context).colorScheme.tertiary, //<-- Unselected text
-        //       tabs: const [
-        //         Tab(
-        //           icon: Icon(
-        //             FontAwesomeIcons.dumbbell,
-        //           ),
-        //           text: 'คลิปออกกำลังกาย',
-        //         ),
-        //         Tab(
-        //           icon: Icon(
-        //             FontAwesomeIcons.utensils,
-        //           ),
-        //           text: 'เมนูอาหาร',
-        //         ),
-        //       ]),
-        //   centerTitle: true,
-        // ),
         body: Column(
           children: [
             showAppBar(context),
@@ -195,28 +152,44 @@ class _HomeFoodAndClipPageState extends State<HomeFoodAndClipPage> {
               child: TabBarView(
                 children: [
                   //Clip
-                  Column(
-                    children: [
-                      const SizedBox(
-                        height: 10,
-                      ),
-                      // ignore: prefer_is_empty
+                  RefreshIndicator(
+                    onRefresh: () async {
+                      setState(() {
+                        loadFoodDataMethod = loadFoodData();
+                        loadClipDataMethod = loadClipData();
+                      });
+                    },
+                    child: Column(
+                      children: [
+                        const SizedBox(
+                          height: 10,
+                        ),
+                        // ignore: prefer_is_empty
 
-                      Expanded(
-                        child: showClip(),
-                      )
-                    ],
+                        Expanded(
+                          child: showClip(),
+                        )
+                      ],
+                    ),
                   ),
                   //Food
-                  Column(
-                    children: [
-                      const SizedBox(
-                        height: 10,
-                      ),
-                      Expanded(
-                        child: showFood(),
-                      ),
-                    ],
+                  RefreshIndicator(
+                    onRefresh: () async {
+                      setState(() {
+                        loadFoodDataMethod = loadFoodData();
+                        loadClipDataMethod = loadClipData();
+                      });
+                    },
+                    child: Column(
+                      children: [
+                        const SizedBox(
+                          height: 10,
+                        ),
+                        Expanded(
+                          child: showFood(),
+                        ),
+                      ],
+                    ),
                   ),
                 ],
               ),
@@ -254,7 +227,7 @@ class _HomeFoodAndClipPageState extends State<HomeFoodAndClipPage> {
                 Color.fromARGB(227, 84, 84, 84),
                 Color.fromARGB(227, 84, 84, 84),
               ])),
-              height: MediaQuery.of(context).size.height * 0.218,
+              height: 150,
             ),
           ),
         ),
@@ -288,8 +261,20 @@ class _HomeFoodAndClipPageState extends State<HomeFoodAndClipPage> {
                 child: Container(
                   width: MediaQuery.of(context).size.width * 0.9,
                   decoration: BoxDecoration(
-                      color: const Color.fromARGB(255, 243, 243, 244),
-                      borderRadius: BorderRadius.circular(15)),
+                    color: const Color.fromARGB(255, 243, 243, 244),
+                    borderRadius: BorderRadius.circular(15),
+                    boxShadow: const [
+                      BoxShadow(
+                        color: Color.fromARGB(255, 156, 156, 156),
+                        blurRadius: 20.0,
+                        spreadRadius: 1,
+                        offset: Offset(
+                          0,
+                          3,
+                        ),
+                      )
+                    ],
+                  ),
                   child: Column(
                     children: [
                       Padding(
@@ -411,6 +396,7 @@ class _HomeFoodAndClipPageState extends State<HomeFoodAndClipPage> {
                   widget.isVisible);
             },
             child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 // ignore: unnecessary_null_comparison
                 if (listfood.listFood.image != '') ...{
@@ -422,7 +408,7 @@ class _HomeFoodAndClipPageState extends State<HomeFoodAndClipPage> {
                           borderRadius:
                               BorderRadius.circular(20), // Image border
                           child: SizedBox.fromSize(
-                            size: const Size.fromRadius(48), // Image radius
+                            size: const Size.fromRadius(60), // Image radius
                             child: Image.network(listfood.listFood.image,
                                 fit: BoxFit.cover),
                           ),
@@ -437,7 +423,7 @@ class _HomeFoodAndClipPageState extends State<HomeFoodAndClipPage> {
                           borderRadius:
                               BorderRadius.circular(20), // Image border
                           child: SizedBox.fromSize(
-                              size: const Size.fromRadius(48), // Image radius
+                              size: const Size.fromRadius(60), // Image radius
                               child: Container(
                                 decoration: BoxDecoration(
                                   color: const Color(0xff7c94b6),
@@ -447,65 +433,61 @@ class _HomeFoodAndClipPageState extends State<HomeFoodAndClipPage> {
                         ),
                       )),
 
-                const SizedBox(width: 20),
+                const SizedBox(width: 30),
 
                 Column(
                   mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.center,
+                  // crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     SizedBox(
                       width: MediaQuery.of(context).size.width * 0.4,
-                      child: AutoSizeText(
+                      child: Text(
                         listfood.listFood.name,
                         maxLines: 5,
                         style: Theme.of(context).textTheme.titleMedium,
                       ),
                     ),
                     const SizedBox(height: 10),
-                    Row(
-                      children: [
-                        Container(
-                          width: MediaQuery.of(context).size.width * 0.4,
-                          height: 40,
-                          decoration: BoxDecoration(
-                              boxShadow: const <BoxShadow>[
-                                BoxShadow(
-                                    color: Colors.grey,
-                                    blurRadius: 2.0,
-                                    offset: Offset(0.0, 0.75))
-                              ],
-                              color: const Color.fromRGBO(244, 243, 243, 1),
-                              borderRadius: BorderRadius.circular(30)),
-                          child: TextButton(
-                            onPressed: () {
-                              if (widget.isVisible == true) {
-                                dialogFoodEditMealInCourse(
-                                    context,
-                                    listfood.listFood.ifid,
-                                    listfood.listFood.name,
-                                    listfood.listFood.image,
-                                    listfood.listFood.calories,
-                                    listfood.time,
-                                    listfood.fid.toString());
-                              }
-                            },
-                            child: Text(
-                              listfood.time == '1'
-                                  ? 'มื้อเช้า'
-                                  : listfood.time == '2'
-                                      ? 'มื้อเที่ยง'
-                                      : listfood.time == '3'
-                                          ? 'มื้อเย็น'
-                                          : 'มื้อใดก็ได้',
-                              style: Theme.of(context).textTheme.bodyMedium,
-                            ),
-                          ),
-                        ),
-                        if (widget.isVisible == false) ...{
-                          const SizedBox(width: 60)
+                    Container(
+                      width: MediaQuery.of(context).size.width * 0.4,
+                      height: 40,
+                      decoration: BoxDecoration(
+                          boxShadow: const <BoxShadow>[
+                            BoxShadow(
+                                color: Colors.grey,
+                                blurRadius: 2.0,
+                                offset: Offset(0.0, 0.75))
+                          ],
+                          color: const Color.fromRGBO(244, 243, 243, 1),
+                          borderRadius: BorderRadius.circular(30)),
+                      child: TextButton(
+                        onPressed: () {
+                          if (widget.isVisible == true) {
+                            dialogFoodEditMealInCourse(
+                                context,
+                                listfood.listFood.ifid,
+                                listfood.listFood.name,
+                                listfood.listFood.image,
+                                listfood.listFood.calories,
+                                listfood.time,
+                                listfood.fid.toString());
+                          }
                         },
-                      ],
+                        child: Text(
+                          listfood.time == '1'
+                              ? 'มื้อเช้า'
+                              : listfood.time == '2'
+                                  ? 'มื้อเที่ยง'
+                                  : listfood.time == '3'
+                                      ? 'มื้อเย็น'
+                                      : 'มื้อใดก็ได้',
+                          style: Theme.of(context).textTheme.bodyMedium,
+                        ),
+                      ),
                     ),
+                    if (widget.isVisible == false) ...{
+                      const SizedBox(width: 60)
+                    },
                   ],
                 ),
               ],

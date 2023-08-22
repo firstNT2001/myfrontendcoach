@@ -182,8 +182,13 @@ class _CoachPageState extends State<CoachPage> {
                                 width: 400,
                                 child: FilledButton(
                                     onPressed: () {
-                                      Get.to(
-                                          () => const CoachEidtProfilePage());
+                                      Get.to(() =>
+                                              const CoachEidtProfilePage())!
+                                          .then((value) {
+                                        setState(() {
+                                          loadCoachDataMethod = loadCoachData();
+                                        });
+                                      });
                                     },
                                     child: const Text("แก้ไขข้อมูล")),
                               ),

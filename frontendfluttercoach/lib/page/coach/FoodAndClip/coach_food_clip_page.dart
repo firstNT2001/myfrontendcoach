@@ -118,7 +118,14 @@ class _FoodCoachPageState extends State<FoodCoachPage> {
                         ),
                         searchFood(context),
                         Expanded(
-                          child: showFood(),
+                          child: RefreshIndicator(
+                              onRefresh: () async {
+                                setState(() {
+                                  loadFoodDataMethod = loadFoodData();
+                                  loadClipDataMethod = loadClipData();
+                                });
+                              },
+                              child: showFood()),
                         ),
                       ],
                     ),
@@ -129,7 +136,14 @@ class _FoodCoachPageState extends State<FoodCoachPage> {
                         ),
                         searchClip(context),
                         Expanded(
-                          child: showClips(),
+                          child: RefreshIndicator(
+                              onRefresh: () async {
+                                setState(() {
+                                  loadFoodDataMethod = loadFoodData();
+                                  loadClipDataMethod = loadClipData();
+                                });
+                              },
+                              child: showClips()),
                         ),
                       ],
                     ),
@@ -170,7 +184,7 @@ class _FoodCoachPageState extends State<FoodCoachPage> {
                 Color.fromARGB(227, 84, 84, 84),
                 Color.fromARGB(227, 84, 84, 84),
               ])),
-              height: MediaQuery.of(context).size.height * 0.218,
+              height: 150,
             ),
           ),
         ),
@@ -192,8 +206,20 @@ class _FoodCoachPageState extends State<FoodCoachPage> {
                 child: Container(
                   width: MediaQuery.of(context).size.width * 0.9,
                   decoration: BoxDecoration(
-                      color: const Color.fromARGB(255, 243, 243, 244),
-                      borderRadius: BorderRadius.circular(15)),
+                    color: const Color.fromARGB(255, 243, 243, 244),
+                    borderRadius: BorderRadius.circular(15),
+                    boxShadow: const [
+                      BoxShadow(
+                        color: Color.fromARGB(255, 156, 156, 156),
+                        blurRadius: 20.0,
+                        spreadRadius: 1,
+                        offset: Offset(
+                          0,
+                          3,
+                        ),
+                      )
+                    ],
+                  ),
                   child: Column(
                     children: [
                       Padding(

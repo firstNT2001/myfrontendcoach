@@ -7,6 +7,7 @@ import 'package:frontendfluttercoach/page/coach/usersBuyCourses/show_course_user
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:percent_indicator/linear_percent_indicator.dart';
+import 'package:persistent_bottom_nav_bar_v2/persistent-tab-view.dart';
 import 'package:provider/provider.dart';
 
 import '../../../model/response/md_process.dart';
@@ -61,7 +62,7 @@ class _ShowCourseUserPageState extends State<ShowCourseUserPage> {
               FontAwesomeIcons.chevronLeft,
             ),
             onPressed: () {
-              Get.back();
+              Navigator.pop(context);
             },
           ),
         ),
@@ -115,9 +116,17 @@ class _ShowCourseUserPageState extends State<ShowCourseUserPage> {
                 padding: const EdgeInsets.only(left: 10, right: 10, bottom: 20),
                 child: InkWell(
                   onTap: () {
-                    Get.to(() => ShowCourseOfUserPage(
-                          coID: listcours.course.coId.toString(),
-                        ));
+                    pushNewScreen(
+                      context,
+                      screen: ShowCourseOfUserPage(
+                        coID: listcours.course.coId.toString(),
+                      ),
+                      withNavBar: true,
+                    ).then((value) {
+                      setState(() {
+                        loadCourseDataMethod = loadUserData();
+                      });
+                    });
                   },
                   child: Container(
                     alignment: Alignment.center,

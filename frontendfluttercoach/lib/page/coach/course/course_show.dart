@@ -47,10 +47,18 @@ class _ShowCourseState extends State<ShowCourse> {
         //resizeToAvoidBottomInset: false,
 
         body: SafeArea(
-            child: ListView(
-          children: [
-            showCourse(),
-          ],
+            child: RefreshIndicator(
+          onRefresh: () async {
+            setState(() {
+              loadDataMethod = loadDataAsync();
+              loadReviewDataAsync();
+            });
+          },
+          child: ListView(
+            children: [
+              showCourse(),
+            ],
+          ),
         )),
       ),
     );

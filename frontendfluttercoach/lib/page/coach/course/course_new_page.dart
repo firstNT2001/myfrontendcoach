@@ -19,7 +19,6 @@ import '../../../model/request/course_coachID_post.dart';
 import '../../../model/response/md_Result.dart';
 import '../../../service/course.dart';
 import '../../../service/provider/appdata.dart';
-import '../../../widget/PopUp/popUp.dart';
 import '../../../widget/dropdown/wg_dropdown_notValue_string.dart';
 
 import '../../../widget/notificationBody.dart';
@@ -218,6 +217,13 @@ class _CourseNewPageState extends State<CourseNewPage> {
             textErr = 'กรุณากรอกข้อมูลให้ครบ';
           });
           stopLoading();
+        } else if (int.parse(days.text).isNegative == true ||
+            int.parse(amount.text).isNegative == true ||
+            int.parse(price.text).isNegative == true) {
+          setState(() {
+            textErr = 'กรุณากรอกตัวเลขมากกว่า 0';
+          });
+          stopLoading();
         } else if (pickedImg == null) {
           setState(() {
             textErr = 'กรุณาเพิ่มรูป';
@@ -255,8 +261,6 @@ class _CourseNewPageState extends State<CourseNewPage> {
           stopLoading();
 
           if (moduleResult.result == '0') {
-            stopLoading();
-
             InAppNotification.show(
               child: NotificationBody(
                 count: 1,
