@@ -72,7 +72,7 @@ class _FoodEditSelectPageState extends State<FoodEditSelectPage> {
             //color: Colors.white,
           ),
           onPressed: () {
-            Get.back();
+            Navigator.pop(context);
           },
         ),
         backgroundColor: Colors.white,
@@ -261,18 +261,8 @@ class _FoodEditSelectPageState extends State<FoodEditSelectPage> {
                             log(modelResult.result);
                             if (modelResult.result == '1') {
                               // ignore: use_build_context_synchronously
-                              Navigator.pushAndRemoveUntil<void>(
-                                context,
-                                MaterialPageRoute<void>(
-                                    builder: (BuildContext context) =>
-                                        HomeFoodAndClipPage(
-                                          did: widget.did,
-                                          sequence:
-                                              context.read<AppData>().sequence,
-                                          isVisible: widget.isVisible,
-                                        )),
-                                ModalRoute.withName('/NavbarBottomCoach'),
-                              );
+                              Navigator.pop(context);
+
                               // ignore: use_build_context_synchronously
                               InAppNotification.show(
                                 child: NotificationBody(

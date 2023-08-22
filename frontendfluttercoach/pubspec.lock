@@ -1441,6 +1441,14 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.99"
+  slide_popup_dialog_null_safety:
+    dependency: "direct main"
+    description:
+      name: slide_popup_dialog_null_safety
+      sha256: "93361043b55ba6734dfe30396d54a1e08c7cefd675deb1ac3416680dc157dc1b"
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.0.0"
   source_gen:
     dependency: "direct main"
     description:

@@ -161,7 +161,7 @@ class _FoodSelectTimePageState extends State<FoodSelectTimePage>
           if (modelResult.result == '1') {
             widget.increaseFood.clear();
             Navigator.popUntil(
-                context, ModalRoute.withName('/NavbarBottomCoach'));
+                context, ModalRoute.withName('/HomeFoodAndClipPage'));
 
             // ignore: use_build_context_synchronously
             InAppNotification.show(

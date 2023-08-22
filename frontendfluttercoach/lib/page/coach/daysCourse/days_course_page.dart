@@ -9,6 +9,8 @@ import 'package:frontendfluttercoach/model/request/day_dayID_put.dart';
 import 'package:frontendfluttercoach/model/response/md_Result.dart';
 
 import 'package:frontendfluttercoach/model/response/md_days.dart';
+import 'package:get/get.dart';
+import 'package:get/get_core/src/get_main.dart';
 
 import 'package:in_app_notification/in_app_notification.dart';
 import 'package:persistent_bottom_nav_bar_v2/persistent-tab-view.dart';
@@ -301,14 +303,21 @@ class _DaysCoursePageState extends State<DaysCoursePage> {
                                   cardColors[index] =
                                       Theme.of(context).colorScheme.tertiary;
                                 });
-                                pushNewScreen(
-                                  context,
-                                  screen: HomeFoodAndClipPage(
+                                // pushNewScreen(
+                                //   context,
+                                //   screen: HomeFoodAndClipPage(
+                                //     did: listday.did.toString(),
+                                //     sequence: i.toString(),
+                                //     isVisible: widget.isVisible,
+                                //   ),
+                                //   withNavBar: true,
+                                // );
+                                Get.to(
+                                  () => HomeFoodAndClipPage(
                                     did: listday.did.toString(),
                                     sequence: i.toString(),
                                     isVisible: widget.isVisible,
                                   ),
-                                  withNavBar: true,
                                 );
                               } else {
                                 dialogDeleteDay(context, listday.did);
