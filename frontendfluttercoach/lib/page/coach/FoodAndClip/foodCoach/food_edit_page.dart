@@ -158,6 +158,10 @@ class _FoodEditCoachPageState extends State<FoodEditCoachPage> {
               textErr = 'กรุณากรอกข้อมูลให้ครบ';
             });
             stopLoading();
+          }else if (int.parse(calories.text).isNegative == true) {
+            setState(() {
+              textErr = 'กรุณากรอกตัวเลขมากกว่า 0';
+            });
           } else {
             setState(() {
               textErr = '';

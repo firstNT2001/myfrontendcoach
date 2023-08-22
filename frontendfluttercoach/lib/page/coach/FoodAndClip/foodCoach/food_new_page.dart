@@ -140,12 +140,15 @@ class _FoodNewCoachPageState extends State<FoodNewCoachPage> {
   FilledButton button(BuildContext context) {
     return FilledButton(
         onPressed: () async {
-
           if (name.text.isEmpty ||
               details.text.isEmpty ||
               calories.text.isEmpty) {
             setState(() {
               textErr = 'กรุณากรอกข้อมูลให้ครบ';
+            });
+          } else if (int.parse(calories.text).isNegative == true) {
+            setState(() {
+              textErr = 'กรุณากรอกตัวเลขมากกว่า 0';
             });
           } else if (pickedImg == null) {
             setState(() {
