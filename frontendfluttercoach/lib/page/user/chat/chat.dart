@@ -4,6 +4,7 @@ import 'dart:io' as io;
 import 'package:flutter/material.dart';
 import 'package:flutter_chat_types/flutter_chat_types.dart' as types;
 import 'package:flutter_chat_ui/flutter_chat_ui.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:uuid/uuid.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -19,7 +20,13 @@ class ChatPage extends StatefulWidget {
   final String userID;
   final String firstName;
 
-  const ChatPage({Key? key, required this.roomID, required this.roomName, required this.userID, required this.firstName}) : super(key: key);
+  const ChatPage(
+      {Key? key,
+      required this.roomID,
+      required this.roomName,
+      required this.userID,
+      required this.firstName})
+      : super(key: key);
 
   @override
   _ChatPageState createState() => _ChatPageState();
@@ -38,7 +45,8 @@ class _ChatPageState extends State<ChatPage> {
 
   void _initialSystem() {
     // Create stream to chatroom collection
-    _chatStream = FirebaseFirestore.instance.collection(widget.roomID).snapshots();
+    _chatStream =
+        FirebaseFirestore.instance.collection(widget.roomID).snapshots();
 
     // Create chatUser object
     _user = types.User(id: widget.userID, firstName: widget.firstName);
@@ -89,7 +97,8 @@ class _ChatPageState extends State<ChatPage> {
       String filename = Uuid().v4() + '.jpg';
 
       // Connect firestorage at Chatroom/filename.jpg
-      Reference firebaseStorageRef = FirebaseStorage.instance.ref().child('${widget.roomID}/${filename}');
+      Reference firebaseStorageRef =
+          FirebaseStorage.instance.ref().child('${widget.roomID}/${filename}');
       // Update file
       UploadTask uploadTask = firebaseStorageRef.putFile(io.File(result.path));
       // Wait for uploading
@@ -144,49 +153,100 @@ class _ChatPageState extends State<ChatPage> {
       context: context,
       builder: (BuildContext context) {
         return SafeArea(
-          child: SizedBox(
-            height: 144,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: <Widget>[
-                TextButton(
-                  onPressed: () {
-                    Navigator.pop(context);
-                    _handleImageSelection(ImageSource.camera);
-                  },
-                  child: const Align(
-                    alignment: Alignment.centerLeft,
-                    child: Text('ถ่ายภาพ'),
+          child: Container(
+            height: 200,
+            color: Colors.white,
+            child: SizedBox(
+              height: 144,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: <Widget>[
+                  TextButton(
+                    onPressed: () {
+                      Navigator.pop(context);
+                      _handleImageSelection(ImageSource.camera);
+                    },
+                    child: const Align(
+                      alignment: Alignment.centerLeft,
+                      child: Padding(
+                        padding: EdgeInsets.only(top: 15, left: 12),
+                        child: Row(
+                          children: [
+                            Padding(
+                              padding: EdgeInsets.only(right: 5),
+                              child: Icon(
+                                FontAwesomeIcons.camera,
+                                color: Colors.black,
+                                size: 18,
+                              ),
+                            ),
+                            Text(
+                              'ถ่ายภาพ',
+                              style:
+                                  TextStyle(fontSize: 16, color: Colors.black),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
                   ),
-                ),
-                TextButton(
-                  onPressed: () {
-                    Navigator.pop(context);
-                    _handleImageSelection(ImageSource.gallery);
-                  },
-                  child: const Align(
-                    alignment: Alignment.centerLeft,
-                    child: Text('เลือกรูปภาพ'),
+                  Divider(indent: 10, endIndent: 10),
+                  TextButton(
+                    onPressed: () {
+                      Navigator.pop(context);
+                      _handleImageSelection(ImageSource.gallery);
+                    },
+                    child: const Align(
+                      alignment: Alignment.centerLeft,
+                      child: Padding(
+                        padding: EdgeInsets.only(left: 12),
+                        child: Row(
+                          children: [
+                            Padding(
+                              padding: EdgeInsets.only(right: 5),
+                              child: Icon(
+                                FontAwesomeIcons.image,
+                                color: Colors.black,
+                                size: 18,
+                              ),
+                            ),
+                            Text(
+                              'เลือกรูปภาพ',
+                              style: TextStyle(fontSize: 16, color: Colors.black),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
                   ),
-                ),
-                // TextButton(
-                //   onPressed: () {
-                //     Navigator.pop(context);
-                //     _handleFileSelection();
-                //   },
-                //   child: const Align(
-                //     alignment: Alignment.centerLeft,
-                //     child: Text('File'),
-                //   ),
-                // ),
-                TextButton(
-                  onPressed: () => Navigator.pop(context),
-                  child: const Align(
-                    alignment: Alignment.centerLeft,
-                    child: Text('ยกเลิก'),
+                  Divider(indent: 10, endIndent: 10),
+                  TextButton(
+                    onPressed: () => Navigator.pop(context),
+                    child: const Align(
+                      alignment: Alignment.centerLeft,
+                      child: Padding(
+                        padding:EdgeInsets.only(left: 12),
+                        child: Row(
+                          children: [
+                            Padding(
+                                padding: EdgeInsets.only(right: 5),
+                                child: Icon(
+                                  FontAwesomeIcons.xmark,
+                                  color: Colors.red,
+                                  size: 18,
+                                ),
+                              ),
+                            Text(
+                              'ยกเลิก',
+                              style: TextStyle(fontSize: 16, color: Colors.black),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
           ),
         );
@@ -240,7 +300,7 @@ class _ChatPageState extends State<ChatPage> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: Text('Chatroom no: ${widget.roomName}'),
+          title: Text(widget.roomName),
         ),
         body: StreamBuilder(
           // Start stream check
