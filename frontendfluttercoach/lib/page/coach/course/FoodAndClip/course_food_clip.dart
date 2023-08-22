@@ -6,7 +6,6 @@ import 'package:auto_size_text/auto_size_text.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
-import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
 
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -27,7 +26,6 @@ import '../../../../model/response/md_Result.dart';
 import '../../../../service/food.dart';
 import '../../../../service/provider/appdata.dart';
 
-import '../../../../widget/PopUp/popUp.dart';
 import '../../../../widget/dialogs.dart';
 import '../../../../widget/dropdown/wg_dropdown_string.dart';
 import '../../../../widget/image_video.dart';
@@ -36,6 +34,8 @@ import '../../../../widget/wg_editClip_Dialog.dart';
 import '../../../../widget/wg_editFood_Dialog.dart';
 import 'clipCourse/insertClip/clip_select_page.dart';
 import 'foodCourse/insertFood/food_new_page.dart';
+import 'package:slide_popup_dialog_null_safety/slide_popup_dialog.dart'
+    as slideDialog;
 
 class HomeFoodAndClipPage extends StatefulWidget {
   const HomeFoodAndClipPage(
@@ -103,99 +103,95 @@ class _HomeFoodAndClipPageState extends State<HomeFoodAndClipPage> {
   Widget build(BuildContext context) {
     return DefaultTabController(
       length: 2,
-      child: scaffold(context),
-    );
-  }
-
-  Scaffold scaffold(BuildContext context) {
-    return Scaffold(
-        floatingActionButton: SpeedDial(
-          backgroundColor: Theme.of(context).colorScheme.primary,
-          visible: widget.isVisible,
-          animatedIcon: AnimatedIcons.menu_close,
-          foregroundColor: Colors.white,
-          overlayOpacity: 0.4,
-          children: [
-            SpeedDialChild(
-                child: const Icon(FontAwesomeIcons.bowlFood),
-                label: 'เพิ่มเมนู',
-                onTap: () {
-                  Get.to(() => FoodNewCoursePage(
-                        did: widget.did,
-                        isVisible: widget.isVisible,
-                      ))?.then((value) {
-                    setState(() {
-                      loadFoodDataMethod = loadFoodData();
-                    });
-                  });
-                }),
-            SpeedDialChild(
-                child: const Icon(FontAwesomeIcons.dumbbell),
-                label: 'เพิ่มคลิป',
-                onTap: () {
-                  Get.to(() => ClipSelectPage(
-                        did: widget.did,
-                        isVisible: widget.isVisible,
-                      ))?.then((value) {
-                    setState(() {
-                      loadClipDataMethod = loadClipData();
-                    });
-                  });
-                }),
-          ],
-        ),
-        resizeToAvoidBottomInset: false,
-        body: Column(
-          children: [
-            showAppBar(context),
-            Expanded(
-              child: TabBarView(
-                children: [
-                  //Clip
-                  RefreshIndicator(
-                    onRefresh: () async {
+      child: Scaffold(
+          floatingActionButton: SpeedDial(
+            backgroundColor: Theme.of(context).colorScheme.primary,
+            visible: widget.isVisible,
+            animatedIcon: AnimatedIcons.menu_close,
+            foregroundColor: Colors.white,
+            overlayOpacity: 0.4,
+            children: [
+              SpeedDialChild(
+                  child: const Icon(FontAwesomeIcons.bowlFood),
+                  label: 'เพิ่มเมนู',
+                  onTap: () {
+                    Get.to(() => FoodNewCoursePage(
+                          did: widget.did,
+                          isVisible: widget.isVisible,
+                        ))?.then((value) {
                       setState(() {
                         loadFoodDataMethod = loadFoodData();
-                        loadClipDataMethod = loadClipData();
                       });
-                    },
-                    child: Column(
-                      children: [
-                        const SizedBox(
-                          height: 10,
-                        ),
-                        // ignore: prefer_is_empty
-
-                        Expanded(
-                          child: showClip(),
-                        )
-                      ],
-                    ),
-                  ),
-                  //Food
-                  RefreshIndicator(
-                    onRefresh: () async {
+                    });
+                  }),
+              SpeedDialChild(
+                  child: const Icon(FontAwesomeIcons.dumbbell),
+                  label: 'เพิ่มคลิป',
+                  onTap: () {
+                    Get.to(() => ClipSelectPage(
+                          did: widget.did,
+                          isVisible: widget.isVisible,
+                        ))?.then((value) {
                       setState(() {
-                        loadFoodDataMethod = loadFoodData();
                         loadClipDataMethod = loadClipData();
                       });
-                    },
-                    child: Column(
-                      children: [
-                        const SizedBox(
-                          height: 10,
-                        ),
-                        Expanded(
-                          child: showFood(),
-                        ),
-                      ],
+                    });
+                  }),
+            ],
+          ),
+          resizeToAvoidBottomInset: false,
+          body: Column(
+            children: [
+              showAppBar(context),
+              Expanded(
+                child: TabBarView(
+                  children: [
+                    //Clip
+                    RefreshIndicator(
+                      onRefresh: () async {
+                        setState(() {
+                          loadFoodDataMethod = loadFoodData();
+                          loadClipDataMethod = loadClipData();
+                        });
+                      },
+                      child: Column(
+                        children: [
+                          const SizedBox(
+                            height: 10,
+                          ),
+                          // ignore: prefer_is_empty
+
+                          Expanded(
+                            child: showClip(),
+                          )
+                        ],
+                      ),
                     ),
-                  ),
-                ],
+                    //Food
+                    RefreshIndicator(
+                      onRefresh: () async {
+                        setState(() {
+                          loadFoodDataMethod = loadFoodData();
+                          loadClipDataMethod = loadClipData();
+                        });
+                      },
+                      child: Column(
+                        children: [
+                          const SizedBox(
+                            height: 10,
+                          ),
+                          Expanded(
+                            child: showFood(),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
               ),
-            ),
-          ],
-        ));
+            ],
+          )),
+    );
   }
 
   Stack showAppBar(BuildContext context) {
@@ -368,7 +364,19 @@ class _HomeFoodAndClipPageState extends State<HomeFoodAndClipPage> {
                           label: 'Delete',
                         )
                       ]),
-                      child: cardFood(context, listfood),
+                      child: InkWell(
+                          onTap: () {
+                            dialogFoodEditInCourse(
+                                context,
+                                listfood.listFood.image,
+                                listfood.listFood.name,
+                                listfood.time,
+                                listfood.fid.toString(),
+                                listfood.dayOfCouseId.toString(),
+                                widget.sequence,
+                                widget.isVisible);
+                          },
+                          child: cardFood(context, listfood)),
                     )
                   : cardFood(context, listfood);
             },
@@ -378,241 +386,231 @@ class _HomeFoodAndClipPageState extends State<HomeFoodAndClipPage> {
     );
   }
 
-  Column cardFood(BuildContext context, ModelFood listfood) {
+  Column cardFood(BuildContext contexts, ModelFood listfood) {
     return Column(
       children: [
         SizedBox(
           height: MediaQuery.of(context).size.height * 0.17,
-          child: InkWell(
-            onTap: () {
-              dialogFoodEditInCourse(
-                  context,
-                  listfood.listFood.image,
-                  listfood.listFood.name,
-                  listfood.time,
-                  listfood.fid.toString(),
-                  listfood.dayOfCouseId.toString(),
-                  widget.sequence,
-                  widget.isVisible);
-            },
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                // ignore: unnecessary_null_comparison
-                if (listfood.listFood.image != '') ...{
-                  Padding(
-                      padding: const EdgeInsets.only(
-                          left: 8, right: 8, top: 5, bottom: 5),
-                      child: Center(
-                        child: ClipRRect(
-                          borderRadius:
-                              BorderRadius.circular(20), // Image border
-                          child: SizedBox.fromSize(
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              if (listfood.listFood.image != '') ...{
+                Padding(
+                    padding: const EdgeInsets.only(
+                        left: 8, right: 8, top: 5, bottom: 5),
+                    child: Center(
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(20), // Image border
+                        child: SizedBox.fromSize(
+                          size: const Size.fromRadius(60), // Image radius
+                          child: Image.network(listfood.listFood.image,
+                              fit: BoxFit.cover),
+                        ),
+                      ),
+                    )),
+              } else
+                Padding(
+                    padding: const EdgeInsets.only(
+                        left: 8, right: 8, top: 5, bottom: 5),
+                    child: Center(
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(20), // Image border
+                        child: SizedBox.fromSize(
                             size: const Size.fromRadius(60), // Image radius
-                            child: Image.network(listfood.listFood.image,
-                                fit: BoxFit.cover),
+                            child: Container(
+                              decoration: BoxDecoration(
+                                color: const Color(0xff7c94b6),
+                                borderRadius: BorderRadius.circular(20),
+                              ),
+                            )),
+                      ),
+                    )),
+              const SizedBox(width: 30),
+              Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                // crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  SizedBox(
+                    width: MediaQuery.of(context).size.width * 0.4,
+                    child: Text(
+                      listfood.listFood.name,
+                      maxLines: 5,
+                      style: Theme.of(context).textTheme.titleMedium,
+                    ),
+                  ),
+                  const SizedBox(height: 10),
+                  Container(
+                    width: MediaQuery.of(context).size.width * 0.4,
+                    height: 40,
+                    decoration: BoxDecoration(
+                        boxShadow: const <BoxShadow>[
+                          BoxShadow(
+                              color: Colors.grey,
+                              blurRadius: 2.0,
+                              offset: Offset(0.0, 0.75))
+                        ],
+                        color: const Color.fromRGBO(244, 243, 243, 1),
+                        borderRadius: BorderRadius.circular(30)),
+                    child: (widget.isVisible == true)
+                        ? TextButton(
+                            onPressed: () {
+                              //dialogFoodEditMealInCourse(contexts, listfood);
+                              dialogFoodEditMealInCourse(listfood);
+                            },
+                            child: Text(
+                              listfood.time == '1'
+                                  ? 'มื้อเช้า'
+                                  : listfood.time == '2'
+                                      ? 'มื้อเที่ยง'
+                                      : listfood.time == '3'
+                                          ? 'มื้อเย็น'
+                                          : 'มื้อใดก็ได้',
+                              style: Theme.of(context).textTheme.bodyMedium,
+                            ),
+                          )
+                        : Center(
+                            child: Text(
+                              listfood.time == '1'
+                                  ? 'มื้อเช้า'
+                                  : listfood.time == '2'
+                                      ? 'มื้อเที่ยง'
+                                      : listfood.time == '3'
+                                          ? 'มื้อเย็น'
+                                          : 'มื้อใดก็ได้',
+                              style: Theme.of(context).textTheme.bodyMedium,
+                            ),
                           ),
-                        ),
-                      )),
-                } else
-                  Padding(
-                      padding: const EdgeInsets.only(
-                          left: 8, right: 8, top: 5, bottom: 5),
-                      child: Center(
-                        child: ClipRRect(
-                          borderRadius:
-                              BorderRadius.circular(20), // Image border
-                          child: SizedBox.fromSize(
-                              size: const Size.fromRadius(60), // Image radius
-                              child: Container(
-                                decoration: BoxDecoration(
-                                  color: const Color(0xff7c94b6),
-                                  borderRadius: BorderRadius.circular(20),
-                                ),
-                              )),
-                        ),
-                      )),
-
-                const SizedBox(width: 30),
-
-                Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  // crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    SizedBox(
-                      width: MediaQuery.of(context).size.width * 0.4,
-                      child: Text(
-                        listfood.listFood.name,
-                        maxLines: 5,
-                        style: Theme.of(context).textTheme.titleMedium,
-                      ),
-                    ),
-                    const SizedBox(height: 10),
-                    Container(
-                      width: MediaQuery.of(context).size.width * 0.4,
-                      height: 40,
-                      decoration: BoxDecoration(
-                          boxShadow: const <BoxShadow>[
-                            BoxShadow(
-                                color: Colors.grey,
-                                blurRadius: 2.0,
-                                offset: Offset(0.0, 0.75))
-                          ],
-                          color: const Color.fromRGBO(244, 243, 243, 1),
-                          borderRadius: BorderRadius.circular(30)),
-                      child: TextButton(
-                        onPressed: () {
-                          if (widget.isVisible == true) {
-                            dialogFoodEditMealInCourse(
-                                context,
-                                listfood.listFood.ifid,
-                                listfood.listFood.name,
-                                listfood.listFood.image,
-                                listfood.listFood.calories,
-                                listfood.time,
-                                listfood.fid.toString());
-                          }
-                        },
-                        child: Text(
-                          listfood.time == '1'
-                              ? 'มื้อเช้า'
-                              : listfood.time == '2'
-                                  ? 'มื้อเที่ยง'
-                                  : listfood.time == '3'
-                                      ? 'มื้อเย็น'
-                                      : 'มื้อใดก็ได้',
-                          style: Theme.of(context).textTheme.bodyMedium,
-                        ),
-                      ),
-                    ),
-                    if (widget.isVisible == false) ...{
-                      const SizedBox(width: 60)
-                    },
-                  ],
-                ),
-              ],
-            ),
+                  ),
+                  if (widget.isVisible == false) ...{const SizedBox(width: 60)},
+                ],
+              ),
+            ],
           ),
         ),
         const SizedBox(height: 10),
         const Divider(
-          endIndent: 20,
-          indent: 20,
+          endIndent: 15,
+          indent: 15,
         ),
       ],
     );
   }
 
-  void dialogFoodEditMealInCourse(BuildContext context, int ifid, String name,
-      String img, int cal, String meal, String fid) {
-    if (meal == '1') {
+  void dialogFoodEditMealInCourse(ModelFood listfood) {
+    if (listfood.time == '1') {
       selectedValuehand.text = 'มื้อเช้า';
-    } else if (meal == '2') {
+    } else if (listfood.time == '2') {
       selectedValuehand.text = 'มื้อเที่ยง';
-    } else if (meal == '3') {
+    } else if (listfood.time == '3') {
       selectedValuehand.text = 'มื้อเย็น';
     }
 
-    SmartDialog.show(
-      alignment: Alignment.bottomCenter,
-      builder: (_) {
-        return Container(
-          width: MediaQuery.of(context).size.width,
-          height: 300,
-          decoration: const BoxDecoration(
-            borderRadius: BorderRadius.only(
-                topLeft: Radius.circular(20), topRight: Radius.circular(20)),
-            color: Colors.white,
-          ),
-          child: SingleChildScrollView(
-            child: Column(
-              children: [
-                const SizedBox(
-                  height: 20,
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(left: 20, bottom: 20),
-                  child:
-                      Text(name, style: Theme.of(context).textTheme.titleLarge),
-                ),
-                Row(
-                  children: [
-                    Padding(
-                        padding: const EdgeInsets.only(left: 20, right: 20),
-                        child: ClipRRect(
-                          borderRadius:
-                              BorderRadius.circular(20), // Image border
-                          child: SizedBox.fromSize(
-                            size: const Size.fromRadius(60), // Image radius
-                            child: Image.network(img, fit: BoxFit.cover),
-                          ),
-                        )),
-                    Expanded(
-                      child: Padding(
-                        padding: const EdgeInsets.only(left: 20, right: 20),
-                        child: WidgetDropdownString(
-                          title: 'เลือกมืออาหาร',
-                          selectedValue: selectedValuehand,
-                          listItems: listhand,
+    slideDialog.showSlideDialog(
+        context: context,
+        backgroundColor: Colors.white,
+        child: SingleChildScrollView(
+          child: Column(
+            children: [
+              const SizedBox(
+                height: 20,
+              ),
+              Padding(
+                padding: const EdgeInsets.only(left: 20, bottom: 20),
+                child: Text(listfood.listFood.name,
+                    style: Theme.of(context).textTheme.titleLarge),
+              ),
+              Row(
+                children: [
+                  Padding(
+                      padding: const EdgeInsets.only(left: 20, right: 20),
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(20), // Image border
+                        child: SizedBox.fromSize(
+                          size: const Size.fromRadius(60), // Image radius
+                          child: Image.network(listfood.listFood.image,
+                              fit: BoxFit.cover),
                         ),
+                      )),
+                  Expanded(
+                    child: Padding(
+                      padding: const EdgeInsets.only(left: 20, right: 20),
+                      child: WidgetDropdownString(
+                        title: 'เลือกมืออาหาร',
+                        selectedValue: selectedValuehand,
+                        listItems: listhand,
                       ),
                     ),
-                  ],
-                ),
-                const SizedBox(
-                  height: 20,
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.only(left: 20, right: 20),
-                      child: FilledButton(
-                          onPressed: () async {
-                            log(fid.toString());
-                            FoodFoodIdPut foodFoodIdPut = FoodFoodIdPut(
-                              listFoodId: ifid,
-                              time: selectedValuehand.text == 'มื้อเช้า'
-                                  ? '1'
-                                  : selectedValuehand.text == 'มื้อเที่ยง'
-                                      ? '2'
-                                      : selectedValuehand.text == 'มื้อเย็น'
-                                          ? '3'
-                                          : '',
-                              dayOfCouseId: int.parse(widget.did),
+                  ),
+                ],
+              ),
+              Padding(
+                padding: const EdgeInsets.only(top: 20, left: 20, right: 20),
+                child: Text(listfood.listFood.details,
+                    maxLines: 5, style: Theme.of(context).textTheme.bodyLarge),
+              ),
+              const SizedBox(
+                height: 20,
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.only(left: 20, right: 20),
+                    child: FilledButton(
+                        onPressed: () async {
+                          FoodFoodIdPut foodFoodIdPut = FoodFoodIdPut(
+                            listFoodId: listfood.listFood.ifid,
+                            time: selectedValuehand.text == 'มื้อเช้า'
+                                ? '1'
+                                : selectedValuehand.text == 'มื้อเที่ยง'
+                                    ? '2'
+                                    : selectedValuehand.text == 'มื้อเย็น'
+                                        ? '3'
+                                        : '',
+                            dayOfCouseId: int.parse(widget.did),
+                          );
+                          log(jsonEncode(foodFoodIdPut));
+                          var response = await _foodService.updateFoodByFoodID(
+                              listfood.fid.toString(), foodFoodIdPut);
+                          modelResult = response.data;
+                          log(modelResult.result);
+
+                          Navigator.of(context, rootNavigator: true).pop();
+
+                          if (modelResult.result == '1') {
+                            // ignore: use_build_context_synchronously
+                            InAppNotification.show(
+                              child: NotificationBody(
+                                count: 1,
+                                message: 'แก้ไขมื้ออาหารสำเร็ส',
+                              ),
+                              context: context,
+                              onTap: () => print('Notification tapped!'),
+                              duration: const Duration(milliseconds: 1500),
                             );
-                            log(jsonEncode(foodFoodIdPut));
-                            var response = await _foodService
-                                .updateFoodByFoodID(fid, foodFoodIdPut);
-                            modelResult = response.data;
-                            log(modelResult.result);
-                            if (modelResult.result == '1') {
-                              SmartDialog.dismiss();
-                              // ignore: use_build_context_synchronously
-                              success(context);
-                              setState(() {
-                                loadFoodDataMethod = loadFoodData();
-                              });
-                            } else {
-                              // ignore: use_build_context_synchronously
-                              QuickAlert.show(
-                                context: context,
-                                type: QuickAlertType.error,
-                                title: 'Oops...',
-                                text: 'เป็น ${selectedValuehand.text} อยู่แล้ว',
-                              );
-                            }
-                          },
-                          child: const Text("บันทึก")),
-                    ),
-                  ],
-                )
-              ],
-            ),
+                            setState(() {
+                              loadFoodDataMethod = loadFoodData();
+                            });
+                          } else {
+                            InAppNotification.show(
+                              child: NotificationBody(
+                                count: 1,
+                                message:
+                                    'เป็น ${selectedValuehand.text} อยู่แล้ว',
+                              ),
+                              context: context,
+                              onTap: () => print('Notification tapped!'),
+                              duration: const Duration(milliseconds: 1500),
+                            );
+                          }
+                        },
+                        child: const Text("บันทึก")),
+                  ),
+                ],
+              )
+            ],
           ),
-        );
-      },
-    );
+        ));
   }
 
   //Dialog Delete

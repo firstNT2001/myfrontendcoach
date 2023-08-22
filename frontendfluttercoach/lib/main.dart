@@ -58,7 +58,6 @@ Future<void> main() async {
             ),
           ],
           child: GetMaterialApp(home: const LoginPage(),
-
            title: 'Application Daily Workout Coaching',
                   debugShowCheckedModeBanner: false,
                   builder: FlutterSmartDialog.init(

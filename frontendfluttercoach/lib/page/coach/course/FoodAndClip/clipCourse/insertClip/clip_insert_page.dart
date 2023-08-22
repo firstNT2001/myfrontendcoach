@@ -7,8 +7,6 @@ import 'package:flutter/src/widgets/framework.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:frontendfluttercoach/widget/dialogs.dart';
 
-import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
 import 'package:in_app_notification/in_app_notification.dart';
 import 'package:provider/provider.dart';
 
@@ -19,7 +17,6 @@ import '../../../../../../service/clip.dart';
 import '../../../../../../service/provider/appdata.dart';
 import '../../../../../../widget/image_video.dart';
 import '../../../../../../widget/notificationBody.dart';
-import '../../course_food_clip.dart';
 
 class ClipInsertPage extends StatefulWidget {
   const ClipInsertPage(
@@ -140,7 +137,7 @@ class _ClipInsertPageState extends State<ClipInsertPage> {
                                     Navigator.popUntil(
                                         context,
                                         ModalRoute.withName(
-                                            '/NavbarBottomCoach'));
+                                            '/HomeFoodAndClipPage'));
 
                                     // ignore: use_build_context_synchronously
                                     InAppNotification.show(

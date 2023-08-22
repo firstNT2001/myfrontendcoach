@@ -5,20 +5,22 @@ import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:badges/badges.dart' as badges;
 import 'package:badges/badges.dart';
-import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
 
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:frontendfluttercoach/model/response/md_FoodList_get.dart';
 import 'package:frontendfluttercoach/service/listFood.dart';
 import 'package:frontendfluttercoach/widget/dropdown/wg_dropdown_notValue_string.dart';
 import 'package:get/get.dart';
+import 'package:in_app_notification/in_app_notification.dart';
 import 'package:provider/provider.dart';
 
 import '../../../../../../model/request/food_dayID_post.dart';
 import '../../../../../../service/provider/appdata.dart';
-import '../../../../../../widget/PopUp/popUp.dart';
 import '../../../../../../widget/dialogs.dart';
+import '../../../../../../widget/notificationBody.dart';
 import 'food_select_time_page.dart';
+import 'package:slide_popup_dialog_null_safety/slide_popup_dialog.dart'
+    as slideDialog;
 
 class FoodNewCoursePage extends StatefulWidget {
   const FoodNewCoursePage(
@@ -53,7 +55,6 @@ class _FoodNewCoursePageState extends State<FoodNewCoursePage> {
 
     _listFoodService = context.read<AppData>().listfoodServices;
     loadListFoodDataMethod = loadListFoodData();
-    selectedValuehand.text = 'มื้อเช้า';
   }
 
   @override
@@ -274,103 +275,106 @@ class _FoodNewCoursePageState extends State<FoodNewCoursePage> {
   }
 
   void _dialog(BuildContext context, List<Color> colorList, int index) {
-    //target widget
-    SmartDialog.show(builder: (context) {
-      return Container(
-        width: MediaQuery.of(context).size.width * 0.9,
-        height: 600,
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(20),
-          color: Colors.white,
-        ),
-        child: SingleChildScrollView(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            //crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              Padding(
-                padding: const EdgeInsets.only(
-                    left: 20, right: 20, top: 50, bottom: 10),
-                child: Text("เมนูอาหาร",
-                    style: Theme.of(context).textTheme.headlineSmall),
-              ),
-              if (request.image != '') ...{
-                ClipRRect(
-                    borderRadius: BorderRadius.circular(15),
-                    child: Image.network(
-                      request.image,
-                      width: MediaQuery.of(context).size.width * 0.7,
-                      height: MediaQuery.of(context).size.height * 0.2,
-                      fit: BoxFit.cover,
-                    )),
-              } else ...{
-                Container(
+    slideDialog.showSlideDialog(
+      context: context,
+      backgroundColor: Colors.white,
+      child: SingleChildScrollView(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          //crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Padding(
+              padding: const EdgeInsets.only(left: 20, right: 20, bottom: 10),
+              child: Text("เมนูอาหาร",
+                  style: Theme.of(context).textTheme.headlineSmall),
+            ),
+            if (request.image != '') ...{
+              ClipRRect(
+                  borderRadius: BorderRadius.circular(15),
+                  child: Image.network(
+                    request.image,
                     width: MediaQuery.of(context).size.width * 0.7,
                     height: MediaQuery.of(context).size.height * 0.2,
-                    decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(26),
-                        color: Colors.black26)),
-                const SizedBox(
-                  height: 8,
-                ),
-              },
-              Padding(
-                padding: const EdgeInsets.only(
-                    top: 10, bottom: 8, right: 20, left: 20),
-                child: Text(request.name,
-                    maxLines: 5,
-                    style:
-                        TextStyle(fontSize: 16, fontWeight: FontWeight.w600)),
+                    fit: BoxFit.cover,
+                  )),
+            } else ...{
+              Container(
+                  width: MediaQuery.of(context).size.width * 0.7,
+                  height: MediaQuery.of(context).size.height * 0.2,
+                  decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(26),
+                      color: Colors.black26)),
+              const SizedBox(
+                height: 8,
               ),
-              Padding(
-                padding: const EdgeInsets.only(bottom: 8, right: 20, left: 20),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    const Text('รายละเอียด',
-                        maxLines: 5,
-                        style: TextStyle(
-                            fontSize: 16, fontWeight: FontWeight.w600)),
-                    Text(
-                      '   ${request.details}',
-                      maxLines: 5,
-                      style: Theme.of(context).textTheme.bodyLarge,
-                    ),
-                  ],
-                ),
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.end,
+            },
+            Padding(
+              padding: const EdgeInsets.only(
+                  top: 10, bottom: 8, right: 20, left: 20),
+              child: Text(request.name,
+                  maxLines: 5,
+                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600)),
+            ),
+            Padding(
+              padding: const EdgeInsets.only(bottom: 8, right: 20, left: 20),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Padding(
-                    padding: const EdgeInsets.only(right: 30, bottom: 8.0),
-                    child: SizedBox(
-                        //width: MediaQuery.of(context).size.width * 0.7,
-                        child: Text(
-                      'แคลอรี่ ${request.calories.toString()}',
-                      style: Theme.of(context).textTheme.bodyLarge,
-                    )),
+                  const Text('รายละเอียด',
+                      maxLines: 5,
+                      style:
+                          TextStyle(fontSize: 16, fontWeight: FontWeight.w600)),
+                  Text(
+                    '   ${request.details}',
+                    maxLines: 3,
+                    style: Theme.of(context).textTheme.bodyLarge,
                   ),
                 ],
               ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.end,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Expanded(
-                    child: Padding(
-                      padding: const EdgeInsets.only(left: 15, right: 15),
-                      child: WidgetDropdownStringNotValue(
-                        title: 'เลือกมืออาหาร',
-                        selectedValue: selectedValuehand,
-                        ListItems: listhand,
-                      ),
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.only(right: 30, bottom: 8.0),
+                  child: SizedBox(
+                      //width: MediaQuery.of(context).size.width * 0.7,
+                      child: Text(
+                    'แคลอรี่ ${request.calories.toString()}',
+                    style: Theme.of(context).textTheme.bodyLarge,
+                  )),
+                ),
+              ],
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Expanded(
+                  child: Padding(
+                    padding: const EdgeInsets.only(left: 15, right: 15),
+                    child: WidgetDropdownStringNotValue(
+                      title: 'เลือกมืออาหาร',
+                      selectedValue: selectedValuehand,
+                      ListItems: listhand,
                     ),
                   ),
-                  Padding(
-                    padding: const EdgeInsets.only(top: 20, right: 30),
-                    child: FilledButton(
-                        onPressed: () {
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(top: 20, right: 30),
+                  child: FilledButton(
+                      onPressed: () {
+                        if (selectedValuehand.text.isEmpty) {
+                          InAppNotification.show(
+                              child: NotificationBody(
+                                count: 1,
+                                message: 'กรุณาใส่มื้ออาหาร',
+                              ),
+                              context: context,
+                              onTap: () => print('Notification tapped!'),
+                              duration: const Duration(milliseconds: 1500),
+                            );
+                        } else {
                           setState(() {
                             increaseFood.add(request);
 
@@ -382,7 +386,7 @@ class _FoodNewCoursePageState extends State<FoodNewCoursePage> {
                                       ? '2'
                                       : selectedValuehand.text == 'มื้อเย็น'
                                           ? '3'
-                                          : '1',
+                                          : '',
                             );
                             increaseFoodDay.add(requestFoodPost);
                             log(jsonEncode(requestFoodPost));
@@ -392,20 +396,21 @@ class _FoodNewCoursePageState extends State<FoodNewCoursePage> {
                                 context.read<AppData>().colorSelect;
                             selectedValuehand.text = '';
                           });
+                          Navigator.of(context, rootNavigator: true).pop();
 
-                          SmartDialog.dismiss();
-                        },
-                        child: const Text('ยืนยัน')),
-                  ),
-                ],
-              ),
-              const SizedBox(
-                width: 20,
-              ),
-            ],
-          ),
+                          //SmartDialog.dismiss();
+                        }
+                      },
+                      child: const Text('ยืนยัน')),
+                ),
+              ],
+            ),
+            const SizedBox(
+              width: 20,
+            ),
+          ],
         ),
-      );
-    });
+      ),
+    );
   }
 }

@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
+import 'package:persistent_bottom_nav_bar_v2/persistent-tab-view.dart';
 
 import '../page/coach/course/FoodAndClip/foodCourse/editFood/food_edit_select.dart';
 
@@ -82,7 +83,6 @@ void dialogFoodEditInCourse(BuildContext context, String image, String name,
                   style: Theme.of(context).textTheme.bodyLarge),
             ],
           ),
-        
           Visibility(
             visible: isVisible,
             child: Row(
@@ -93,6 +93,19 @@ void dialogFoodEditInCourse(BuildContext context, String image, String name,
                   padding: const EdgeInsets.only(right: 20.0, top: 8),
                   child: FilledButton(
                       onPressed: () {
+                        SmartDialog.dismiss();
+
+                        // pushNewScreen(
+                        //   context,
+                        //   screen: FoodEditSelectPage(
+                        //     fid: fid,
+                        //     did: did,
+                        //     sequence: sequence,
+                        //     time: meal,
+                        //     isVisible: isVisible,
+                        //   ),
+                        //   withNavBar: true,
+                        // );
                         Get.to(() => FoodEditSelectPage(
                               fid: fid,
                               did: did,
@@ -100,7 +113,6 @@ void dialogFoodEditInCourse(BuildContext context, String image, String name,
                               time: meal,
                               isVisible: isVisible,
                             ));
-                        SmartDialog.dismiss();
                       },
                       child: const Text("เปลี่ยนเมนู")),
                 ),
