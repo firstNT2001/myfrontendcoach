@@ -18,7 +18,6 @@ import '../../../../../../model/response/md_Result.dart';
 import '../../../../../../service/provider/appdata.dart';
 import '../../../../../../widget/notificationBody.dart';
 import '../../../../../../widget/slideAction.dart';
-import '../../course_food_clip.dart';
 
 class FoodSelectTimePage extends StatefulWidget {
   const FoodSelectTimePage(
@@ -243,17 +242,17 @@ class _FoodSelectTimePageState extends State<FoodSelectTimePage>
           children: [
             if (foods.image != '') ...{
               Padding(
-                padding: const EdgeInsets.only(left: 8, top: 5, bottom: 5),
-                child: Container(
-                    width: MediaQuery.of(context).size.width * 0.25,
-                    height: MediaQuery.of(context).size.height,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(26),
-                      image: DecorationImage(
-                        image: NetworkImage(foods.image),
+                  padding: const EdgeInsets.only(
+                      left: 8, right: 8, top: 5, bottom: 5),
+                  child: Center(
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(20), // Image border
+                      child: SizedBox.fromSize(
+                        size: const Size.fromRadius(50), // Image radius
+                        child: Image.network(foods.image, fit: BoxFit.cover),
                       ),
-                    )),
-              ),
+                    ),
+                  )),
             } else
               Padding(
                 padding: const EdgeInsets.only(left: 8, top: 5, bottom: 5),

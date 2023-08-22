@@ -119,7 +119,7 @@ class _ShowCourseOfUserPageState extends State<ShowCourseOfUserPage> {
                       FontAwesomeIcons.chevronLeft,
                     ),
                     onPressed: () {
-                      Get.back();
+                      Navigator.pop(context);
                     },
                   ),
                 ),
@@ -314,7 +314,7 @@ class _ShowCourseOfUserPageState extends State<ShowCourseOfUserPage> {
                         onPressed: () {
                           //roomchat= widget.namecourse+coID.toString();
                           Get.to(() => ChatPage(
-                                roomID: widget.coID+courses.first.name,
+                                roomID: widget.coID + courses.first.name,
                                 roomName: courses.first.name,
                                 userID: context.read<AppData>().cid.toString(),
                                 firstName:

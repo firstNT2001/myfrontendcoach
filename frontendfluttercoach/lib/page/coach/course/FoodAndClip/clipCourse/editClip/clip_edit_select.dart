@@ -213,26 +213,35 @@ class _ClipEditSelectPageState extends State<ClipEditSelectPage> {
                                   )),
                             ),
                           const SizedBox(width: 10),
-                          Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              SizedBox(
-                                width: MediaQuery.of(context).size.width * 0.5,
-                                child: AutoSizeText(
-                                  listClip.name,
-                                  maxLines: 5,
-                                  style:
-                                      Theme.of(context).textTheme.titleMedium,
+                         Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                SizedBox(
+                                  width:
+                                      MediaQuery.of(context).size.width * 0.5,
+                                  child: Text(
+                                    listClip.name,
+                                    maxLines: 5,
+                                    style:
+                                        Theme.of(context).textTheme.titleMedium,
+                                  ),
                                 ),
-                              ),
-                              const SizedBox(height: 10),
-                              // Text(
-                              //   "Calories : ${listClip.calories}",
-                              //   style: Theme.of(context).textTheme.titleMedium,
-                              // )
-                            ],
-                          ),
+                                const SizedBox(
+                                  height: 10,
+                                ),
+                                SizedBox(
+                                  width:
+                                      MediaQuery.of(context).size.width * 0.5,
+                                  child: Text(
+                                    'จำนวนเซต ${listClip.amountPerSet}',
+                                    maxLines: 5,
+                                    style: const TextStyle(
+                                        fontSize: 16, color: Colors.black38),
+                                  ),
+                                ),
+                              ],
+                            ),
                           //const SizedBox(height: 60),
                         ],
                       ),

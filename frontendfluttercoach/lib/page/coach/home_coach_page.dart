@@ -122,34 +122,43 @@ class _HomePageCoachState extends State<HomePageCoach> {
         ),
       ),
       body: SafeArea(
-        child: Column(
-          children: [
-            columnAll(context),
-            const SizedBox(
-              height: 10,
-            ),
-            //show Course
-            if (onVisibles == true)
-              Expanded(
-                child: Visibility(
-                  visible: onVisibles,
-                  child: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: showCourse(),
+        child: RefreshIndicator(
+          onRefresh: () async {
+            setState(() {
+              loadCourseDataMethod = loadCourseData();
+              loadCoachDataMethod = loadCoachData();
+              loadRequestDataMethod = loadRequestData();
+            });
+          },
+          child: Column(
+            children: [
+              columnAll(context),
+              const SizedBox(
+                height: 10,
+              ),
+              //show Course
+              if (onVisibles == true)
+                Expanded(
+                  child: Visibility(
+                    visible: onVisibles,
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: showCourse(),
+                    ),
                   ),
                 ),
-              ),
-            if (offVisibles == true)
-              Expanded(
-                child: Visibility(
-                  visible: offVisibles,
-                  child: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: showCourse(),
+              if (offVisibles == true)
+                Expanded(
+                  child: Visibility(
+                    visible: offVisibles,
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: showCourse(),
+                    ),
                   ),
                 ),
-              ),
-          ],
+            ],
+          ),
         ),
       ),
     );
@@ -188,7 +197,7 @@ class _HomePageCoachState extends State<HomePageCoach> {
                     Color.fromARGB(227, 84, 84, 84),
                     Color.fromARGB(227, 84, 84, 84),
                   ])),
-                  height: MediaQuery.of(context).size.height * 0.218,
+                  height: 150,
                 ),
               ),
             ),
@@ -241,8 +250,20 @@ class _HomePageCoachState extends State<HomePageCoach> {
                     child: Container(
                       width: MediaQuery.of(context).size.width * 0.9,
                       decoration: BoxDecoration(
-                          color: const Color.fromARGB(255, 243, 243, 244),
-                          borderRadius: BorderRadius.circular(15)),
+                        color: const Color.fromARGB(255, 243, 243, 244),
+                        borderRadius: BorderRadius.circular(15),
+                        boxShadow: const [
+                          BoxShadow(
+                            color: Color.fromARGB(255, 156, 156, 156),
+                            blurRadius: 20.0,
+                            spreadRadius: 1,
+                            offset: Offset(
+                              0,
+                              3,
+                            ),
+                          )
+                        ],
+                      ),
                       child: TextField(
                         readOnly: true,
                         onTap: () {

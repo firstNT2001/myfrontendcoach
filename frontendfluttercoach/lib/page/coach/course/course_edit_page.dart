@@ -156,7 +156,6 @@ class _CourseEditPageState extends State<CourseEditPage> {
                 blurRadius: 15,
                 offset: const Offset(0, -7),
               ),
-            
             ],
             color: Colors.white),
         child: Column(
@@ -322,7 +321,7 @@ class _CourseEditPageState extends State<CourseEditPage> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               CircleAvatar(
-                  backgroundColor: const Color.fromARGB(178, 220, 219, 219),
+                backgroundColor: const Color.fromARGB(178, 220, 219, 219),
                 radius: 20,
                 child: IconButton(
                   icon: const Icon(
@@ -372,6 +371,13 @@ class _CourseEditPageState extends State<CourseEditPage> {
               textErr = 'กรุณากรอกข้อมูลให้ครบ';
             });
             log(textErr);
+          } else if (int.parse(days.text).isNegative == true ||
+              int.parse(amount.text).isNegative == true ||
+              int.parse(price.text).isNegative == true) {
+            setState(() {
+              textErr = 'กรุณากรอกตัวเลขมากกว่า 0';
+            });
+            stopLoading();
           } else {
             setState(() {
               textErr = '';

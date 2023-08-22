@@ -447,9 +447,9 @@ class _DaysCoursePageState extends State<DaysCoursePage> {
       context: context,
       barrierDismissible: isVisibleQuickAlert,
       type: QuickAlertType.confirm,
-      text: 'Do you want to delete?',
-      confirmBtnText: 'Yes',
-      cancelBtnText: 'No',
+      text: 'ต้องการลบวันหรือไม',
+      confirmBtnText: 'ตกลง',
+      cancelBtnText: 'ยกเลิก',
       confirmBtnColor: Theme.of(context).colorScheme.primary,
       onConfirmBtnTap: () async {
         Navigator.of(context, rootNavigator: true).pop();
@@ -521,9 +521,9 @@ class _DaysCoursePageState extends State<DaysCoursePage> {
     QuickAlert.show(
       context: context,
       type: QuickAlertType.confirm,
-      text: 'Do you want to add a day?',
-      confirmBtnText: 'Yes',
-      cancelBtnText: 'No',
+      text: 'ต้องการเพิ่มวันหรือไม',
+      confirmBtnText: 'ตกลง',
+      cancelBtnText: 'ยกเลิก',
       confirmBtnColor: Theme.of(context).colorScheme.primary,
       onConfirmBtnTap: () async {
         Navigator.of(context, rootNavigator: true).pop();

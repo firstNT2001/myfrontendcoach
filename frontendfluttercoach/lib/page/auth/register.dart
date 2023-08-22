@@ -178,7 +178,7 @@ class _RegisterPageState extends State<RegisterPage> {
       ),
       WidgetTextFieldString(
         controller: fullName,
-        labelText: 'ชื่อ',
+        labelText: 'ชื่อ-นามสกุล',
       ),
       Padding(
         padding: const EdgeInsets.only(bottom: 8),
@@ -189,7 +189,7 @@ class _RegisterPageState extends State<RegisterPage> {
             Expanded(
               child: WidgetTextFieldString(
                 controller: name,
-                labelText: 'ชื่อเล่น',
+                labelText: 'ชื่อเรียกในระบบ',
               ),
             ),
             Expanded(
@@ -344,6 +344,11 @@ class _RegisterPageState extends State<RegisterPage> {
         textErr = 'อีมลไม่ถูกต้อง';
       });
       stopLoading();
+    } else if (int.parse(phone.text).isNegative == true) {
+      setState(() {
+        textErr = 'กรุณากรอกตัวเลขมากกว่า 0';
+      });
+      stopLoading();
     } else {
       if (pickedImg != null) await uploadfile();
       if (pickedImg == null) {
@@ -351,45 +356,57 @@ class _RegisterPageState extends State<RegisterPage> {
             'https://t3.ftcdn.net/jpg/03/46/83/96/360_F_346839683_6nAPzbhpSkIpb8pmAwufkC7c5eD7wYws.jpg';
       }
       if (widget.isVisible == true) {
-        if (height.text != '' || weight.text != '') {
-          RegisterCusDto request = RegisterCusDto(
-            fullName: fullName.text,
-            username: name.text,
-            email: email.text,
-            password: password1.text,
-            image: profile,
-            gender: (selectedValue.text) == 'ชาย'
-                ? '2'
-                : (selectedValue.text == 'หญิง')
-                    ? '1'
-                    : '1',
-            phone: phone.text,
-            birthday: newbirht,
-            height: int.parse(height.text),
-            weight: int.parse(weight.text),
-          );
-          var result = await _authService.regCus(request);
-          modelResult = result.data;
-          log(modelResult.result);
-          stopLoading();
-          if (modelResult.result == '1') {
-            Get.to(() => const LoginPage());
-          } else {
-            InAppNotification.show(
-              child: NotificationBody(
-                count: 1,
-                message: 'สมัครไม่สำเร็จ',
-              ),
-              context: context,
-              onTap: () => print('Notification tapped!'),
-              duration: const Duration(milliseconds: 1500),
-            );
-          }
-        } else {
+        if (height.text == '' || weight.text == '') {
           setState(() {
             textErr = 'กรุณาใส่นํ้าหนักหรือส่วนสูง';
           });
           stopLoading();
+        } else {
+          setState(() {
+            textErr = 'กรุณาใส่นํ้าหนักหรือส่วนสูง';
+          });
+
+          if (int.parse(height.text).isNegative == true ||
+              int.parse(weight.text).isNegative == true) {
+            setState(() {
+              textErr = 'กรุณากรอกตัวเลขมากกว่า 0';
+            });
+            stopLoading();
+          } else {
+            RegisterCusDto request = RegisterCusDto(
+              fullName: fullName.text,
+              username: name.text,
+              email: email.text,
+              password: password1.text,
+              image: profile,
+              gender: (selectedValue.text) == 'ชาย'
+                  ? '2'
+                  : (selectedValue.text == 'หญิง')
+                      ? '1'
+                      : '1',
+              phone: phone.text,
+              birthday: newbirht,
+              height: int.parse(height.text),
+              weight: int.parse(weight.text),
+            );
+            var result = await _authService.regCus(request);
+            modelResult = result.data;
+            log(modelResult.result);
+            stopLoading();
+            if (modelResult.result == '1') {
+              Get.to(() => const LoginPage());
+            } else {
+              InAppNotification.show(
+                child: NotificationBody(
+                  count: 1,
+                  message: 'สมัครไม่สำเร็จ',
+                ),
+                context: context,
+                onTap: () => print('Notification tapped!'),
+                duration: const Duration(milliseconds: 1500),
+              );
+            }
+          }
         }
       } else {
         if (property.text != '' || qualification.text != '') {

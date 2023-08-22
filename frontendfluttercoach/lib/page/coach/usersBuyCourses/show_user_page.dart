@@ -3,7 +3,7 @@ import 'dart:developer';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:frontendfluttercoach/page/coach/usersBuyCourses/show_courseAll_user_page.dart';
-import 'package:get/get.dart';
+import 'package:persistent_bottom_nav_bar_v2/persistent-tab-view.dart';
 import 'package:provider/provider.dart';
 
 import '../../../model/response/md_Buying_get.dart';
@@ -29,7 +29,6 @@ class _ShowUserByCoursePageState extends State<ShowUserByCoursePage> {
     super.initState();
     _BuyingService = context.read<AppData>().buyCourseService;
     loadCourseDataMethod = loadUserData();
-    
   }
 
   @override
@@ -48,7 +47,6 @@ class _ShowUserByCoursePageState extends State<ShowUserByCoursePage> {
             style: Theme.of(context).textTheme.headlineMedium,
           ),
         ),
-        
       ),
       body: Column(
         children: [
@@ -97,8 +95,16 @@ class _ShowUserByCoursePageState extends State<ShowUserByCoursePage> {
                 child: InkWell(
                   onTap: () {
                     context.read<AppData>().nameCus = course.customer.fullName;
-                    Get.to(() => ShowCourseUserPage(
-                        uid: course.customer.uid.toString()));
+                    pushNewScreen(
+                      context,
+                      screen: ShowCourseUserPage(
+                          uid: course.customer.uid.toString()),
+                      withNavBar: true,
+                    ).then((value) {
+                      setState(() {
+                        loadCourseDataMethod = loadUserData();
+                      });
+                    });
                   },
                   child: Column(
                     // mainAxisAlignment: MainAxisAlignment.start,

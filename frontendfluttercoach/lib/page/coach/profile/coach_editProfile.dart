@@ -11,6 +11,7 @@ import 'package:frontendfluttercoach/model/response/md_Result.dart';
 import 'package:frontendfluttercoach/page/auth/GoogleAuthenticator.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
+import 'package:in_app_notification/in_app_notification.dart';
 import 'package:provider/provider.dart';
 
 import '../../../model/request/registerCoachDTO.dart';
@@ -18,9 +19,9 @@ import '../../../model/response/md_Coach_get.dart';
 import '../../../service/auth.dart';
 import '../../../service/coach.dart';
 import '../../../service/provider/appdata.dart';
-import '../../../widget/PopUp/popUp.dart';
 import '../../../widget/dialogs.dart';
 import '../../../widget/dropdown/wg_dropdown_string.dart';
+import '../../../widget/notificationBody.dart';
 import '../../../widget/textField/wg_textField.dart';
 import '../../../widget/textField/wg_textFieldLines.dart';
 import '../../../widget/textField/wg_textField_int copy.dart';
@@ -100,6 +101,7 @@ class _CoachEidtProfilePageState extends State<CoachEidtProfilePage> {
       child: FilledButton(
         //style: style,
         onPressed: () async {
+          log(int.parse(phone.text).isNegative.toString());
           if (fullName.text.isEmpty ||
               name.text.isEmpty ||
               selectedValue.text.isEmpty ||
@@ -109,8 +111,18 @@ class _CoachEidtProfilePageState extends State<CoachEidtProfilePage> {
               property.text.isEmpty) {
             setState(() {
               _isvisible = true;
+              textErr = 'กรุณากรอกข้อความในช่องว่างให้ครบ';
+            });
+          }else if(int.parse(phone.text).isNegative == true) {
+             setState(() {
+              _isvisible = true;
+              textErr = 'เบอร์โทรศัพท์มีค่าติดลบ';
             });
           } else {
+             setState(() {
+              _isvisible = false;
+              textErr = '';
+            });
             if (pickedImg != null) await uploadfile();
             if (pickedImg == null) profile = coachs.first.image;
             if (newbirht.isEmpty) {
@@ -137,12 +149,28 @@ class _CoachEidtProfilePageState extends State<CoachEidtProfilePage> {
                 context.read<AppData>().cid.toString(),
                 request);
             modelResult = result.data;
-            if (modelResult.result == '0') {
-              // ignore: use_build_context_synchronously
-              warning(context);
+            if (modelResult.result == '1') {
+              Navigator.pop(context);
+
+              InAppNotification.show(
+                child: NotificationBody(
+                  count: 1,
+                  message: 'แก้ไข่สำเร็จ',
+                ),
+                context: context,
+                onTap: () => print('Notification tapped!'),
+                duration: const Duration(milliseconds: 1500),
+              );
             } else {
-              // ignore: use_build_context_synchronously
-              success(context);
+              InAppNotification.show(
+                child: NotificationBody(
+                  count: 1,
+                  message: 'แก้ไขไม่สำเร็จ',
+                ),
+                context: context,
+                onTap: () => print('Notification tapped!'),
+                duration: const Duration(milliseconds: 2000),
+              );
             }
             log(modelResult.result);
           }
@@ -296,7 +324,7 @@ class _CoachEidtProfilePageState extends State<CoachEidtProfilePage> {
                           padding: const EdgeInsets.only(
                               bottom: 8, left: 20, right: 23),
                           child: Text(
-                            "กรุณากรอกข้อความในช่องว่างให้ครบ",
+                            textErr,
                             style: TextStyle(
                                 color: Theme.of(context).colorScheme.error),
                           ),
