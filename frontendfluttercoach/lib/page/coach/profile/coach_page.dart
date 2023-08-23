@@ -52,8 +52,15 @@ class _CoachPageState extends State<CoachPage> {
     return Scaffold(
       resizeToAvoidBottomInset: false,
       body: SafeArea(
-          child: ListView(
-        children: [showCoach()],
+          child: RefreshIndicator(
+        onRefresh: () async {
+          setState(() {
+            loadCoachDataMethod = loadCoachData();
+          });
+        },
+        child: ListView(
+          children: [showCoach()],
+        ),
       )),
     );
   }
