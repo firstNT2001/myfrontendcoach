@@ -13,6 +13,7 @@ import 'package:get/get.dart';
 
 import 'package:provider/provider.dart';
 import 'package:badges/badges.dart' as badges;
+import 'package:video_player/video_player.dart';
 
 import '../../../../../../model/request/clip_dayID_post.dart';
 import '../../../../../../model/response/md_ClipList_get.dart';
@@ -33,6 +34,8 @@ class ClipSelectPage extends StatefulWidget {
 }
 
 class _ClipSelectPageState extends State<ClipSelectPage> {
+  late VideoPlayerController _videoPlayerController;
+
   //ClipService
   late Future<void> loadListClipDataMethod;
   late ListClipServices _listClipService;
@@ -57,6 +60,8 @@ class _ClipSelectPageState extends State<ClipSelectPage> {
   @override
   void initState() {
     super.initState();
+    _videoPlayerController = VideoPlayerController.networkUrl(Uri.parse(''))
+      ..initialize().then((value) => setState(() {}));
     _listClipService = context.read<AppData>().listClipServices;
     loadListClipDataMethod = loadListClipsData();
   }
@@ -304,7 +309,9 @@ class _ClipSelectPageState extends State<ClipSelectPage> {
                 ),
               ),
               if (listClip.video != '') ...{
-                WidgetShowCilp(urlVideo: listClip.video),
+                WidgetShowCilp(
+                  urlVideo: listClip.video,
+                ),
               } else ...{
                 Container(
                     width: MediaQuery.of(context).size.width * 0.7,

@@ -175,6 +175,8 @@ class _ClipNewCoachPageState extends State<ClipNewCoachPage> {
             child: InkWell(
               onTap: () {
                 log("message");
+                _controller.pause();
+
                 selectFile();
               },
               child: Container(
@@ -204,6 +206,7 @@ class _ClipNewCoachPageState extends State<ClipNewCoachPage> {
                     color: Colors.black,
                   ),
                   onPressed: () {
+                    _controller.pause();
                     Navigator.pop(context);
                   },
                 ),
@@ -280,6 +283,8 @@ class _ClipNewCoachPageState extends State<ClipNewCoachPage> {
   FilledButton button() {
     return FilledButton(
         onPressed: () async {
+          _controller.pause();
+
           log(pathVdieo);
           log('message');
           if (name.text.isEmpty ||
@@ -339,7 +344,9 @@ class _ClipNewCoachPageState extends State<ClipNewCoachPage> {
 
   //Video
   Future selectFile() async {
-    final result = await FilePicker.platform.pickFiles(type: FileType.video,);
+    final result = await FilePicker.platform.pickFiles(
+      type: FileType.video,
+    );
     if (result == null) return;
 
     // ignore: use_build_context_synchronously
