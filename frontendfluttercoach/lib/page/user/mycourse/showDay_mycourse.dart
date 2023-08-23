@@ -59,12 +59,16 @@ class _ShowDayMycourseState extends State<ShowDayMycourse> {
   late DateTime today;
   late DateTime expirationDate;
   late DateTime showtodaycolor;
+  //
+  List<DateTime> listindexday = [];
+  int dayincourse = 0;
+  late DateTime exdate;
+  late DateTime dayex;
   String txtdateEX = "";
   String txtdateStart = "";
   late String roomchat;
   var update;
   int coachId = 0;
-
   void initState() {
     // TODO: implement initState
 
@@ -80,9 +84,10 @@ class _ShowDayMycourseState extends State<ShowDayMycourse> {
     today = DateTime(nows.year, nows.month, nows.day);
     expirationDate =
         DateTime(nows.year, nows.month, nows.day + widget.dayincourse - 1);
+// showtodaycolor = DateTime(expirationDate.year,expirationDate.month-,expirationDate.day- nows.day);
+    log("message" + today.toString());
     var formatter = DateFormat.yMMMd();
-showtodaycolor =  DateTime(expirationDate.year, expirationDate.month- nows.month, expirationDate.day - nows.month);
-log("INDEX"+showtodaycolor.day.toString());
+
     var onlyBuddhistYear = nows.yearInBuddhistCalendar;
     txtdateEX = formatter.formatInBuddhistCalendarThai(expirationDate);
     txtdateStart = formatter.formatInBuddhistCalendarThai(nows);
@@ -291,6 +296,20 @@ log("INDEX"+showtodaycolor.day.toString());
       var dataday = await dayService.day(
           did: '', coID: widget.coID.toString(), sequence: '');
       days = dataday.data;
+      showtodaycolor = DateTime(expirationDate.year,
+          expirationDate.month - nows.month, expirationDate.day - nows.day);
+
+      log("INDEX" + expirationDate.toString());
+
+      int dayx = showtodaycolor.day;
+      for (int i = 0; i <= dayx + 1; i++) {
+        dayex = DateTime(
+            expirationDate.year, expirationDate.month, expirationDate.day - i);
+        listindexday.add(dayex);
+        listindexday.sort();
+        //log("อิหยัง= ${dayex.day}");
+      }
+      log("iรf= $listindexday");
     } catch (err) {
       log('Error: $err');
     }
@@ -313,12 +332,19 @@ log("INDEX"+showtodaycolor.day.toString());
             child: Padding(
               padding: const EdgeInsets.all(20.0),
               child: Center(
-                child: GridView.count(
-                    crossAxisCount: 5,
-                    children: days
-                        .map((day) => Column(children: [
-                              InkWell(
-                                onTap: () {
+                child: GridView.builder(
+                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: 5,
+                  mainAxisExtent: 50,
+                ),
+                  shrinkWrap: true,
+                  itemCount: days.length,
+                 itemBuilder: (context, index) {
+                  final day = days[index];
+                  final indextoday =listindexday[index];
+                    return Column(children: [
+                      InkWell(
+                         onTap: () {
                                   if (widget.expirationDate ==
                                       "0001-01-01T00:00:00Z") {
                                     _bindPage(context);
@@ -337,11 +363,11 @@ log("INDEX"+showtodaycolor.day.toString());
                                         showFood(indexSeq: day.sequence - 1));
                                   }
                                 },
-                                child: Container(
+                                child: (nows.day <=  indextoday.day)?Container(
                                   height: 50,
                                   width: 50,
                                   decoration: BoxDecoration(
-                                      color: Colors.black,
+                                      color: Color.fromARGB(255, 255, 124, 2),
                                       borderRadius: BorderRadius.circular(100)
                                       //more than 50% of width makes circle
                                       ),
@@ -352,14 +378,88 @@ log("INDEX"+showtodaycolor.day.toString());
                                       color: Colors.white,
                                     ),
                                   )),
-                                ),
-                              ),
-                              //  Padding(
-                              //    padding: const EdgeInsets.all(8.0),
-                              //    child: Text(day.sequence.toString()),
-                              //  )
-                            ]))
-                        .toList()),
+                                ):(nows.day >  indextoday.day)?Container(
+                                  height: 50,
+                                  width: 50,
+                                  decoration: BoxDecoration(
+                                      color: Color.fromARGB(255, 107, 107, 107),
+                                      borderRadius: BorderRadius.circular(100)
+                                      //more than 50% of width makes circle
+                                      ),
+                                  child: Center(
+                                      child: Text(
+                                    day.sequence.toString(),
+                                    style: const TextStyle(
+                                      color: Colors.white,
+                                    ),
+                                  )),
+                                ):Container(
+                                  height: 50,
+                                  width: 50,
+                                  decoration: BoxDecoration(
+                                      color: Color.fromARGB(255, 139, 131, 255),
+                                      borderRadius: BorderRadius.circular(100)
+                                      //more than 50% of width makes circle
+                                      ),
+                                  child: Center(
+                                      child: Text(
+                                    day.sequence.toString(),
+                                    style: const TextStyle(
+                                      color: Colors.white,
+                                    ),
+                                  )),
+                                )
+                      )
+                    ],);
+                  },
+                ),
+                // GridView.count(
+                //     crossAxisCount: 5,
+                //     children: days
+                //         .map((day) => Column(children: [
+                //               InkWell(
+                //                 onTap: () {
+                //                   if (widget.expirationDate ==
+                //                       "0001-01-01T00:00:00Z") {
+                //                     _bindPage(context);
+                //                     log("ยังไม่เริ่ม$widget.expirationDate");
+                //                     setState(() {
+                //                       loadDataMethod = loadData();
+                //                     });
+                //                   } else {
+                //                     log("เริ่มแล้ว$widget.expirationDate");
+                //                     context.read<AppData>().did = day.did;
+                //                     context.read<AppData>().idcourse =
+                //                         widget.coID;
+
+                //                     log(" DID220:= ${day.sequence - 1}");
+                //                     Get.to(() =>
+                //                         showFood(indexSeq: day.sequence - 1));
+                //                   }
+                //                 },
+                //                 child: (today == listindexday)?Container(
+                //                   height: 50,
+                //                   width: 50,
+                //                   decoration: BoxDecoration(
+                //                       color: const Color.fromARGB(255, 255, 131, 131),
+                //                       borderRadius: BorderRadius.circular(100)
+                //                       //more than 50% of width makes circle
+                //                       ),
+                //                   child: Center(
+                //                       child: Text(
+                //                     day.sequence.toString(),
+                //                     style: const TextStyle(
+                //                       color: Colors.white,
+                //                     ),
+                //                   )),
+                //                 ):(today.day < listindexday.)?
+                //               ),
+                //               //  Padding(
+                //               //    padding: const EdgeInsets.all(8.0),
+                //               //    child: Text(day.sequence.toString()),
+                //               //  )
+                //             ]))
+                //         .toList()),
               ),
             ),
           );
@@ -506,23 +606,23 @@ log("INDEX"+showtodaycolor.day.toString());
                         modelResult = response.data;
                         Navigator.of(context, rootNavigator: true).pop();
                         if (modelResult.result == '1') {
-                          // ignore: use_build_context_synchronously
-                          pushNewScreen(
-                            context,
-                            screen: const MyCouses(),
-                            withNavBar: true,
-                          );
-                          // ignore: use_build_context_synchronously
-                          InAppNotification.show(
-                            child: NotificationBody(
-                              count: 1,
-                              message: 'ลบคอร์สสำเร็จ',
-                            ),
-                            context: context,
-                            onTap: () => print('Notification tapped!'),
-                            duration: const Duration(milliseconds: 1500),
-                          );
-                        } else {
+          // ignore: use_build_context_synchronously
+          pushNewScreen(
+            context,
+            screen: const MyCouses(),
+            withNavBar: true,
+          );
+          // ignore: use_build_context_synchronously
+          InAppNotification.show(
+            child: NotificationBody(
+              count: 1,
+              message: 'ลบคอร์สสำเร็จ',
+            ),
+            context: context,
+            onTap: () => print('Notification tapped!'),
+            duration: const Duration(milliseconds: 1500),
+          );
+        } else {
                           // ignore: use_build_context_synchronously
                           InAppNotification.show(
                             child: NotificationBody(
