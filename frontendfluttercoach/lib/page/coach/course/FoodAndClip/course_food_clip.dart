@@ -19,7 +19,6 @@ import 'package:msh_checkbox/msh_checkbox.dart';
 import 'package:provider/provider.dart';
 import 'package:quickalert/models/quickalert_type.dart';
 import 'package:quickalert/widgets/quickalert_dialog.dart';
-import 'package:video_player/video_player.dart';
 
 import '../../../../model/request/food_foodID_put.dart';
 import '../../../../model/response/clip_get_res.dart';
@@ -56,7 +55,6 @@ class HomeFoodAndClipPage extends StatefulWidget {
 }
 
 class _HomeFoodAndClipPageState extends State<HomeFoodAndClipPage> {
-  late VideoPlayerController _videoPlayerController;
 
   // FoodService
   late Future<void> loadFoodDataMethod;
@@ -100,15 +98,7 @@ class _HomeFoodAndClipPageState extends State<HomeFoodAndClipPage> {
     super.initState();
     log(widget.did);
     context.read<AppData>().sequence = widget.sequence;
-    _videoPlayerController = VideoPlayerController.networkUrl(Uri.parse(''))
-      ..initialize().then((_) {
-        // Ensure the first frame is shown after the video is initialized, even before the play button has been pressed.
-        setState(() {});
-      });
-    // _customVideoPlayerController = CustomVideoPlayerController(
-    //   context: context,
-    //   videoPlayerController: _videoPlayerController,
-    // );;
+  
     //Food
     _foodService = context.read<AppData>().foodServices;
     loadFoodDataMethod = loadFoodData();

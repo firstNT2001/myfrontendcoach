@@ -26,7 +26,6 @@ import '../../../widget/notificationBody.dart';
 import '../../../widget/textField/wg_textField.dart';
 import '../../../widget/textField/wg_textFieldLines.dart';
 
-import '../../../widget/textField/wg_textField_int copy.dart';
 import '../daysCourse/days_course_page.dart';
 
 class CourseNewPage extends StatefulWidget {
@@ -69,7 +68,9 @@ class _CourseNewPageState extends State<CourseNewPage> {
 
   String textErr = '';
   final _formKey = GlobalKey<FormState>();
+  final _formKey2 = GlobalKey<FormState>();
 
+  bool isValid = true;
   @override
   void initState() {
     // ignore: todo
@@ -121,105 +122,49 @@ class _CourseNewPageState extends State<CourseNewPage> {
                                     MainAxisAlignment.spaceEvenly,
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  Expanded(
-                                    child: WidgetTextFieldInt(
-                                      controller: amount,
-                                      labelText: 'จำนวนคน',
-                                      maxLength: 2,
-                                    ),
-                                  ),
                                   // Expanded(
-                                  //     child: Padding(
-                                  //   padding: const EdgeInsets.only(
-                                  //       bottom: 10, left: 15, right: 15),
-                                  //   child: Column(
-                                  //     crossAxisAlignment:
-                                  //         CrossAxisAlignment.start,
-                                  //     children: [
-                                  //       Padding(
-                                  //         padding: const EdgeInsets.only(
-                                  //             left: 5, bottom: 3),
-                                  //         child: Text(
-                                  //           'จำนวนคน',
-                                  //           style: Theme.of(context)
-                                  //               .textTheme
-                                  //               .bodyLarge,
-                                  //         ),
-                                  //       ),
-                                  //       TextFormField(
-                                  //           keyboardType: TextInputType.number,
-                                  //           controller: amount,
-                                  //           validator: (value) {
-                                  //             bool isValidw =
-                                  //                 isNumeric(value!); // false
-                                  //             log("ss"+isValidw.toString());
-                                  //             if (isValidw == true) {
-                                  //               log("BB");
-                                  //             } else {
-                                  //               log("FF");
-                                  //               setState(() {
-                                  //                 // _isvisibleHW = true;
-                                  //                 log("PP");
-                                  //               });
-                                  //             }
-
-                                  //             return null;
-                                  //           },
-                                  //           maxLength: 2,
-                                  //           textAlignVertical:
-                                  //               TextAlignVertical.center,
-                                  //           textAlign: TextAlign.center,
-                                  //           decoration: InputDecoration(
-                                  //               contentPadding:
-                                  //                   EdgeInsets.symmetric(
-                                  //                       vertical: 9,
-                                  //                       horizontal: 12),
-                                  //               counterText: "",
-                                  //               filled: true,
-                                  //               fillColor: Theme.of(context)
-                                  //                   .colorScheme
-                                  //                   .background)),
-                                  //     ],
+                                  //   child: WidgetTextFieldInt(
+                                  //     controller: amount,
+                                  //     labelText: 'จำนวนคน',
+                                  //     maxLength: 2,
                                   //   ),
-                                  // )),
-
+                                  // ),
                                   Expanded(
-                                    child: WidgetTextFieldInt(
-                                      controller: days,
-                                      labelText: 'จำนวนวัน',
-                                      maxLength: 2,
-                                    ),
-                                  ),
+                                      child: textForimField(
+                                          context, amount, 'จำนวนคน', 2)),
+                                  Expanded(
+                                      child: textForimField(
+                                          context, days, 'จำนวนวัน', 2)),
                                 ],
                               ),
                             ),
                           ),
-                          Padding(
-                            padding: const EdgeInsets.only(bottom: 8),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Expanded(
-                                  child: WidgetTextFieldInt(
-                                    controller: price,
-                                    labelText: 'ราคา',
-                                    maxLength: 5,
-                                  ),
-                                ),
-                                Expanded(
-                                  child: Padding(
-                                    padding: const EdgeInsets.only(
-                                        right: 15, left: 15),
-                                    child: WidgetDropdownStringNotValue(
-                                      title: 'เลือกความยากง่าย',
-                                      selectedValue: selectedValue,
-                                      ListItems: LevelItems,
-                                      //listItems: LevelItems,
+                          Form(
+                            key: _formKey2,
+                            child: Padding(
+                              padding: const EdgeInsets.only(bottom: 8),
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceEvenly,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Expanded(
+                                      child: textForimField(
+                                          context, price, 'ราคา', 5)),
+                                  Expanded(
+                                    child: Padding(
+                                      padding: const EdgeInsets.only(
+                                          right: 15, left: 15),
+                                      child: WidgetDropdownStringNotValue(
+                                        title: 'เลือกความยากง่าย',
+                                        selectedValue: selectedValue,
+                                        ListItems: LevelItems,
+                                        //listItems: LevelItems,
+                                      ),
                                     ),
                                   ),
-                                ),
-                              ],
+                                ],
+                              ),
                             ),
                           ),
                           WidgetTextFieldLines(
@@ -279,20 +224,9 @@ class _CourseNewPageState extends State<CourseNewPage> {
           ),
           TextFormField(
               keyboardType: TextInputType.number,
-              controller: amount,
+              controller: controller,
               validator: (value) {
-                bool isValidw = isNumeric(value!); // false
-                log(isValidw.toString());
-                if (isValidw == true) {
-                  log("BB");
-                } else {
-                  log("FF");
-                  setState(() {
-                    // _isvisibleHW = true;
-                    log("PP");
-                  });
-                }
-
+                isValid = isNumeric(value!); // false
                 return null;
               },
               maxLength: maxLength,
@@ -300,7 +234,7 @@ class _CourseNewPageState extends State<CourseNewPage> {
               textAlign: TextAlign.center,
               decoration: InputDecoration(
                   contentPadding:
-                      EdgeInsets.symmetric(vertical: 9, horizontal: 12),
+                      const EdgeInsets.symmetric(vertical: 9, horizontal: 12),
                   counterText: "",
                   filled: true,
                   fillColor: Theme.of(context).colorScheme.background)),
@@ -313,6 +247,10 @@ class _CourseNewPageState extends State<CourseNewPage> {
     return FilledButton(
       //style: style,
       onPressed: () async {
+        _formKey.currentState!.validate();
+
+        _formKey2.currentState!.validate();
+        log(isValid.toString());
         startLoading(context);
         if (name.text.isEmpty ||
             details.text.isEmpty ||
@@ -322,6 +260,11 @@ class _CourseNewPageState extends State<CourseNewPage> {
             price.text.isEmpty) {
           setState(() {
             textErr = 'กรุณากรอกข้อมูลให้ครบ';
+          });
+          stopLoading();
+        } else if (isValid == false) {
+          setState(() {
+            textErr = 'กรุณากรอกตัวเลขให้ถูกต้อง';
           });
           stopLoading();
         } else if (int.parse(days.text).isNegative == true ||

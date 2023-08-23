@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:developer';
 import 'dart:io';
 
@@ -13,6 +14,7 @@ import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:in_app_notification/in_app_notification.dart';
 import 'package:provider/provider.dart';
+import 'package:string_validator/string_validator.dart';
 
 import '../../../model/request/registerCoachDTO.dart';
 import '../../../model/response/md_Coach_get.dart';
@@ -68,7 +70,8 @@ class _CoachEidtProfilePageState extends State<CoachEidtProfilePage> {
   bool _isvisible = false;
 
   String textErr = '';
-
+  final _formKey = GlobalKey<FormState>();
+  bool isValid = false;
   @override
   void initState() {
     super.initState();
@@ -94,7 +97,6 @@ class _CoachEidtProfilePageState extends State<CoachEidtProfilePage> {
     );
   }
 
-
   Widget button() {
     return SizedBox(
       width: MediaQuery.of(context).size.width,
@@ -102,6 +104,7 @@ class _CoachEidtProfilePageState extends State<CoachEidtProfilePage> {
       child: FilledButton(
         //style: style,
         onPressed: () async {
+          _formKey.currentState!.validate();
 
           log(int.parse(phone.text).isNegative.toString());
           if (fullName.text.isEmpty ||
@@ -115,6 +118,10 @@ class _CoachEidtProfilePageState extends State<CoachEidtProfilePage> {
               _isvisible = true;
               textErr = 'กรุณากรอกข้อความในช่องว่างให้ครบ';
             });
+          } else if (isValid == false) {
+            setState(() {
+              textErr = 'กรุณากรอกตัวเลขให้ถูกต้อง';
+            });
           } else if (int.parse(phone.text).isNegative == true) {
             setState(() {
               _isvisible = true;
@@ -125,6 +132,7 @@ class _CoachEidtProfilePageState extends State<CoachEidtProfilePage> {
               _isvisible = false;
               textErr = '';
             });
+            startLoading(context);
             if (pickedImg != null) await uploadfile();
             if (pickedImg == null) profile = coachs.first.image;
             if (newbirht.isEmpty) {
@@ -146,25 +154,30 @@ class _CoachEidtProfilePageState extends State<CoachEidtProfilePage> {
                 property: property.text,
                 qualification: qualification.text,
                 facebookId: coachs.first.facebookId);
+                log(jsonEncode(request));
             var result = await _authService.updateCoach(
                 // ignore: use_build_context_synchronously
                 context.read<AppData>().cid.toString(),
                 request);
             modelResult = result.data;
             log(modelResult.result);
+            stopLoading();
             if (modelResult.result == '1') {
-              Navigator.pop(context);
+              // ignore: use_build_context_synchronously
+              //Navigator.pop(context);
 
+              // ignore: use_build_context_synchronously
               InAppNotification.show(
                 child: NotificationBody(
                   count: 1,
-                  message: 'แก้ไข่สำเร็จ',
+                  message: 'แก้ไขสำเร็จ',
                 ),
                 context: context,
                 onTap: () => print('Notification tapped!'),
                 duration: const Duration(milliseconds: 1500),
               );
             } else if (modelResult.result == '-14') {
+              // ignore: use_build_context_synchronously
               InAppNotification.show(
                 child: NotificationBody(
                   count: 1,
@@ -300,28 +313,29 @@ class _CoachEidtProfilePageState extends State<CoachEidtProfilePage> {
                     controller: fullName,
                     labelText: 'ชื่อ-นามสกุล',
                   ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    children: [
-                      SizedBox(
-                        width: (width - 16 - (3 * 30)) / 2,
-                        child: Padding(
-                          padding: const EdgeInsets.only(bottom: 10, left: 15),
-                          child: WidgetDropdownString(
-                            title: 'เพศ',
-                            selectedValue: selectedValue,
-                            listItems: LevelItems,
+                  Form(
+                    key: _formKey,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      children: [
+                        SizedBox(
+                          width: (width - 16 - (3 * 30)) / 2,
+                          child: Padding(
+                            padding:
+                                const EdgeInsets.only(bottom: 10, left: 15),
+                            child: WidgetDropdownString(
+                              title: 'เพศ',
+                              selectedValue: selectedValue,
+                              listItems: LevelItems,
+                            ),
                           ),
                         ),
-                      ),
-                      Expanded(
-                        child: WidgetTextFieldInt(
-                          controller: phone,
-                          labelText: 'เบอร์โทรศัพท์',
-                          maxLength: 10,
+                        Expanded(
+                          child: textForimField(
+                              context, phone, 'เบอร์โทรศัพท์', 10),
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
                   txtfildBirth(birthday, "วันเกิด"),
                   const Divider(endIndent: 20, indent: 20),
@@ -510,5 +524,40 @@ class _CoachEidtProfilePageState extends State<CoachEidtProfilePage> {
     final urlDownload = await snapshot.ref.getDownloadURL();
     // print('link img firebase $urlDownload');
     profile = urlDownload;
+  }
+
+  textForimField(BuildContext context, TextEditingController controller,
+      String labelText, int maxLength) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 10, left: 15, right: 15),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Padding(
+            padding: const EdgeInsets.only(left: 5, bottom: 3),
+            child: Text(
+              labelText,
+              style: Theme.of(context).textTheme.bodyLarge,
+            ),
+          ),
+          TextFormField(
+              keyboardType: TextInputType.number,
+              controller: controller,
+              validator: (value) {
+                isValid = isNumeric(value!); // false
+                return null;
+              },
+              maxLength: maxLength,
+              textAlignVertical: TextAlignVertical.center,
+              textAlign: TextAlign.center,
+              decoration: InputDecoration(
+                  contentPadding:
+                      const EdgeInsets.symmetric(vertical: 9, horizontal: 12),
+                  counterText: "",
+                  filled: true,
+                  fillColor: Theme.of(context).colorScheme.background)),
+        ],
+      ),
+    );
   }
 }

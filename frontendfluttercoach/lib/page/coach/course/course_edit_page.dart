@@ -13,6 +13,7 @@ import 'package:persistent_bottom_nav_bar_v2/persistent-tab-view.dart';
 import 'package:provider/provider.dart';
 import 'package:quickalert/models/quickalert_type.dart';
 import 'package:quickalert/widgets/quickalert_dialog.dart';
+import 'package:string_validator/string_validator.dart';
 
 import '../../../model/request/course_courseID_put.dart';
 
@@ -31,7 +32,6 @@ import '../../../widget/dropdown/wg_dropdown_string.dart';
 import '../../../widget/notificationBody.dart';
 import '../../../widget/textField/wg_textField.dart';
 import '../../../widget/textField/wg_textFieldLines.dart';
-import '../../../widget/textField/wg_textField_int copy.dart';
 import '../../../widget/textField/wg_textfile_show.dart';
 import '../daysCourse/days_course_page.dart';
 
@@ -95,6 +95,9 @@ class _CourseEditPageState extends State<CourseEditPage> {
   final selectedValue = TextEditingController();
 
   String textErr = "";
+  bool isValid = true;
+  final _formKey = GlobalKey<FormState>();
+  final _formKey2 = GlobalKey<FormState>();
 
   @override
   void initState() {
@@ -168,52 +171,47 @@ class _CourseEditPageState extends State<CourseEditPage> {
               controller: name,
               labelText: 'ชื่อ',
             ),
-            Padding(
-              padding: const EdgeInsets.only(bottom: 8),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Expanded(
-                    child: WidgetTextFieldInt(
-                      controller: amount,
-                      labelText: 'จำนวนคน',
-                      maxLength: 2,
-                    ),
-                  ),
-                  Expanded(
-                    child: WidgetTextFieldStringShow(
-                      controller: days,
-                      labelText: 'จำนวนวัน',
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.only(bottom: 8),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Expanded(
-                    child: WidgetTextFieldInt(
-                      controller: price,
-                      labelText: 'ราคา',
-                      maxLength: 5,
-                    ),
-                  ),
-                  Expanded(
-                    child: Padding(
-                      padding: const EdgeInsets.only(right: 15, left: 15),
-                      child: WidgetDropdownString(
-                        title: 'เลือกความยากง่าย',
-                        selectedValue: selectedValue,
-                        listItems: LevelItems,
+            Form(
+              key: _formKey,
+              child: Padding(
+                padding: const EdgeInsets.only(bottom: 8),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Expanded(
+                        child: textForimField(context, amount, 'จำนวนคน', 2)),
+                    Expanded(
+                      child: WidgetTextFieldStringShow(
+                        controller: days,
+                        labelText: 'จำนวนวัน',
                       ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
+              ),
+            ),
+            Form(
+              key: _formKey2,
+              child: Padding(
+                padding: const EdgeInsets.only(bottom: 8),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Expanded(child: textForimField(context, price, 'ราคา', 5)),
+                    Expanded(
+                      child: Padding(
+                        padding: const EdgeInsets.only(right: 15, left: 15),
+                        child: WidgetDropdownString(
+                          title: 'เลือกความยากง่าย',
+                          selectedValue: selectedValue,
+                          listItems: LevelItems,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
               ),
             ),
             WidgetTextFieldLines(
@@ -350,10 +348,49 @@ class _CourseEditPageState extends State<CourseEditPage> {
     );
   }
 
+  Padding textForimField(BuildContext context, TextEditingController controller,
+      String labelText, int maxLength) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 10, left: 15, right: 15),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Padding(
+            padding: const EdgeInsets.only(left: 5, bottom: 3),
+            child: Text(
+              labelText,
+              style: Theme.of(context).textTheme.bodyLarge,
+            ),
+          ),
+          TextFormField(
+              keyboardType: TextInputType.number,
+              controller: controller,
+              validator: (value) {
+                isValid = isNumeric(value!); // false
+                return null;
+              },
+              maxLength: maxLength,
+              textAlignVertical: TextAlignVertical.center,
+              textAlign: TextAlign.center,
+              decoration: InputDecoration(
+                  contentPadding:
+                      const EdgeInsets.symmetric(vertical: 9, horizontal: 12),
+                  counterText: "",
+                  filled: true,
+                  fillColor: Theme.of(context).colorScheme.background)),
+        ],
+      ),
+    );
+  }
+
   FilledButton buttonNext() {
     return FilledButton(
       //style: style,
       onPressed: () async {
+        startLoading(context);
+        _formKey.currentState!.validate();
+        _formKey2.currentState!.validate();
+
         if (widget.isVisible == true) {
           if (selectedValue.text == 'ง่าย') {
             lavel = 1;
@@ -370,7 +407,12 @@ class _CourseEditPageState extends State<CourseEditPage> {
             setState(() {
               textErr = 'กรุณากรอกข้อมูลให้ครบ';
             });
-            log(textErr);
+            stopLoading();
+          } else if (isValid == false) {
+            setState(() {
+              textErr = 'กรุณากรอกตัวเลขให้ถูกต้อง';
+            });
+            stopLoading();
           } else if (int.parse(days.text).isNegative == true ||
               int.parse(amount.text).isNegative == true ||
               int.parse(price.text).isNegative == true) {
@@ -405,6 +447,8 @@ class _CourseEditPageState extends State<CourseEditPage> {
                 widget.coID.toString(), updateCourseDTO);
             moduleResult = updateCourse.data;
             log(jsonEncode(moduleResult.result));
+            stopLoading();
+
             if (moduleResult.result == '0') {
               // ignore: use_build_context_synchronously
               context.read<AppData>().img = courses.first.image;

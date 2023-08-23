@@ -411,12 +411,12 @@ class _FoodCoachPageState extends State<FoodCoachPage> {
           padding: const EdgeInsets.only(right: 8, left: 8),
           child: InkWell(
             onTap: () {
-              // pushNewScreen(
-              //   context,
-              //   screen: FoodEditCoachPage(ifid: listfood.ifid),
-              //   withNavBar: true,
-              // );
-              Get.to(() => FoodEditCoachPage(ifid: listfood.ifid));
+              Get.to(() => FoodEditCoachPage(ifid: listfood.ifid))!
+                  .then((value) {
+                setState(() {
+                  loadFoodDataMethod = loadFoodData();
+                });
+              });
             },
             child: Column(
               children: [
@@ -526,7 +526,12 @@ class _FoodCoachPageState extends State<FoodCoachPage> {
                 //   screen: ClipEditCoachPage(icpId: listClips.icpId),
                 //   withNavBar: true,
                 // );
-                Get.to(() => ClipEditCoachPage(icpId: listClips.icpId));
+                Get.to(() => ClipEditCoachPage(icpId: listClips.icpId))!.then((value) {
+                  setState(() {
+                        loadClipDataMethod = loadClipData();
+
+                  });
+                });
               },
               child: Column(
                 children: [
