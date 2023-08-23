@@ -103,7 +103,7 @@ class _CourseNewPageState extends State<CourseNewPage> {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          SizedBox(
+                          const SizedBox(
                             height: 28,
                           ),
                           WidgetTextFieldString(

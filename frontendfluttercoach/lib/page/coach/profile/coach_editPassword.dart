@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
@@ -13,6 +14,7 @@ import '../../../service/provider/appdata.dart';
 import '../../../widget/textField/wg_textField_password.dart';
 import '../../user/editProfile.dart';
 import 'coach_editProfile.dart';
+import 'package:crypto/crypto.dart';
 
 class CoachEditPassword extends StatefulWidget {
   const CoachEditPassword(
@@ -166,6 +168,8 @@ class _CoachEditPasswordState extends State<CoachEditPassword> {
       child: FilledButton(
         //style: style,
         onPressed: () async {
+           String encryptedPassword = encryptPassword(oldPassword.text);
+          log(encryptedPassword);
           setState(() {
             textErr = '';
           });
@@ -173,7 +177,7 @@ class _CoachEditPasswordState extends State<CoachEditPassword> {
             setState(() {
               textErr = 'กรุณากรอกข้อมูลรหัสผ่าน';
             });
-          } else if (oldPassword.text != widget.password) {
+          } else if (encryptedPassword != widget.password) {
             setState(() {
               textErr = 'รหัสผ่านไม่ถูกต้อง';
               log('message');
@@ -192,7 +196,11 @@ class _CoachEditPasswordState extends State<CoachEditPassword> {
       ),
     );
   }
-
+ String encryptPassword(String password) {
+    final bytes = utf8.encode(password);
+    final hash = sha256.convert(bytes);
+    return hash.toString();
+  }
   Widget buttonNewPassword() {
     return SizedBox(
       width: MediaQuery.of(context).size.width,
@@ -200,6 +208,7 @@ class _CoachEditPasswordState extends State<CoachEditPassword> {
       child: FilledButton(
         //style: style,
         onPressed: () async {
+         
           setState(() {
             textErr = '';
           });
@@ -216,8 +225,10 @@ class _CoachEditPasswordState extends State<CoachEditPassword> {
               textErr = 'รหัสผ่านไม่ตรงกัน';
             });
           } else {
+             String encryptedPassword = encryptPassword(password1.text);
+          log(encryptedPassword);
             if (widget.visible == true) {
-              AuthPassword request = AuthPassword(password: password1.text);
+              AuthPassword request = AuthPassword(password: encryptedPassword);
               var response =
                   await authService.passwordCoach(widget.id, request);
               modelResult = response.data;

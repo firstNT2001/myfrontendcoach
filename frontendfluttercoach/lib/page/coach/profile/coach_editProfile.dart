@@ -94,6 +94,7 @@ class _CoachEidtProfilePageState extends State<CoachEidtProfilePage> {
     );
   }
 
+
   Widget button() {
     return SizedBox(
       width: MediaQuery.of(context).size.width,
@@ -101,6 +102,7 @@ class _CoachEidtProfilePageState extends State<CoachEidtProfilePage> {
       child: FilledButton(
         //style: style,
         onPressed: () async {
+
           log(int.parse(phone.text).isNegative.toString());
           if (fullName.text.isEmpty ||
               name.text.isEmpty ||
@@ -162,8 +164,8 @@ class _CoachEidtProfilePageState extends State<CoachEidtProfilePage> {
                 onTap: () => print('Notification tapped!'),
                 duration: const Duration(milliseconds: 1500),
               );
-            } else if(modelResult.result == '-14') {
-               InAppNotification.show(
+            } else if (modelResult.result == '-14') {
+              InAppNotification.show(
                 child: NotificationBody(
                   count: 1,
                   message: 'มีอีเมลนี้ซํ้าในระบบ',
@@ -172,7 +174,7 @@ class _CoachEidtProfilePageState extends State<CoachEidtProfilePage> {
                 onTap: () => print('Notification tapped!'),
                 duration: const Duration(milliseconds: 2000),
               );
-            }else {
+            } else {
               InAppNotification.show(
                 child: NotificationBody(
                   count: 1,
@@ -298,7 +300,6 @@ class _CoachEidtProfilePageState extends State<CoachEidtProfilePage> {
                     controller: fullName,
                     labelText: 'ชื่อ-นามสกุล',
                   ),
-
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children: [

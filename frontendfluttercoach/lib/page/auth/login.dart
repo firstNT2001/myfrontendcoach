@@ -20,6 +20,7 @@ import '../../widget/dialogs.dart';
 import '../coach/navigationbar.dart';
 import '../user/navigationbar.dart';
 import 'register.dart';
+import 'package:crypto/crypto.dart';
 
 class LoginPage extends StatefulWidget {
   final StreamController<SessionState>? sessionStateStream;
@@ -286,10 +287,18 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 
+  String encryptPassword(String password) {
+    final bytes = utf8.encode(password);
+    final hash = sha256.convert(bytes);
+    return hash.toString();
+  }
+
   void login(BuildContext context) async {
     startLoading(context);
+    String encryptedPassword = encryptPassword(password.text);
+    log(encryptedPassword);
     AuthLoginPost request =
-        AuthLoginPost(email: email.text, password: password.text);
+        AuthLoginPost(email: email.text, password: encryptedPassword);
     log(jsonEncode(request));
     var response = await authService.login(request);
     authLoginRes = response.data;
