@@ -714,7 +714,7 @@ class _showCousePageState extends State<showCousePage> {
   void _close(BuildContext ctx) {
     SmartDialog.show(builder: (_) {
       return Container(
-        width: MediaQuery.of(context).size.width * 0.8,
+        width: MediaQuery.of(context).size.width * 0.9,
         height: MediaQuery.of(context).size.height * 0.3,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(20),
