@@ -58,6 +58,7 @@ class _ShowDayMycourseState extends State<ShowDayMycourse> {
   DateTime nows = DateTime.now();
   late DateTime today;
   late DateTime expirationDate;
+  late DateTime showtodaycolor;
   String txtdateEX = "";
   String txtdateStart = "";
   late String roomchat;
@@ -80,7 +81,8 @@ class _ShowDayMycourseState extends State<ShowDayMycourse> {
     expirationDate =
         DateTime(nows.year, nows.month, nows.day + widget.dayincourse - 1);
     var formatter = DateFormat.yMMMd();
-
+showtodaycolor =  DateTime(expirationDate.year, expirationDate.month- nows.month, expirationDate.day - nows.month);
+log("INDEX"+showtodaycolor.day.toString());
     var onlyBuddhistYear = nows.yearInBuddhistCalendar;
     txtdateEX = formatter.formatInBuddhistCalendarThai(expirationDate);
     txtdateStart = formatter.formatInBuddhistCalendarThai(nows);
@@ -173,7 +175,6 @@ class _ShowDayMycourseState extends State<ShowDayMycourse> {
                                     const EdgeInsets.only(left: 15, bottom: 10),
                                 child: FilledButton.icon(
                                     onPressed: () {
-                                      log("messagecoID" + coachId.toString());
                                       pushNewScreen(
                                         context,
                                         screen: ProfileCoachPage(
@@ -290,7 +291,6 @@ class _ShowDayMycourseState extends State<ShowDayMycourse> {
       var dataday = await dayService.day(
           did: '', coID: widget.coID.toString(), sequence: '');
       days = dataday.data;
-      log('couse: ${days.length}');
     } catch (err) {
       log('Error: $err');
     }
@@ -321,20 +321,17 @@ class _ShowDayMycourseState extends State<ShowDayMycourse> {
                                 onTap: () {
                                   if (widget.expirationDate ==
                                       "0001-01-01T00:00:00Z") {
-                                    log("A");
                                     _bindPage(context);
                                     log("ยังไม่เริ่ม$widget.expirationDate");
                                     setState(() {
                                       loadDataMethod = loadData();
                                     });
                                   } else {
-                                    log("C");
                                     log("เริ่มแล้ว$widget.expirationDate");
-                                    log(" DID:= ${day.did}");
                                     context.read<AppData>().did = day.did;
                                     context.read<AppData>().idcourse =
                                         widget.coID;
-              
+
                                     log(" DID220:= ${day.sequence - 1}");
                                     Get.to(() =>
                                         showFood(indexSeq: day.sequence - 1));
@@ -447,48 +444,105 @@ class _ShowDayMycourseState extends State<ShowDayMycourse> {
     });
   }
 
-  void dialogCourse(BuildContext context) {
-    QuickAlert.show(
-      context: context,
-      type: QuickAlertType.confirm,
-      text: 'คุณต้องการที่จะยกเลิกคอร์สใช่หรือไม่?',
-      confirmBtnText: 'ใช่',
-      cancelBtnText: 'ไม่',
-      confirmBtnColor: Theme.of(context).colorScheme.primary,
-      onConfirmBtnTap: () async {
-        var response = await courseService.deleteCourse(widget.coID.toString());
-        modelResult = response.data;
-        Navigator.of(context, rootNavigator: true).pop();
-        if (modelResult.result == '1') {
-          // ignore: use_build_context_synchronously
-          pushNewScreen(
-            context,
-            screen: const MyCouses(),
-            withNavBar: true,
-          );
-          // ignore: use_build_context_synchronously
-          InAppNotification.show(
-            child: NotificationBody(
-              count: 1,
-              message: 'ลบคอร์สสำเร็จ',
+  void dialogCourse(BuildContext ctx) {
+    SmartDialog.show(builder: (_) {
+      return Container(
+        width: MediaQuery.of(context).size.width * 0.8,
+        height: MediaQuery.of(context).size.height * 0.4,
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(20),
+          color: Colors.white,
+        ),
+        alignment: Alignment.center,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            //Text("กรุณาชำระเงิน",style: Theme.of(context).textTheme.bodyLarge),
+            SizedBox(
+                width: MediaQuery.of(context).size.width * 0.25,
+                height: MediaQuery.of(context).size.height * 0.12,
+                child: Image.asset(
+                  "assets/images/delete.png",
+                  fit: BoxFit.fill,
+                )),
+            const Padding(
+              padding: EdgeInsets.all(10.0),
+              child: Text("คุณต้องการที่จะยกเลิกคอร์สใช่หรือไม่",
+                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600)),
             ),
-            context: context,
-            onTap: () => print('Notification tapped!'),
-            duration: const Duration(milliseconds: 1500),
-          );
-        } else {
-          // ignore: use_build_context_synchronously
-          InAppNotification.show(
-            child: NotificationBody(
-              count: 1,
-              message: 'ลบคอร์สไม่สำเร็จ',
+            const Padding(
+              padding: EdgeInsets.only(left: 15, right: 10, bottom: 10),
+              child: Text(
+                  "เมื่อคุณยกเลิกคอร์ส คอร์สจะถูกลบทันทีและไม่มีการคืนเงิน",
+                  style: TextStyle(
+                    fontSize: 16,
+                  )),
             ),
-            context: context,
-            onTap: () => print('Notification tapped!'),
-            duration: const Duration(milliseconds: 1500),
-          );
-        }
-      },
-    );
+
+            Padding(
+              padding: const EdgeInsets.only(top: 12),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: [
+                  ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      primary: const Color.fromARGB(
+                          255, 167, 18, 8), // Background color
+                    ),
+                    onPressed: () {
+                      SmartDialog.dismiss();
+                    },
+                    child: const Text('ยกเลิก',
+                        style: TextStyle(fontSize: 16, color: Colors.white)),
+                  ),
+                  ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        primary: Colors.green, // Background color
+                      ),
+                      onPressed: () async {
+                        SmartDialog.dismiss();
+                        var response = await courseService
+                            .deleteCourse(widget.coID.toString());
+                        modelResult = response.data;
+                        Navigator.of(context, rootNavigator: true).pop();
+                        if (modelResult.result == '1') {
+                          // ignore: use_build_context_synchronously
+                          pushNewScreen(
+                            context,
+                            screen: const MyCouses(),
+                            withNavBar: true,
+                          );
+                          // ignore: use_build_context_synchronously
+                          InAppNotification.show(
+                            child: NotificationBody(
+                              count: 1,
+                              message: 'ลบคอร์สสำเร็จ',
+                            ),
+                            context: context,
+                            onTap: () => print('Notification tapped!'),
+                            duration: const Duration(milliseconds: 1500),
+                          );
+                        } else {
+                          // ignore: use_build_context_synchronously
+                          InAppNotification.show(
+                            child: NotificationBody(
+                              count: 1,
+                              message: 'ลบคอร์สไม่สำเร็จ',
+                            ),
+                            context: context,
+                            onTap: () => print('Notification tapped!'),
+                            duration: const Duration(milliseconds: 1500),
+                          );
+                        }
+                      },
+                      child: const Text("ตกลง",
+                          style: TextStyle(fontSize: 16, color: Colors.white))),
+                ],
+              ),
+            )
+          ],
+        ),
+      );
+    });
   }
 }

@@ -240,7 +240,7 @@ class _showCousePageState extends State<showCousePage> {
                             onPressed: () {
                               log("courses.first.coach.cid =" +
                                   courses.first.coach.cid.toString());
-
+                
                               pushNewScreen(
                                 context,
                                 screen: ProfileCoachPage(
@@ -425,7 +425,7 @@ class _showCousePageState extends State<showCousePage> {
                                           // Row(children: [
                                           // const Icon(
                                           //     FontAwesomeIcons.coins),
-
+                
                                           //   )
                                           // ]),
                                         ),

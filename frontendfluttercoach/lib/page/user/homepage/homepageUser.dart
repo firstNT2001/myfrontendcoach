@@ -254,10 +254,8 @@ class _HomePageUserState extends State<HomePageUser> {
         if (snapshot.connectionState != ConnectionState.done) {
           return const Center(child: CircularProgressIndicator());
         } else {
-          if (courses.length > 5) {
-            setState(() {
-              courses.length = 5;
-            });
+          if (courseWithRatings.length > 5) {
+            courseWithRatings.length = 5;
           }
 
           //courses.sort((a, b) => a.someProperty.compareTo(b.someProperty));
@@ -339,13 +337,18 @@ class _HomePageUserState extends State<HomePageUser> {
                                           end: Alignment.bottomLeft,
                                           colors: [
                                             Color.fromARGB(255, 185, 0, 0),
-                                            Colors.transparent, // top Right part
+                                            Colors
+                                                .transparent, // top Right part
                                           ],
                                         ),
                                       ),
-                                      child:  Padding(
-                                        padding:
-                                            EdgeInsets.only(left: MediaQuery.of(context).size.width * 0.075, top: 7),
+                                      child: Padding(
+                                        padding: EdgeInsets.only(
+                                            left: MediaQuery.of(context)
+                                                    .size
+                                                    .width *
+                                                0.075,
+                                            top: 7),
                                         child: Text("ฟรี",
                                             style: TextStyle(
                                                 fontSize: 18,
