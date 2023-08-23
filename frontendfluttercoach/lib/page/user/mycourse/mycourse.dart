@@ -14,6 +14,7 @@ import '../../../model/response/md_process.dart';
 import '../../../service/course.dart';
 import '../../../service/progessbar.dart';
 import '../../../service/provider/appdata.dart';
+import 'Widget/widget_loadprogess.dart';
 import 'history.dart';
 import 'showDay_mycourse.dart';
 import 'package:percent_indicator/percent_indicator.dart';
@@ -27,18 +28,17 @@ class MyCouses extends StatefulWidget {
 
 class _MyCousesState extends State<MyCouses> {
   late CourseService _courseService;
-  late ProgessbarService progessService;
+ 
   // late HttpResponse<ModelCourse> courses;
-  late Modelprogessbar progess;
+
   List<Course> mycourse = [];
   List<Buying> courses = [];
   List<ModelClip> clips = [];
-  List<double> listpercent =[];
+
     List<double> listpercentText =[];
   late Future<void> loadDataMethod;
 
-  double percen = 0.00;
-  double percenText = 0.00;
+
   //show day not ex
   DateTime nows = DateTime.now();
   late DateTime today;
@@ -47,10 +47,7 @@ class _MyCousesState extends State<MyCouses> {
     // TODO: implement initState
     super.initState();
   
-      
   
-    progessService =
-        ProgessbarService(Dio(), baseUrl: context.read<AppData>().baseurl);
     _courseService = context.read<AppData>().courseService;
     
     loadDataMethod = loadData();
@@ -103,18 +100,6 @@ class _MyCousesState extends State<MyCouses> {
       var datas = await _courseService.showcourseNotEx(
           uid: context.read<AppData>().uid.toString());
       courses = datas.data;
-      for (int i = 0; i < courses.length; i++) {
-        log("i${courses[i].courseId}");
-        var datas = await progessService.processbar(
-            coID: courses[i].courseId.toString());
-        progess = datas.data;
-        percen=(progess.percent).toPrecision(2);
-        //percenText=(progess.percent).toPrecision(1);
-        listpercent.add(percen);
-        //listpercentText.add(percenText);
-        log("percent${percen.toString()}");
-       // log("percentTEXT${percenText.toString()}");
-      }
     } catch (err) {
       log('Error: $err');
     }
@@ -131,10 +116,7 @@ class _MyCousesState extends State<MyCouses> {
             itemCount: courses.length,
             itemBuilder: (context, index) {
               final listcours = courses[index];
-              final listpercents = (listpercent[index]/100).toPrecision(2);
-              final listshowpercents = listpercent[index];
-              log("listpercents"+listpercents.toString());
-               log("listshowpercents"+listpercents.toString());
+            
               return Padding(
                 padding: const EdgeInsets.only(left: 10, right: 10, bottom: 20),
                 child: InkWell(
@@ -226,30 +208,7 @@ class _MyCousesState extends State<MyCouses> {
                                       ),
                                     ],
                                   ),
-                                  Padding(
-                                    padding:
-                                        EdgeInsets.only(bottom: 4.0, top: 4.0),
-                                    child: FittedBox(
-                                      child: LinearPercentIndicator(
-                                        width: MediaQuery.of(context).size.width *
-                                            0.65,
-                                        fillColor:
-                                            Color.fromARGB(0, 255, 255, 255),
-                                        lineHeight: 10.0,
-                                        percent: listpercents,
-                                        trailing: Text(
-                                          listshowpercents.toString()+"%",
-                                          style: TextStyle(
-                                              fontSize: 16.0,
-                                              color: Colors.white),
-                                        ),
-                                        barRadius: Radius.circular(7),
-                                        backgroundColor: Colors.grey,
-                                        progressColor:
-                                            Theme.of(context).colorScheme.primary,
-                                      ),
-                                    ),
-                                  ),
+                                  WidgetProgess(coID: listcours.courseId.toString(),)
                                  
                                 ],
                               ),
