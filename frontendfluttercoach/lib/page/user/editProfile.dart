@@ -26,6 +26,7 @@ import '../../widget/dropdown/wg_dropdown_string.dart';
 import '../../widget/textField/wg_textField.dart';
 import '../../widget/textField/wg_textField_int copy.dart';
 import '../../widget/textField/wg_textField_int.dart';
+import '../../widget/textField/wg_tx_inputint.dart';
 import '../auth/GoogleAuthenticator.dart';
 import '../coach/profile/coach_editPassword.dart';
 import 'money/widgethistory/widget_history.dart';
@@ -50,6 +51,7 @@ class _editProfileCusState extends State<editProfileCus> {
   String GenOTP = "";
   late int uid;
   bool _isvisible = false;
+  bool _isvisibleHW = false;
   bool _isvisiblephone = false;
   String tt = '';
   //controller
@@ -74,7 +76,10 @@ class _editProfileCusState extends State<editProfileCus> {
   //selectimg
   PlatformFile? pickedImg;
   UploadTask? uploadTask;
-
+  final _formKey = GlobalKey<FormState>();
+  RegExp _numeric = RegExp(r'^-?[0-9]+$');
+  late   bool isValidw;
+  late   bool isValidh;
   Future selectImg() async {
     final result = await FilePicker.platform.pickFiles();
     if (result == null) return;
@@ -359,18 +364,112 @@ class _editProfileCusState extends State<editProfileCus> {
                     ],
                   ),
                   txtfildBirth(birthday, "วันเกิด"),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    children: [
-                      Expanded(
-                        child: WidgetTextFieldIntnotmax(
-                            controller: weight, labelText: 'น้ำหนัก'),
-                      ),
-                      Expanded(
-                        child: WidgetTextFieldIntnotmax(
-                            controller: height, labelText: 'ส่วนสูง'),
-                      ),
-                    ],
+                  Form(
+                    key: _formKey,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      children: [
+                        Expanded(
+                          child: Padding(
+                            padding: const EdgeInsets.only(
+                                bottom: 10, left: 15, right: 15),
+                            child: Column(
+                              children: [
+                                Padding(
+                                  padding:
+                                      const EdgeInsets.only(left: 5, bottom: 3),
+                                  child: Text(
+                                    "น้ำหนัก (กิโลกรัม)",
+                                    style:
+                                        Theme.of(context).textTheme.bodyLarge,
+                                  ),
+                                ),
+                                TextFormField(
+                                    keyboardType: TextInputType.number,
+                                    controller: weight,
+                                    validator: (value) {
+                                      isValidw = isNumeric(value!); // false
+                                      log(isValidw.toString());
+                                      if (isValidw == true) {
+                                        log("BB");
+                                      } else {
+                                    log("FF");
+                                        setState(() {
+                                           
+                                          _isvisibleHW =true;
+                                          log("PP");
+                                        });
+                                      }
+
+                                      return null;
+                                    },
+                                     maxLength: 3,
+                                    textAlignVertical: TextAlignVertical.center,
+                                    textAlign: TextAlign.center,
+                                    decoration: InputDecoration(
+                                        contentPadding: EdgeInsets.symmetric(
+                                            vertical: 9, horizontal: 12),
+                                        counterText: "",
+                                        filled: true,
+                                        fillColor: Theme.of(context)
+                                            .colorScheme
+                                            .background)),
+                              ],
+                            ),
+                          ),
+                        ),
+                        Expanded(
+                          child: Padding(
+                            padding: const EdgeInsets.only(
+                                bottom: 10, left: 15, right: 15),
+                            child: Column(
+                              children: [
+                                Padding(
+                                  padding:
+                                      const EdgeInsets.only(left: 5, bottom: 3),
+                                  child: Text(
+                                    "ส่วนสูง (เซนติเมตร)",
+                                    style:
+                                        Theme.of(context).textTheme.bodyLarge,
+                                  ),
+                                ),
+                                TextFormField(
+                                    keyboardType: TextInputType.number,
+                                    controller: height,
+                                    validator: (value) {
+                                      isValidh = isNumeric(value!); // false
+                                      log(isValidh.toString());
+                                      if (isValidh == true) {
+                                        log("BB");
+                                      } else {
+                                        log("CC");
+                                        setState(() {
+                                           
+                                          _isvisibleHW =true;
+                                          log("DD");
+                                        });
+                                      }
+
+                                      return null;
+                                    },
+                                     maxLength: 3,
+                                    textAlignVertical: TextAlignVertical.center,
+                                    textAlign: TextAlign.center,
+                                    decoration: InputDecoration(
+                                        contentPadding:
+                                            const EdgeInsets.symmetric(
+                                                vertical: 9, horizontal: 12),
+                                        counterText: "",
+                                        filled: true,
+                                        fillColor: Theme.of(context)
+                                            .colorScheme
+                                            .background)),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
                   Visibility(
                     visible: _isvisible,
@@ -382,6 +481,23 @@ class _editProfileCusState extends State<editProfileCus> {
                               bottom: 8, left: 20, right: 23),
                           child: Text(
                             "กรุณากรอกข้อความในช่องว่างให้ครบ",
+                            style: TextStyle(
+                                color: Theme.of(context).colorScheme.error),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  Visibility(
+                    visible: _isvisibleHW,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.only(
+                              bottom: 8, left: 20, right: 23),
+                          child: Text(
+                            "กรุณากรอกข้อความให้ถูกต้อง",
                             style: TextStyle(
                                 color: Theme.of(context).colorScheme.error),
                           ),
@@ -435,76 +551,103 @@ class _editProfileCusState extends State<editProfileCus> {
                       child: FilledButton(
                           child: Text("บันทึก"),
                           onPressed: () async {
-                            if (pickedImg != null) await uploadfile();
-                            if (pickedImg == null) profile = _image;
-
-                            if (username.text.isEmpty ||
-                                email.text.isEmpty ||
-                                fullName.text.isEmpty ||
-                                phone.text.isEmpty ||
-                                weight.text.isEmpty ||
-                                gender.text.isEmpty ||
-                                height.text.isEmpty) {
+                            if (_formKey.currentState!.validate()) {
                               setState(() {
-                                _isvisible = true;
+                                setState(() {
+                                  _isvisibleHW = false;
+                                });
                               });
-                            } else {
-                              // var formatter = DateFormat.yMMMd( _birthday.text);
-                              // log("formatter"+formatter.toString());
-                              if (newbirht.isEmpty) {
-                                newbirht = oldbirht;
-                              }
-                              if (gender.text == 'ชาย') {
-                                log("newg3" + gender.text);
-                                tt = '2';
-                                log("newg1=" + tt);
-                              } else {
-                                tt = '1';
-                                log("newg2=" + tt);
-                              }
-                              if (phone.text.length != 10) {
-                                log("Erorphone");
-                              }
-
-                              UpdateCustomer updateCustomer = UpdateCustomer(
-                                  username: username.text,
-                                  password: password.text,
-                                  email: email.text,
-                                  fullName: fullName.text,
-                                  birthday: newbirht,
-                                  gender: tt,
-                                  phone: phone.text,
-                                  image: profile,
-                                  weight: int.parse(weight.text),
-                                  height: int.parse(height.text));
-                              log("Update");
-                              log(jsonEncode(updateCustomer));
-                              log("log" + uid.toString());
-                              log(birthday.text);
-                              //log(_image.toString());
-                              update = await customerService.updateCustomer(
-                                  uid.toString(), updateCustomer);
-                              moduleResult = update.data;
-                              log(moduleResult.result);
-                              modelResult = update.data;
-                              if (modelResult.result == '0') {
-                                // ignore: use_build_context_synchronously
-                                warning(context);
-                              } else {
-                                // ignore: use_build_context_synchronously
-                                success(context);
-                              }
                             }
+                              if (pickedImg != null) await uploadfile();
+                              if (pickedImg == null) profile = _image;
+                              if (_formKey.currentState!.validate()) {
+                                // If the form is valid, display a snackbar. In the real world,
+                                // you'd often call a server or save the information in a database.
+                                setState(() {
+                                  _isvisibleHW = false;
+                                  _isvisible = false;
+                                });
+                              }
+                              if (username.text.isEmpty ||
+                                  email.text.isEmpty ||
+                                  fullName.text.isEmpty ||
+                                  phone.text.isEmpty ||
+                                  weight.text.isEmpty ||
+                                  gender.text.isEmpty ||
+                                  height.text.isEmpty) {
+                                setState(() {
+                                  _isvisible = true;
+                                  _isvisibleHW = false;
+                                });
+                              }
+                              if(isValidw==false||isValidh==false||int.parse(weight.text) < 1 ||
+                                  int.parse(height.text) < 1||int.parse(weight.text) > 150 ||
+                                  int.parse(height.text) > 200) {
+                                setState(() {
+                                  _isvisible = false;
+                                  _isvisibleHW = true;
+                                });
+                              } else {
+                                // var formatter = DateFormat.yMMMd( _birthday.text);
+                                // log("formatter"+formatter.toString());
+                                if (newbirht.isEmpty) {
+                                  newbirht = oldbirht;
+                                }
+                                if (gender.text == 'ชาย') {
+                                  log("newg3" + gender.text);
+                                  tt = '2';
+                                  log("newg1=" + tt);
+                                } else {
+                                  tt = '1';
+                                  log("newg2=" + tt);
+                                }
+                                if (phone.text.length != 10) {
+                                  log("Erorphone");
+                                }
 
-                            // Put your code here, which you want to execute when Text Field is NOT Empty.
+                                UpdateCustomer updateCustomer = UpdateCustomer(
+                                    username: username.text,
+                                    password: password.text,
+                                    email: email.text,
+                                    fullName: fullName.text,
+                                    birthday: newbirht,
+                                    gender: tt,
+                                    phone: phone.text,
+                                    image: profile,
+                                    weight: int.parse(weight.text),
+                                    height: int.parse(height.text));
+                                log("Update");
+                                log(jsonEncode(updateCustomer));
+                                log("log" + uid.toString());
+                                log(birthday.text);
+                                //log(_image.toString());
+                                update = await customerService.updateCustomer(
+                                    uid.toString(), updateCustomer);
+                                moduleResult = update.data;
+                                log(moduleResult.result);
+                                modelResult = update.data;
+                                if (modelResult.result == '0') {
+                                  // ignore: use_build_context_synchronously
+                                  warning(context);
+                                } else {
+                                  // ignore: use_build_context_synchronously
+                                  success(context);
+                                }
+                              }
+
+                     
+                            
                           }),
-                    ),
-                  ),
-                ],
+                    )
+              )],
               ),
             );
           }
         });
+  }
+
+  bool isNumeric(String str) {
+    return _numeric.hasMatch(str);
   }
 
   String getGoogleAuthenticatorUri(String appname, String email, String key) {
