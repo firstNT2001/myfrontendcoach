@@ -38,6 +38,8 @@ class _CoachPageState extends State<CoachPage> {
   TextEditingController property = TextEditingController();
   TextEditingController qualification = TextEditingController();
 
+  TextEditingController price = TextEditingController();
+
   @override
   void initState() {
     super.initState();
@@ -71,6 +73,7 @@ class _CoachPageState extends State<CoachPage> {
       birthday.text = thaiDate(coachs.first.birthday);
       property.text = coachs.first.property.toString();
       qualification.text = coachs.first.qualification.toString();
+      price.text = coachs.first.price.toString();
       if (coachs.first.gender == "1") {
         gender.text = "หญิง";
         log('เพศใหม่1: ${gender.text}');
@@ -141,6 +144,10 @@ class _CoachPageState extends State<CoachPage> {
                             WidgetTextFieldStringShow(
                               controller: fullName,
                               labelText: 'ชื่อ-นามสกุล',
+                            ),
+                            WidgetTextFieldStringShow(
+                              controller: price,
+                              labelText: 'จำนวนเงิน',
                             ),
                             WidgetTextFieldStringShow(
                               controller: email,

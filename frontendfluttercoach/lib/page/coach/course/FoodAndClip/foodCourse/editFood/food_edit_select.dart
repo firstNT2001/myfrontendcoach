@@ -273,12 +273,23 @@ class _FoodEditSelectPageState extends State<FoodEditSelectPage> {
                                 onTap: () => print('Notification tapped!'),
                                 duration: const Duration(milliseconds: 1500),
                               );
+                            } else if (modelResult.result == '-14') {
+                              // ignore: use_build_context_synchronously
+                              InAppNotification.show(
+                                child: NotificationBody(
+                                  count: 1,
+                                  message: 'มีเมนูอาหารในมื้อนี้แล้ว',
+                                ),
+                                context: context,
+                                onTap: () => print('Notification tapped!'),
+                                duration: const Duration(milliseconds: 1500),
+                              );
                             } else {
                               // ignore: use_build_context_synchronously
                               InAppNotification.show(
                                 child: NotificationBody(
                                   count: 1,
-                                  message: 'มีเมนู $name ในวันนี้แล้ว',
+                                  message: 'มีเมนูอาหารในมื้อ ${widget.time == '1' ?'มื้อเช้า' : widget.time == '2' ?'มื้อเที่ยง' : widget.time == '3' ?'มื้อเย็น': ''} แล้ว',
                                 ),
                                 context: context,
                                 onTap: () => print('Notification tapped!'),
