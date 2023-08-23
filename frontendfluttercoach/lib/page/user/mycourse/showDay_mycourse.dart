@@ -306,7 +306,10 @@ class _ShowDayMycourseState extends State<ShowDayMycourse> {
           expirationDate.month - nows.month, expirationDate.day - nows.day);
          log("INDEX" + expirationDate.toString()); 
       log("INDEX" + showtodaycolor.toString());
-
+        var formatter = DateFormat.yMMMd();
+   var onlyBuddhistYear = nows.yearInBuddhistCalendar;
+    txtdateEX = formatter.formatInBuddhistCalendarThai(expirationDate);
+    txtdateStart = formatter.formatInBuddhistCalendarThai(nows);
       int dayx = showtodaycolor.day;
       for (int i = 0; i <= dayx; i++) {
         dayex = DateTime(
@@ -457,7 +460,7 @@ class _ShowDayMycourseState extends State<ShowDayMycourse> {
             ),
             Text("วันที่เริ่ม $txtdateStart",
                 style: Theme.of(context).textTheme.bodyLarge),
-            Text("วันที่เริ่ม $txtdateEX",
+            Text("วันที่สิ้นสุด $txtdateEX",
                 style: Theme.of(context).textTheme.bodyLarge),
             Padding(
               padding: const EdgeInsets.only(top: 15),

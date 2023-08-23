@@ -417,7 +417,7 @@ class _LoginPageState extends State<LoginPage> {
                             child:
                                 Image.asset("assets/images/single-person.png")),
                         Text(
-                          'ผู้ใช้ทั้วไป',
+                          'ผู้ใช้ทั่วไป',
                           style: Theme.of(context).textTheme.titleMedium,
                         ),
                       ],
