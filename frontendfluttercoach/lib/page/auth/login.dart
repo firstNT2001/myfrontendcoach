@@ -7,6 +7,7 @@ import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:frontendfluttercoach/page/auth/password.dart';
 import 'package:get/get.dart';
+import 'package:in_app_notification/in_app_notification.dart';
 
 import 'package:local_session_timeout/src/session_timeout_manager.dart';
 import 'package:provider/provider.dart';
@@ -17,6 +18,7 @@ import '../../service/auth.dart';
 
 import '../../service/provider/appdata.dart';
 import '../../widget/dialogs.dart';
+import '../../widget/notificationBody.dart';
 import '../coach/navigationbar.dart';
 import '../user/navigationbar.dart';
 import 'register.dart';
@@ -159,6 +161,18 @@ class _LoginPageState extends State<LoginPage> {
                               setState(() => titleErr = '');
                             },
                             decoration: InputDecoration(
+                                suffixIcon: IconButton(
+                                  icon: Icon(showPassword
+                                      ? Icons.visibility_off
+                                      : Icons.visibility),
+                                  onPressed: () {
+                                    setState(
+                                      () {
+                                        showPassword = !showPassword;
+                                      },
+                                    );
+                                  },
+                                ),
                                 filled: true, //<-- SEE HERE
                                 fillColor: Colors.white,
                                 border: InputBorder.none,
@@ -331,7 +345,16 @@ class _LoginPageState extends State<LoginPage> {
       stopLoading();
 
       log('ไม่พบ');
-
+      // ignore: use_build_context_synchronously
+      InAppNotification.show(
+        child: NotificationBody(
+          count: 1,
+          message: 'กรุณาใส่อีเมล์หรือรหัสผ่านให้ถูกต้อง',
+        ),
+        context: context,
+        onTap: () => print('Notification tapped!'),
+        duration: const Duration(milliseconds: 3000),
+      );
       setState(() => titleErr = 'กรุณาใส่อีเมล์หรือรหัสผ่านให้ถูกต้อง');
     }
   }
