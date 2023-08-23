@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:developer';
 import 'dart:io';
 
@@ -27,6 +28,8 @@ import '../../widget/textField/wg_textFieldLines.dart';
 import '../../widget/textField/wg_textField_int copy.dart';
 import '../../widget/textField/wg_textField_password.dart';
 import '../user/money/widgethistory/widget_history.dart';
+
+import 'package:crypto/crypto.dart';
 
 class RegisterPage extends StatefulWidget {
   const RegisterPage({super.key, required this.isVisible});
@@ -312,7 +315,6 @@ class _RegisterPageState extends State<RegisterPage> {
   }
 
   void reg(BuildContext context) async {
-    log(birthday.text);
     setState(() {
       textErr = '';
     });
@@ -350,6 +352,8 @@ class _RegisterPageState extends State<RegisterPage> {
       });
       stopLoading();
     } else {
+      String encryptedPassword = encryptPassword(password1.text);
+      log(encryptedPassword);
       if (pickedImg != null) await uploadfile();
       if (pickedImg == null) {
         profile =
@@ -376,7 +380,7 @@ class _RegisterPageState extends State<RegisterPage> {
               fullName: fullName.text,
               username: name.text,
               email: email.text,
-              password: password1.text,
+              password: encryptedPassword,
               image: profile,
               gender: (selectedValue.text) == 'ชาย'
                   ? '2'
@@ -422,7 +426,7 @@ class _RegisterPageState extends State<RegisterPage> {
               fullName: fullName.text,
               username: name.text,
               email: email.text,
-              password: password1.text,
+              password: encryptedPassword,
               image: profile,
               gender: (selectedValue.text) == 'ชาย'
                   ? '2'
@@ -578,5 +582,11 @@ class _RegisterPageState extends State<RegisterPage> {
         ),
       ],
     );
+  }
+
+  String encryptPassword(String password) {
+    final bytes = utf8.encode(password);
+    final hash = sha256.convert(bytes);
+    return hash.toString();
   }
 }
