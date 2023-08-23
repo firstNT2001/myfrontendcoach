@@ -9,6 +9,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:in_app_notification/in_app_notification.dart';
 
 import 'package:provider/provider.dart';
+import 'package:string_validator/string_validator.dart';
 
 import '../../../../model/request/listFood_foodID_put.dart';
 
@@ -20,7 +21,6 @@ import '../../../../widget/dialogs.dart';
 import '../../../../widget/notificationBody.dart';
 import '../../../../widget/textField/wg_textField.dart';
 import '../../../../widget/textField/wg_textFieldLines.dart';
-import '../../../../widget/textField/wg_textField_int copy.dart';
 
 class FoodEditCoachPage extends StatefulWidget {
   final int ifid;
@@ -50,7 +50,8 @@ class _FoodEditCoachPageState extends State<FoodEditCoachPage> {
   String profile = " ";
 
   String textErr = '';
-
+  final _formKey = GlobalKey<FormState>();
+  bool isValid = true;
   @override
   void initState() {
     super.initState();
@@ -101,16 +102,17 @@ class _FoodEditCoachPageState extends State<FoodEditCoachPage> {
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              SizedBox(height: 20,),
+                              SizedBox(
+                                height: 20,
+                              ),
                               WidgetTextFieldString(
                                 controller: name,
                                 labelText: 'ขื่อเมนู',
                               ),
-                              WidgetTextFieldInt(
-                                controller: calories,
-                                labelText: 'แคลอรี่',
-                                maxLength: 4,
-                              ),
+                              Form(
+                                  key: _formKey,
+                                  child: textForimField(
+                                      context, calories, 'แคลอรี่', 4)),
                               WidgetTextFieldLines(
                                 controller: details,
                                 labelText: 'วิธีการปรุง',
@@ -150,6 +152,8 @@ class _FoodEditCoachPageState extends State<FoodEditCoachPage> {
   FilledButton button(BuildContext context) {
     return FilledButton(
         onPressed: () async {
+          _formKey.currentState!.validate();
+
           startLoading(context);
           if (name.text.isEmpty ||
               details.text.isEmpty ||
@@ -158,7 +162,12 @@ class _FoodEditCoachPageState extends State<FoodEditCoachPage> {
               textErr = 'กรุณากรอกข้อมูลให้ครบ';
             });
             stopLoading();
-          }else if (int.parse(calories.text).isNegative == true) {
+          } else if (isValid == false) {
+            setState(() {
+              textErr = 'กรุณากรอกตัวเลขให้ถูกต้อง';
+            });
+            stopLoading();
+          } else if (int.parse(calories.text).isNegative == true) {
             setState(() {
               textErr = 'กรุณากรอกตัวเลขมากกว่า 0';
             });
@@ -316,7 +325,7 @@ class _FoodEditCoachPageState extends State<FoodEditCoachPage> {
               child: Container(
                 height: 40,
                 width: 40,
-                decoration:  BoxDecoration(
+                decoration: BoxDecoration(
                     shape: BoxShape.circle,
                     //border: Border.all(width: 4, color: Colors.white),
                     color: Theme.of(context).colorScheme.primary),
@@ -348,6 +357,41 @@ class _FoodEditCoachPageState extends State<FoodEditCoachPage> {
           ),
         ),
       ],
+    );
+  }
+
+  Padding textForimField(BuildContext context, TextEditingController controller,
+      String labelText, int maxLength) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 10, left: 15, right: 15),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Padding(
+            padding: const EdgeInsets.only(left: 5, bottom: 3),
+            child: Text(
+              labelText,
+              style: Theme.of(context).textTheme.bodyLarge,
+            ),
+          ),
+          TextFormField(
+              keyboardType: TextInputType.number,
+              controller: controller,
+              validator: (value) {
+                isValid = isNumeric(value!); // false
+                return null;
+              },
+              maxLength: maxLength,
+              textAlignVertical: TextAlignVertical.center,
+              textAlign: TextAlign.center,
+              decoration: InputDecoration(
+                  contentPadding:
+                      const EdgeInsets.symmetric(vertical: 9, horizontal: 12),
+                  counterText: "",
+                  filled: true,
+                  fillColor: Theme.of(context).colorScheme.background)),
+        ],
+      ),
     );
   }
 }

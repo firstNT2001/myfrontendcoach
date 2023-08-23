@@ -21,7 +21,6 @@ import '../../../../service/listClip.dart';
 import '../../../../service/provider/appdata.dart';
 import '../../../../widget/dialogs.dart';
 import '../../../../widget/notificationBody.dart';
-import '../../../../widget/showCilp.dart';
 import '../../../../widget/textField/wg_textField.dart';
 import '../../../../widget/textField/wg_textFieldLines.dart';
 
@@ -47,8 +46,9 @@ class _ClipEditCoachPageState extends State<ClipEditCoachPage> {
   //Vdieo
   PlatformFile? pickedFile;
   UploadTask? uploadTask;
-  late VideoPlayerController _videoPlayerController;
-  late CustomVideoPlayerController _customVideoPlayerController;
+  late VideoPlayerController _videoSelectPlayerController;
+  late CustomVideoPlayerController _customSelectVideoPlayerController;
+
   String pathVdieo = '';
 
   bool isVisibles = true;
@@ -71,7 +71,13 @@ class _ClipEditCoachPageState extends State<ClipEditCoachPage> {
 
     log(pickedFile.toString());
   }
-
+  @override
+  void dispose() {
+    _videoSelectPlayerController.pause();
+    // ignore: avoid_print
+    print('Dispose used');
+    super.dispose();
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -148,13 +154,17 @@ class _ClipEditCoachPageState extends State<ClipEditCoachPage> {
                 child: SafeArea(
                   child: CustomVideoPlayer(
                       customVideoPlayerController:
-                          _customVideoPlayerController),
+                          _customSelectVideoPlayerController),
                 ),
               ),
             } else if (listclips.first.video != '') ...{
-              WidgetShowCilp(
-                urlVideo: listclips.first.video,
-              ),
+              _videoSelectPlayerController.value.isInitialized
+                  ? Expanded(
+                      child: CustomVideoPlayer(
+                          customVideoPlayerController:
+                              _customSelectVideoPlayerController),
+                    )
+                  : Center(child: load(context)),
             } else
               Container(
                 width: MediaQuery.of(context).size.width,
@@ -175,12 +185,14 @@ class _ClipEditCoachPageState extends State<ClipEditCoachPage> {
                 child: InkWell(
                   onTap: () {
                     log("message");
+                    _videoSelectPlayerController.pause();
+
                     selectFile();
                   },
                   child: Container(
                     height: 40,
                     width: 40,
-                    decoration:  BoxDecoration(
+                    decoration: BoxDecoration(
                         shape: BoxShape.circle,
                         //border: Border.all(width: 4, color: Colors.white),
                         color: Theme.of(context).colorScheme.primary),
@@ -204,9 +216,18 @@ class _ClipEditCoachPageState extends State<ClipEditCoachPage> {
                         color: Colors.black,
                       ),
                       onPressed: () {
-                        // setState(() {
-                        //   loadClipDataMethod = loadClipData();
-                        // });
+                        // _videoPlayerController.value.isInitialized
+                        //     ? _videoPlayerController.pause()
+                        //     : log('');
+
+                        // _videoSelectPlayerController.value.isInitialized
+                        //     ? _videoSelectPlayerController.pause()
+                        //     : log('');
+                        // log(_videoPlayerController.value.isInitialized
+                        //     .toString());
+                        log(_videoSelectPlayerController.value.isInitialized
+                            .toString());
+
                         Navigator.pop(context);
                       },
                     ),
@@ -223,6 +244,8 @@ class _ClipEditCoachPageState extends State<ClipEditCoachPage> {
   FilledButton button(BuildContext context) {
     return FilledButton(
         onPressed: () async {
+          _videoSelectPlayerController.pause();
+
           if (name.text.isEmpty ||
               amountPerSet.text.isEmpty ||
               details.text.isEmpty) {
@@ -288,6 +311,14 @@ class _ClipEditCoachPageState extends State<ClipEditCoachPage> {
       name.text = listclips.first.name;
       details.text = listclips.first.details;
       amountPerSet.text = listclips.first.amountPerSet;
+
+      _videoSelectPlayerController =
+          VideoPlayerController.network(listclips.first.video)
+            ..initialize().then((value) => setState(() {}));
+      _customSelectVideoPlayerController = CustomVideoPlayerController(
+        context: context,
+        videoPlayerController: _videoSelectPlayerController,
+      );
     } catch (err) {
       log('Error: $err');
     }
@@ -295,7 +326,9 @@ class _ClipEditCoachPageState extends State<ClipEditCoachPage> {
 
   //Video
   Future selectFile() async {
-    final result = await FilePicker.platform.pickFiles(type: FileType.video,);
+    final result = await FilePicker.platform.pickFiles(
+      type: FileType.video,
+    );
     if (result == null) return;
     // ignore: use_build_context_synchronously
     //startLoading(context);
@@ -305,13 +338,13 @@ class _ClipEditCoachPageState extends State<ClipEditCoachPage> {
     final File fileForFirebase = File(pickedFile!.path!);
 
     log(pickedFile.toString());
-    _videoPlayerController = VideoPlayerController.file(fileForFirebase)
+    _videoSelectPlayerController = VideoPlayerController.file(fileForFirebase)
       ..initialize().then((_) {
         // Ensure the first frame is shown after the video is initialized, even before the play button has been pressed.
         setState(() {});
-        _customVideoPlayerController = CustomVideoPlayerController(
+        _customSelectVideoPlayerController = CustomVideoPlayerController(
           context: context,
-          videoPlayerController: _videoPlayerController,
+          videoPlayerController: _videoSelectPlayerController,
         );
       });
   }

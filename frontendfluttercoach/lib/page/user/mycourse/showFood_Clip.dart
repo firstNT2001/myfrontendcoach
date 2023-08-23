@@ -84,7 +84,7 @@ class _showFoodState extends State<showFood> {
         ClipServices(Dio(), baseUrl: context.read<AppData>().baseurl);
     foodService = FoodServices(Dio(), baseUrl: context.read<AppData>().baseurl);
     loadDataMethod = loadData();
-    today = DateTime(nows.year, nows.month, nows.day);
+    today = DateTime(nows.year, nows.month, 24);
   }
 
   @override
