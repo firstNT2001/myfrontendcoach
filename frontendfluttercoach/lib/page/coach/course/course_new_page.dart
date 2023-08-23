@@ -13,6 +13,7 @@ import 'package:in_app_notification/in_app_notification.dart';
 import 'package:persistent_bottom_nav_bar_v2/persistent-tab-view.dart';
 
 import 'package:provider/provider.dart';
+import 'package:string_validator/string_validator.dart';
 
 import '../../../model/request/course_coachID_post.dart';
 
@@ -67,6 +68,7 @@ class _CourseNewPageState extends State<CourseNewPage> {
   String imageCourse = "";
 
   String textErr = '';
+  final _formKey = GlobalKey<FormState>();
 
   @override
   void initState() {
@@ -110,27 +112,86 @@ class _CourseNewPageState extends State<CourseNewPage> {
                             controller: name,
                             labelText: 'ชื่อ',
                           ),
-                          Padding(
-                            padding: const EdgeInsets.only(bottom: 8),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Expanded(
-                                  child: WidgetTextFieldInt(
-                                    controller: amount,
-                                    labelText: 'จำนวนคน',
-                                    maxLength: 2,
+                          Form(
+                            key: _formKey,
+                            child: Padding(
+                              padding: const EdgeInsets.only(bottom: 8),
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceEvenly,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Expanded(
+                                    child: WidgetTextFieldInt(
+                                      controller: amount,
+                                      labelText: 'จำนวนคน',
+                                      maxLength: 2,
+                                    ),
                                   ),
-                                ),
-                                Expanded(
-                                  child: WidgetTextFieldInt(
-                                    controller: days,
-                                    labelText: 'จำนวนวัน',
-                                    maxLength: 2,
+                                  // Expanded(
+                                  //     child: Padding(
+                                  //   padding: const EdgeInsets.only(
+                                  //       bottom: 10, left: 15, right: 15),
+                                  //   child: Column(
+                                  //     crossAxisAlignment:
+                                  //         CrossAxisAlignment.start,
+                                  //     children: [
+                                  //       Padding(
+                                  //         padding: const EdgeInsets.only(
+                                  //             left: 5, bottom: 3),
+                                  //         child: Text(
+                                  //           'จำนวนคน',
+                                  //           style: Theme.of(context)
+                                  //               .textTheme
+                                  //               .bodyLarge,
+                                  //         ),
+                                  //       ),
+                                  //       TextFormField(
+                                  //           keyboardType: TextInputType.number,
+                                  //           controller: amount,
+                                  //           validator: (value) {
+                                  //             bool isValidw =
+                                  //                 isNumeric(value!); // false
+                                  //             log("ss"+isValidw.toString());
+                                  //             if (isValidw == true) {
+                                  //               log("BB");
+                                  //             } else {
+                                  //               log("FF");
+                                  //               setState(() {
+                                  //                 // _isvisibleHW = true;
+                                  //                 log("PP");
+                                  //               });
+                                  //             }
+
+                                  //             return null;
+                                  //           },
+                                  //           maxLength: 2,
+                                  //           textAlignVertical:
+                                  //               TextAlignVertical.center,
+                                  //           textAlign: TextAlign.center,
+                                  //           decoration: InputDecoration(
+                                  //               contentPadding:
+                                  //                   EdgeInsets.symmetric(
+                                  //                       vertical: 9,
+                                  //                       horizontal: 12),
+                                  //               counterText: "",
+                                  //               filled: true,
+                                  //               fillColor: Theme.of(context)
+                                  //                   .colorScheme
+                                  //                   .background)),
+                                  //     ],
+                                  //   ),
+                                  // )),
+
+                                  Expanded(
+                                    child: WidgetTextFieldInt(
+                                      controller: days,
+                                      labelText: 'จำนวนวัน',
+                                      maxLength: 2,
+                                    ),
                                   ),
-                                ),
-                              ],
+                                ],
+                              ),
                             ),
                           ),
                           Padding(
@@ -202,6 +263,52 @@ class _CourseNewPageState extends State<CourseNewPage> {
     );
   }
 
+  Padding textForimField(BuildContext context, TextEditingController controller,
+      String labelText, int maxLength) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 10, left: 15, right: 15),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Padding(
+            padding: const EdgeInsets.only(left: 5, bottom: 3),
+            child: Text(
+              labelText,
+              style: Theme.of(context).textTheme.bodyLarge,
+            ),
+          ),
+          TextFormField(
+              keyboardType: TextInputType.number,
+              controller: amount,
+              validator: (value) {
+                bool isValidw = isNumeric(value!); // false
+                log(isValidw.toString());
+                if (isValidw == true) {
+                  log("BB");
+                } else {
+                  log("FF");
+                  setState(() {
+                    // _isvisibleHW = true;
+                    log("PP");
+                  });
+                }
+
+                return null;
+              },
+              maxLength: maxLength,
+              textAlignVertical: TextAlignVertical.center,
+              textAlign: TextAlign.center,
+              decoration: InputDecoration(
+                  contentPadding:
+                      EdgeInsets.symmetric(vertical: 9, horizontal: 12),
+                  counterText: "",
+                  filled: true,
+                  fillColor: Theme.of(context).colorScheme.background)),
+        ],
+      ),
+    );
+  }
+
   FilledButton button() {
     return FilledButton(
       //style: style,
@@ -224,17 +331,17 @@ class _CourseNewPageState extends State<CourseNewPage> {
             textErr = 'กรุณากรอกตัวเลขมากกว่า 0';
           });
           stopLoading();
-        }else if (int.parse(days.text) > 30) {
+        } else if (int.parse(days.text) > 30) {
           setState(() {
             textErr = 'เพิ่มวันได้สูงสุด 30 วัน';
           });
           stopLoading();
-        }else if (int.parse(amount.text) > 20) {
+        } else if (int.parse(amount.text) > 20) {
           setState(() {
             textErr = 'เพิ่มจำนวนคนได้สูงสุด 20 คน';
           });
           stopLoading();
-        }  else if (pickedImg == null) {
+        } else if (pickedImg == null) {
           setState(() {
             textErr = 'กรุณาเพิ่มรูป';
           });
