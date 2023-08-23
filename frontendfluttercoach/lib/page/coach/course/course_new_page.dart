@@ -224,7 +224,17 @@ class _CourseNewPageState extends State<CourseNewPage> {
             textErr = 'กรุณากรอกตัวเลขมากกว่า 0';
           });
           stopLoading();
-        } else if (pickedImg == null) {
+        }else if (int.parse(days.text) > 30) {
+          setState(() {
+            textErr = 'เพิ่มวันได้สูงสุด 30 วัน';
+          });
+          stopLoading();
+        }else if (int.parse(amount.text) > 20) {
+          setState(() {
+            textErr = 'เพิ่มจำนวนคนได้สูงสุด 20 คน';
+          });
+          stopLoading();
+        }  else if (pickedImg == null) {
           setState(() {
             textErr = 'กรุณาเพิ่มรูป';
           });

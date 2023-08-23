@@ -105,7 +105,7 @@ class _ClipNewCoachPageState extends State<ClipNewCoachPage> {
                 ),
                 WidgetTextFieldString(
                   controller: amountPerSet,
-                  labelText: 'จำนวนเซ็ท',
+                  labelText: 'จำนวนเซต',
                 ),
                 WidgetTextFieldLines(
                   controller: details,
@@ -239,7 +239,7 @@ class _ClipNewCoachPageState extends State<ClipNewCoachPage> {
                 padding: const EdgeInsets.only(bottom: 18, left: 20, right: 20),
                 child: WidgetTextFieldString(
                   controller: amountPerSet,
-                  labelText: 'จำนวนเซ็ท',
+                  labelText: 'จำนวนเซต',
                 ),
               ),
               Padding(
@@ -339,7 +339,7 @@ class _ClipNewCoachPageState extends State<ClipNewCoachPage> {
 
   //Video
   Future selectFile() async {
-    final result = await FilePicker.platform.pickFiles();
+    final result = await FilePicker.platform.pickFiles(type: FileType.video,);
     if (result == null) return;
 
     // ignore: use_build_context_synchronously

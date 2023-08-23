@@ -13,7 +13,6 @@ import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 
 import 'package:in_app_notification/in_app_notification.dart';
-import 'package:persistent_bottom_nav_bar_v2/persistent-tab-view.dart';
 import 'package:provider/provider.dart';
 import 'package:quickalert/models/quickalert_type.dart';
 import 'package:quickalert/widgets/quickalert_dialog.dart';
@@ -536,50 +535,64 @@ class _DaysCoursePageState extends State<DaysCoursePage> {
       confirmBtnColor: Theme.of(context).colorScheme.primary,
       onConfirmBtnTap: () async {
         Navigator.of(context, rootNavigator: true).pop();
+        sequence = days.length + 1;
+
         startLoading(context);
 
-        sequence = days.length + 1;
-        log(sequence.toString());
-        DayDayIdPut request = DayDayIdPut(sequence: sequence);
-        log(jsonEncode(request));
-        var response =
-            await _daysService.insertDayByCourseID(widget.coID, request);
+        if (sequence > 30) {
+          InAppNotification.show(
+            child: NotificationBody(
+              count: 1,
+              message: 'เพิ่มวันได้สูงสุด30วัน',
+            ),
+            context: context,
+            onTap: () => print('Notification tapped!'),
+            duration: const Duration(milliseconds: 1500),
+          );
+          stopLoading();
+        } else {
+          log(sequence.toString());
+          DayDayIdPut request = DayDayIdPut(sequence: sequence);
+          log(jsonEncode(request));
+          var response =
+              await _daysService.insertDayByCourseID(widget.coID, request);
 
-        modelResult = response.data;
-        log("${modelResult.code} : ${modelResult.result}");
+          modelResult = response.data;
+          log("${modelResult.code} : ${modelResult.result}");
 
-        CourseCourseIdPut requestCourse = CourseCourseIdPut(
-            name: course.first.name,
-            details: course.first.details,
-            level: course.first.level,
-            amount: course.first.amount,
-            image: course.first.image,
-            days: sequence,
-            price: course.first.price,
-            status: course.first.status);
-        //log(jsonEncode(requestCourse));
-        var respo = await _courseService.updateCourseByCourseID(
-            widget.coID, requestCourse);
-        modelResult = respo.data;
+          CourseCourseIdPut requestCourse = CourseCourseIdPut(
+              name: course.first.name,
+              details: course.first.details,
+              level: course.first.level,
+              amount: course.first.amount,
+              image: course.first.image,
+              days: sequence,
+              price: course.first.price,
+              status: course.first.status);
+          //log(jsonEncode(requestCourse));
+          var respo = await _courseService.updateCourseByCourseID(
+              widget.coID, requestCourse);
+          modelResult = respo.data;
 
-        setState(() {
-          loadDaysDataMethod = loadDaysDataAsync();
-          sequence = 0;
-        });
+          setState(() {
+            loadDaysDataMethod = loadDaysDataAsync();
+            sequence = 0;
+          });
 
-        stopLoading();
+          stopLoading();
 
-        log('onConfirmBtnTap');
-        // ignore: use_build_context_synchronously
-        InAppNotification.show(
-          child: NotificationBody(
-            count: 1,
-            message: 'ได้เพิ่มวันเรียบร้อยแล้ว',
-          ),
-          context: context,
-          onTap: () => print('Notification tapped!'),
-          duration: const Duration(milliseconds: 1500),
-        );
+          log('onConfirmBtnTap');
+          // ignore: use_build_context_synchronously
+          InAppNotification.show(
+            child: NotificationBody(
+              count: 1,
+              message: 'ได้เพิ่มวันเรียบร้อยแล้ว',
+            ),
+            context: context,
+            onTap: () => print('Notification tapped!'),
+            duration: const Duration(milliseconds: 1500),
+          );
+        }
       },
     );
   }

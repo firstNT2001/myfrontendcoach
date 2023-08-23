@@ -363,9 +363,8 @@ class _RegisterPageState extends State<RegisterPage> {
           stopLoading();
         } else {
           setState(() {
-            textErr = 'กรุณาใส่นํ้าหนักหรือส่วนสูง';
+            textErr = '';
           });
-
           if (int.parse(height.text).isNegative == true ||
               int.parse(weight.text).isNegative == true) {
             setState(() {
@@ -391,10 +390,19 @@ class _RegisterPageState extends State<RegisterPage> {
             );
             var result = await _authService.regCus(request);
             modelResult = result.data;
-            log(modelResult.result);
             stopLoading();
             if (modelResult.result == '1') {
               Get.to(() => const LoginPage());
+            } else if (modelResult.result == '-14') {
+              InAppNotification.show(
+                child: NotificationBody(
+                  count: 1,
+                  message: 'มีอีเมลนี้ซํ้าในระบบ',
+                ),
+                context: context,
+                onTap: () => print('Notification tapped!'),
+                duration: const Duration(milliseconds: 2000),
+              );
             } else {
               InAppNotification.show(
                 child: NotificationBody(
@@ -428,11 +436,20 @@ class _RegisterPageState extends State<RegisterPage> {
               facebookId: '');
           var result = await _authService.regCoach(request);
           modelResult = result.data;
-          log(modelResult.result);
           stopLoading();
-
+          log('message' + modelResult.result);
           if (modelResult.result == '1') {
             Get.to(() => const LoginPage());
+          } else if (modelResult.result == '-14') {
+            InAppNotification.show(
+              child: NotificationBody(
+                count: 1,
+                message: 'มีอีเมลนี้ซํ้าในระบบ',
+              ),
+              context: context,
+              onTap: () => print('Notification tapped!'),
+              duration: const Duration(milliseconds: 2000),
+            );
           } else {
             InAppNotification.show(
               child: NotificationBody(

@@ -113,13 +113,13 @@ class _CoachEidtProfilePageState extends State<CoachEidtProfilePage> {
               _isvisible = true;
               textErr = 'กรุณากรอกข้อความในช่องว่างให้ครบ';
             });
-          }else if(int.parse(phone.text).isNegative == true) {
-             setState(() {
+          } else if (int.parse(phone.text).isNegative == true) {
+            setState(() {
               _isvisible = true;
               textErr = 'เบอร์โทรศัพท์มีค่าติดลบ';
             });
           } else {
-             setState(() {
+            setState(() {
               _isvisible = false;
               textErr = '';
             });
@@ -149,6 +149,7 @@ class _CoachEidtProfilePageState extends State<CoachEidtProfilePage> {
                 context.read<AppData>().cid.toString(),
                 request);
             modelResult = result.data;
+            log(modelResult.result);
             if (modelResult.result == '1') {
               Navigator.pop(context);
 
@@ -161,7 +162,17 @@ class _CoachEidtProfilePageState extends State<CoachEidtProfilePage> {
                 onTap: () => print('Notification tapped!'),
                 duration: const Duration(milliseconds: 1500),
               );
-            } else {
+            } else if(modelResult.result == '-14') {
+               InAppNotification.show(
+                child: NotificationBody(
+                  count: 1,
+                  message: 'มีอีเมลนี้ซํ้าในระบบ',
+                ),
+                context: context,
+                onTap: () => print('Notification tapped!'),
+                duration: const Duration(milliseconds: 2000),
+              );
+            }else {
               InAppNotification.show(
                 child: NotificationBody(
                   count: 1,
@@ -256,9 +267,14 @@ class _CoachEidtProfilePageState extends State<CoachEidtProfilePage> {
                         onPressed: () {
                           log(coachs.first.email);
                           Get.to(() => GoogleAuthenticatorPage(
-                                email: coachs.first.email,
-                                password: coachs.first.password,
-                              ));
+                                    email: coachs.first.email,
+                                    password: coachs.first.password,
+                                  ))!
+                              .then((value) {
+                            setState(() {
+                              loadCoachDataMethod = loadCoachData();
+                            });
+                          });
                         },
                       ),
                     ],
@@ -282,6 +298,7 @@ class _CoachEidtProfilePageState extends State<CoachEidtProfilePage> {
                     controller: fullName,
                     labelText: 'ชื่อ-นามสกุล',
                   ),
+
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children: [

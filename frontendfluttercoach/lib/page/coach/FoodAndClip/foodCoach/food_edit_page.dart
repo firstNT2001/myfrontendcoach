@@ -108,12 +108,12 @@ class _FoodEditCoachPageState extends State<FoodEditCoachPage> {
                               ),
                               WidgetTextFieldInt(
                                 controller: calories,
-                                labelText: 'Calories',
+                                labelText: 'แคลอรี่',
                                 maxLength: 4,
                               ),
                               WidgetTextFieldLines(
                                 controller: details,
-                                labelText: 'ส่วนผสม',
+                                labelText: 'วิธีการปรุง',
                               ),
                               Row(
                                 mainAxisAlignment: MainAxisAlignment.end,

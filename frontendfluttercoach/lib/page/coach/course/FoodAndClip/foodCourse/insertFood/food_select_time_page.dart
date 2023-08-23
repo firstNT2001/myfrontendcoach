@@ -158,6 +158,7 @@ class _FoodSelectTimePageState extends State<FoodSelectTimePage>
           }
           log("result:${modelResult.result}");
           stopLoading();
+          log(modelResult.result);
           if (modelResult.result == '1') {
             widget.increaseFood.clear();
             Navigator.popUntil(
@@ -168,6 +169,17 @@ class _FoodSelectTimePageState extends State<FoodSelectTimePage>
               child: NotificationBody(
                 count: 1,
                 message: 'เพิ่มเมนูสำเร็จ',
+              ),
+              context: context,
+              onTap: () => print('Notification tapped!'),
+              duration: const Duration(milliseconds: 1500),
+            );
+          } else if(modelResult.result == '-14') {
+            // ignore: use_build_context_synchronously
+            InAppNotification.show(
+              child: NotificationBody(
+                count: 1,
+                message: 'มีเมนูอาหารในมื้อนี้แล้ว',
               ),
               context: context,
               onTap: () => print('Notification tapped!'),

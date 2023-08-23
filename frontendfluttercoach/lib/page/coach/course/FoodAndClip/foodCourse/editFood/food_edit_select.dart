@@ -5,8 +5,7 @@ import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
+
 import 'package:in_app_notification/in_app_notification.dart';
 import 'package:provider/provider.dart';
 
@@ -18,7 +17,6 @@ import '../../../../../../service/listFood.dart';
 import '../../../../../../service/provider/appdata.dart';
 import '../../../../../../widget/dialogs.dart';
 import '../../../../../../widget/notificationBody.dart';
-import '../../course_food_clip.dart';
 
 class FoodEditSelectPage extends StatefulWidget {
   const FoodEditSelectPage(
@@ -273,12 +271,23 @@ class _FoodEditSelectPageState extends State<FoodEditSelectPage> {
                                 onTap: () => print('Notification tapped!'),
                                 duration: const Duration(milliseconds: 1500),
                               );
+                            } else if (modelResult.result == '-14') {
+                              // ignore: use_build_context_synchronously
+                              InAppNotification.show(
+                                child: NotificationBody(
+                                  count: 1,
+                                  message: 'มีเมนูอาหารในมื้อนี้แล้ว',
+                                ),
+                                context: context,
+                                onTap: () => print('Notification tapped!'),
+                                duration: const Duration(milliseconds: 1500),
+                              );
                             } else {
                               // ignore: use_build_context_synchronously
                               InAppNotification.show(
                                 child: NotificationBody(
                                   count: 1,
-                                  message: 'มีเมนู $name ในวันนี้แล้ว',
+                                  message: 'มีเมนูอาหารในมื้อ ${widget.time == '1' ?'มื้อเช้า' : widget.time == '2' ?'มื้อเที่ยง' : widget.time == '3' ?'มื้อเย็น': ''} แล้ว',
                                 ),
                                 context: context,
                                 onTap: () => print('Notification tapped!'),
