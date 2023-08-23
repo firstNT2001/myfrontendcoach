@@ -115,6 +115,7 @@ dependencies:
   floating_tabbar: ^0.0.9
   crop_your_image: ^0.7.5
   string_validator: ^1.0.0
+  slide_popup_dialog_null_safety: ^1.0.0
 
   # video_thumbnail: ^0.5.3
    
