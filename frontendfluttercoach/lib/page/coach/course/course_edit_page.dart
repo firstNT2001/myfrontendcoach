@@ -378,6 +378,11 @@ class _CourseEditPageState extends State<CourseEditPage> {
               textErr = 'กรุณากรอกตัวเลขมากกว่า 0';
             });
             stopLoading();
+          } else if (int.parse(amount.text) > 20) {
+            setState(() {
+              textErr = 'เพิ่มจำนวนคนได้สูงสุด 20 คน';
+            });
+            stopLoading();
           } else {
             setState(() {
               textErr = '';
@@ -418,30 +423,16 @@ class _CourseEditPageState extends State<CourseEditPage> {
                 });
               });
             } else {
-              // ignore: use_build_context_synchronously
-              // InAppNotification.show(
-              //   child: NotificationBody(
-              //     count: 1,
-              //     message: 'แก้ไขสำเร็จ',
-              //   ),
-              //   context: context,
-              //   onTap: () => print('Notification tapped!'),
-              //   duration: const Duration(milliseconds: 1500),
-              // );
-              // ignore: use_build_context_synchronously
-              pushNewScreen(
-                context,
-                screen: DaysCoursePage(
-                  coID: widget.coID,
-                  isVisible: widget.isVisible,
+              //ignore: use_build_context_synchronously
+              InAppNotification.show(
+                child: NotificationBody(
+                  count: 1,
+                  message: 'แก้ไขสำเร็จ',
                 ),
-                withNavBar: true,
-              ).then((value) {
-                log('ponds');
-                setState(() {
-                  loadDataMethod = loadDataAsync();
-                });
-              });
+                context: context,
+                onTap: () => print('Notification tapped!'),
+                duration: const Duration(milliseconds: 1500),
+              );
             }
           }
         }

@@ -101,7 +101,7 @@ class _ClipEditCoachPageState extends State<ClipEditCoachPage> {
                 ),
                 WidgetTextFieldString(
                   controller: amountPerSet,
-                  labelText: 'จำนวนเซ็ท',
+                  labelText: 'จำนวนเซต',
                 ),
                 WidgetTextFieldLines(
                   controller: details,
@@ -295,7 +295,7 @@ class _ClipEditCoachPageState extends State<ClipEditCoachPage> {
 
   //Video
   Future selectFile() async {
-    final result = await FilePicker.platform.pickFiles();
+    final result = await FilePicker.platform.pickFiles(type: FileType.video,);
     if (result == null) return;
     // ignore: use_build_context_synchronously
     //startLoading(context);

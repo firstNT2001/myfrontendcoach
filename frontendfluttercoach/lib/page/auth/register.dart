@@ -363,9 +363,8 @@ class _RegisterPageState extends State<RegisterPage> {
           stopLoading();
         } else {
           setState(() {
-            textErr = 'กรุณาใส่นํ้าหนักหรือส่วนสูง';
+            textErr = '';
           });
-
           if (int.parse(height.text).isNegative == true ||
               int.parse(weight.text).isNegative == true) {
             setState(() {
@@ -438,7 +437,7 @@ class _RegisterPageState extends State<RegisterPage> {
           var result = await _authService.regCoach(request);
           modelResult = result.data;
           stopLoading();
-          log('message'+modelResult.result);
+          log('message' + modelResult.result);
           if (modelResult.result == '1') {
             Get.to(() => const LoginPage());
           } else if (modelResult.result == '-14') {
