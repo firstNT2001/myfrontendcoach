@@ -51,20 +51,16 @@ class _HistoryPageState extends State<HistoryPage> {
             Navigator.pop(context);
           },
         ),
-        title: Text(
-            "ประวัติการซื้อคอร์ส",
-            style: Theme.of(context).textTheme.headlineSmall,
-          ),
       ),
       body: SafeArea(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // Padding(
-          //   padding: const EdgeInsets.only(left: 10,bottom: 10,top: 10),
-          //   child: Text("ประวัติการซื้อคอร์ส",
-          //       style: TextStyle(fontSize: 20,fontWeight: FontWeight.w600)),
-          // ),
+          Padding(
+            padding: const EdgeInsets.only(left: 10,bottom: 10,top: 10),
+            child: Text("ประวัติการซื้อคอร์ส",
+                style: TextStyle(fontSize: 20,fontWeight: FontWeight.w600)),
+          ),
           Padding(
             padding: const EdgeInsets.only(left: 8,right: 8),
             child: loadcourse(),

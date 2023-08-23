@@ -18,6 +18,7 @@ import 'package:quickalert/widgets/quickalert_dialog.dart';
 import '../../../model/request/course_EX.dart';
 import '../../../model/response/md_Day_showmycourse.dart';
 import '../../../model/response/md_Result.dart';
+import '../../../model/response/md_coach_course_get.dart';
 import '../../../service/course.dart';
 import '../../../service/day.dart';
 import '../../../service/provider/appdata.dart';
@@ -26,22 +27,9 @@ import '../profilecoach.dart';
 import 'mycourse.dart';
 
 class ShowDayMycourse extends StatefulWidget {
-  ShowDayMycourse(
-      {super.key,
-      required this.coID,
-      required this.img,
-      required this.namecourse,
-      required this.namecoach,
-      required this.detail,
-      required this.expirationDate,
-      required this.dayincourse});
-  late int coID;
-  late String img;
+  ShowDayMycourse({super.key, required this.namecourse, required this.nameCoach});
   late String namecourse;
-  late String namecoach;
-  late String detail;
-  late String expirationDate;
-  late int dayincourse;
+  late String nameCoach;
 
   @override
   State<ShowDayMycourse> createState() => _ShowDayMycourseState();
@@ -50,7 +38,9 @@ class ShowDayMycourse extends StatefulWidget {
 class _ShowDayMycourseState extends State<ShowDayMycourse> {
   late ModelResult moduleResult;
   late DayService dayService;
-  late CourseService courseService;
+  late Course courses;
+  late CourseService _courseService;
+
   // late HttpResponse<ModelCourse> courses;
   List<DayDetail> days = [];
   late Future<void> loadDataMethod;
@@ -64,33 +54,33 @@ class _ShowDayMycourseState extends State<ShowDayMycourse> {
   int dayincourse = 0;
   late DateTime exdate;
   late DateTime dayex;
+  int indexToday = 0;
+  int indexEx = 0;
   String txtdateEX = "";
   String txtdateStart = "";
   late String roomchat;
   var update;
   int coachId = 0;
+  int coID = 0;
   void initState() {
     // TODO: implement initState
 
     super.initState();
 
     coachId = context.read<AppData>().cid;
+    coID = context.read<AppData>().idcourse;
+    log("messagecoID" + coID.toString());
     dayService = DayService(Dio(), baseUrl: context.read<AppData>().baseurl);
-    courseService =
+    _courseService =
         CourseService(Dio(), baseUrl: context.read<AppData>().baseurl);
 
     loadDataMethod = loadData();
 
     today = DateTime(nows.year, nows.month, nows.day);
-    expirationDate =
-        DateTime(nows.year, nows.month, nows.day + widget.dayincourse - 1);
-// showtodaycolor = DateTime(expirationDate.year,expirationDate.month-,expirationDate.day- nows.day);
-    log("message" + today.toString());
+
     var formatter = DateFormat.yMMMd();
 
     var onlyBuddhistYear = nows.yearInBuddhistCalendar;
-    txtdateEX = formatter.formatInBuddhistCalendarThai(expirationDate);
-    txtdateStart = formatter.formatInBuddhistCalendarThai(nows);
   }
 
   @override
@@ -105,8 +95,8 @@ class _ShowDayMycourseState extends State<ShowDayMycourse> {
           foregroundColor: Colors.white,
           onPressed: () {
             Get.to(() => ChatPage(
-                  roomID: widget.coID.toString() + widget.namecourse,
-                  userID: widget.coID.toString(),
+                  roomID: coID.toString() + widget.namecourse,
+                  userID: coID.toString(),
                   firstName: widget.namecourse,
                   roomName: widget.namecourse,
                 ));
@@ -146,87 +136,6 @@ class _ShowDayMycourseState extends State<ShowDayMycourse> {
         child: Stack(
           children: [
             loadImgCourse(),
-            Padding(
-              padding:
-                  EdgeInsets.only(top: MediaQuery.of(context).size.height / 4),
-              child: Container(
-                  width: MediaQuery.of(context).size.width,
-                  decoration: const BoxDecoration(
-                      borderRadius: BorderRadius.only(
-                          topLeft: Radius.circular(20),
-                          topRight: Radius.circular(20)),
-                      color: Colors.white),
-                  child: SingleChildScrollView(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.only(
-                              left: 15, top: 25, bottom: 8),
-                          child: Row(
-                            children: [
-                              Text(widget.namecourse,
-                                  style: const TextStyle(
-                                      fontSize: 20,
-                                      fontWeight: FontWeight.w700)),
-                            ],
-                          ),
-                        ),
-                        InkWell(
-                          child: Row(
-                            children: [
-                              Padding(
-                                padding:
-                                    const EdgeInsets.only(left: 15, bottom: 10),
-                                child: FilledButton.icon(
-                                    onPressed: () {
-                                      pushNewScreen(
-                                        context,
-                                        screen: ProfileCoachPage(
-                                          coachID: coachId,
-                                        ),
-                                        withNavBar: true,
-                                      );
-                                    },
-                                    icon: const Icon(
-                                      FontAwesomeIcons.solidUser,
-                                      size: 16,
-                                    ),
-                                    label: Text(widget.namecoach,
-                                        style: const TextStyle(
-                                            color: Colors.white,
-                                            fontSize: 16))),
-                              ),
-                            ],
-                          ),
-                        ),
-                        const Padding(
-                          padding: EdgeInsets.only(left: 15, bottom: 10),
-                          child: Text("รายละเอียดคอร์ส",
-                              style: TextStyle(
-                                  fontSize: 17, fontWeight: FontWeight.w700)),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.only(
-                              left: 20, bottom: 8, right: 8),
-                          child: Text(widget.detail,
-                              style: Theme.of(context).textTheme.bodyLarge),
-                        ),
-                        const Padding(
-                          padding: EdgeInsets.only(left: 15),
-                          child: Text("วันที่",
-                              style: TextStyle(
-                                  fontSize: 18, fontWeight: FontWeight.w700)),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.only(
-                              left: 20, right: 20, top: 5, bottom: 30),
-                          child: loadDay(),
-                        ),
-                      ],
-                    ),
-                  )),
-            ),
           ],
         ),
       ),
@@ -238,52 +147,140 @@ class _ShowDayMycourseState extends State<ShowDayMycourse> {
         future: loadDataMethod, // 3.1 object ของ async method
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.done) {
-            return Container(
-              // alignment: Alignment.center,
-              // width: double.infinity,
-              width: MediaQuery.of(context).size.width,
-              height: MediaQuery.of(context).size.height * 0.4,
-              child: AspectRatio(
-                aspectRatio: 16 / 9,
-                child: Stack(
-                  children: <Widget>[
-                    Container(
-                      alignment: Alignment.topCenter,
-                      child: AspectRatio(
-                          aspectRatio: 16 / 9,
-                          child: Container(
-                            decoration: BoxDecoration(
-                              color: Theme.of(context).colorScheme.onPrimary,
-                              image: DecorationImage(
-                                  image: NetworkImage(widget.img),
-                                  fit: BoxFit.cover),
+            return Stack(
+              children: [
+                Container(
+                  // alignment: Alignment.center,
+                  // width: double.infinity,
+                  width: MediaQuery.of(context).size.width,
+                  height: MediaQuery.of(context).size.height * 0.4,
+                  child: AspectRatio(
+                    aspectRatio: 16 / 9,
+                    child: Stack(
+                      children: <Widget>[
+                        Container(
+                          alignment: Alignment.topCenter,
+                          child: AspectRatio(
+                              aspectRatio: 16 / 9,
+                              child: Container(
+                                decoration: BoxDecoration(
+                                  color:
+                                      Theme.of(context).colorScheme.onPrimary,
+                                  image: DecorationImage(
+                                      image: NetworkImage(courses.image),
+                                      fit: BoxFit.cover),
+                                ),
+                              )),
+                          //color: Colors.white,
+                        ),
+                        Container(
+                          padding: const EdgeInsets.all(5.0),
+                          alignment: Alignment.bottomCenter,
+                          decoration: BoxDecoration(
+                            gradient: LinearGradient(
+                              begin: Alignment.topCenter,
+                              end: Alignment.bottomCenter,
+                              colors: <Color>[
+                                const Color.fromARGB(255, 0, 0, 0).withAlpha(0),
+                                const Color.fromARGB(49, 0, 0, 0),
+                                const Color.fromARGB(127, 0, 0, 0)
+                                // const Color.fromARGB(255, 255, 255, 255)
+                                //     .withAlpha(0),
+                                // Color.fromARGB(70, 255, 255, 255),
+                                // Color.fromARGB(149, 255, 255, 255)
+                              ],
                             ),
-                          )),
-                      //color: Colors.white,
+                            borderRadius: BorderRadius.circular(20),
+                          ),
+                        ),
+                      ],
                     ),
-                    Container(
-                      padding: const EdgeInsets.all(5.0),
-                      alignment: Alignment.bottomCenter,
-                      decoration: BoxDecoration(
-                        gradient: LinearGradient(
-                          begin: Alignment.topCenter,
-                          end: Alignment.bottomCenter,
-                          colors: <Color>[
-                            const Color.fromARGB(255, 0, 0, 0).withAlpha(0),
-                            const Color.fromARGB(49, 0, 0, 0),
-                            const Color.fromARGB(127, 0, 0, 0)
-                            // const Color.fromARGB(255, 255, 255, 255)
-                            //     .withAlpha(0),
-                            // Color.fromARGB(70, 255, 255, 255),
-                            // Color.fromARGB(149, 255, 255, 255)
+                  ),
+                ),
+                Padding(
+                  padding: EdgeInsets.only(
+                      top: MediaQuery.of(context).size.height / 4),
+                  child: Container(
+                      width: MediaQuery.of(context).size.width,
+                      decoration: const BoxDecoration(
+                          borderRadius: BorderRadius.only(
+                              topLeft: Radius.circular(20),
+                              topRight: Radius.circular(20)),
+                          color: Colors.white),
+                      child: SingleChildScrollView(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Padding(
+                              padding: const EdgeInsets.only(
+                                  left: 15, top: 25, bottom: 8),
+                              child: Row(
+                                children: [
+                                  Text(widget.namecourse,
+                                      style: const TextStyle(
+                                          fontSize: 20,
+                                          fontWeight: FontWeight.w700)),
+                                ],
+                              ),
+                            ),
+                            InkWell(
+                              child: Row(
+                                children: [
+                                  Padding(
+                                    padding: const EdgeInsets.only(
+                                        left: 15, bottom: 10),
+                                    child: FilledButton.icon(
+                                        onPressed: () {
+                                          pushNewScreen(
+                                            context,
+                                            screen: ProfileCoachPage(
+                                              coachID: coachId,
+                                            ),
+                                            withNavBar: true,
+                                          );
+                                        },
+                                        icon: const Icon(
+                                          FontAwesomeIcons.solidUser,
+                                          size: 16,
+                                        ),
+                                        label: Text(widget.nameCoach,
+                                            style: const TextStyle(
+                                                color: Colors.white,
+                                                fontSize: 16))),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            const Padding(
+                              padding: EdgeInsets.only(left: 15, bottom: 10),
+                              child: Text("รายละเอียดคอร์ส",
+                                  style: TextStyle(
+                                      fontSize: 17,
+                                      fontWeight: FontWeight.w700)),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.only(
+                                  left: 20, bottom: 8, right: 8),
+                              child: Text(courses.details,
+                                  style: Theme.of(context).textTheme.bodyLarge),
+                            ),
+                            const Padding(
+                              padding: EdgeInsets.only(left: 15),
+                              child: Text("วันที่",
+                                  style: TextStyle(
+                                      fontSize: 18,
+                                      fontWeight: FontWeight.w700)),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.only(
+                                  left: 20, right: 20, top: 5, bottom: 30),
+                              child: loadDay(),
+                            ),
                           ],
                         ),
-                        borderRadius: BorderRadius.circular(20),
-                      ),
-                    ),
-                  ],
+                      )),
                 ),
-              ),
+              ],
             );
           } else {
             return const Center(child: CircularProgressIndicator());
@@ -293,16 +290,25 @@ class _ShowDayMycourseState extends State<ShowDayMycourse> {
 
   Future<void> loadData() async {
     try {
-      var dataday = await dayService.day(
-          did: '', coID: widget.coID.toString(), sequence: '');
+      var dataday =
+          await dayService.day(did: '', coID: coID.toString(), sequence: '');
       days = dataday.data;
+
+      var datacourse = await _courseService.coursebyCoID(coID.toString());
+      courses = datacourse.data;
+      expirationDate = DateTime(nows.year, nows.month, nows.day + courses.days);
+
+      indexEx = expirationDate.day + expirationDate.month;
+
+      log("message" + indexEx.toString());
+
       showtodaycolor = DateTime(expirationDate.year,
           expirationDate.month - nows.month, expirationDate.day - nows.day);
-
-      log("INDEX" + expirationDate.toString());
+         log("INDEX" + expirationDate.toString()); 
+      log("INDEX" + showtodaycolor.toString());
 
       int dayx = showtodaycolor.day;
-      for (int i = 0; i <= dayx + 1; i++) {
+      for (int i = 0; i <= dayx; i++) {
         dayex = DateTime(
             expirationDate.year, expirationDate.month, expirationDate.day - i);
         listindexday.add(dayex);
@@ -333,142 +339,98 @@ class _ShowDayMycourseState extends State<ShowDayMycourse> {
               padding: const EdgeInsets.all(20.0),
               child: Center(
                 child: GridView.builder(
-                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 5,
-                  mainAxisExtent: 50,
-                ),
+                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: 5,
+                    mainAxisExtent: 60,
+                  ),
                   shrinkWrap: true,
                   itemCount: days.length,
-                 itemBuilder: (context, index) {
-                  final day = days[index];
-                  final indextoday =listindexday[index];
-                    return Column(children: [
-                      InkWell(
-                         onTap: () {
-                                  if (widget.expirationDate ==
-                                      "0001-01-01T00:00:00Z") {
-                                    _bindPage(context);
-                                    log("ยังไม่เริ่ม$widget.expirationDate");
-                                    setState(() {
-                                      loadDataMethod = loadData();
-                                    });
-                                  } else {
-                                    log("เริ่มแล้ว$widget.expirationDate");
-                                    context.read<AppData>().did = day.did;
-                                    context.read<AppData>().idcourse =
-                                        widget.coID;
+                  itemBuilder: (context, index) {
+                    final day = days[index];
+                    final indextoday = listindexday[index];
+                    //log("messageindextoday"+indextoday.toString());
+                    return Column(
+                      children: [
+                        InkWell(
+                            onTap: () {
+                              if (courses.expirationDate ==
+                                  "0001-01-01T00:00:00Z") {
+                                _bindPage(context);
+                                log("ยังไม่เริ่ม$widget.expirationDate");
+                                setState(() {
+                                  loadDataMethod = loadData();
+                                });
+                              } else {
+                                log("เริ่มแล้ว$widget.expirationDate");
+                                context.read<AppData>().did = day.did;
+                                context.read<AppData>().idcourse = coID;
 
-                                    log(" DID220:= ${day.sequence - 1}");
-                                    Get.to(() =>
-                                        showFood(indexSeq: day.sequence - 1));
-                                  }
-                                },
-                                child: (nows.day <=  indextoday.day)?Container(
-                                  height: 50,
-                                  width: 50,
-                                  decoration: BoxDecoration(
-                                      color: Color.fromARGB(255, 255, 124, 2),
-                                      borderRadius: BorderRadius.circular(100)
-                                      //more than 50% of width makes circle
+                                log(" DID220:= ${day.sequence - 1}");
+                                Get.to(
+                                    () => showFood(indexSeq: day.sequence - 1));
+                              }
+                            },
+                            child: (indextoday.isBefore(today))
+                                ? Container(
+                                    height: 50,
+                                    width: 50,
+                                    decoration: BoxDecoration(
+                                        color: Color.fromARGB(255, 255, 124, 2),
+                                        borderRadius: BorderRadius.circular(100)
+                                        //more than 50% of width makes circle
+                                        ),
+                                    child: Center(
+                                        child: Text(
+                                      day.sequence.toString(),
+                                      style: const TextStyle(
+                                        color: Colors.white,
                                       ),
-                                  child: Center(
-                                      child: Text(
-                                    day.sequence.toString(),
-                                    style: const TextStyle(
-                                      color: Colors.white,
-                                    ),
-                                  )),
-                                ):(nows.day >  indextoday.day)?Container(
-                                  height: 50,
-                                  width: 50,
-                                  decoration: BoxDecoration(
-                                      color: Color.fromARGB(255, 107, 107, 107),
-                                      borderRadius: BorderRadius.circular(100)
-                                      //more than 50% of width makes circle
-                                      ),
-                                  child: Center(
-                                      child: Text(
-                                    day.sequence.toString(),
-                                    style: const TextStyle(
-                                      color: Colors.white,
-                                    ),
-                                  )),
-                                ):Container(
-                                  height: 50,
-                                  width: 50,
-                                  decoration: BoxDecoration(
-                                      color: Color.fromARGB(255, 139, 131, 255),
-                                      borderRadius: BorderRadius.circular(100)
-                                      //more than 50% of width makes circle
-                                      ),
-                                  child: Center(
-                                      child: Text(
-                                    day.sequence.toString(),
-                                    style: const TextStyle(
-                                      color: Colors.white,
-                                    ),
-                                  )),
-                                )
-                      )
-                    ],);
+                                    )),
+                                  )
+                                : (indextoday.isAfter(today))
+                                    ? Container(
+                                        height: 50,
+                                        width: 50,
+                                        decoration: BoxDecoration(
+                                            color: Color.fromARGB(
+                                                255, 107, 107, 107),
+                                            borderRadius:
+                                                BorderRadius.circular(100)
+                                            //more than 50% of width makes circle
+                                            ),
+                                        child: Center(
+                                            child: Text(
+                                          day.sequence.toString(),
+                                          style: const TextStyle(
+                                            color: Colors.white,
+                                          ),
+                                        )),
+                                      )
+                                    : Container(
+                                        height: 50,
+                                        width: 50,
+                                        decoration: BoxDecoration(
+                                            color: Color.fromARGB(
+                                                255, 107, 107, 107),
+                                            borderRadius:
+                                                BorderRadius.circular(100)
+                                            //more than 50% of width makes circle
+                                            ),
+                                        child: Center(
+                                            child: Text(
+                                          day.sequence.toString(),
+                                          style: const TextStyle(
+                                            color: Colors.white,
+                                          ),
+                                        )),
+                                      ))
+                      ],
+                    );
                   },
                 ),
-                // GridView.count(
-                //     crossAxisCount: 5,
-                //     children: days
-                //         .map((day) => Column(children: [
-                //               InkWell(
-                //                 onTap: () {
-                //                   if (widget.expirationDate ==
-                //                       "0001-01-01T00:00:00Z") {
-                //                     _bindPage(context);
-                //                     log("ยังไม่เริ่ม$widget.expirationDate");
-                //                     setState(() {
-                //                       loadDataMethod = loadData();
-                //                     });
-                //                   } else {
-                //                     log("เริ่มแล้ว$widget.expirationDate");
-                //                     context.read<AppData>().did = day.did;
-                //                     context.read<AppData>().idcourse =
-                //                         widget.coID;
-
-                //                     log(" DID220:= ${day.sequence - 1}");
-                //                     Get.to(() =>
-                //                         showFood(indexSeq: day.sequence - 1));
-                //                   }
-                //                 },
-                //                 child: (today == listindexday)?Container(
-                //                   height: 50,
-                //                   width: 50,
-                //                   decoration: BoxDecoration(
-                //                       color: const Color.fromARGB(255, 255, 131, 131),
-                //                       borderRadius: BorderRadius.circular(100)
-                //                       //more than 50% of width makes circle
-                //                       ),
-                //                   child: Center(
-                //                       child: Text(
-                //                     day.sequence.toString(),
-                //                     style: const TextStyle(
-                //                       color: Colors.white,
-                //                     ),
-                //                   )),
-                //                 ):(today.day < listindexday.)?
-                //               ),
-                //               //  Padding(
-                //               //    padding: const EdgeInsets.all(8.0),
-                //               //    child: Text(day.sequence.toString()),
-                //               //  )
-                //             ]))
-                //         .toList()),
               ),
             ),
           );
-          // Card(child: Padding(
-          //   padding: const EdgeInsets.all(20),
-          //   child: Column(
-          //     children: days.map((day) => Container(child: Text(day.sequence.toString()),)).toList(),
-          //   ),
-          // ),);
         }
       },
     );
@@ -511,19 +473,19 @@ class _ShowDayMycourseState extends State<ShowDayMycourse> {
                   FilledButton(
                     onPressed: () async {
                       CourseExpiration courseExpiration =
-                          CourseExpiration(days: widget.dayincourse);
+                          CourseExpiration(days: courses.days);
 
                       log(jsonEncode(courseExpiration));
-                      update = await courseService.updateCourseExpiration(
-                          widget.coID.toString(), courseExpiration);
+                      update = await _courseService.updateCourseExpiration(
+                          coID.toString(), courseExpiration);
                       moduleResult = update.data;
                       log(moduleResult.result);
                       context.read<AppData>().did = days.first.did;
-                      context.read<AppData>().idcourse = widget.coID;
+                      context.read<AppData>().idcourse = coID;
                       log(days.first.did.toString());
                       SmartDialog.dismiss();
-                      widget.expirationDate = txtdateEX;
-                      log("new widget.expirationDate" + widget.expirationDate);
+                      courses.expirationDate = txtdateEX;
+                      log("new widget.expirationDate" + courses.expirationDate);
                       Get.to(() => showFood(indexSeq: days.first.sequence - 1))!
                           .then((value) {
                         log("messageCheak");
@@ -601,28 +563,28 @@ class _ShowDayMycourseState extends State<ShowDayMycourse> {
                       ),
                       onPressed: () async {
                         SmartDialog.dismiss();
-                        var response = await courseService
-                            .deleteCourse(widget.coID.toString());
+                        var response =
+                            await _courseService.deleteCourse(coID.toString());
                         modelResult = response.data;
-                        Navigator.of(context, rootNavigator: true).pop();
+
                         if (modelResult.result == '1') {
-          // ignore: use_build_context_synchronously
-          pushNewScreen(
-            context,
-            screen: const MyCouses(),
-            withNavBar: true,
-          );
-          // ignore: use_build_context_synchronously
-          InAppNotification.show(
-            child: NotificationBody(
-              count: 1,
-              message: 'ลบคอร์สสำเร็จ',
-            ),
-            context: context,
-            onTap: () => print('Notification tapped!'),
-            duration: const Duration(milliseconds: 1500),
-          );
-        } else {
+                          // ignore: use_build_context_synchronously
+                          pushNewScreen(
+                            context,
+                            screen: const MyCouses(),
+                            withNavBar: true,
+                          );
+                          // ignore: use_build_context_synchronously
+                          InAppNotification.show(
+                            child: NotificationBody(
+                              count: 1,
+                              message: 'ลบคอร์สสำเร็จ',
+                            ),
+                            context: context,
+                            onTap: () => print('Notification tapped!'),
+                            duration: const Duration(milliseconds: 1500),
+                          );
+                        } else {
                           // ignore: use_build_context_synchronously
                           InAppNotification.show(
                             child: NotificationBody(

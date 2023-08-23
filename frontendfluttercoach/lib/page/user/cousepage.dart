@@ -24,6 +24,7 @@ import '../../service/day.dart';
 import '../../service/provider/appdata.dart';
 import '../../widget/dialogs.dart';
 import '../../widget/notificationBody.dart';
+import 'homepage/homepageUser.dart';
 import 'money/money.dart';
 import 'mycourse/Widget/widget_loadScore.dart';
 import 'mycourse/Widget/widget_loadreview.dart';
@@ -118,10 +119,7 @@ class _showCousePageState extends State<showCousePage> {
               Navigator.pop(context);
             },
           ),
-          title: Text(
-            widget.namecourse,
-            style: Theme.of(context).textTheme.headlineMedium,
-          ),
+         
         ),
         body: SafeArea(
           child: RefreshIndicator(
@@ -652,16 +650,22 @@ class _showCousePageState extends State<showCousePage> {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
-                  FilledButton(
+                  ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      primary: const Color.fromARGB(
+                          255, 167, 18, 8), // Background color
+                    ),
                     onPressed: () {
                       SmartDialog.dismiss();
                     },
                     child: const Text('ยกเลิก',
-                        style: TextStyle(
-                          fontSize: 16,
-                        )),
+                        style: TextStyle(fontSize: 16, color: Colors.white)),
                   ),
-                  FilledButton(
+                 
+                  ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                        primary: Colors.green, // Background color
+                      ),
                       onPressed: () async {
                         SmartDialog.dismiss();
                         if (customer.first.price < courses.first.price) {
@@ -689,19 +693,21 @@ class _showCousePageState extends State<showCousePage> {
                           if (moduleResult.result == "1") {
                             SmartDialog.dismiss();
                             stopLoading();
-                            // pushNewScreen(
-                            //   context,
-                            //   screen: const MyCouses(),
-                            //   withNavBar: true,
-                            // );
-                            _correct(ctx);
+                            InAppNotification.show(
+                            child: NotificationBody(
+                              count: 1,
+                              message: 'คอร์สที่ซื้อสำเร็จจะอยู่ที่หน้ารายการซื้อของฉัน',
+                            ),
+                            context: context,
+                            onTap: () => print('Notification tapped!'),
+                            duration: const Duration(milliseconds: 2000),
+                          );
+                           pushNewScreen(context, screen: const HomePageUser());
                           }
                         }
                       },
                       child: const Text("ชำระเงิน",
-                          style: TextStyle(
-                            fontSize: 16,
-                          ))),
+                          style:TextStyle(fontSize: 16, color: Colors.white))),
                 ],
               ),
             )
@@ -738,23 +744,28 @@ class _showCousePageState extends State<showCousePage> {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
-                FilledButton(
-                  onPressed: () {
-                    SmartDialog.dismiss();
-                  },
-                  child: const Text('ยกเลิก',
-                      style: TextStyle(
-                        fontSize: 16,
-                      )),
-                ),
-                FilledButton(
+                ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      primary: const Color.fromARGB(
+                          255, 167, 18, 8), // Background color
+                    ),
+                    onPressed: () {
+                      SmartDialog.dismiss();
+                    },
+                    child: const Text('ยกเลิก',
+                        style: TextStyle(fontSize: 16, color: Colors.white)),
+                  ),
+                 ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                        primary: Colors.green, // Background color
+                      ),
                     onPressed: () async {
                       SmartDialog.dismiss();
                       pushNewScreen(context, screen: const addCoin());
                     },
                     child: const Text("เติมเงิน",
                         style: TextStyle(
-                          fontSize: 16,
+                          fontSize: 16,color: Colors.white
                         ))),
               ],
             ),
@@ -788,7 +799,7 @@ class _showCousePageState extends State<showCousePage> {
           const Padding(
             padding: EdgeInsets.only(left: 15, right: 12, top: 12, bottom: 15),
             child: Text(
-                "คอร์สที่ซื้อสำเร็จจะอยู่ที่หน้ารายการซื้อของฉัน พร้อมที่จะออกกำลังกายกันแล้วหรือยัง?",
+                "คอร์สที่ซื้อสำเร็จจะอยู่ที่หน้ารายการซื้อของฉัน",
                 style: TextStyle(fontSize: 16)),
           ),
           // Padding(
