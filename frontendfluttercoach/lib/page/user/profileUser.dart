@@ -49,11 +49,18 @@ class _ProfileUserState extends State<ProfileUser> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: ListView(
-        children: [
-          showProfile(),
-          //Expanded(child: showMenu()),
-        ],
+      body: RefreshIndicator(
+        onRefresh: () async{
+              setState(() {
+                loadDataMethod = loadData();
+              });
+            },
+        child: ListView(
+          children: [
+            showProfile(),
+            //Expanded(child: showMenu()),
+          ],
+        ),
       ),
     );
   }

@@ -51,16 +51,20 @@ class _HistoryPageState extends State<HistoryPage> {
             Navigator.pop(context);
           },
         ),
+        title: Text(
+            "ประวัติการซื้อคอร์ส",
+            style: Theme.of(context).textTheme.headlineSmall,
+          ),
       ),
       body: SafeArea(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Padding(
-            padding: const EdgeInsets.only(left: 10,bottom: 10,top: 10),
-            child: Text("ประวัติการซื้อคอร์ส",
-                style: TextStyle(fontSize: 20,fontWeight: FontWeight.w600)),
-          ),
+          // Padding(
+          //   padding: const EdgeInsets.only(left: 10,bottom: 10,top: 10),
+          //   child: Text("ประวัติการซื้อคอร์ส",
+          //       style: TextStyle(fontSize: 20,fontWeight: FontWeight.w600)),
+          // ),
           Padding(
             padding: const EdgeInsets.only(left: 8,right: 8),
             child: loadcourse(),
@@ -76,114 +80,120 @@ class _HistoryPageState extends State<HistoryPage> {
         if (snapshot.connectionState != ConnectionState.done) {
           return const Center(child: CircularProgressIndicator());
         } else {
-          return ListView.builder(
-            shrinkWrap: true,
-            itemCount: courses.length,
-            itemBuilder: (context, index) {
-              final listcours = courses[index];
-              return Padding(
-                padding: const EdgeInsets.only(left: 10, right: 10, bottom: 20),
-                child: Container(
-                  alignment: Alignment.center,
-                  width: double.infinity,
-                  child: AspectRatio(
-                    aspectRatio: 16 / 9,
-                    child: Stack(
-                      children: <Widget>[
-                        Container(
-                          alignment: Alignment.topCenter,
-                          child: AspectRatio(
-                              aspectRatio: 16 / 9,
-                              child: Container(
-                                decoration: BoxDecoration(
-                                  color: const Color(0xff7c94b6),
-                                  image: DecorationImage(
-                                      image:
-                                          NetworkImage(listcours.course.image),
-                                      fit: BoxFit.cover),
-                                  borderRadius: BorderRadius.circular(20),
-                                ),
-                              )),
-                          //color: Colors.white,
-                        ),
-                        Container(
-                          padding: const EdgeInsets.all(5.0),
-                          alignment: Alignment.bottomCenter,
-                          decoration: BoxDecoration(
-                            gradient: LinearGradient(
-                              begin: Alignment.topCenter,
-                              end: Alignment.bottomCenter,
-                              colors: <Color>[
-                                const Color.fromARGB(255, 0, 0, 0).withAlpha(0),
-                                const Color.fromARGB(49, 0, 0, 0),
-                                const Color.fromARGB(127, 0, 0, 0)
-                                // const Color.fromARGB(255, 255, 255, 255)
-                                //     .withAlpha(0),
-                                // const Color.fromARGB(39, 255, 255, 255),
-                                // const Color.fromARGB(121, 255, 255, 255)
-                              ],
-                            ),
-                            borderRadius: BorderRadius.circular(20),
-                          ),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.all(8),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            mainAxisAlignment: MainAxisAlignment.end,
-                            children: [
-                              Text(listcours.course.name,
-                                  style: Theme.of(context)
-                                          .textTheme
-                                          .titleLarge!
-                                          .copyWith(color: Colors.white),),
-                              Row(
-                                children: [
-                                  const Padding(
-                                    padding: EdgeInsets.only(right: 8),
-                                    child: Icon(
-                                      FontAwesomeIcons.solidUser,
-                                      size: 16.0,
-                                      color: Colors.white,
-                                    ),
+          return RefreshIndicator(onRefresh: () async{
+            setState(() {
+              loadDataMethod=loadData();
+            });
+          },
+            child: ListView.builder(
+              shrinkWrap: true,
+              itemCount: courses.length,
+              itemBuilder: (context, index) {
+                final listcours = courses[index];
+                return Padding(
+                  padding: const EdgeInsets.only(left: 10, right: 10, bottom: 20),
+                  child: Container(
+                    alignment: Alignment.center,
+                    width: double.infinity,
+                    child: AspectRatio(
+                      aspectRatio: 16 / 9,
+                      child: Stack(
+                        children: <Widget>[
+                          Container(
+                            alignment: Alignment.topCenter,
+                            child: AspectRatio(
+                                aspectRatio: 16 / 9,
+                                child: Container(
+                                  decoration: BoxDecoration(
+                                    color: const Color(0xff7c94b6),
+                                    image: DecorationImage(
+                                        image:
+                                            NetworkImage(listcours.course.image),
+                                        fit: BoxFit.cover),
+                                    borderRadius: BorderRadius.circular(20),
                                   ),
-                                  Text(listcours.course.coach.fullName,
-                                      style: Theme.of(context)
-                                          .textTheme
-                                          .bodyLarge!
-                                          .copyWith(color: Colors.white),),
+                                )),
+                            //color: Colors.white,
+                          ),
+                          Container(
+                            padding: const EdgeInsets.all(5.0),
+                            alignment: Alignment.bottomCenter,
+                            decoration: BoxDecoration(
+                              gradient: LinearGradient(
+                                begin: Alignment.topCenter,
+                                end: Alignment.bottomCenter,
+                                colors: <Color>[
+                                  const Color.fromARGB(255, 0, 0, 0).withAlpha(0),
+                                  const Color.fromARGB(49, 0, 0, 0),
+                                  const Color.fromARGB(127, 0, 0, 0)
+                                  // const Color.fromARGB(255, 255, 255, 255)
+                                  //     .withAlpha(0),
+                                  // const Color.fromARGB(39, 255, 255, 255),
+                                  // const Color.fromARGB(121, 255, 255, 255)
                                 ],
                               ),
-                               RatingBar.readOnly(
-                                  isHalfAllowed: false,
-                                  filledIcon: FontAwesomeIcons.bolt,
-                                  size: 16,
-                                  emptyIcon: FontAwesomeIcons.bolt,
-                                  filledColor: Theme.of(context)
-                                      .colorScheme
-                                      .tertiaryContainer,
-                                  emptyColor:
-                                      Color.fromARGB(255, 245, 245, 245),
-                                  initialRating: double.parse(listcours.course.level),
-                                  maxRating: 3,
-                                ),
-                            ],
+                              borderRadius: BorderRadius.circular(20),
+                            ),
                           ),
-                        ),
-                        Positioned(
-                            right: 8,
-                            bottom: 8,
-                            child: FilledButton(
-                                onPressed: () {
-                                  Get.to(() => ReviewPage(billID: listcours.bid,));
-                                },
-                                child: const Text("ให้คะแนน")))
-                      ],
+                          Padding(
+                            padding: const EdgeInsets.all(8),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              mainAxisAlignment: MainAxisAlignment.end,
+                              children: [
+                                Text(listcours.course.name,
+                                    style: Theme.of(context)
+                                            .textTheme
+                                            .titleLarge!
+                                            .copyWith(color: Colors.white),),
+                                Row(
+                                  children: [
+                                    const Padding(
+                                      padding: EdgeInsets.only(right: 8),
+                                      child: Icon(
+                                        FontAwesomeIcons.solidUser,
+                                        size: 16.0,
+                                        color: Colors.white,
+                                      ),
+                                    ),
+                                    Text(listcours.course.coach.fullName,
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .bodyLarge!
+                                            .copyWith(color: Colors.white),),
+                                  ],
+                                ),
+                                 RatingBar.readOnly(
+                                    isHalfAllowed: false,
+                                    filledIcon: FontAwesomeIcons.bolt,
+                                    size: 16,
+                                    emptyIcon: FontAwesomeIcons.bolt,
+                                    filledColor: Theme.of(context)
+                                        .colorScheme
+                                        .tertiaryContainer,
+                                    emptyColor:
+                                        Color.fromARGB(255, 245, 245, 245),
+                                    initialRating: double.parse(listcours.course.level),
+                                    maxRating: 3,
+                                  ),
+                              ],
+                            ),
+                          ),
+                          Positioned(
+                              right: 8,
+                              bottom: 8,
+                              child: FilledButton(
+                                  onPressed: () {
+                                    Get.to(() => ReviewPage(billID: listcours.bid,));
+                                  },
+                                  child: const Text("ให้คะแนน")))
+                        ],
+                      ),
                     ),
                   ),
-                ),
-              );
-            },
+                );
+              },
+            ),
           );
         }
       },

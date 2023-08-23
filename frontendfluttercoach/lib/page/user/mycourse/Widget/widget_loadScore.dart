@@ -43,12 +43,12 @@ class _WidgetShowScoreState extends State<WidgetShowScore> {
             crossAxisAlignment: CrossAxisAlignment.center,
             
             children: [
-              Icon(FontAwesomeIcons.solidStar,color: Colors.yellow,size: 26,),
+              Icon(FontAwesomeIcons.solidStar,color: Colors.yellow,size: 22,),
 
               Text(
                 calRating.toStringAsFixed(1),
                 style:
-                    const TextStyle(fontSize: 16, fontWeight: FontWeight.bold,color: Colors.black),
+                    const TextStyle(fontSize: 14, fontWeight: FontWeight.bold,color: Colors.white),
               ),
               
               

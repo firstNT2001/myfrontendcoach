@@ -6,7 +6,6 @@ void warningFood(BuildContext context) {
   QuickAlert.show(
     context: context,
     type: QuickAlertType.warning,
-    title: 'Oops...',
     text: 'กรุณาเลือกมืออาหาร',
   );
 }
@@ -15,7 +14,6 @@ void warning(BuildContext context) {
   QuickAlert.show(
     context: context,
     type: QuickAlertType.warning,
-    title: 'Oops...',
     text: 'บันทึกไม่สำเร็จ',
   );
 }
@@ -33,9 +31,9 @@ void confirm(BuildContext context) {
   QuickAlert.show(
     context: context,
     type: QuickAlertType.confirm,
-    text: 'Do you want to logout',
-    confirmBtnText: 'Yes',
-    cancelBtnText: 'No',
+    text: 'คุณต้องการออกจากระบบใช่หรือไม่',
+    confirmBtnText: 'ใช่',
+    cancelBtnText: 'ไม่',
     confirmBtnColor: Colors.green,
   );
 }
@@ -44,7 +42,6 @@ void popUpWarningDelete(BuildContext context) {
   QuickAlert.show(
     context: context,
     type: QuickAlertType.warning,
-    title: 'Oops...',
     text: 'ลบไม่สำเร็จ',
   );
 }

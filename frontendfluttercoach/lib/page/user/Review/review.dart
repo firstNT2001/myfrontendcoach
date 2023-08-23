@@ -16,6 +16,7 @@ import '../../../model/request/insertReview.dart';
 import '../../../model/response/md_Result.dart';
 import '../../../widget/textField/wg_textFieldLines.dart';
 import '../../../widget/textField/wg_textField_int.dart';
+import '../../../widget/textField/wg_tx_inputint.dart';
 
 class ReviewPage extends StatefulWidget {
   ReviewPage({super.key, required this.billID});
@@ -129,9 +130,9 @@ class _ReviewPageState extends State<ReviewPage> {
                   Padding(
                     padding:
                         const EdgeInsets.only(top: 19, left: 20, right: 20),
-                    child: WidgetTextFieldIntnotmax(
+                    child: WidgetInputnum(
                       controller: weight,
-                      labelText: "ระบุน้ำหนักปัจจุบัน(กิโลกรัม)",
+                      labelText: "ระบุน้ำหนักปัจจุบัน(กิโลกรัม)",maxLength: 3,
                     ),
                   ),
                   Padding(
