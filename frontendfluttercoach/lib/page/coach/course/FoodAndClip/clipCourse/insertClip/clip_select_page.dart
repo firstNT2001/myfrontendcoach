@@ -33,6 +33,7 @@ class ClipSelectPage extends StatefulWidget {
 }
 
 class _ClipSelectPageState extends State<ClipSelectPage> {
+
   //ClipService
   late Future<void> loadListClipDataMethod;
   late ListClipServices _listClipService;
@@ -57,6 +58,7 @@ class _ClipSelectPageState extends State<ClipSelectPage> {
   @override
   void initState() {
     super.initState();
+   
     _listClipService = context.read<AppData>().listClipServices;
     loadListClipDataMethod = loadListClipsData();
   }
@@ -304,7 +306,9 @@ class _ClipSelectPageState extends State<ClipSelectPage> {
                 ),
               ),
               if (listClip.video != '') ...{
-                WidgetShowCilp(urlVideo: listClip.video),
+                WidgetShowCilp(
+                  urlVideo: listClip.video,
+                ),
               } else ...{
                 Container(
                     width: MediaQuery.of(context).size.width * 0.7,

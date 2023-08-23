@@ -22,7 +22,7 @@ Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   GetStorage gs = GetStorage();
   final DefaultTheme defaultTheme = DefaultTheme();
-  
+
   // Screen size
   Size screenSize =
       MediaQueryData.fromWindow(WidgetsBinding.instance.window).size;
@@ -51,54 +51,45 @@ Future<void> main() async {
       }
     }
     runApp(InAppNotification(
-      child:  MultiProvider(
+      child: MultiProvider(
           providers: [
             ChangeNotifierProvider(
               create: (context) => AppData(),
             ),
           ],
-          child: GetMaterialApp(home: const LoginPage(),
-           title: 'Application Daily Workout Coaching',
-                  debugShowCheckedModeBanner: false,
-                  builder: FlutterSmartDialog.init(
-                    builder: (context, child) {
-                      return MediaQuery(
-                        data: MediaQuery.of(context)
-                            .copyWith(textScaleFactor: scale),
-                        child: child!,
-                      );
-                    },
-                  ),
-                  themeMode: ThemeMode.system,
-                  theme: defaultTheme.flexTheme.theme.copyWith(
-                      scaffoldBackgroundColor: Colors.white,
-                      inputDecorationTheme: defaultTheme
-                          .flexTheme.theme.inputDecorationTheme
-                          .copyWith(
-                        contentPadding:
-                            const EdgeInsets.fromLTRB(6, 10, 6, 3),
-                        isDense: true,
-                      )),
-                  darkTheme: defaultTheme.flexTheme.darkTheme.copyWith(
-                      inputDecorationTheme: defaultTheme
-                          .flexTheme.darkTheme.inputDecorationTheme
-                          .copyWith(
-                    contentPadding: const EdgeInsets.fromLTRB(6, 10, 6, 3),
-                    isDense: true,
-                  )),
-                  navigatorObservers: [FlutterSmartDialog.observer],
-                  localizationsDelegates:
-                      GlobalMaterialLocalizations.delegates,
-                  supportedLocales: const [
-                    Locale('th', 'TH'),
-                  ],
-          
-          
-          )
-        ),
-       
-              
-  
+          child: GetMaterialApp(
+            home: const LoginPage(),
+            title: 'Application Daily Workout Coaching',
+            debugShowCheckedModeBanner: false,
+            builder: FlutterSmartDialog.init(
+              builder: (context, child) {
+                return MediaQuery(
+                  data: MediaQuery.of(context).copyWith(textScaleFactor: scale),
+                  child: child!,
+                );
+              },
+            ),
+            themeMode: ThemeMode.system,
+            theme: defaultTheme.flexTheme.theme.copyWith(
+                scaffoldBackgroundColor: Colors.white,
+                inputDecorationTheme:
+                    defaultTheme.flexTheme.theme.inputDecorationTheme.copyWith(
+                  contentPadding: const EdgeInsets.fromLTRB(6, 10, 6, 3),
+                  isDense: true,
+                )),
+            darkTheme: defaultTheme.flexTheme.darkTheme.copyWith(
+                inputDecorationTheme: defaultTheme
+                    .flexTheme.darkTheme.inputDecorationTheme
+                    .copyWith(
+              contentPadding: const EdgeInsets.fromLTRB(6, 10, 6, 3),
+              isDense: true,
+            )),
+            navigatorObservers: [FlutterSmartDialog.observer],
+            localizationsDelegates: GlobalMaterialLocalizations.delegates,
+            supportedLocales: const [
+              Locale('th', 'TH'),
+            ],
+          )),
     ));
   });
 }

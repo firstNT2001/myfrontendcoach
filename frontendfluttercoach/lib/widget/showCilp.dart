@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:appinio_video_player/appinio_video_player.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -26,6 +28,14 @@ class _WidgetShowCilpState extends State<WidgetShowCilp> {
       videoPlayerController: _videoPlayerController,
     );
     stopLoading();
+  }
+
+  @override
+  void dispose() {
+    _videoPlayerController.pause();
+    // ignore: avoid_print
+    log('Dispose used');
+    super.dispose();
   }
 
   @override

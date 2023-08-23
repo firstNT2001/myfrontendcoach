@@ -10,6 +10,7 @@ import 'package:frontendfluttercoach/widget/dialogs.dart';
 import 'package:in_app_notification/in_app_notification.dart';
 
 import 'package:provider/provider.dart';
+import 'package:string_validator/string_validator.dart';
 
 import '../../../../model/request/listFood_coachID_post.dart';
 
@@ -20,7 +21,6 @@ import '../../../../service/provider/appdata.dart';
 import '../../../../widget/notificationBody.dart';
 import '../../../../widget/textField/wg_textField.dart';
 import '../../../../widget/textField/wg_textFieldLines.dart';
-import '../../../../widget/textField/wg_textField_int copy.dart';
 
 class FoodNewCoachPage extends StatefulWidget {
   const FoodNewCoachPage({super.key});
@@ -49,7 +49,8 @@ class _FoodNewCoachPageState extends State<FoodNewCoachPage> {
   String profile = "";
 
   String textErr = '';
-
+  final _formKey = GlobalKey<FormState>();
+  bool isValid = true;
   @override
   void initState() {
     super.initState();
@@ -101,11 +102,10 @@ class _FoodNewCoachPageState extends State<FoodNewCoachPage> {
                       controller: name,
                       labelText: 'ขื่อเมนู',
                     ),
-                    WidgetTextFieldInt(
-                      controller: calories,
-                      labelText: 'แคลอรี่',
-                      maxLength: 10,
-                    ),
+                    Form(
+                        key: _formKey,
+                        child:
+                            textForimField(context, calories, 'แคลอรี่', 4)),
                     WidgetTextFieldLines(
                       controller: details,
                       labelText: 'วิธีการปรุง',
@@ -140,11 +140,17 @@ class _FoodNewCoachPageState extends State<FoodNewCoachPage> {
   FilledButton button(BuildContext context) {
     return FilledButton(
         onPressed: () async {
+          _formKey.currentState!.validate();
+
           if (name.text.isEmpty ||
               details.text.isEmpty ||
               calories.text.isEmpty) {
             setState(() {
               textErr = 'กรุณากรอกข้อมูลให้ครบ';
+            });
+          } else if (isValid == false) {
+            setState(() {
+              textErr = 'กรุณากรอกตัวเลขให้ถูกต้อง';
             });
           } else if (int.parse(calories.text).isNegative == true) {
             setState(() {
@@ -200,6 +206,41 @@ class _FoodNewCoachPageState extends State<FoodNewCoachPage> {
           }
         },
         child: const Text("บันทึก"));
+  }
+
+  Padding textForimField(BuildContext context, TextEditingController controller,
+      String labelText, int maxLength) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 10, left: 15, right: 15),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Padding(
+            padding: const EdgeInsets.only(left: 5, bottom: 3),
+            child: Text(
+              labelText,
+              style: Theme.of(context).textTheme.bodyLarge,
+            ),
+          ),
+          TextFormField(
+              keyboardType: TextInputType.number,
+              controller: controller,
+              validator: (value) {
+                isValid = isNumeric(value!); // false
+                return null;
+              },
+              maxLength: maxLength,
+              textAlignVertical: TextAlignVertical.center,
+              textAlign: TextAlign.center,
+              decoration: InputDecoration(
+                  contentPadding:
+                      const EdgeInsets.symmetric(vertical: 9, horizontal: 12),
+                  counterText: "",
+                  filled: true,
+                  fillColor: Theme.of(context).colorScheme.background)),
+        ],
+      ),
+    );
   }
 
   Column showDialogRowsAffected(BuildContext context, int type) {
