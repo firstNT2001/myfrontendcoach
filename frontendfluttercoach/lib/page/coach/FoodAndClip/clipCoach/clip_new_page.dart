@@ -47,6 +47,13 @@ class _ClipNewCoachPageState extends State<ClipNewCoachPage> {
   String pathVdieo = '';
 
   String textErr = '';
+  @override
+  void dispose() {
+    _controller.pause();
+    // ignore: avoid_print
+    print('Dispose used');
+    super.dispose();
+  }
 
   @override
   void initState() {
@@ -379,12 +386,6 @@ class _ClipNewCoachPageState extends State<ClipNewCoachPage> {
 
     final urlDownload = await snapshot.ref.getDownloadURL();
     pathVdieo = urlDownload;
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
-    _customVideoPlayerController.dispose();
   }
 
   // StartLoading And StopLoading

@@ -6,6 +6,7 @@ import 'package:auto_size_text/auto_size_text.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
+import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
 
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -18,6 +19,7 @@ import 'package:msh_checkbox/msh_checkbox.dart';
 import 'package:provider/provider.dart';
 import 'package:quickalert/models/quickalert_type.dart';
 import 'package:quickalert/widgets/quickalert_dialog.dart';
+import 'package:video_player/video_player.dart';
 
 import '../../../../model/request/food_foodID_put.dart';
 import '../../../../model/response/clip_get_res.dart';
@@ -30,8 +32,9 @@ import '../../../../widget/dialogs.dart';
 import '../../../../widget/dropdown/wg_dropdown_string.dart';
 import '../../../../widget/image_video.dart';
 import '../../../../widget/notificationBody.dart';
-import '../../../../widget/wg_editClip_Dialog.dart';
+import '../../../../widget/showCilp.dart';
 import '../../../../widget/wg_editFood_Dialog.dart';
+import 'clipCourse/editClip/clip_edit_select.dart';
 import 'clipCourse/insertClip/clip_select_page.dart';
 import 'foodCourse/insertFood/food_new_page.dart';
 import 'package:slide_popup_dialog_null_safety/slide_popup_dialog.dart'
@@ -53,6 +56,8 @@ class HomeFoodAndClipPage extends StatefulWidget {
 }
 
 class _HomeFoodAndClipPageState extends State<HomeFoodAndClipPage> {
+  late VideoPlayerController _videoPlayerController;
+
   // FoodService
   late Future<void> loadFoodDataMethod;
   late FoodServices _foodService;
@@ -83,11 +88,27 @@ class _HomeFoodAndClipPageState extends State<HomeFoodAndClipPage> {
   final selectedValuehand = TextEditingController();
   final List<String> listhand = ['มื้อเช้า', 'มื้อเที่ยง', 'มื้อเย็น'];
   @override
+  void dispose() {
+    //textEditingController.dispose();
+    // ignore: avoid_print
+    print('Dispose used');
+    super.dispose();
+  }
+
+  @override
   void initState() {
     super.initState();
     log(widget.did);
     context.read<AppData>().sequence = widget.sequence;
-
+    _videoPlayerController = VideoPlayerController.networkUrl(Uri.parse(''))
+      ..initialize().then((_) {
+        // Ensure the first frame is shown after the video is initialized, even before the play button has been pressed.
+        setState(() {});
+      });
+    // _customVideoPlayerController = CustomVideoPlayerController(
+    //   context: context,
+    //   videoPlayerController: _videoPlayerController,
+    // );;
     //Food
     _foodService = context.read<AppData>().foodServices;
     loadFoodDataMethod = loadFoodData();
@@ -691,6 +712,7 @@ class _HomeFoodAndClipPageState extends State<HomeFoodAndClipPage> {
                             details: listClip.listClip.details,
                             amountPerSet: listClip.listClip.amountPerSet);
                         log(listClip.cpId.toString());
+
                         dialogClipEditInCourse(
                             context,
                             request,
@@ -852,5 +874,96 @@ class _HomeFoodAndClipPageState extends State<HomeFoodAndClipPage> {
         }
       },
     );
+  }
+
+  void dialogClipEditInCourse(BuildContext context, ListClip listClip,
+      String cpID, String did, String sequence, int status, bool isVisible) {
+    //target widget
+    SmartDialog.show(builder: (_) {
+      return Container(
+        width: MediaQuery.of(context).size.width * 0.9,
+        height: MediaQuery.of(context).size.height * 0.8,
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(20),
+          color: Colors.white,
+        ),
+        //alignment: Alignment.center,
+        child: SingleChildScrollView(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            //crossAxisAlignment: CrossAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Center(
+                child: Padding(
+                  padding: const EdgeInsets.only(
+                      left: 20, right: 20, top: 50, bottom: 0),
+                  child: Text("คลิปท่าออกกำลังกาย",
+                      style: Theme.of(context).textTheme.headlineSmall),
+                ),
+              ),
+              if (listClip.video != '') ...{
+                WidgetShowCilp(
+                  urlVideo: listClip.video,
+                ),
+              } else ...{
+                Container(
+                    width: MediaQuery.of(context).size.width * 0.7,
+                    height: MediaQuery.of(context).size.height * 0.3,
+                    decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(26),
+                        color: Theme.of(context).colorScheme.primary)),
+                const SizedBox(
+                  height: 8,
+                ),
+              },
+              Padding(
+                padding: const EdgeInsets.only(
+                    top: 20, bottom: 8, right: 20, left: 20),
+                child: Text(
+                  'ชื่อคลิปxx ${listClip.name}',
+                  style: Theme.of(context).textTheme.bodyLarge,
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.only(bottom: 8, right: 20, left: 20),
+                child: Text(
+                  'รายละเอียด ${listClip.details}',
+                  style: Theme.of(context).textTheme.bodyLarge,
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.only(bottom: 8, right: 20, left: 20),
+                child: Text(
+                  'จำนวนเซต ${listClip.amountPerSet.toString()}',
+                  style: Theme.of(context).textTheme.bodyLarge,
+                ),
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                //MainAxisAlignment.end,
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.only(right: 20),
+                    child: FilledButton(
+                        onPressed: () {
+                          SmartDialog.dismiss();
+                          Get.to(() => ClipEditSelectPage(
+                                cpID: cpID,
+                                did: did,
+                                sequence: sequence,
+                                status: status,
+                                isVisible: isVisible,
+                              ));
+                        },
+                        child: const Text('เปลี่ยนคลิป')),
+                  ),
+                ],
+              )
+            ],
+          ),
+        ),
+      );
+    });
   }
 }

@@ -21,7 +21,6 @@ import '../../../../service/listClip.dart';
 import '../../../../service/provider/appdata.dart';
 import '../../../../widget/dialogs.dart';
 import '../../../../widget/notificationBody.dart';
-import '../../../../widget/showCilp.dart';
 import '../../../../widget/textField/wg_textField.dart';
 import '../../../../widget/textField/wg_textFieldLines.dart';
 
@@ -72,7 +71,13 @@ class _ClipEditCoachPageState extends State<ClipEditCoachPage> {
 
     log(pickedFile.toString());
   }
-
+  @override
+  void dispose() {
+    _videoSelectPlayerController.pause();
+    // ignore: avoid_print
+    print('Dispose used');
+    super.dispose();
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
