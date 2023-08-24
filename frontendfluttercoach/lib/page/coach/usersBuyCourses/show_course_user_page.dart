@@ -325,7 +325,7 @@ class _ShowCourseOfUserPageState extends State<ShowCourseOfUserPage> {
                           FontAwesomeIcons.facebookMessenger,
                           size: 16,
                         ),
-                        label: const Text("คุยกับโค้ช")),
+                        label: const Text("คุยกับผู้ซื้อ")),
                   ),
                 ],
               )

@@ -150,16 +150,14 @@ class _ClipEditCoachPageState extends State<ClipEditCoachPage> {
         Stack(
           children: [
             if (pickedFile != null) ...{
-              Expanded(
-                child: SafeArea(
-                  child: CustomVideoPlayer(
-                      customVideoPlayerController:
-                          _customSelectVideoPlayerController),
-                ),
+              Positioned(
+                child: CustomVideoPlayer(
+                    customVideoPlayerController:
+                        _customSelectVideoPlayerController),
               ),
             } else if (listclips.first.video != '') ...{
               _videoSelectPlayerController.value.isInitialized
-                  ? Expanded(
+                  ? Positioned(
                       child: CustomVideoPlayer(
                           customVideoPlayerController:
                               _customSelectVideoPlayerController),

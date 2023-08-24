@@ -192,7 +192,7 @@ class _ClipEditSelectPageState extends State<ClipEditSelectPage> {
                                   child: Container(
                                     decoration: BoxDecoration(
                                         borderRadius: BorderRadius.circular(26),
-                                        color: Colors.pink),
+                                       ),
                                     child: VideoItem(
                                       video: listClip.video,
                                     ),

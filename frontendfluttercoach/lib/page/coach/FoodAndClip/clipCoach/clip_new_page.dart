@@ -18,6 +18,7 @@ import '../../../../model/request/listClip_coachID_post.dart';
 import '../../../../model/response/md_Result.dart';
 import '../../../../service/listClip.dart';
 import '../../../../service/provider/appdata.dart';
+import '../../../../widget/dialogs.dart';
 import '../../../../widget/notificationBody.dart';
 import '../../../../widget/textField/wg_textField.dart';
 import '../../../../widget/textField/wg_textFieldLines.dart';
@@ -153,8 +154,10 @@ class _ClipNewCoachPageState extends State<ClipNewCoachPage> {
         if (pickedFile != null) ...{
           Positioned(
             child: SafeArea(
-              child: CustomVideoPlayer(
-                  customVideoPlayerController: _customVideoPlayerController),
+              child: _controller.value.isInitialized
+                  ? CustomVideoPlayer(
+                      customVideoPlayerController: _customVideoPlayerController)
+                  : Center(child: load(context)),
             ),
           ),
         } else
