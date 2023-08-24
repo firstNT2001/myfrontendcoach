@@ -24,9 +24,11 @@ class _WidgetHistoryState extends State<WidgetHistory> {
   late WalletService walletServiceService;
   late Future<void> loadDataMethod;
   int money =0;
+  int uid = 0;
   @override
   void initState() {
     super.initState();
+     uid = context.read<AppData>().uid;
     walletServiceService =
         WalletService(Dio(), baseUrl: context.read<AppData>().baseurl);
     loadDataMethod = loadData();
@@ -39,7 +41,7 @@ class _WidgetHistoryState extends State<WidgetHistory> {
 
   Future<void> loadData() async {
     try {
-      var datahistory = await walletServiceService.showHistorywall(uid: "1");
+      var datahistory = await walletServiceService.showHistorywall(uid: uid.toString());
       history = datahistory.data;
       log(history.first.money.toString());
     } catch (err) {
@@ -68,7 +70,7 @@ class _WidgetHistoryState extends State<WidgetHistory> {
                     const Padding(
                 padding: EdgeInsets.only( top: 20,bottom: 8),
                 child: Text(
-                  "ประวัติการชำระเงิน",
+                  "ประวัติการเติมเงิน",
                   style: TextStyle(
                       fontSize: 20, fontWeight: FontWeight.bold),
                 ),
