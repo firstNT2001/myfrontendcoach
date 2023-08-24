@@ -40,7 +40,7 @@ class _CourseNewPageState extends State<CourseNewPage> {
   late ModelResult moduleResult;
   int cid = 0;
   String image = "_";
-  String status = "1";
+  String status = "0";
   bool switchOnOff = true;
   // String expirationDate = "";
 
