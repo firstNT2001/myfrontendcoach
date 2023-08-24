@@ -481,7 +481,7 @@ class _CourseEditPageState extends State<CourseEditPage> {
           }
         }
       },
-      child: const Text('Next'),
+      child: const Text('บันทึก / ต่อไป'),
     );
   }
 

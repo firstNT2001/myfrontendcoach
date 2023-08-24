@@ -366,7 +366,7 @@ class _CourseNewPageState extends State<CourseNewPage> {
           }
         }
       },
-      child: const Text('Next'),
+      child: const Text('ต่อไป'),
     );
   }
 
