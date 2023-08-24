@@ -108,7 +108,7 @@ class _FoodNewCoachPageState extends State<FoodNewCoachPage> {
                             textForimField(context, calories, 'แคลอรี่', 4)),
                     WidgetTextFieldLines(
                       controller: details,
-                      labelText: 'วิธีการปรุง',
+                      labelText: 'วิธีการปรุงเมนูอาหาร',
                     ),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.end,

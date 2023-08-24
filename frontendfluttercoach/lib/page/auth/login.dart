@@ -57,8 +57,8 @@ class _LoginPageState extends State<LoginPage> {
   void initState() {
     super.initState();
     // Test
-    email.text = 'sirawitpongpond.la@gmail.com';
-    password.text = '1234';
+    // email.text = 'sirawitpongpond.la@gmail.com';
+    // password.text = '1234';
 
     authService = context.read<AppData>().authService;
   }
