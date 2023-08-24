@@ -379,7 +379,7 @@ class _ClipEditSelectPageState extends State<ClipEditSelectPage> {
                     ),
                     context: context,
                     onTap: () => print('Notification tapped!'),
-                    duration: const Duration(milliseconds: 1500),
+                    duration: const Duration(milliseconds: 2000),
                   );
                 } else {
                   // ignore: use_build_context_synchronously
@@ -390,7 +390,7 @@ class _ClipEditSelectPageState extends State<ClipEditSelectPage> {
                     ),
                     context: context,
                     onTap: () => print('Notification tapped!'),
-                    duration: const Duration(milliseconds: 1500),
+                    duration: const Duration(milliseconds: 2000),
                   );
                 }
               },

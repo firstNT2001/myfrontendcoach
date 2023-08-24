@@ -150,7 +150,7 @@ class _ClipInsertPageState extends State<ClipInsertPage> {
                                       onTap: () =>
                                           print('Notification tapped!'),
                                       duration:
-                                          const Duration(milliseconds: 1500),
+                                          const Duration(milliseconds: 2000),
                                     );
                                   } else {
                                     // ignore: use_build_context_synchronously
