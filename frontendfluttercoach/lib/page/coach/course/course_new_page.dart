@@ -71,6 +71,15 @@ class _CourseNewPageState extends State<CourseNewPage> {
   final _formKey2 = GlobalKey<FormState>();
 
   bool isValid = true;
+
+  @override
+  void dispose() {
+    FocusManager.instance.primaryFocus?.unfocus();
+    // ignore: avoid_print
+    log('Dispose used');
+    super.dispose();
+  }
+
   @override
   void initState() {
     // ignore: todo
@@ -342,6 +351,7 @@ class _CourseNewPageState extends State<CourseNewPage> {
               duration: const Duration(milliseconds: 1500),
             );
             context.read<AppData>().img = profile;
+
             // ignore: use_build_context_synchronously
             pushNewScreen(
               context,
