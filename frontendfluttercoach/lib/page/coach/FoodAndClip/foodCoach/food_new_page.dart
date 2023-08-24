@@ -187,7 +187,7 @@ class _FoodNewCoachPageState extends State<FoodNewCoachPage> {
                 ),
                 context: context,
                 onTap: () => print('Notification tapped!'),
-                duration: const Duration(milliseconds: 1500),
+                duration: const Duration(milliseconds: 2000),
               );
               // ignore: use_build_context_synchronously
               Navigator.pop(context);
@@ -200,7 +200,7 @@ class _FoodNewCoachPageState extends State<FoodNewCoachPage> {
                 ),
                 context: context,
                 onTap: () => print('Notification tapped!'),
-                duration: const Duration(milliseconds: 1500),
+                duration: const Duration(milliseconds: 2000),
               );
             }
           }

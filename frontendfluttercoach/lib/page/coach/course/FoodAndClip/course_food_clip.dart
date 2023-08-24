@@ -597,7 +597,7 @@ class _HomeFoodAndClipPageState extends State<HomeFoodAndClipPage> {
                               ),
                               context: context,
                               onTap: () => print('Notification tapped!'),
-                              duration: const Duration(milliseconds: 1500),
+                              duration: const Duration(milliseconds: 2000),
                             );
                             setState(() {
                               loadFoodDataMethod = loadFoodData();
@@ -611,7 +611,7 @@ class _HomeFoodAndClipPageState extends State<HomeFoodAndClipPage> {
                               ),
                               context: context,
                               onTap: () => print('Notification tapped!'),
-                              duration: const Duration(milliseconds: 1500),
+                              duration: const Duration(milliseconds: 2000),
                             );
                           }
                         },
@@ -653,7 +653,7 @@ class _HomeFoodAndClipPageState extends State<HomeFoodAndClipPage> {
             ),
             context: context,
             onTap: () => print('Notification tapped!'),
-            duration: const Duration(milliseconds: 1500),
+            duration: const Duration(milliseconds: 2000),
           );
         } else {
           // ignore: use_build_context_synchronously
@@ -664,7 +664,7 @@ class _HomeFoodAndClipPageState extends State<HomeFoodAndClipPage> {
             ),
             context: context,
             onTap: () => print('Notification tapped!'),
-            duration: const Duration(milliseconds: 1500),
+            duration: const Duration(milliseconds: 2000),
           );
         }
       },
@@ -848,7 +848,7 @@ class _HomeFoodAndClipPageState extends State<HomeFoodAndClipPage> {
             ),
             context: context,
             onTap: () => print('Notification tapped!'),
-            duration: const Duration(milliseconds: 1500),
+            duration: const Duration(milliseconds: 2000),
           );
         } else {
           // ignore: use_build_context_synchronously
@@ -859,7 +859,7 @@ class _HomeFoodAndClipPageState extends State<HomeFoodAndClipPage> {
             ),
             context: context,
             onTap: () => print('Notification tapped!'),
-            duration: const Duration(milliseconds: 1500),
+            duration: const Duration(milliseconds: 2000),
           );
         }
       },

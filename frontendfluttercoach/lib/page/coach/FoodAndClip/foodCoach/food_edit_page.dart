@@ -201,7 +201,7 @@ class _FoodEditCoachPageState extends State<FoodEditCoachPage> {
                 ),
                 context: context,
                 onTap: () => print('Notification tapped!'),
-                duration: const Duration(milliseconds: 1500),
+                duration: const Duration(milliseconds: 2000),
               );
               Navigator.pop(context);
             } else {
@@ -213,7 +213,7 @@ class _FoodEditCoachPageState extends State<FoodEditCoachPage> {
                 ),
                 context: context,
                 onTap: () => print('Notification tapped!'),
-                duration: const Duration(milliseconds: 1500),
+                duration: const Duration(milliseconds: 2000),
               );
             }
           }
