@@ -210,7 +210,7 @@ class _RegisterPageState extends State<RegisterPage> {
       ),
       WidgetTextFieldInt(
         controller: phone,
-        labelText: 'เบอร์โทร',
+        labelText: 'เบอร์โทรศัพท์',
         maxLength: 10,
       ),
       txtfildBirth(birthday, "วันเกิด"),

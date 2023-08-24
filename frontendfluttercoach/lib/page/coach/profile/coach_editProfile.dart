@@ -303,7 +303,7 @@ class _CoachEidtProfilePageState extends State<CoachEidtProfilePage> {
                   ),
                   WidgetTextFieldString(
                     controller: name,
-                    labelText: 'ชื่อผู้ใช้',
+                    labelText: 'ชื่อเรียกในระบบ',
                   ),
                   WidgetTextFieldString(
                     controller: email,
