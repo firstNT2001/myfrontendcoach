@@ -119,7 +119,6 @@ class _showCousePageState extends State<showCousePage> {
               Navigator.pop(context);
             },
           ),
-         
         ),
         body: SafeArea(
           child: RefreshIndicator(
@@ -238,7 +237,7 @@ class _showCousePageState extends State<showCousePage> {
                             onPressed: () {
                               log("courses.first.coach.cid =" +
                                   courses.first.coach.cid.toString());
-                
+
                               pushNewScreen(
                                 context,
                                 screen: ProfileCoachPage(
@@ -326,10 +325,10 @@ class _showCousePageState extends State<showCousePage> {
                                                         .userPlus),
                                                   ),
                                                   Text(
-                                                    courses.first.amount
-                                                            .toString() +
+                                                    amountUser.toString() +
                                                         "/" +
-                                                        amountUser.toString() +
+                                                        courses.first.amount
+                                                            .toString() +
                                                         " คน",
                                                     style: const TextStyle(
                                                         fontSize: 16,
@@ -423,7 +422,7 @@ class _showCousePageState extends State<showCousePage> {
                                           // Row(children: [
                                           // const Icon(
                                           //     FontAwesomeIcons.coins),
-                
+
                                           //   )
                                           // ]),
                                         ),
@@ -661,9 +660,8 @@ class _showCousePageState extends State<showCousePage> {
                     child: const Text('ยกเลิก',
                         style: TextStyle(fontSize: 16, color: Colors.white)),
                   ),
-                 
                   ElevatedButton(
-                    style: ElevatedButton.styleFrom(
+                      style: ElevatedButton.styleFrom(
                         primary: Colors.green, // Background color
                       ),
                       onPressed: () async {
@@ -694,20 +692,22 @@ class _showCousePageState extends State<showCousePage> {
                             SmartDialog.dismiss();
                             stopLoading();
                             InAppNotification.show(
-                            child: NotificationBody(
-                              count: 1,
-                              message: 'คอร์สที่ซื้อสำเร็จจะอยู่ที่หน้ารายการซื้อของฉัน',
-                            ),
-                            context: context,
-                            onTap: () => print('Notification tapped!'),
-                            duration: const Duration(milliseconds: 2000),
-                          );
-                           pushNewScreen(context, screen: const HomePageUser());
+                              child: NotificationBody(
+                                count: 1,
+                                message:
+                                    'คอร์สที่ซื้อสำเร็จจะอยู่ที่หน้ารายการซื้อของฉัน',
+                              ),
+                              context: context,
+                              onTap: () => print('Notification tapped!'),
+                              duration: const Duration(milliseconds: 2000),
+                            );
+                            pushNewScreen(context,
+                                screen: const HomePageUser());
                           }
                         }
                       },
                       child: const Text("ชำระเงิน",
-                          style:TextStyle(fontSize: 16, color: Colors.white))),
+                          style: TextStyle(fontSize: 16, color: Colors.white))),
                 ],
               ),
             )
@@ -745,28 +745,26 @@ class _showCousePageState extends State<showCousePage> {
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
                 ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      primary: const Color.fromARGB(
-                          255, 167, 18, 8), // Background color
-                    ),
-                    onPressed: () {
-                      SmartDialog.dismiss();
-                    },
-                    child: const Text('ยกเลิก',
-                        style: TextStyle(fontSize: 16, color: Colors.white)),
+                  style: ElevatedButton.styleFrom(
+                    primary: const Color.fromARGB(
+                        255, 167, 18, 8), // Background color
                   ),
-                 ElevatedButton(
+                  onPressed: () {
+                    SmartDialog.dismiss();
+                  },
+                  child: const Text('ยกเลิก',
+                      style: TextStyle(fontSize: 16, color: Colors.white)),
+                ),
+                ElevatedButton(
                     style: ElevatedButton.styleFrom(
-                        primary: Colors.green, // Background color
-                      ),
+                      primary: Colors.green, // Background color
+                    ),
                     onPressed: () async {
                       SmartDialog.dismiss();
                       pushNewScreen(context, screen: const addCoin());
                     },
                     child: const Text("เติมเงิน",
-                        style: TextStyle(
-                          fontSize: 16,color: Colors.white
-                        ))),
+                        style: TextStyle(fontSize: 16, color: Colors.white))),
               ],
             ),
           )
@@ -798,8 +796,7 @@ class _showCousePageState extends State<showCousePage> {
 
           const Padding(
             padding: EdgeInsets.only(left: 15, right: 12, top: 12, bottom: 15),
-            child: Text(
-                "คอร์สที่ซื้อสำเร็จจะอยู่ที่หน้ารายการซื้อของฉัน",
+            child: Text("คอร์สที่ซื้อสำเร็จจะอยู่ที่หน้ารายการซื้อของฉัน",
                 style: TextStyle(fontSize: 16)),
           ),
           // Padding(

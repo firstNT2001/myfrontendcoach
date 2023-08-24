@@ -23,8 +23,8 @@ import '../../../widget/textField/wg_textFieldLines.dart';
 import '../mycourse/history.dart';
 
 class ReviewPage extends StatefulWidget {
-  ReviewPage({super.key, required this.billID});
-  late int billID;
+  const ReviewPage({super.key,});
+ 
 
   @override
   State<ReviewPage> createState() => _ReviewPageState();
@@ -36,6 +36,7 @@ class _ReviewPageState extends State<ReviewPage> {
   late ModelResult moduleResult;
   List<Buying> buys = [];
   late int uid;
+  int bill = 0;
   late int coID;
   final TextEditingController detail = TextEditingController();
   final TextEditingController weight = TextEditingController();
@@ -54,6 +55,8 @@ class _ReviewPageState extends State<ReviewPage> {
     // TODO: implement initState
     super.initState();
     uid = context.read<AppData>().uid;
+    bill = context.read<AppData>().bill;
+    log("Bill"+bill.toString());
     coID = context.read<AppData>().idcourse;
     reviewService = context.read<AppData>().reviewService;
     buyCourseService =
@@ -252,7 +255,7 @@ class _ReviewPageState extends State<ReviewPage> {
                               setState(() {
                                 _isvisible = false;
                               });
-                              log("BILL" +  widget.billID.toString().toString());
+                              log("BILL" +  bill.toString());
                               InsertReview insertReview = InsertReview(
                                   customerId: uid,
                                   details: detail.text,
@@ -260,7 +263,7 @@ class _ReviewPageState extends State<ReviewPage> {
                                   weight: int.parse(weight.text));
                               log(jsonEncode(insertReview));
                               insert = await reviewService.insertreview(
-                                  widget.billID.toString(), insertReview);
+                                  bill.toString(), insertReview);
                               moduleResult = insert.data;
                               log("Model" + moduleResult.result);
                               if (moduleResult.result == '0') {
@@ -270,16 +273,16 @@ class _ReviewPageState extends State<ReviewPage> {
                                 warning(context);
                               } else {
                                 stopLoading();
-                                log("BILL2" +  widget.billID.toString().toString());
-                                   pushNewScreen(
-                                  context,
-                                  screen:  HistoryPage(),
-                                  withNavBar: true,
-                                );
-                                // Get.to(() => ShowReviewweightPage(
-                                //       newweightreview: int.parse(weight.text),
-                                //       billID: widget.billID.toString(),
-                                //     ));
+                                log("BILL2" +  bill.toString().toString());
+                                //    pushNewScreen(
+                                //   context,
+                                //   screen:  HistoryPage(),
+                                //   withNavBar: true,
+                                // );
+                                Get.to(() => ShowReviewweightPage(
+                                      newweightreview: int.parse(weight.text),
+                                     
+                                    ));
                               }
                             }
                           },

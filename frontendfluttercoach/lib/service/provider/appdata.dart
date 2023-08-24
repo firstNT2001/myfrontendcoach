@@ -30,7 +30,8 @@ class AppData with ChangeNotifier {
 
   
   int coID = 0;
-
+  //bill
+  int bill =0;
   // coach
   int cid = 0;
   String qualification = "";

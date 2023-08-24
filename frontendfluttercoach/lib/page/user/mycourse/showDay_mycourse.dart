@@ -13,8 +13,6 @@ import 'package:in_app_notification/in_app_notification.dart';
 import 'package:intl/intl.dart';
 import 'package:persistent_bottom_nav_bar_v2/persistent-tab-view.dart';
 import 'package:provider/provider.dart';
-import 'package:quickalert/models/quickalert_type.dart';
-import 'package:quickalert/widgets/quickalert_dialog.dart';
 import '../../../model/request/course_EX.dart';
 import '../../../model/response/md_Day_showmycourse.dart';
 import '../../../model/response/md_Result.dart';
@@ -51,7 +49,9 @@ class _ShowDayMycourseState extends State<ShowDayMycourse> {
   late DateTime expirationDate;
   late DateTime showtodaycolor;
   //
-  List<DateTime> listindexday = [];
+  List<DateTime> listindexday1 = [];
+  List<DateTime> listindexday2 = [];
+  List<DateTime> listindexdaysum = [];
   int dayincourse = 0;
   late DateTime exdate;
   late DateTime dayex;
@@ -70,7 +70,7 @@ class _ShowDayMycourseState extends State<ShowDayMycourse> {
 
     coachId = context.read<AppData>().cid;
     coID = context.read<AppData>().idcourse;
-    log("messagecoID" + coID.toString());
+
     dayService = DayService(Dio(), baseUrl: context.read<AppData>().baseurl);
     _courseService =
         CourseService(Dio(), baseUrl: context.read<AppData>().baseurl);
@@ -78,7 +78,7 @@ class _ShowDayMycourseState extends State<ShowDayMycourse> {
     loadDataMethod = loadData();
 
     today = DateTime(nows.year, nows.month, nows.day);
-
+    log("messagetoday" + today.toString());
     var formatter = DateFormat.yMMMd();
 
     var onlyBuddhistYear = nows.yearInBuddhistCalendar;
@@ -97,7 +97,7 @@ class _ShowDayMycourseState extends State<ShowDayMycourse> {
           foregroundColor: Colors.white,
           onPressed: () {
             Get.to(() => ChatPage(
-                  roomID: coID.toString() + widget.namecourse,
+                  roomID: coID.toString() ,
                   userID: coID.toString(),
                   firstName: widget.namecourse,
                   roomName: widget.namecourse,
@@ -127,7 +127,7 @@ class _ShowDayMycourseState extends State<ShowDayMycourse> {
         ),
         actions: <Widget>[
           IconButton(
-            icon: Icon(FontAwesomeIcons.ellipsisVertical),
+            icon: Icon(FontAwesomeIcons.trash),
             onPressed: () {
               dialogCourse(context);
             },
@@ -298,12 +298,12 @@ class _ShowDayMycourseState extends State<ShowDayMycourse> {
 
       var datacourse = await _courseService.coursebyCoID(coID.toString());
       courses = datacourse.data;
-      expirationDate = DateTime(nows.year, nows.month, nows.day +( courses.days-1));
+      expirationDate =
+          DateTime(nows.year, nows.month, nows.day + (courses.days - 1));
 
       //indexEx = expirationDate.day + expirationDate.month;
 
       log("message" + indexEx.toString());
-
 
       // log("INDEX" + expirationDate.toString());
       // log("INDEX" + showtodaycolor.toString());
@@ -311,15 +311,28 @@ class _ShowDayMycourseState extends State<ShowDayMycourse> {
       var onlyBuddhistYear = nows.yearInBuddhistCalendar;
       txtdateEX = formatter.formatInBuddhistCalendarThai(expirationDate);
       txtdateStart = formatter.formatInBuddhistCalendarThai(nows);
-    
-      for (int i = 0; i <= courses.days-1; i++) {
-        dayex = DateTime(
-            expirationDate.year, expirationDate.month, expirationDate.day - i);
-        listindexday.add(dayex);
-        listindexday.sort();
-        log("อิหยัง= ${dayex.day}");
+
+      if (courses.expirationDate != "0001-01-01T00:00:00Z") {
+        log("A");
+        exdate = DateTime.parse(courses.expirationDate);
+        log(exdate.toString());
+        for (int i = 0; i <= courses.days - 1; i++) {
+          dayex = DateTime(exdate.year, exdate.month, exdate.day - i);
+          listindexday1.add(dayex);
+          listindexday1.sort();
+        }
+        log("iรf1= $listindexday1");
+      } else if (courses.expirationDate == "0001-01-01T00:00:00Z") {
+        log("B");
+        for (int i = 0; i <= courses.days - 1; i++) {
+          dayex = DateTime(expirationDate.year, expirationDate.month,
+              expirationDate.day - i);
+          listindexday2.add(dayex);
+          listindexday2.sort();
+          //log("อิหยัง= ${dayex.day}");
+        }
+        log("iรf1= $listindexday2");
       }
-      log("iรf= $listindexday");
     } catch (err) {
       log('Error: $err');
     }
@@ -351,8 +364,14 @@ class _ShowDayMycourseState extends State<ShowDayMycourse> {
                   itemCount: days.length,
                   itemBuilder: (context, index) {
                     final day = days[index];
-                    final indextoday = listindexday[index];
-                    //log("messageindextoday"+indextoday.toString());
+                    final indextoday;
+                    if (courses.expirationDate == "0001-01-01T00:00:00Z") {
+                      indextoday = listindexday2[index];
+                    } else {
+                      indextoday = listindexday1[index];
+                    }
+
+                    log("WWWWW= " + indextoday.toString());
                     return Column(
                       children: [
                         InkWell(
@@ -361,9 +380,6 @@ class _ShowDayMycourseState extends State<ShowDayMycourse> {
                                   "0001-01-01T00:00:00Z") {
                                 _bindPage(context);
                                 log("ยังไม่เริ่ม$widget.expirationDate");
-                                setState(() {
-                                  loadDataMethod = loadData();
-                                });
                               } else {
                                 log("เริ่มแล้ว$widget.expirationDate");
                                 context.read<AppData>().did = day.did;
@@ -414,8 +430,7 @@ class _ShowDayMycourseState extends State<ShowDayMycourse> {
                                         height: 50,
                                         width: 50,
                                         decoration: BoxDecoration(
-                                            color:
-                                                Colors.greenAccent.shade700,
+                                            color: Colors.greenAccent.shade700,
                                             borderRadius:
                                                 BorderRadius.circular(100)
                                             //more than 50% of width makes circle

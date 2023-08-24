@@ -24,9 +24,11 @@ class _WidgetHistoryState extends State<WidgetHistory> {
   late WalletService walletServiceService;
   late Future<void> loadDataMethod;
   int money =0;
+  int uid = 0;
   @override
   void initState() {
     super.initState();
+     uid = context.read<AppData>().uid;
     walletServiceService =
         WalletService(Dio(), baseUrl: context.read<AppData>().baseurl);
     loadDataMethod = loadData();
@@ -39,7 +41,7 @@ class _WidgetHistoryState extends State<WidgetHistory> {
 
   Future<void> loadData() async {
     try {
-      var datahistory = await walletServiceService.showHistorywall(uid: "1");
+      var datahistory = await walletServiceService.showHistorywall(uid: uid.toString());
       history = datahistory.data;
       log(history.first.money.toString());
     } catch (err) {
@@ -68,42 +70,49 @@ class _WidgetHistoryState extends State<WidgetHistory> {
                     const Padding(
                 padding: EdgeInsets.only( top: 20,bottom: 8),
                 child: Text(
-                  "ประวัติการชำระเงิน",
+                  "ประวัติการเติมเงิน",
                   style: TextStyle(
                       fontSize: 20, fontWeight: FontWeight.bold),
                 ),
               ),
-                    ListView.builder(
-                        shrinkWrap: true,
-                        itemCount: history.length,
-                        itemBuilder: (context, index) {
-                          money = history[index].amount*1000;
-                          String day = history[index].date.substring(0, 2);
-            
-                          String month = history[index].date.substring(2, 4);
-                          String year = history[index].date.substring(4);
-            
-                          DateTime dateTime =
-                              DateTime.parse("$year-$month-$day");
-                          thaiDate(dateTime.toString());
-                          //DateTime time =  DateFormat("ddMMyyyy").parse(history[index].date);
-                          final listhis = history[index];
-                          return Padding(
-                            padding: const EdgeInsets.only(bottom: 8),
-                            child: Card(
-                              color: Color.fromARGB(255, 255, 215, 177),
-                              elevation: 5,
-                              child: ListTile(
-                                leading: Icon(FontAwesomeIcons.clockRotateLeft),
-                                title: Text(thaiDate(dateTime.toString()),style: TextStyle(fontSize: 16,fontWeight: FontWeight.w600)),
-                                subtitle: Text(
-                                  "+ ${money} บาท",
-                                  style: TextStyle(color: Colors.green,fontSize: 16),
+                   RefreshIndicator(
+        onRefresh: () async{
+              setState(() {
+                loadDataMethod = loadData();
+              });
+            },
+                      child: ListView.builder(
+                          shrinkWrap: true,
+                          itemCount: history.length,
+                          itemBuilder: (context, index) {
+                            money = history[index].amount*1000;
+                            String day = history[index].date.substring(0, 2);
+                                
+                            String month = history[index].date.substring(2, 4);
+                            String year = history[index].date.substring(4);
+                                
+                            DateTime dateTime =
+                                DateTime.parse("$year-$month-$day");
+                            thaiDate(dateTime.toString());
+                            //DateTime time =  DateFormat("ddMMyyyy").parse(history[index].date);
+                            final listhis = history[index];
+                            return Padding(
+                              padding: const EdgeInsets.only(bottom: 8),
+                              child: Card(
+                                color: Color.fromARGB(255, 255, 215, 177),
+                                elevation: 5,
+                                child: ListTile(
+                                  leading: Icon(FontAwesomeIcons.clockRotateLeft),
+                                  title: Text(thaiDate(dateTime.toString()),style: TextStyle(fontSize: 16,fontWeight: FontWeight.w600)),
+                                  subtitle: Text(
+                                    "+ ${money} บาท",
+                                    style: TextStyle(color: Colors.green,fontSize: 16),
+                                  ),
                                 ),
                               ),
-                            ),
-                          );
-                        }),
+                            );
+                          }),
+                    ),
                   ],
                 ),
               ),

@@ -30,6 +30,7 @@ class _ProfileCoachPageState extends State<ProfileCoachPage> {
   late List<Course> courses = [];
   late List<Coach> coach = [];
   int selectedIndex = 0;
+  bool isVisibleText = false;
   late CustomerService customerService;
   List<Customer> customer = [];
   int uid = 0;
@@ -77,20 +78,34 @@ class _ProfileCoachPageState extends State<ProfileCoachPage> {
       body: SafeArea(
         child: Stack(
           children: [
-         
-            Container(color: Color.fromARGB(255, 255, 175, 99),height: double.infinity,),
-            ListView(
-            
-              children: [
-                loadcoach(),
-                // const Divider(
-                //   color: Colors.black,
-                //   indent: 8,
-                //   endIndent: 8,
-                // ),
-                
-                
-              ],
+            Container(
+              color: Color.fromARGB(255, 255, 175, 99),
+              height: double.infinity,
+            ),
+            Padding(
+              padding: const EdgeInsets.only(top: 80),
+              child: Container(
+                width: MediaQuery.of(context).size.width,
+                decoration: const BoxDecoration(
+                    borderRadius: BorderRadius.only(
+                        topLeft: Radius.circular(20),
+                        topRight: Radius.circular(20)),
+                    color: Colors.white),
+              ),
+            ),
+            Center(child: loadcoachImg()),
+            Padding(
+              padding: const EdgeInsets.only(top: 220),
+              child: ListView(
+                children: [
+                  loadcoach(),
+                  // const Divider(
+                  //   color: Colors.black,
+                  //   indent: 8,
+                  //   endIndent: 8,
+                  // ),
+                ],
+              ),
             ),
           ],
         ),
@@ -167,6 +182,47 @@ class _ProfileCoachPageState extends State<ProfileCoachPage> {
                                     borderRadius: BorderRadius.circular(20),
                                   ),
                                 ),
+                                Visibility(
+                                  visible: isVisibleText,
+                                  child: Padding(
+                                    padding: EdgeInsets.only(
+                                      left: MediaQuery.of(context).size.width *
+                                          0.78,
+                                    ),
+                                    child: Align(
+                                      alignment: Alignment.topRight,
+                                      child: Container(
+                                        height: 65,
+                                        width: 65,
+                                        decoration: const BoxDecoration(
+                                          gradient: LinearGradient(
+                                            stops: [.5, .5],
+                                            begin: Alignment.topRight,
+                                            end: Alignment.bottomLeft,
+                                            colors: [
+                                              Color.fromARGB(255, 185, 0, 0),
+                                              Colors
+                                                  .transparent, // top Right part
+                                            ],
+                                          ),
+                                        ),
+                                        child: Padding(
+                                          padding: EdgeInsets.only(
+                                              left: MediaQuery.of(context)
+                                                      .size
+                                                      .width *
+                                                  0.075,
+                                              top: 7),
+                                          child: Text("ฟรี",
+                                              style: TextStyle(
+                                                  fontSize: 18,
+                                                  fontWeight: FontWeight.w600,
+                                                  color: Colors.white)),
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ),
                                 Padding(
                                   padding: const EdgeInsets.all(8.0),
                                   child: Column(
@@ -227,116 +283,145 @@ class _ProfileCoachPageState extends State<ProfileCoachPage> {
     );
   }
 
+  Widget loadcoachImg() {
+    return FutureBuilder(
+        future: loadDataMethod, // 3.1 object ของ async method
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.done) {
+            return Column(children: [
+              Container(
+                decoration: BoxDecoration(
+                  color: Color.fromARGB(255, 255, 255, 255),
+                  borderRadius: BorderRadius.circular(100),
+                ),
+                child: Padding(
+                  padding: const EdgeInsets.all(15.0),
+                  child: Container(
+                    height: MediaQuery.of(context).size.height * 0.168,
+                    width: MediaQuery.of(context).size.width * 0.37,
+                    decoration: BoxDecoration(
+                      color: const Color(0xff7c94b6),
+                      image: DecorationImage(
+                          image: NetworkImage(coach.first.image),
+                          fit: BoxFit.cover),
+                      borderRadius: BorderRadius.circular(100),
+                    ),
+                  ),
+                ),
+              ),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Text("@${coach.first.username}",
+                      style: const TextStyle(
+                          fontSize: 16, fontWeight: FontWeight.w600)),
+                  Text(coach.first.fullName,
+                      style: const TextStyle(
+                          fontSize: 16, fontWeight: FontWeight.w600)),
+                ],
+              ),
+            ]);
+          } else {
+            return const Center(child: CircularProgressIndicator());
+          }
+        });
+  }
+
   Widget loadcoach() {
     return FutureBuilder(
         future: loadDataMethod, // 3.1 object ของ async method
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.done) {
-            return Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Container(
-                   width: MediaQuery.of(context).size.width,
-                   decoration: const BoxDecoration(
-                    borderRadius: BorderRadius.only(
-                        topLeft: Radius.circular(20),
-                        topRight: Radius.circular(20)),
-                    color: Colors.white),
-                  child: Column(
-                    children: [
-                      Container(
-                        height: MediaQuery.of(context).size.height * 0.168,
-                        width: MediaQuery.of(context).size.width * 0.37,
-                        decoration: BoxDecoration(
-                          color: const Color(0xff7c94b6),
-                          image: DecorationImage(
-                              image: NetworkImage(coach.first.image),
-                              fit: BoxFit.cover),
-                          borderRadius: BorderRadius.circular(100),
-                        ),
-                      ),
-                      Column(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                  Text("@${coach.first.username}",
-                    style: const TextStyle(
-                        fontSize: 16, fontWeight: FontWeight.w600)),
-                  Text(coach.first.fullName,
-                    style: const TextStyle(
-                        fontSize: 16, fontWeight: FontWeight.w600)),
-                  ],
-                  ),
-                   
-               
-                
-                const Padding(
-                  padding: EdgeInsets.only(top: 15, left: 10),
-                  child: Row(
-                    children: [
-                      Icon(
-                        FontAwesomeIcons.graduationCap,
-                        size: 18,
-                      ),
-                      Padding(
-                        padding: EdgeInsets.only(left: 8, right: 8),
-                        child: Text("วุฒิการศึกษา",
-                            style: TextStyle(
-                                fontSize: 16, fontWeight: FontWeight.w700)),
-                      ),
-                    ],
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(left: 18, right: 15, top: 5),
-                  child: Text(coach.first.qualification,
-                      style: const TextStyle(fontSize: 16)),
-                ),
-                const Padding(
-                  padding: EdgeInsets.only(top: 10, left: 10),
-                  child: Row(
-                    children: [
-                      Icon(
-                        FontAwesomeIcons.buildingColumns,
-                        size: 18,
-                      ),
-                      Padding(
-                        padding: EdgeInsets.only(top: 10, left: 8),
-                        child: Text("คุณสมบัติ",
-                            style: TextStyle(
-                                fontSize: 16, fontWeight: FontWeight.w700)),
-                      ),
-                    ],
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(left: 18, right: 15),
-                  child: Text(coach.first.property,
-                      style: const TextStyle(fontSize: 16)),
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(
-                      left: 8, top: 15, bottom: 8, right: 8),
-                  child: ClipRRect(
-                      borderRadius: const BorderRadius.only(
-                          topLeft: Radius.circular(12),
-                          topRight: Radius.circular(12),
-                          bottomLeft: Radius.circular(12),
-                          bottomRight: Radius.circular(12)),
-                      child: Container(
+            return Padding(
+              padding: EdgeInsets.only(top: 15),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Container(
+                      width: double.infinity,
+                      decoration: BoxDecoration(
                           color: Colors.amber,
-                          child: const Padding(
-                            padding: EdgeInsets.only(
-                                left: 8, right: 8, top: 5, bottom: 5),
-                            child: Text(
-                              "คอร์สทั้งหมด",
-                              style: TextStyle(
-                                  fontSize: 17, fontWeight: FontWeight.w600),
+                          borderRadius: BorderRadius.circular(12)),
+                      child: const Padding(
+                        padding: EdgeInsets.only(
+                            left: 8, right: 8, top: 5, bottom: 5),
+                        child: Row(
+                          children: [
+                            Icon(
+                              FontAwesomeIcons.graduationCap,
+                              size: 18,
                             ),
-                          ))),
-                ),
-                loadcourse()  ],
-                  ),),
-              ],
+                            Padding(
+                              padding: EdgeInsets.only(left: 8, right: 8),
+                              child: Text("วุฒิการศึกษา",
+                                  style: TextStyle(
+                                      fontSize: 17,
+                                      fontWeight: FontWeight.w700)),
+                            ),
+                          ],
+                        ),
+                      )),
+                  Padding(
+                    padding: const EdgeInsets.only(
+                        left: 20, right: 15, top: 10, bottom: 20),
+                    child: Text("- " + coach.first.qualification,
+                        style: const TextStyle(fontSize: 16)),
+                  ),
+                  Container(
+                      width: double.infinity,
+                      decoration: BoxDecoration(
+                          color: Colors.amber,
+                          borderRadius: BorderRadius.circular(12)),
+                      child: const Padding(
+                        padding: EdgeInsets.only(
+                            left: 8, right: 8, top: 5, bottom: 5),
+                        child: Row(
+                          children: [
+                            Icon(
+                              FontAwesomeIcons.buildingColumns,
+                              size: 18,
+                            ),
+                            Padding(
+                              padding: EdgeInsets.only(left: 8),
+                              child: Text("คุณสมบัติ",
+                                  style: TextStyle(
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.w700)),
+                            ),
+                          ],
+                        ),
+                      )),
+                  Padding(
+                    padding:
+                        const EdgeInsets.only(left: 18, right: 15, top: 10),
+                    child: Text(coach.first.property,
+                        style: const TextStyle(fontSize: 16)),
+                  ),
+                  Padding(
+                    padding:
+                        const EdgeInsets.only(left: 8, bottom: 8, right: 8),
+                    child: ClipRRect(
+                        borderRadius: const BorderRadius.only(
+                            topLeft: Radius.circular(12),
+                            topRight: Radius.circular(12),
+                            bottomLeft: Radius.circular(12),
+                            bottomRight: Radius.circular(12)),
+                        child: Container(
+                            width: double.infinity,
+                            color: Colors.amber,
+                            child: const Padding(
+                              padding: EdgeInsets.only(
+                                  left: 8, right: 8, top: 5, bottom: 5),
+                              child: Text(
+                                "คอร์สทั้งหมด",
+                                style: TextStyle(
+                                    fontSize: 17, fontWeight: FontWeight.w600),
+                              ),
+                            ))),
+                  ),
+                  loadcourse(),
+                ],
+              ),
             );
           } else {
             return const Center(child: CircularProgressIndicator());

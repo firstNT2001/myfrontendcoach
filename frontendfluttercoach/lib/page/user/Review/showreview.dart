@@ -23,35 +23,34 @@ import '../../../widget/dialogs.dart';
 import '../../../widget/textField/wg_textFieldLines.dart';
 import '../../../widget/textField/wg_textField_int.dart';
 import '../../../widget/textField/wg_tx_inputint.dart';
+import '../homepage/homepageUser.dart';
 
 class ShowReviewweightPage extends StatefulWidget {
-  ShowReviewweightPage({super.key, required this.newweightreview,required this.billID});
+  ShowReviewweightPage({super.key, required this.newweightreview});
   late int newweightreview;
-    late String billID;
 
   @override
   State<ShowReviewweightPage> createState() => _ShowReviewweightPageState();
 }
 
 class _ShowReviewweightPageState extends State<ShowReviewweightPage> {
-  late ReviewService reviewService;
   late BuyCourseService buyCourseService;
-  late ModelResult moduleResult;
   List<Buying> buys = [];
   late int uid;
-  late int coID;
   double value = 0.0;
   late Future<void> loadDataMethod;
   int newweight = 0;
+  int oldweight = 0;
   int sumweight = 0;
+  int bill = 0;
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
     uid = context.read<AppData>().uid;
-    coID = context.read<AppData>().idcourse;
-    log("coID" + coID.toString());
-    reviewService = context.read<AppData>().reviewService;
+    bill = context.read<AppData>().bill;
+    log("bill" + bill.toString());
+
     buyCourseService =
         BuyCourseService(Dio(), baseUrl: context.read<AppData>().baseurl);
     loadDataMethod = loadData();
@@ -60,22 +59,21 @@ class _ShowReviewweightPageState extends State<ShowReviewweightPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Colors.white,
-        leading: IconButton(
-          icon: const Icon(
-            FontAwesomeIcons.chevronLeft,
-          ),
-          onPressed: () {
-            Navigator.pop(context);
-          },
-        ),
-      ),
+      // appBar: AppBar(
+      //   backgroundColor: Colors.white,
+      //   leading: IconButton(
+      //     icon: const Icon(
+      //       FontAwesomeIcons.chevronLeft,
+      //     ),
+      //     onPressed: () {
+      //       Navigator.pop(context);
+      //     },
+      //   ),
+      // ),
       body: SafeArea(
-        child: ListView(
-          children: [
-            loadbuy()
-          ],
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [loadbuy()],
         ),
       ),
     );
@@ -88,59 +86,254 @@ class _ShowReviewweightPageState extends State<ShowReviewweightPage> {
           if (snapshot.connectionState != ConnectionState.done) {
             return const Center(child: CircularProgressIndicator());
           } else {
-            //newweight = buys.first.weight;
-           // log("newweight" + newweight.toString());
-            return Column(children: [
-              Text(buys.first.weight.toString())
-            ],);
-            // Align(
-            //   alignment: Alignment.center,
-            //   child: Container(
-            //       width: MediaQuery.of(context).size.width * 0.7,
-            //       height: MediaQuery.of(context).size.height * 0.5,
-            //       decoration: const BoxDecoration(
-            //         boxShadow: [
-            //           BoxShadow(
-            //             color: Color.fromARGB(101, 83, 83, 83),
-            //             blurRadius: 20.0,
-            //             spreadRadius: 0.1,
-            //           ),
-            //         ],
-            //       ),
-            //       child: (newweight > 0)
-            //           ? Column(
-            //               children: [
-            //                 Container(
-            //                   color: Colors.white,
-            //                   child: Column(children: [
-            //                     SizedBox(
-            //                         width:
-            //                             MediaQuery.of(context).size.width * 0.4,
-            //                         height: MediaQuery.of(context).size.height *
-            //                             0.1,
-            //                         child:
-            //                             Image.asset("assets/images/happy.png")),
-            //                   ]),
-            //                 ),
-            //                 Text("ขอแสดงความยินดี")
-            //               ],
-            //             )
-            //           : (newweight < 0)
-            //               ? Container(
-            //                   color: Colors.white,
-            //                   child: Column(children: [
-            //                     SizedBox(
-            //                         width:
-            //                             MediaQuery.of(context).size.width * 0.4,
-            //                         height: MediaQuery.of(context).size.height *
-            //                             0.1,
-            //                         child:
-            //                             Image.asset("assets/images/cry.png")),
-            //                     Text("พยายามเข้านะ")
-            //                   ]),
-            //                 )
-            //               : Container()),
-            // );
+            oldweight = buys.first.weight;
+            newweight = oldweight - widget.newweightreview;
+            log("newweight" + newweight.toString());
+            return Align(
+              alignment: Alignment.center,
+              child: (newweight > 0)
+                  ? Padding(
+                      padding: const EdgeInsets.only(left: 25, right: 25),
+                      child: Container(
+                        decoration: BoxDecoration(
+                            boxShadow: [
+                              BoxShadow(
+                                color: Color.fromARGB(255, 156, 156, 156),
+                                blurRadius: 20.0,
+                                spreadRadius: 1,
+                                offset: Offset(
+                                  0,
+                                  3,
+                                ),
+                              )
+                            ],
+                            color: Color.fromARGB(255, 255, 255, 255),
+                            borderRadius: BorderRadius.circular(30)),
+                        child: Padding(
+                          padding: const EdgeInsets.only(top: 25, bottom: 25),
+                          child: Column(
+                            children: [
+                              Container(
+                                color: Colors.white,
+                                child: Column(children: [
+                                  SizedBox(
+                                      width: MediaQuery.of(context).size.width *
+                                          0.6,
+                                      height:
+                                          MediaQuery.of(context).size.height *
+                                              0.2,
+                                      child: Image.asset(
+                                          "assets/images/happy.png")),
+                                ]),
+                              ),
+                              const Padding(
+                                padding: EdgeInsets.only(top: 15),
+                                child: Text(
+                                  "ขอแสดงความยินดี",
+                                  style: TextStyle(
+                                      fontSize: 30,
+                                      fontWeight: FontWeight.w600),
+                                ),
+                              ),
+                              const Padding(
+                                padding: EdgeInsets.only(top: 30),
+                                child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceAround,
+                                  children: [
+                                    Text(
+                                      "น้ำหนักเดิม",
+                                      style: TextStyle(
+                                          fontSize: 22,
+                                          fontWeight: FontWeight.w600),
+                                    ),
+                                    Text(
+                                      "น้ำหนักปัจจุบัน",
+                                      style: TextStyle(
+                                          fontSize: 22,
+                                          fontWeight: FontWeight.w600),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.only(top: 15),
+                                child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceAround,
+                                  children: [
+                                    Text(
+                                      oldweight.toString() + ' กก.',
+                                      style: const TextStyle(
+                                          fontSize: 22,
+                                          fontWeight: FontWeight.w600,
+                                          color:
+                                              Color.fromARGB(255, 170, 40, 31)),
+                                    ),
+                                    Text(
+                                      widget.newweightreview.toString() +
+                                          ' กก.',
+                                      style: const TextStyle(
+                                          fontSize: 22,
+                                          fontWeight: FontWeight.w600,
+                                          color: Color.fromARGB(
+                                              255, 104, 211, 77)),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.only(top: 30),
+                                child: ElevatedButton(
+                                    style: ElevatedButton.styleFrom(
+                                      primary: Color.fromARGB(255, 25, 201,
+                                          171), // Background color
+                                    ),
+                                    onPressed: () {
+                                      Navigator.pop(context);
+            Navigator.pop(context);
+                                    },
+                                    child: Padding(
+                                      padding: const EdgeInsets.all(8.0),
+                                      child: Text(
+                                        "กลับสู่หน้าหลัก",
+                                        style: TextStyle(
+                                            fontSize: 22,
+                                            fontWeight: FontWeight.w600,
+                                            color: Colors.black),
+                                      ),
+                                    )),
+                              )
+                            ],
+                          ),
+                        ),
+                      ),
+                    )
+                  : (newweight < 0)
+                      ? Padding(
+                          padding: const EdgeInsets.only(left: 25, right: 25),
+                          child: Container(
+                            decoration: BoxDecoration(
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: Color.fromARGB(255, 156, 156, 156),
+                                    blurRadius: 20.0,
+                                    spreadRadius: 1,
+                                    offset: Offset(
+                                      0,
+                                      3,
+                                    ),
+                                  )
+                                ],
+                                color: Color.fromARGB(255, 255, 255, 255),
+                                borderRadius: BorderRadius.circular(30)),
+                            child: Padding(
+                              padding:
+                                  const EdgeInsets.only(top: 25, bottom: 25),
+                              child: Column(
+                                children: [
+                                  Container(
+                                    color: Colors.white,
+                                    child: Column(children: [
+                                      SizedBox(
+                                          width: MediaQuery.of(context)
+                                                  .size
+                                                  .width *
+                                              0.6,
+                                          height: MediaQuery.of(context)
+                                                  .size
+                                                  .height *
+                                              0.2,
+                                          child: Image.asset(
+                                              "assets/images/cry.png")),
+                                    ]),
+                                  ),
+                                  const Padding(
+                                    padding: EdgeInsets.only(top: 15),
+                                    child: Text(
+                                      "พยายามเข้านะ",
+                                      style: TextStyle(
+                                          fontSize: 30,
+                                          fontWeight: FontWeight.w600),
+                                    ),
+                                  ),
+                                  const Padding(
+                                    padding: EdgeInsets.only(top: 30),
+                                    child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceAround,
+                                      children: [
+                                        Text(
+                                          "น้ำหนักเดิม",
+                                          style: TextStyle(
+                                              fontSize: 22,
+                                              fontWeight: FontWeight.w600),
+                                        ),
+                                        Text(
+                                          "น้ำหนักปัจจุบัน",
+                                          style: TextStyle(
+                                              fontSize: 22,
+                                              fontWeight: FontWeight.w600),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                  Padding(
+                                    padding: const EdgeInsets.only(top: 15),
+                                    child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceAround,
+                                      children: [
+                                        Text(
+                                          oldweight.toString() + ' กก.',
+                                          style: const TextStyle(
+                                              fontSize: 22,
+                                              fontWeight: FontWeight.w600,
+                                              color: Color.fromARGB(
+                                                  255, 104, 211, 77)),
+                                        ),
+                                        Text(
+                                          widget.newweightreview.toString() +
+                                              ' กก.',
+                                          style: const TextStyle(
+                                              fontSize: 22,
+                                              fontWeight: FontWeight.w600,
+                                              color: 
+                                                  Color.fromARGB(
+                                                  255, 170, 40, 31)),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                  Padding(
+                                    padding: const EdgeInsets.only(top: 30),
+                                    child: ElevatedButton(
+                                        style: ElevatedButton.styleFrom(
+                                          primary: Color.fromARGB(255, 25, 201,
+                                              171), // Background color
+                                        ),
+                                        onPressed: () {
+                                           Navigator.pop(context);
+            Navigator.pop(context);
+                                        },
+                                        child: Padding(
+                                          padding: const EdgeInsets.all(8.0),
+                                          child: Text(
+                                            "กลับสู่หน้าหลัก",
+                                            style: TextStyle(
+                                                fontSize: 22,
+                                                fontWeight: FontWeight.w600,
+                                                color: Colors.black),
+                                          ),
+                                        )),
+                                  )
+                                ],
+                              ),
+                            ),
+                          ),
+                        )
+                      : Container(),
+            );
           }
         });
   }
@@ -148,11 +341,9 @@ class _ShowReviewweightPageState extends State<ShowReviewweightPage> {
   Future<void> loadData() async {
     try {
       var databuy = await buyCourseService.buying(
-          uid: '', coID: '', cid: '', bid: widget.billID);
+          uid: '', coID: '', cid: '', bid: bill.toString());
       buys = databuy.data;
-     // log("B"+buys.first.weight.toString());
-
-   
+      // log("B"+buys.first.weight.toString());
     } catch (err) {
       log('Error: $err');
     }
