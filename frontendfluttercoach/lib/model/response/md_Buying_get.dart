@@ -2,6 +2,7 @@
 //
 //     final buying = buyingFromJson(jsonString);
 
+import 'package:meta/meta.dart';
 import 'dart:convert';
 
 import 'md_Customer_get.dart';
@@ -14,8 +15,10 @@ String buyingToJson(List<Buying> data) => json.encode(List<dynamic>.from(data.ma
 class Buying {
     int bid;
     int customerId;
-    String buyDateTime;
+    DateTime buyDateTime;
     int courseId;
+    int originalId;
+    int weight;
     Customer customer;
     Course course;
 
@@ -24,6 +27,8 @@ class Buying {
         required this.customerId,
         required this.buyDateTime,
         required this.courseId,
+        required this.originalId,
+        required this.weight,
         required this.customer,
         required this.course,
     });
@@ -31,8 +36,10 @@ class Buying {
     factory Buying.fromJson(Map<String, dynamic> json) => Buying(
         bid: json["Bid"],
         customerId: json["CustomerID"],
-        buyDateTime: json["BuyDateTime"],
+        buyDateTime: DateTime.parse(json["BuyDateTime"]),
         courseId: json["CourseID"],
+        originalId: json["OriginalID"],
+        weight: json["Weight"],
         customer: Customer.fromJson(json["Customer"]),
         course: Course.fromJson(json["Course"]),
     );
@@ -40,9 +47,13 @@ class Buying {
     Map<String, dynamic> toJson() => {
         "Bid": bid,
         "CustomerID": customerId,
-        "BuyDateTime": buyDateTime,
+        "BuyDateTime": buyDateTime.toIso8601String(),
         "CourseID": courseId,
+        "OriginalID": originalId,
+        "Weight": weight,
         "Customer": customer.toJson(),
         "Course": course.toJson(),
     };
 }
+
+

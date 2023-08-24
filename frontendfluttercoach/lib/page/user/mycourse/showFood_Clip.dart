@@ -22,6 +22,7 @@ import 'package:dio/dio.dart';
 import '../../../service/provider/appdata.dart';
 
 import '../../../service/request.dart';
+import '../../../widget/showCilp.dart';
 import 'Widget/widget_loadcilcp.dart';
 import 'Widget/widget_showfood.dart';
 import 'mycourse.dart';
@@ -74,7 +75,7 @@ class _showFoodState extends State<showFood> {
 
     did = context.read<AppData>().did;
     log("did$did");
-    log("indexSeq" + widget.indexSeq.toString());
+    log("indexSeq${widget.indexSeq}");
     coID = context.read<AppData>().idcourse;
     requestService =
         RequestService(Dio(), baseUrl: context.read<AppData>().baseurl);
@@ -92,127 +93,134 @@ class _showFoodState extends State<showFood> {
     return DefaultTabController(
         length: 2,
         child: Scaffold(
-          appBar: AppBar(
-            leading: IconButton(
-              icon: const Icon(
-                FontAwesomeIcons.chevronLeft,
+          // appBar: AppBar(
+          //   leading: IconButton(
+          //     icon: const Icon(
+          //       FontAwesomeIcons.chevronLeft,
+          //     ),
+          //     onPressed: () {
+          //       // Get.to(() => DaysCoursePage(
+          //       //       coID: context.read<AppData>().coID.toString(),
+          //       //       isVisible: widget.isVisible,
+          //       //     ));
+          //       Navigator.pop(context);
+          //     },
+          //   ),
+          //   title: Text(
+          //     "วันที่ " + (widget.indexSeq + 1).toString(),
+          //     style: Theme.of(context).textTheme.headlineMedium,
+          //   ),
+          //   automaticallyImplyLeading: false,
+          //   bottom: const TabBar(tabs: [
+          //     Tab(
+          //       icon: Icon(
+          //         FontAwesomeIcons.dumbbell,
+          //       ),
+          //       text: 'คลิปออกกำลังกาย',
+          //     ),
+          //     Tab(
+          //       icon: Icon(
+          //         FontAwesomeIcons.utensils,
+          //       ),
+          //       text: 'เมนูอาหาร',
+          //     ),
+          //   ]),
+          // ),
+          body: Column(
+            children: [
+              showAppBar(context),
+              Expanded(
+                child: TabBarView(children: [
+                 Column(
+                   children: [
+                     Visibility(
+                         visible: showtoday,
+                         child: Expanded(
+                           child: loadclipschecktoday(),
+                         )),
+                     Visibility(
+                         visible: showtomorrow,
+                         child: Expanded(
+                           child: Padding(
+                             padding: const EdgeInsets.all(8.0),
+                             child: loadclipschecktomorrow(),
+                           ),
+                         )),
+                     Visibility(
+                         visible: showyesterday,
+                         child: Expanded(
+                           child: Padding(
+                             padding: const EdgeInsets.all(8.0),
+                             child: loadclipscheckyesterday(),
+                           ),
+                         )),
+                   ],
+                 ),
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: ListView(
+                      children: [
+                        const Padding(
+                          padding: EdgeInsets.only(left: 8, top: 15),
+                          child: Text(
+                            "มื้อเช้า",
+                            style: TextStyle(
+                                fontSize: 20, fontWeight: FontWeight.w600),
+                          ),
+                        ),
+                        SizedBox(
+                          height: 200,
+                          child: Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Widgetloadfood(
+                              did: did,
+                              time: '1',
+                            ),
+                          ),
+                        ),
+                        const Padding(
+                          padding: EdgeInsets.only(left: 8, top: 15),
+                          child: Text(
+                            "มื้อเที่ยง",
+                            style: TextStyle(
+                                fontSize: 20, fontWeight: FontWeight.w600),
+                          ),
+                        ),
+                        SizedBox(
+                          height: 200,
+                          child: Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Widgetloadfood(
+                              did: did,
+                              time: '2',
+                            ),
+                          ),
+                        ),
+                        const Padding(
+                          padding: EdgeInsets.only(left: 8, top: 15),
+                          child: Text(
+                            "มื้อเย็น",
+                            style: TextStyle(
+                                fontSize: 20, fontWeight: FontWeight.w600),
+                          ),
+                        ),
+                        SizedBox(
+                          height: 200,
+                          child: Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Widgetloadfood(
+                              did: did,
+                              time: '3',
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ]),
               ),
-              onPressed: () {
-                // Get.to(() => DaysCoursePage(
-                //       coID: context.read<AppData>().coID.toString(),
-                //       isVisible: widget.isVisible,
-                //     ));
-                Navigator.pop(context);
-              },
-            ),
-            title: Text(
-              "วันที่ " + (widget.indexSeq + 1).toString(),
-              style: Theme.of(context).textTheme.headlineMedium,
-            ),
-            automaticallyImplyLeading: false,
-            bottom: const TabBar(tabs: [
-              Tab(
-                icon: Icon(
-                  FontAwesomeIcons.dumbbell,
-                ),
-                text: 'คลิปออกกำลังกาย',
-              ),
-              Tab(
-                icon: Icon(
-                  FontAwesomeIcons.utensils,
-                ),
-                text: 'เมนูอาหาร',
-              ),
-            ]),
+            ],
           ),
-          body: TabBarView(children: [
-            Column(
-              children: [
-                Visibility(
-                    visible: showtoday,
-                    child: Expanded(
-                      child: loadclipschecktoday(),
-                    )),
-                Visibility(
-                    visible: showtomorrow,
-                    child: Expanded(
-                      child: Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: loadclipschecktomorrow(),
-                      ),
-                    )),
-                Visibility(
-                    visible: showyesterday,
-                    child: Expanded(
-                      child: Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: loadclipscheckyesterday(),
-                      ),
-                    )),
-              ],
-            ),
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: ListView(
-                children: [
-                  const Padding(
-                    padding: EdgeInsets.only(left: 8, top: 15),
-                    child: Text(
-                      "มื้อเช้า",
-                      style:
-                          TextStyle(fontSize: 20, fontWeight: FontWeight.w600),
-                    ),
-                  ),
-                  SizedBox(
-                    height: 200,
-                    child: Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Widgetloadfood(
-                        did: did,
-                        time: '1',
-                      ),
-                    ),
-                  ),
-                  const Padding(
-                    padding: EdgeInsets.only(left: 8, top: 15),
-                    child: Text(
-                      "มื้อเที่ยง",
-                      style:
-                          TextStyle(fontSize: 20, fontWeight: FontWeight.w600),
-                    ),
-                  ),
-                  SizedBox(
-                    height: 200,
-                    child: Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Widgetloadfood(
-                        did: did,
-                        time: '2',
-                      ),
-                    ),
-                  ),
-                  const Padding(
-                    padding: EdgeInsets.only(left: 8, top: 15),
-                    child: Text(
-                      "มื้อเย็น",
-                      style:
-                          TextStyle(fontSize: 20, fontWeight: FontWeight.w600),
-                    ),
-                  ),
-                  SizedBox(
-                    height: 200,
-                    child: Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Widgetloadfood(
-                        did: did,
-                        time: '3',
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ]),
         ));
   }
 
@@ -233,7 +241,7 @@ class _showFoodState extends State<showFood> {
                     padding:
                         const EdgeInsets.only(left: 10, right: 10, bottom: 8),
                     child: Card(
-                      elevation: 0,
+                      elevation: 5,
                       child: Padding(
                         padding: const EdgeInsets.all(8.0),
                         child: Column(
@@ -322,56 +330,64 @@ class _showFoodState extends State<showFood> {
                   videoUrl = listclip.listClip.video;
                   return SizedBox(
                     width: MediaQuery.of(context).size.width * 0.8,
-                    child: Card(
-                      elevation: 0,
-                      child: Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: Center(
-                                  child: Text(listclip.listClip.name,
-                                      style: Theme.of(context)
-                                          .textTheme
-                                          .bodyLarge)),
-                            ),
-                            WidgetloadCilp(
-                              urlVideo: videoUrl,
-                              nameclip: listclip.listClip.name,
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.only(left: 8),
-                              child: Text(listclip.listClip.details,
-                                  style: Theme.of(context).textTheme.bodyLarge),
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.only(left: 8),
-                              child: Text(listclip.listClip.amountPerSet,
-                                  style: Theme.of(context).textTheme.bodyLarge),
-                            ),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.end,
-                              children: [
-                                Checkbox(
-                                  value: isChecked[index],
-                                  onChanged: (bool? value) async {},
+                    child: Padding(
+                      padding: const EdgeInsets.only(bottom: 10),
+                      child: Card(
+                        elevation: 5,
+                        child: Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Center(
+                                    child: Text(listclip.listClip.name,
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .bodyLarge)),
+                              ),
+                              WidgetloadCilp(
+                                urlVideo: videoUrl,
+                                nameclip: listclip.listClip.name,
+                              ),
+                              //Text(listclip.listClip.name),
+                              WidgetShowCilp(urlVideo: videoUrl,),
+                              Padding(
+                                padding: const EdgeInsets.only(left: 8),
+                                child: Text(listclip.listClip.details,
+                                    style: Theme.of(context).textTheme.bodyLarge),
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.only(left: 8),
+                                child: Text(listclip.listClip.amountPerSet,
+                                    style: Theme.of(context).textTheme.bodyLarge),
+                              ),
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.end,
+                                children: [
+                                  Checkbox(
+                                    value: isChecked[index],
+                                    onChanged: (bool? value) async {},
+                                  ),
+                                  const Text(
+                                    "ออกกำลังกายแล้ว",
+                                    style: TextStyle(fontSize: 17.0),
+                                  ),
+                                ],
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.only(bottom: 15),
+                                child: Center(
+                                  child: FilledButton(
+                                      onPressed: () {
+                                        _bindPage(context);
+                                      },
+                                      child: const Text("คำร้องขอเปลี่ยนท่า")),
                                 ),
-                                const Text(
-                                  "ออกกำลังกายแล้ว",
-                                  style: TextStyle(fontSize: 17.0),
-                                ),
-                              ],
-                            ),
-                            Center(
-                              child: FilledButton(
-                                  onPressed: () {
-                                    _bindPage(context);
-                                  },
-                                  child: const Text("คำร้องขอเปลี่ยนท่า")),
-                            ),
-                          ],
+                              ),
+                            ],
+                          ),
                         ),
                       ),
                     ),
@@ -404,7 +420,7 @@ class _showFoodState extends State<showFood> {
                   return SizedBox(
                     width: MediaQuery.of(context).size.width * 0.8,
                     child: Card(
-                      elevation: 0,
+                      elevation: 5,
                       child: Padding(
                         padding: const EdgeInsets.all(8.0),
                         child: Column(
@@ -557,8 +573,14 @@ class _showFoodState extends State<showFood> {
       foods = datafood.data;
 
       log('food leng: ${foods.length}');
-      for (var index in clips) {
-        isChecked.add(false);
+      for (var clip in clips) {
+        log('ssss ' + clip.status);
+        if (clip.status == "0") {
+          isChecked.add(false);
+        } else {
+          isChecked.add(true);
+        }
+        // isChecked.add(bool.tryParse(clip.status) ?? false);
       }
 
       var datacourse = await courseService.coursebyCoID(coID.toString());
@@ -610,5 +632,133 @@ class _showFoodState extends State<showFood> {
     } catch (err) {
       log('Error: $err');
     }
+  }
+
+  Stack showAppBar(BuildContext context) {
+    return Stack(
+      children: [
+        Container(
+          decoration: const BoxDecoration(
+            boxShadow: [
+              BoxShadow(
+                color: Color.fromARGB(255, 196, 196, 196),
+                blurRadius: 20.0,
+                spreadRadius: 1,
+                offset: Offset(
+                  0,
+                  1,
+                ),
+              )
+            ],
+          ),
+          child: ClipRRect(
+            borderRadius: const BorderRadius.only(
+              bottomRight: Radius.circular(30.0),
+              bottomLeft: Radius.circular(30.0),
+            ),
+            child: Container(
+              decoration: const BoxDecoration(
+                  gradient: LinearGradient(begin: Alignment.topCenter, colors: [
+                Color.fromARGB(225, 255, 138, 5),
+                Color.fromARGB(226, 255, 154, 22),
+                Color.fromARGB(226, 255, 154, 22),
+              ])),
+              height: 180,
+            ),
+          ),
+        ),
+        Row(children: [Padding(
+              padding: const EdgeInsets.only(left: 15, top: 35),
+              child: IconButton(
+                icon: const Icon(
+                  FontAwesomeIcons.chevronLeft,
+                  color: Colors.white,
+                ),
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+              ),
+            ),
+            Center(
+                child: Padding(
+              padding: const EdgeInsets.only(left: 2, top: 38),
+              child: Text("วันที่ ${widget.indexSeq + 1}",
+                  style: const TextStyle(
+                      fontSize: 25,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white)),
+            )),],),
+        Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            
+            const Center(
+                child: Padding(
+              padding: EdgeInsets.only(left: 15, top: 90),
+              child: Text("เมนูและคลิป",
+                  style: TextStyle(
+                      fontSize: 30,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white)),
+            )),
+            Center(
+              child: Padding(
+                padding: const EdgeInsets.only(top: 15),
+                child: Container(
+                  width: MediaQuery.of(context).size.width * 0.9,
+                  decoration: BoxDecoration(
+                    color: const Color.fromARGB(255, 243, 243, 244),
+                    borderRadius: BorderRadius.circular(15),
+                    boxShadow: const [
+                      BoxShadow(
+                        color: Color.fromARGB(255, 156, 156, 156),
+                        blurRadius: 20.0,
+                        spreadRadius: 1,
+                        offset: Offset(
+                          0,
+                          3,
+                        ),
+                      )
+                    ],
+                  ),
+                  child: Column(
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.all(5.0),
+                        child: TabBar(
+                            indicatorWeight: 2,
+                            indicatorColor:
+                                Theme.of(context).colorScheme.primary,
+                            labelColor: Theme.of(context)
+                                .colorScheme
+                                .primary, //<-- selected text color
+                            unselectedLabelColor: Theme.of(context)
+                                .colorScheme
+                                .tertiary, //<-- Unselected text
+                            // indicator: BoxDecoration(
+                            //     color: Theme.of(context).colorScheme.primary,
+                            //     borderRadius: BorderRadius.circular(15)),
+                            tabs: const [
+                              Tab(
+                                icon: Icon(
+                                  FontAwesomeIcons.utensils,
+                                ),
+                              ),
+                              Tab(
+                                icon: Icon(
+                                  FontAwesomeIcons.dumbbell,
+                                ),
+                              )
+                            ]),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+          ],
+        )
+      ],
+    );
   }
 }

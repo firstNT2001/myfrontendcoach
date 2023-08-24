@@ -157,6 +157,12 @@ class _HistoryPageState extends State<HistoryPage> {
                                             .textTheme
                                             .bodyLarge!
                                             .copyWith(color: Colors.white),),
+                                            Text(listcours.bid.toString(),
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .bodyLarge!
+                                            
+                                            .copyWith(color: Colors.white),),
                                   ],
                                 ),
                                  RatingBar.readOnly(
@@ -179,8 +185,11 @@ class _HistoryPageState extends State<HistoryPage> {
                               right: 8,
                               bottom: 8,
                               child: FilledButton(
-                                  onPressed: () {
+                                  onPressed: () { 
+                                    log("BILL55" +  listcours.bid.toString().toString());
+                                     context.read<AppData>().idcourse = listcours.courseId;
                                     Get.to(() => ReviewPage(billID: listcours.bid,));
+                                   
                                   },
                                   child: const Text("ให้คะแนน")))
                         ],

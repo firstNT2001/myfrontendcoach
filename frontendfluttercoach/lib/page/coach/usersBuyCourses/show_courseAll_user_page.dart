@@ -80,7 +80,7 @@ class _ShowCourseUserPageState extends State<ShowCourseUserPage> {
       var datacouse = await _buyingService.buying(
           uid: widget.uid,
           cid: context.read<AppData>().cid.toString(),
-          coID: '');
+          coID: '', bid: '');
       courses = datacouse.data;
 
       log(courses.length.toString());

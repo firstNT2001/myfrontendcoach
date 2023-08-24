@@ -14,18 +14,18 @@ abstract class BuyCourseService {
   @POST("/buycourse/{coID}")
   Future<HttpResponse<ModelResult>> buyCourse(
       @Path("coID") String coID, @Body() BuyCoursecoIdPost buyCoursecoId);
-      
+
   @GET("/buy/user/{cid}")
   Future<HttpResponse<List<Buying>>> courseUsers({@Path() required String cid});
 
-    @GET("/buy/count")
+  @GET("/buy/count")
   Future<HttpResponse<int>> amountUserinCourse(
       {@Query("originalID") required String originalID});
 
-   @GET("/buy")
+  @GET("/buy")
   Future<HttpResponse<List<Buying>>> buying(
       {@Query("uid") required String uid,
       @Query("coID") required String coID,
-      @Query("cid") required String cid});
-
+      @Query("cid") required String cid,
+      @Query("bid") required String bid});
 }

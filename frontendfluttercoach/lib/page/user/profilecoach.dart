@@ -30,9 +30,9 @@ class _ProfileCoachPageState extends State<ProfileCoachPage> {
   late List<Course> courses = [];
   late List<Coach> coach = [];
   int selectedIndex = 0;
-   late CustomerService customerService;
+  late CustomerService customerService;
   List<Customer> customer = [];
-int uid=0;
+  int uid = 0;
   PageController pageController = PageController();
   void onTapped(int index) {
     setState(() {
@@ -51,7 +51,7 @@ int uid=0;
         CourseService(Dio(), baseUrl: context.read<AppData>().baseurl);
     coachService =
         CoachService(Dio(), baseUrl: context.read<AppData>().baseurl);
-        customerService =
+    customerService =
         CustomerService(Dio(), baseUrl: context.read<AppData>().baseurl);
     loadDataMethod = loadData();
   }
@@ -60,7 +60,7 @@ int uid=0;
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.white,
+        backgroundColor: Color.fromARGB(255, 255, 175, 99),
         leading: IconButton(
           icon: const Icon(
             FontAwesomeIcons.chevronLeft,
@@ -73,51 +73,31 @@ int uid=0;
             Navigator.pop(context);
           },
         ),
-        // title: Text(
-        //   "โปรไฟล์โค้ช",
-        //   style: Theme.of(context).textTheme.headlineMedium,
-        // ),
       ),
       body: SafeArea(
         child: Stack(
           children: [
-            
+         
+            Container(color: Color.fromARGB(255, 255, 175, 99),height: double.infinity,),
             ListView(
-              // crossAxisAlignment: CrossAxisAlignment.start,
+            
               children: [
-                Padding(
-                  padding: const EdgeInsets.only(top: 170),
-                  child: loadcoach(),
-                ),
-                Padding(
-                  padding:
-                      const EdgeInsets.only(left: 8, top: 15, bottom: 8, right: 8),
-                  child: ClipRRect(
-                      borderRadius: const BorderRadius.only(
-                          topLeft: Radius.circular(12),
-                          topRight: Radius.circular(12),
-                          bottomLeft: Radius.circular(12),
-                          bottomRight: Radius.circular(12)),
-                      child: Container(
-                          color: Colors.amber,
-                          child: const Padding(
-                            padding: EdgeInsets.only(
-                                left: 8, right: 8, top: 5, bottom: 5),
-                            child: Text(
-                              "คอร์สทั้งหมด",
-                              style: TextStyle(fontSize: 17,fontWeight: FontWeight.w600),
-                            ),
-                          ))),
-                ),
-                loadcourse(),
+                loadcoach(),
+                // const Divider(
+                //   color: Colors.black,
+                //   indent: 8,
+                //   endIndent: 8,
+                // ),
+                
+                
               ],
             ),
-            loadcoachIMG(),
           ],
         ),
       ),
     );
   }
+
   Widget loadcourse() {
     return FutureBuilder(
       future: loadDataMethod,
@@ -246,7 +226,8 @@ int uid=0;
       },
     );
   }
-  Widget loadcoachIMG() {
+
+  Widget loadcoach() {
     return FutureBuilder(
         future: loadDataMethod, // 3.1 object ของ async method
         builder: (context, snapshot) {
@@ -254,137 +235,108 @@ int uid=0;
             return Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Stack(
+                Container(
+                   width: MediaQuery.of(context).size.width,
+                   decoration: const BoxDecoration(
+                    borderRadius: BorderRadius.only(
+                        topLeft: Radius.circular(20),
+                        topRight: Radius.circular(20)),
+                    color: Colors.white),
+                  child: Column(
+                    children: [
+                      Container(
+                        height: MediaQuery.of(context).size.height * 0.168,
+                        width: MediaQuery.of(context).size.width * 0.37,
+                        decoration: BoxDecoration(
+                          color: const Color(0xff7c94b6),
+                          image: DecorationImage(
+                              image: NetworkImage(coach.first.image),
+                              fit: BoxFit.cover),
+                          borderRadius: BorderRadius.circular(100),
+                        ),
+                      ),
+                      Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    Container(
-              decoration: const BoxDecoration(
-                boxShadow: [
-                  BoxShadow(
-                    color: Color.fromARGB(255, 156, 156, 156),
-                    blurRadius: 20.0,
-                    spreadRadius: 1,
-                    offset: Offset(
-                      0,
-                      3,
-                    ),
-                  )
-                ],
-              ),
-              child: ClipRRect(
-                borderRadius: const BorderRadius.only(
-                  bottomRight: Radius.circular(40.0),
-                  bottomLeft: Radius.circular(40.0),
-                ),
-                child: Container(
-                  decoration: const BoxDecoration(
-                      gradient:
-                          LinearGradient(begin: Alignment.topCenter, colors: [
-                    Color.fromARGB(228, 255, 122, 13),
-                    Color.fromARGB(255, 255, 150, 12),
-                    Color.fromARGB(255, 255, 158, 31)
-                  ])),
-                  height: 200,
-                ),
-              ),
-            ),
-                    Row(
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.only(left: 10, top: 8),
-                          child: Container(
-                            height:
-                                MediaQuery.of(context).size.height * 0.17,
-                            width: MediaQuery.of(context).size.width * 0.36,
-                            decoration: BoxDecoration(
-                              color: const Color(0xff7c94b6),
-                              image: DecorationImage(
-                                  image: NetworkImage(coach.first.image),
-                                  fit: BoxFit.cover),
-                              borderRadius: BorderRadius.circular(100),
-                            ),
-                          ),
-                        ),
-                        const SizedBox(
-                          width: 30,
-                        ),
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            Text("@${coach.first.username}",
-                                style: const TextStyle(
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.w600)),
-                            Text("@${coach.first.fullName}",
-                                style: const TextStyle(
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.w600)),
-                          ],
-                        )
-                      ],
-                    ),
+                  Text("@${coach.first.username}",
+                    style: const TextStyle(
+                        fontSize: 16, fontWeight: FontWeight.w600)),
+                  Text(coach.first.fullName,
+                    style: const TextStyle(
+                        fontSize: 16, fontWeight: FontWeight.w600)),
                   ],
-                ),
+                  ),
+                   
                
+                
+                const Padding(
+                  padding: EdgeInsets.only(top: 15, left: 10),
+                  child: Row(
+                    children: [
+                      Icon(
+                        FontAwesomeIcons.graduationCap,
+                        size: 18,
+                      ),
+                      Padding(
+                        padding: EdgeInsets.only(left: 8, right: 8),
+                        child: Text("วุฒิการศึกษา",
+                            style: TextStyle(
+                                fontSize: 16, fontWeight: FontWeight.w700)),
+                      ),
+                    ],
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(left: 18, right: 15, top: 5),
+                  child: Text(coach.first.qualification,
+                      style: const TextStyle(fontSize: 16)),
+                ),
+                const Padding(
+                  padding: EdgeInsets.only(top: 10, left: 10),
+                  child: Row(
+                    children: [
+                      Icon(
+                        FontAwesomeIcons.buildingColumns,
+                        size: 18,
+                      ),
+                      Padding(
+                        padding: EdgeInsets.only(top: 10, left: 8),
+                        child: Text("คุณสมบัติ",
+                            style: TextStyle(
+                                fontSize: 16, fontWeight: FontWeight.w700)),
+                      ),
+                    ],
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(left: 18, right: 15),
+                  child: Text(coach.first.property,
+                      style: const TextStyle(fontSize: 16)),
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(
+                      left: 8, top: 15, bottom: 8, right: 8),
+                  child: ClipRRect(
+                      borderRadius: const BorderRadius.only(
+                          topLeft: Radius.circular(12),
+                          topRight: Radius.circular(12),
+                          bottomLeft: Radius.circular(12),
+                          bottomRight: Radius.circular(12)),
+                      child: Container(
+                          color: Colors.amber,
+                          child: const Padding(
+                            padding: EdgeInsets.only(
+                                left: 8, right: 8, top: 5, bottom: 5),
+                            child: Text(
+                              "คอร์สทั้งหมด",
+                              style: TextStyle(
+                                  fontSize: 17, fontWeight: FontWeight.w600),
+                            ),
+                          ))),
+                ),
+                loadcourse()  ],
+                  ),),
               ],
-            );
-          } else {
-            return const Center(child: CircularProgressIndicator());
-          }
-        });
-  }
-  Widget loadcoach() {
-    return FutureBuilder(
-        future: loadDataMethod, // 3.1 object ของ async method
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.done) {
-            return Padding(
-              padding: const EdgeInsets.only(top: 15),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  
-                  const Padding(
-                    padding: EdgeInsets.only(top: 15, left: 10),
-                    child: Row(
-                      children: [
-                        Icon(
-                          FontAwesomeIcons.graduationCap,
-                          size: 18,
-                        ),
-                        Padding(
-                          padding: EdgeInsets.only(left: 8, right: 8),
-                          child: Text("วุฒิการศึกษา",
-                              style: TextStyle(fontSize: 16,fontWeight: FontWeight.w700)),
-                        ),
-                      ],
-                    ),
-                  ), Padding(
-                          padding: const EdgeInsets.only(left: 18, right: 15,top: 5),
-                          child: Text(coach.first.qualification,
-                              style: const TextStyle(fontSize: 16)),
-                        ),
-                  const Padding(
-                    padding: EdgeInsets.only(top: 10, left: 10),
-                    child: Row(
-                      children: [
-                        Icon(
-                            FontAwesomeIcons.buildingColumns,
-                            size: 18,
-                          ),
-                        Padding(
-                          padding: EdgeInsets.only(top: 10, left: 8),
-                          child: Text("คุณสมบัติ", style: TextStyle(fontSize: 16,fontWeight: FontWeight.w700)),
-                        ),
-                      ],
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.only(left: 18,right: 15),
-                    child: Text(coach.first.property,
-                        style: const TextStyle(fontSize: 16)),
-                  ),
-                ],
-              ),
             );
           } else {
             return const Center(child: CircularProgressIndicator());
@@ -394,7 +346,8 @@ int uid=0;
 
   Future<void> loadData() async {
     try {
-      var result = await customerService.customer(uid: uid.toString(), email: '');
+      var result =
+          await customerService.customer(uid: uid.toString(), email: '');
       customer = result.data;
       var datas = await courseService.course(
           cid: widget.coachID.toString(), coID: '', name: '');
