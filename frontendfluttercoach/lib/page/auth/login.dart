@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
 import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:frontendfluttercoach/page/auth/password.dart';
@@ -13,6 +14,7 @@ import 'package:local_session_timeout/src/session_timeout_manager.dart';
 import 'package:provider/provider.dart';
 
 import '../../model/request/auth_login_post.dart';
+import '../../model/request/loginFBDTO.dart';
 import '../../model/response/auth_login_res.dart';
 import '../../service/auth.dart';
 
@@ -263,7 +265,7 @@ class _LoginPageState extends State<LoginPage> {
                                 icon: const FaIcon(FontAwesomeIcons.facebookF,
                                     size: 16),
                                 onPressed: () async {
-                                  // await login(context);
+                                  loginFB(context);
                                 },
                                 style: ElevatedButton.styleFrom(
                                     foregroundColor: Colors.white,
@@ -308,6 +310,39 @@ class _LoginPageState extends State<LoginPage> {
     return hash.toString();
   }
 
+  void loginFB(BuildContext context) async {
+    final LoginResult result = await FacebookAuth.instance.login();
+    if (result.status == LoginStatus.success) {
+      //final AccessToken accessToken = result.accessToken!;
+
+      //log(accessToken.toString());
+      final userData = await FacebookAuth.instance.getUserData();
+      context.read<AppData>().userFacebook = userData;
+    
+      LoginFbDto dtofb = LoginFbDto(facebookId: userData['id']);
+
+      var result = await authService.loginfb(dtofb);
+      authLoginRes = result.data;
+
+      if (authLoginRes.cid > 0) {
+        // ignore: use_build_context_synchronously
+
+        Get.to(() => const NavbarBottomCoach());
+      } else if (authLoginRes.uid > 0) {
+       
+        // ignore: use_build_context_synchronously
+
+        Get.to(() => const NavbarBottom());
+      } else {
+        // ignore: use_build_context_synchronously
+        register(context);
+      }
+    } else {
+      print(result.status);
+      print(result.message);
+    }
+  }
+
   void login(BuildContext context) async {
     log('message');
     startLoading(context);
@@ -320,7 +355,7 @@ class _LoginPageState extends State<LoginPage> {
     authLoginRes = response.data;
     uid = authLoginRes.uid;
     cid = authLoginRes.cid;
-    
+
     // log(authLoginRes.cid);
     // log(authLoginRes.uid.toString());
     if (authLoginRes.uid > 0 && authLoginRes.cid > 0) {

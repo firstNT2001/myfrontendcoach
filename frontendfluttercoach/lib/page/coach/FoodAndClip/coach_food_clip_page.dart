@@ -635,6 +635,7 @@ class _FoodCoachPageState extends State<FoodCoachPage> {
           loadFoodDataMethod = loadFoodData();
         });
 
+
         Navigator.of(context, rootNavigator: true).pop();
         log('onConfirmBtnTap');
         // ignore: use_build_context_synchronously
@@ -645,7 +646,7 @@ class _FoodCoachPageState extends State<FoodCoachPage> {
           ),
           context: context,
           onTap: () => print('Notification tapped!'),
-          duration: const Duration(milliseconds: 1500),
+          duration: const Duration(milliseconds: 2000),
         );
       },
     );
@@ -676,7 +677,7 @@ class _FoodCoachPageState extends State<FoodCoachPage> {
           ),
           context: context,
           onTap: () => print('Notification tapped!'),
-          duration: const Duration(milliseconds: 1500),
+          duration: const Duration(milliseconds: 2000),
         );
       },
     );

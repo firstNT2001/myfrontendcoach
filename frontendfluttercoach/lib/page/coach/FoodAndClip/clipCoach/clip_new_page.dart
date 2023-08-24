@@ -331,7 +331,7 @@ class _ClipNewCoachPageState extends State<ClipNewCoachPage> {
                 ),
                 context: context,
                 onTap: () => print('Notification tapped!'),
-                duration: const Duration(milliseconds: 1500),
+                duration: const Duration(milliseconds: 2000),
               );
               Navigator.pop(context);
             } else {
@@ -343,7 +343,7 @@ class _ClipNewCoachPageState extends State<ClipNewCoachPage> {
                 ),
                 context: context,
                 onTap: () => print('Notification tapped!'),
-                duration: const Duration(milliseconds: 1500),
+                duration: const Duration(milliseconds: 2000),
               );
             }
             log(jsonEncode(modelResult.result));

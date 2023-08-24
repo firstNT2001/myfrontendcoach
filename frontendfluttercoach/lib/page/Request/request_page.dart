@@ -256,24 +256,30 @@ class _RequestPageState extends State<RequestPage> {
                   //mainAxisSize: MainAxisSize.max,
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
-                    FilledButton(
-                        onPressed: () {
-                          SmartDialog.dismiss();
-                        },
-                        child: const Text("ยกเลิก")),
-                    FilledButton(
-                        onPressed: () {
-                          context.read<AppData>().rqID =
-                              request.rpId.toString();
-                          Get.to(() => ClipEditSelectPage(
-                                cpID: request.clipId.toString(),
-                                did: request.clip.dayOfCouseId.toString(),
-                                isVisible: false,
-                                sequence: '',
-                                status: 1,
-                              ));
-                        },
-                        child: const Text("ตกลง"))
+                    SizedBox(
+                      width: 150,
+                      child: ElevatedButton(
+                          onPressed: () {
+                            SmartDialog.dismiss();
+                          },
+                          child: const Text("ปิด")),
+                    ),
+                    SizedBox(
+                      width: 150,
+                      child: FilledButton(
+                          onPressed: () {
+                            context.read<AppData>().rqID =
+                                request.rpId.toString();
+                            Get.to(() => ClipEditSelectPage(
+                                  cpID: request.clipId.toString(),
+                                  did: request.clip.dayOfCouseId.toString(),
+                                  isVisible: false,
+                                  sequence: '',
+                                  status: 1,
+                                ));
+                          },
+                          child: const Text("เปลี่ยนท่า")),
+                    )
                   ],
                 ),
               ),

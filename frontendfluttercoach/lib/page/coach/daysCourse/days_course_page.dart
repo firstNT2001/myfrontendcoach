@@ -215,7 +215,7 @@ class _DaysCoursePageState extends State<DaysCoursePage> {
                                 ),
                                 context: context,
                                 onTap: () => print('Notification tapped!'),
-                                duration: const Duration(milliseconds: 1500),
+                                duration: const Duration(milliseconds: 2000),
                               );
                             } else {
                               moveDayColor = Colors.black;
@@ -226,7 +226,7 @@ class _DaysCoursePageState extends State<DaysCoursePage> {
                                 ),
                                 context: context,
                                 onTap: () => print('Notification tapped!'),
-                                duration: const Duration(milliseconds: 1500),
+                                duration: const Duration(milliseconds: 2000),
                               );
                             }
                             log(moveIsVisible.toString());
@@ -338,7 +338,7 @@ class _DaysCoursePageState extends State<DaysCoursePage> {
                                 ),
                                 context: context,
                                 onTap: () => print('Notification tapped!'),
-                                duration: const Duration(milliseconds: 1500),
+                                duration: const Duration(milliseconds: 2000),
                               );
                             },
                             child: cardText(index, i, context));
@@ -445,7 +445,7 @@ class _DaysCoursePageState extends State<DaysCoursePage> {
       ),
       context: context,
       onTap: () => print('Notification tapped!'),
-      duration: const Duration(milliseconds: 1500),
+      duration: const Duration(milliseconds: 2000),
     );
   }
 
@@ -504,7 +504,7 @@ class _DaysCoursePageState extends State<DaysCoursePage> {
             ),
             context: context,
             onTap: () => print('Notification tapped!'),
-            duration: const Duration(milliseconds: 1500),
+            duration: const Duration(milliseconds: 2000),
           );
           setState(() {
             loadDaysDataMethod = loadDaysDataAsync();
@@ -547,7 +547,7 @@ class _DaysCoursePageState extends State<DaysCoursePage> {
             ),
             context: context,
             onTap: () => print('Notification tapped!'),
-            duration: const Duration(milliseconds: 1500),
+            duration: const Duration(milliseconds: 2000),
           );
           stopLoading();
         } else {
@@ -590,7 +590,7 @@ class _DaysCoursePageState extends State<DaysCoursePage> {
             ),
             context: context,
             onTap: () => print('Notification tapped!'),
-            duration: const Duration(milliseconds: 1500),
+            duration: const Duration(milliseconds: 2000),
           );
         }
       },

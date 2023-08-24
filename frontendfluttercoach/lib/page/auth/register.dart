@@ -69,11 +69,14 @@ class _RegisterPageState extends State<RegisterPage> {
 
   String newbirht = '';
   String oldbirht = '';
+
   //selectLevel
   // ignore: non_constant_identifier_names
   final List<String> LevelItems = ['ชาย', 'หญิง'];
   final selectedValue = TextEditingController();
-
+  //FB
+  late Map<String, dynamic> userFacebook;
+  String facebookID = '';
   // Method to validate the email the take
   // the user email as an input and
   // print the bool value in the console.
@@ -86,6 +89,19 @@ class _RegisterPageState extends State<RegisterPage> {
   void initState() {
     super.initState();
     _authService = context.read<AppData>().authService;
+    userFacebook = context.read<AppData>().userFacebook;
+    log(userFacebook.isNotEmpty.toString());
+    if (userFacebook.isNotEmpty) {
+      email.text = userFacebook['email'];
+      fullName.text = userFacebook['name'];
+      profile = userFacebook['picture']['data']['url'];
+      facebookID = userFacebook['id'];
+    } else {
+      email.text = "";
+      fullName.text = "";
+      profile = "";
+      facebookID = "";
+    }
   }
 
   @override
@@ -405,7 +421,7 @@ class _RegisterPageState extends State<RegisterPage> {
                 ),
                 context: context,
                 onTap: () => print('Notification tapped!'),
-                duration: const Duration(milliseconds: 2000),
+                duration: const Duration(milliseconds: 3000),
               );
             } else {
               InAppNotification.show(
@@ -415,7 +431,7 @@ class _RegisterPageState extends State<RegisterPage> {
                 ),
                 context: context,
                 onTap: () => print('Notification tapped!'),
-                duration: const Duration(milliseconds: 1500),
+                duration: const Duration(milliseconds: 3000),
               );
             }
           }
@@ -437,7 +453,7 @@ class _RegisterPageState extends State<RegisterPage> {
               birthday: newbirht,
               property: property.text,
               qualification: qualification.text,
-              facebookId: '');
+              facebookId: facebookID);
           var result = await _authService.regCoach(request);
           modelResult = result.data;
           stopLoading();
@@ -452,7 +468,7 @@ class _RegisterPageState extends State<RegisterPage> {
               ),
               context: context,
               onTap: () => print('Notification tapped!'),
-              duration: const Duration(milliseconds: 2000),
+              duration: const Duration(milliseconds: 3000),
             );
           } else {
             InAppNotification.show(
@@ -462,7 +478,7 @@ class _RegisterPageState extends State<RegisterPage> {
               ),
               context: context,
               onTap: () => print('Notification tapped!'),
-              duration: const Duration(milliseconds: 1500),
+              duration: const Duration(milliseconds: 3000),
             );
           }
         } else {

@@ -278,7 +278,7 @@ class _ClipEditCoachPageState extends State<ClipEditCoachPage> {
                 ),
                 context: context,
                 onTap: () => print('Notification tapped!'),
-                duration: const Duration(milliseconds: 1500),
+                duration: const Duration(milliseconds: 2000),
               );
               Navigator.pop(context);
             } else {
@@ -290,7 +290,7 @@ class _ClipEditCoachPageState extends State<ClipEditCoachPage> {
                 ),
                 context: context,
                 onTap: () => print('Notification tapped!'),
-                duration: const Duration(milliseconds: 1500),
+                duration: const Duration(milliseconds: 2000),
               );
             }
           }
