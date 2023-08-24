@@ -25,6 +25,7 @@ import '../../service/provider/appdata.dart';
 import '../../widget/textField/wg_textField_int copy.dart';
 import '../../widget/textField/wg_textField_password.dart';
 import 'login.dart';
+import 'package:crypto/crypto.dart';
 
 class EditPasswordPage extends StatefulWidget {
   const EditPasswordPage({super.key});
@@ -183,13 +184,15 @@ class _EditPasswordPageState extends State<EditPasswordPage> {
               textErr = 'รหัสไม่ตรงกัน';
             });
           } else {
+            String encryptedPassword = encryptPassword(password1.text);
+
             if (resetPassword == true) {
-              AuthPassword request = AuthPassword(password: password1.text);
+              AuthPassword request = AuthPassword(password: encryptedPassword);
               var response = await authService.passwordCoach(
                   modelCoach.first.cid.toString(), request);
               modelResult = response.data;
             } else {
-              AuthPassword request = AuthPassword(password: password1.text);
+              AuthPassword request = AuthPassword(password: encryptedPassword);
               var response = await authService.passwordCus(
                   modelCustomer.first.uid.toString(), request);
               modelResult = response.data;
@@ -253,6 +256,12 @@ class _EditPasswordPageState extends State<EditPasswordPage> {
     );
   }
 
+  String encryptPassword(String password) {
+    final bytes = utf8.encode(password);
+    final hash = sha256.convert(bytes);
+    return hash.toString();
+  }
+
   //LoadData
   Future<void> loadData() async {
     try {
@@ -264,7 +273,7 @@ class _EditPasswordPageState extends State<EditPasswordPage> {
       var cusDatas =
           await _customerService.customer(email: email.text, uid: '');
       modelCustomer = cusDatas.data;
-
+      
       if (modelCoach.isNotEmpty && modelCustomer.isNotEmpty) {
         setState(() {
           password = modelCoach.first.password;

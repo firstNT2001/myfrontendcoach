@@ -279,6 +279,7 @@ class _LoginPageState extends State<LoginPage> {
                         TextButton(
                             onPressed: () {
                               register(context);
+                              log('message');
                             },
                             child: Text(
                               " สมัครสมาชิก",
@@ -308,6 +309,7 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   void login(BuildContext context) async {
+    log('message');
     startLoading(context);
     String encryptedPassword = encryptPassword(password.text);
     log(encryptedPassword);
@@ -318,8 +320,9 @@ class _LoginPageState extends State<LoginPage> {
     authLoginRes = response.data;
     uid = authLoginRes.uid;
     cid = authLoginRes.cid;
+    
     // log(authLoginRes.cid);
-    //log(authLoginRes.uid.toString());
+    // log(authLoginRes.uid.toString());
     if (authLoginRes.uid > 0 && authLoginRes.cid > 0) {
       stopLoading();
 
