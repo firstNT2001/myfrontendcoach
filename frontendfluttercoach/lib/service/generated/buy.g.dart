@@ -101,12 +101,14 @@ class _BuyCourseService implements BuyCourseService {
     required uid,
     required coID,
     required cid,
+    required bid,
   }) async {
     const _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{
       r'uid': uid,
       r'coID': coID,
       r'cid': cid,
+      r'bid': bid,
     };
     final _headers = <String, dynamic>{};
     final _data = <String, dynamic>{};

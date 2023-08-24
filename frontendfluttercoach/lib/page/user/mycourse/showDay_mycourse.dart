@@ -27,7 +27,8 @@ import '../profilecoach.dart';
 import 'mycourse.dart';
 
 class ShowDayMycourse extends StatefulWidget {
-  ShowDayMycourse({super.key, required this.namecourse, required this.nameCoach});
+  ShowDayMycourse(
+      {super.key, required this.namecourse, required this.nameCoach});
   late String namecourse;
   late String nameCoach;
 
@@ -297,27 +298,26 @@ class _ShowDayMycourseState extends State<ShowDayMycourse> {
 
       var datacourse = await _courseService.coursebyCoID(coID.toString());
       courses = datacourse.data;
-      expirationDate = DateTime(nows.year, nows.month, nows.day + courses.days);
+      expirationDate = DateTime(nows.year, nows.month, nows.day +( courses.days-1));
 
-      indexEx = expirationDate.day + expirationDate.month;
+      //indexEx = expirationDate.day + expirationDate.month;
 
       log("message" + indexEx.toString());
 
-      showtodaycolor = DateTime(expirationDate.year,
-          expirationDate.month - nows.month, expirationDate.day - nows.day);
-         log("INDEX" + expirationDate.toString()); 
-      log("INDEX" + showtodaycolor.toString());
-        var formatter = DateFormat.yMMMd();
-   var onlyBuddhistYear = nows.yearInBuddhistCalendar;
-    txtdateEX = formatter.formatInBuddhistCalendarThai(expirationDate);
-    txtdateStart = formatter.formatInBuddhistCalendarThai(nows);
-      int dayx = showtodaycolor.day;
-      for (int i = 0; i <= dayx; i++) {
+
+      // log("INDEX" + expirationDate.toString());
+      // log("INDEX" + showtodaycolor.toString());
+      var formatter = DateFormat.yMMMd();
+      var onlyBuddhistYear = nows.yearInBuddhistCalendar;
+      txtdateEX = formatter.formatInBuddhistCalendarThai(expirationDate);
+      txtdateStart = formatter.formatInBuddhistCalendarThai(nows);
+    
+      for (int i = 0; i <= courses.days-1; i++) {
         dayex = DateTime(
             expirationDate.year, expirationDate.month, expirationDate.day - i);
         listindexday.add(dayex);
         listindexday.sort();
-        //log("อิหยัง= ${dayex.day}");
+        log("อิหยัง= ${dayex.day}");
       }
       log("iรf= $listindexday");
     } catch (err) {
@@ -414,7 +414,8 @@ class _ShowDayMycourseState extends State<ShowDayMycourse> {
                                         height: 50,
                                         width: 50,
                                         decoration: BoxDecoration(
-                                            color: Color.fromARGB(255, 53, 53, 53),
+                                            color:
+                                                Colors.greenAccent.shade700,
                                             borderRadius:
                                                 BorderRadius.circular(100)
                                             //more than 50% of width makes circle

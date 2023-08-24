@@ -78,7 +78,6 @@ class _editProfileCusState extends State<editProfileCus> {
   PlatformFile? pickedImg;
   UploadTask? uploadTask;
   final _formKey = GlobalKey<FormState>();
-  final _formKeyphone = GlobalKey<FormState>();
   RegExp _numeric = RegExp(r'^-?[0-9]+$');
   late   bool isValidw;
   late   bool isValidh;
