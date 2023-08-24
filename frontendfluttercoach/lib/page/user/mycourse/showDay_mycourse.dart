@@ -13,8 +13,6 @@ import 'package:in_app_notification/in_app_notification.dart';
 import 'package:intl/intl.dart';
 import 'package:persistent_bottom_nav_bar_v2/persistent-tab-view.dart';
 import 'package:provider/provider.dart';
-import 'package:quickalert/models/quickalert_type.dart';
-import 'package:quickalert/widgets/quickalert_dialog.dart';
 import '../../../model/request/course_EX.dart';
 import '../../../model/response/md_Day_showmycourse.dart';
 import '../../../model/response/md_Result.dart';
@@ -77,7 +75,7 @@ class _ShowDayMycourseState extends State<ShowDayMycourse> {
 
     loadDataMethod = loadData();
 
-    today = DateTime(nows.year, nows.month, nows.day);
+    today = DateTime(nows.year, nows.month,24);
 
     var formatter = DateFormat.yMMMd();
 
@@ -352,7 +350,8 @@ class _ShowDayMycourseState extends State<ShowDayMycourse> {
                   itemBuilder: (context, index) {
                     final day = days[index];
                     final indextoday = listindexday[index];
-                    //log("messageindextoday"+indextoday.toString());
+                    log("messageindextoday"+today.toString());
+                    log(indextoday.toString());
                     return Column(
                       children: [
                         InkWell(

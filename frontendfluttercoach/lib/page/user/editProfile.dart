@@ -365,7 +365,7 @@ class _editProfileCusState extends State<editProfileCus> {
                                   padding:
                                       const EdgeInsets.only(left: 5, bottom: 3),
                                   child: Text(
-                                    "หมายเลขโทรศัพท์",
+                                    "เบอร์โทรศัพท์",
                                     style:
                                         Theme.of(context).textTheme.bodyLarge,
                                   ),
