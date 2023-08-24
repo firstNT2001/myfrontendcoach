@@ -79,7 +79,7 @@ _controller = PersistentTabController(initialIndex: 0);
             //borderRadius: BorderRadius.circular(10.0),
             colorBehindNavBar: Colors.white,
           ),
-          popAllScreensOnTapOfSelectedTab: true,
+          popAllScreensOnTapOfSelectedTab: false,
           popActionScreens: PopActionScreensType.all,
           itemAnimationProperties: const ItemAnimationProperties( // Navigation Bar's items animation properties.
             duration: Duration(milliseconds: 200),
