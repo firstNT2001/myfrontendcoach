@@ -188,7 +188,8 @@ class _HistoryPageState extends State<HistoryPage> {
                                   onPressed: () { 
                                     log("BILL55" +  listcours.bid.toString().toString());
                                      context.read<AppData>().idcourse = listcours.courseId;
-                                    Get.to(() => ReviewPage(billID: listcours.bid,));
+                                     context.read<AppData>().bill =listcours.bid;
+                                    Get.to(() => const ReviewPage());
                                    
                                   },
                                   child: const Text("ให้คะแนน")))
