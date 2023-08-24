@@ -29,7 +29,7 @@ _controller = PersistentTabController(initialIndex: 0);
         return [
             PersistentBottomNavBarItem(
                 icon: const Icon(FontAwesomeIcons.house),
-                title: "Home",
+                title: "หน้าหลัก",
                 activeColorPrimary:Theme.of(context).colorScheme.primary,
                 inactiveColorPrimary:  const Color.fromARGB(255, 0, 0, 0),
                 // activeColorPrimary: Color.fromARGB(255, 101, 6, 255),
@@ -37,7 +37,7 @@ _controller = PersistentTabController(initialIndex: 0);
             ),
             PersistentBottomNavBarItem(
                 icon: const Icon(FontAwesomeIcons.utensils),
-                title: "History",
+                title: "หน้าคลัง",
                 activeColorPrimary:Theme.of(context).colorScheme.primary,
                 inactiveColorPrimary:  const Color.fromARGB(255, 0, 0, 0),
                 // activeColorPrimary: CupertinoColors.activeBlue,
@@ -46,7 +46,7 @@ _controller = PersistentTabController(initialIndex: 0);
           
             PersistentBottomNavBarItem(
                 icon: const Icon(FontAwesomeIcons.comment),
-                title: "Chat",
+                title: "แชท",
                 activeColorPrimary: Theme.of(context).colorScheme.primary,
                 inactiveColorPrimary: const Color.fromARGB(255, 0, 0, 0),
                 // activeColorPrimary: CupertinoColors.activeBlue,
@@ -54,7 +54,7 @@ _controller = PersistentTabController(initialIndex: 0);
             ),
             PersistentBottomNavBarItem(
                 icon: const Icon(FontAwesomeIcons.solidUser),
-                title: "Profile",
+                title: "โปรไฟล์",
                 activeColorPrimary: Theme.of(context).colorScheme.primary,
                 inactiveColorPrimary: const Color.fromARGB(255, 0, 0, 0),
                 // activeColorPrimary: CupertinoColors.activeBlue,
