@@ -63,6 +63,7 @@ class _RegisterPageState extends State<RegisterPage> {
   final qualification = TextEditingController();
   final property = TextEditingController();
   final birthday = TextEditingController();
+  final number = TextEditingController();
 
   String textErr = '';
   bool passwordVisible = true;
@@ -292,6 +293,11 @@ class _RegisterPageState extends State<RegisterPage> {
         ),
       ),
       if (widget.isVisible == false) ...{
+        WidgetTextFieldInt(
+          controller: number,
+          labelText: 'เลขบัญชีธนาคาร',
+          maxLength: 10,
+        ),
         WidgetTextFieldLines(
           controller: qualification,
           labelText: 'วุฒิการศึกษา',
@@ -342,7 +348,8 @@ class _RegisterPageState extends State<RegisterPage> {
         email.text == '' ||
         password1.text == '' ||
         password2.text == '' ||
-        birthday.text.isEmpty) {
+        birthday.text.isEmpty ||
+        number.text.isEmpty) {
       setState(() {
         textErr = 'กรุณากรอกข้อมูลให้ครบ';
       });

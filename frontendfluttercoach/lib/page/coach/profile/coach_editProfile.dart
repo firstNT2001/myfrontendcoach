@@ -60,6 +60,7 @@ class _CoachEidtProfilePageState extends State<CoachEidtProfilePage> {
   final qualification = TextEditingController();
   final property = TextEditingController();
   final birthday = TextEditingController();
+  final number = TextEditingController();
 
   String newbirht = '';
   String oldbirht = '';
@@ -78,6 +79,7 @@ class _CoachEidtProfilePageState extends State<CoachEidtProfilePage> {
     _coachService = context.read<AppData>().coachService;
     _authService = context.read<AppData>().authService;
     loadCoachDataMethod = loadCoachData();
+    number.text = '3842566266';
   }
 
   @override
@@ -154,7 +156,7 @@ class _CoachEidtProfilePageState extends State<CoachEidtProfilePage> {
                 property: property.text,
                 qualification: qualification.text,
                 facebookId: coachs.first.facebookId);
-                log(jsonEncode(request));
+            log(jsonEncode(request));
             var result = await _authService.updateCoach(
                 // ignore: use_build_context_synchronously
                 context.read<AppData>().cid.toString(),
@@ -339,6 +341,11 @@ class _CoachEidtProfilePageState extends State<CoachEidtProfilePage> {
                   ),
                   txtfildBirth(birthday, "วันเกิด"),
                   const Divider(endIndent: 20, indent: 20),
+                  WidgetTextFieldInt(
+                    controller: number,
+                    labelText: 'เลขบัญชีธนาคาร',
+                    maxLength: 10,
+                  ),
                   WidgetTextFieldLines(
                     controller: qualification,
                     labelText: 'วุฒิการศึกษา',
