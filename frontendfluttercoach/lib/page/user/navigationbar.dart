@@ -76,7 +76,7 @@ onWillPop: () async => false,
             //borderRadius: BorderRadius.circular(10.0),
             colorBehindNavBar: Colors.white,
           ),
-          popAllScreensOnTapOfSelectedTab: true,
+          popAllScreensOnTapOfSelectedTab: false,
           popActionScreens: PopActionScreensType.all,
           itemAnimationProperties: ItemAnimationProperties( // Navigation Bar's items animation properties.
             duration: Duration(milliseconds: 200),
