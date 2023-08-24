@@ -90,8 +90,8 @@ class _RegisterPageState extends State<RegisterPage> {
     super.initState();
     _authService = context.read<AppData>().authService;
     userFacebook = context.read<AppData>().userFacebook;
-
-    if (userFacebook['name'].length > 0) {
+    log(userFacebook.isNotEmpty.toString());
+    if (userFacebook.isNotEmpty) {
       email.text = userFacebook['email'];
       fullName.text = userFacebook['name'];
       profile = userFacebook['picture']['data']['url'];
