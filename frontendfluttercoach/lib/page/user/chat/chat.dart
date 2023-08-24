@@ -212,7 +212,8 @@ class _ChatPageState extends State<ChatPage> {
                             ),
                             Text(
                               'เลือกรูปภาพ',
-                              style: TextStyle(fontSize: 16, color: Colors.black),
+                              style:
+                                  TextStyle(fontSize: 16, color: Colors.black),
                             ),
                           ],
                         ),
@@ -225,20 +226,21 @@ class _ChatPageState extends State<ChatPage> {
                     child: const Align(
                       alignment: Alignment.centerLeft,
                       child: Padding(
-                        padding:EdgeInsets.only(left: 12),
+                        padding: EdgeInsets.only(left: 12),
                         child: Row(
                           children: [
                             Padding(
-                                padding: EdgeInsets.only(right: 5),
-                                child: Icon(
-                                  FontAwesomeIcons.xmark,
-                                  color: Colors.red,
-                                  size: 18,
-                                ),
+                              padding: EdgeInsets.only(right: 5),
+                              child: Icon(
+                                FontAwesomeIcons.xmark,
+                                color: Colors.red,
+                                size: 18,
                               ),
+                            ),
                             Text(
                               'ยกเลิก',
-                              style: TextStyle(fontSize: 16, color: Colors.black),
+                              style:
+                                  TextStyle(fontSize: 16, color: Colors.black),
                             ),
                           ],
                         ),
