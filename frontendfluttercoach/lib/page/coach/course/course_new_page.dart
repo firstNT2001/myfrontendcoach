@@ -333,7 +333,7 @@ class _CourseNewPageState extends State<CourseNewPage> {
             InAppNotification.show(
               child: NotificationBody(
                 count: 1,
-                message: 'เพิ่มคอร์สไม่สำเร็ส',
+                message: 'เพิ่มคอร์สไม่สำเร็จ',
               ),
               context: context,
               onTap: () => print('Notification tapped!'),
@@ -344,7 +344,7 @@ class _CourseNewPageState extends State<CourseNewPage> {
             InAppNotification.show(
               child: NotificationBody(
                 count: 1,
-                message: 'เพิ่มคอร์สสำเร็ส',
+                message: 'เพิ่มคอร์สสำเร็จ',
               ),
               context: context,
               onTap: () => print('Notification tapped!'),

@@ -85,7 +85,7 @@ class _showFoodState extends State<showFood> {
         ClipServices(Dio(), baseUrl: context.read<AppData>().baseurl);
     foodService = FoodServices(Dio(), baseUrl: context.read<AppData>().baseurl);
     loadDataMethod = loadData();
-    today = DateTime(nows.year, nows.month, 24);
+    today = DateTime(nows.year, nows.month, nows.day);
   }
 
   @override
@@ -347,11 +347,11 @@ class _showFoodState extends State<showFood> {
                                             .textTheme
                                             .bodyLarge)),
                               ),
-                              WidgetloadCilp(
-                                urlVideo: videoUrl,
-                                nameclip: listclip.listClip.name,
-                              ),
-                              //Text(listclip.listClip.name),
+                              // WidgetloadCilp(
+                              //   urlVideo: videoUrl,
+                              //   nameclip: listclip.listClip.name,
+                              // ),
+                              Text(listclip.listClip.name),
                               WidgetShowCilp(urlVideo: videoUrl,),
                               Padding(
                                 padding: const EdgeInsets.only(left: 8),
