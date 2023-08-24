@@ -91,6 +91,7 @@ class _ShowDayMycourseState extends State<ShowDayMycourse> {
         height: 60,
         width: 60,
         child: FloatingActionButton(
+          heroTag: 'chat',
           backgroundColor: Theme.of(context).colorScheme.primary,
           foregroundColor: Colors.white,
           onPressed: () {
@@ -413,8 +414,7 @@ class _ShowDayMycourseState extends State<ShowDayMycourse> {
                                         height: 50,
                                         width: 50,
                                         decoration: BoxDecoration(
-                                            color: Color.fromARGB(
-                                                255, 107, 107, 107),
+                                            color: Color.fromARGB(255, 53, 53, 53),
                                             borderRadius:
                                                 BorderRadius.circular(100)
                                             //more than 50% of width makes circle
