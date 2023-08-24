@@ -9,9 +9,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_rounded_date_picker/flutter_rounded_date_picker.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:frontendfluttercoach/page/user/profileUser.dart';
+import 'package:frontendfluttercoach/widget/notificationBody.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:hex/hex.dart';
+import 'package:in_app_notification/in_app_notification.dart';
 import 'package:persistent_bottom_nav_bar_v2/persistent-tab-view.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -389,7 +391,7 @@ class _editProfileCusState extends State<editProfileCus> {
               
                                           return null;
                                         },
-                                         maxLength: 3,
+                                         maxLength:10,
                                         textAlignVertical: TextAlignVertical.center,
                                         textAlign: TextAlign.center,
                                         decoration: InputDecoration(
@@ -677,10 +679,15 @@ class _editProfileCusState extends State<editProfileCus> {
                                     // ignore: use_build_context_synchronously
                                     stopLoading();
                                     warning(context);
-                                  } else {
+                                  } else if(modelResult.result == '-14') {
+                                    InAppNotification.show(child: NotificationBody(count: 1,message: 'มีอีเมลนี้ซ้ำในระบบ'), context: context,
+                  onTap: () => print('Notification tapped!'),
+                  duration: const Duration(milliseconds: 2000),);
+                                  }else{
                                      stopLoading();
-                                    // ignore: use_build_context_synchronously
-                                   // success(context);
+                                   InAppNotification.show(child: NotificationBody(count: 1,message: 'บันทึกข้อมูลสำเร็จ'), context: context,
+                  onTap: () => print('Notification tapped!'),
+                  duration: const Duration(milliseconds: 2000),);
                                    
                                    pushNewScreen(
                               context,

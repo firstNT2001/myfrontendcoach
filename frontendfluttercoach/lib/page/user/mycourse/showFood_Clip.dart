@@ -86,6 +86,7 @@ class _showFoodState extends State<showFood> {
     foodService = FoodServices(Dio(), baseUrl: context.read<AppData>().baseurl);
     loadDataMethod = loadData();
     today = DateTime(nows.year, nows.month, nows.day);
+     log("indexSeqtoday${today}");
   }
 
   @override
@@ -93,39 +94,7 @@ class _showFoodState extends State<showFood> {
     return DefaultTabController(
         length: 2,
         child: Scaffold(
-          // appBar: AppBar(
-          //   leading: IconButton(
-          //     icon: const Icon(
-          //       FontAwesomeIcons.chevronLeft,
-          //     ),
-          //     onPressed: () {
-          //       // Get.to(() => DaysCoursePage(
-          //       //       coID: context.read<AppData>().coID.toString(),
-          //       //       isVisible: widget.isVisible,
-          //       //     ));
-          //       Navigator.pop(context);
-          //     },
-          //   ),
-          //   title: Text(
-          //     "วันที่ " + (widget.indexSeq + 1).toString(),
-          //     style: Theme.of(context).textTheme.headlineMedium,
-          //   ),
-          //   automaticallyImplyLeading: false,
-          //   bottom: const TabBar(tabs: [
-          //     Tab(
-          //       icon: Icon(
-          //         FontAwesomeIcons.dumbbell,
-          //       ),
-          //       text: 'คลิปออกกำลังกาย',
-          //     ),
-          //     Tab(
-          //       icon: Icon(
-          //         FontAwesomeIcons.utensils,
-          //       ),
-          //       text: 'เมนูอาหาร',
-          //     ),
-          //   ]),
-          // ),
+       
           body: Column(
             children: [
               showAppBar(context),
@@ -585,13 +554,13 @@ class _showFoodState extends State<showFood> {
 
       var datacourse = await courseService.coursebyCoID(coID.toString());
       courses = datacourse.data;
-      dayincourse = courses.days;
+      //dayincourse = courses.days;
       exdate = DateTime.parse(courses.expirationDate);
 
       var formatter = DateFormat.yMMMd();
       //หาลิสของวันทั้งหมดที่มี แล้วเรียงวันใหม่
       log("dayincourse= $dayincourse");
-      for (int i = 0; i < dayincourse; i++) {
+      for (int i = 0; i < courses.days; i++) {
         dayex = DateTime(exdate.year, exdate.month, exdate.day - i);
         listindexday.add(dayex);
         listindexday.sort();
