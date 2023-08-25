@@ -153,101 +153,103 @@ class _ChatPageState extends State<ChatPage> {
       context: context,
       builder: (BuildContext context) {
         return SafeArea(
-          child: Container(
-            height: 200,
-            color: Colors.white,
-            child: SizedBox(
-              height: 144,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: <Widget>[
-                  TextButton(
-                    onPressed: () {
-                      Navigator.pop(context);
-                      _handleImageSelection(ImageSource.camera);
-                    },
-                    child: const Align(
-                      alignment: Alignment.centerLeft,
-                      child: Padding(
-                        padding: EdgeInsets.only(top: 15, left: 12),
-                        child: Row(
-                          children: [
-                            Padding(
-                              padding: EdgeInsets.only(right: 5),
-                              child: Icon(
-                                FontAwesomeIcons.camera,
-                                color: Colors.black,
-                                size: 18,
+          child: Center(
+            child: Container(
+              height: 200,
+              color: Colors.white,
+              child: SizedBox(
+                height: 144,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: <Widget>[
+                    TextButton(
+                      onPressed: () {
+                        Navigator.pop(context);
+                        _handleImageSelection(ImageSource.camera);
+                      },
+                      child: const Align(
+                        alignment: Alignment.centerLeft,
+                        child: Padding(
+                          padding: EdgeInsets.only(top: 15, left: 12),
+                          child: Row(
+                            children: [
+                              Padding(
+                                padding: EdgeInsets.only(right: 5),
+                                child: Icon(
+                                  FontAwesomeIcons.camera,
+                                  color: Colors.black,
+                                  size: 18,
+                                ),
                               ),
-                            ),
-                            Text(
-                              'ถ่ายภาพ',
-                              style:
-                                  TextStyle(fontSize: 16, color: Colors.black),
-                            ),
-                          ],
+                              Text(
+                                'ถ่ายภาพ',
+                                style:
+                                    TextStyle(fontSize: 16, color: Colors.black),
+                              ),
+                            ],
+                          ),
                         ),
                       ),
                     ),
-                  ),
-                  Divider(indent: 10, endIndent: 10),
-                  TextButton(
-                    onPressed: () {
-                      Navigator.pop(context);
-                      _handleImageSelection(ImageSource.gallery);
-                    },
-                    child: const Align(
-                      alignment: Alignment.centerLeft,
-                      child: Padding(
-                        padding: EdgeInsets.only(left: 12),
-                        child: Row(
-                          children: [
-                            Padding(
-                              padding: EdgeInsets.only(right: 5),
-                              child: Icon(
-                                FontAwesomeIcons.image,
-                                color: Colors.black,
-                                size: 18,
+                    Divider(indent: 10, endIndent: 10),
+                    TextButton(
+                      onPressed: () {
+                        Navigator.pop(context);
+                        _handleImageSelection(ImageSource.gallery);
+                      },
+                      child: const Align(
+                        alignment: Alignment.centerLeft,
+                        child: Padding(
+                          padding: EdgeInsets.only(left: 12),
+                          child: Row(
+                            children: [
+                              Padding(
+                                padding: EdgeInsets.only(right: 5),
+                                child: Icon(
+                                  FontAwesomeIcons.image,
+                                  color: Colors.black,
+                                  size: 18,
+                                ),
                               ),
-                            ),
-                            Text(
-                              'เลือกรูปภาพ',
-                              style:
-                                  TextStyle(fontSize: 16, color: Colors.black),
-                            ),
-                          ],
+                              Text(
+                                'เลือกรูปภาพ',
+                                style:
+                                    TextStyle(fontSize: 16, color: Colors.black),
+                              ),
+                            ],
+                          ),
                         ),
                       ),
                     ),
-                  ),
-                  Divider(indent: 10, endIndent: 10),
-                  TextButton(
-                    onPressed: () => Navigator.pop(context),
-                    child: const Align(
-                      alignment: Alignment.centerLeft,
-                      child: Padding(
-                        padding: EdgeInsets.only(left: 12),
-                        child: Row(
-                          children: [
-                            Padding(
-                              padding: EdgeInsets.only(right: 5),
-                              child: Icon(
-                                FontAwesomeIcons.xmark,
-                                color: Colors.red,
-                                size: 18,
+                    Divider(indent: 10, endIndent: 10),
+                    TextButton(
+                      onPressed: () => Navigator.pop(context),
+                      child: const Align(
+                        alignment: Alignment.centerLeft,
+                        child: Padding(
+                          padding: EdgeInsets.only(left: 12),
+                          child: Row(
+                            children: [
+                              Padding(
+                                padding: EdgeInsets.only(right: 5),
+                                child: Icon(
+                                  FontAwesomeIcons.xmark,
+                                  color: Colors.red,
+                                  size: 18,
+                                ),
                               ),
-                            ),
-                            Text(
-                              'ยกเลิก',
-                              style:
-                                  TextStyle(fontSize: 16, color: Colors.black),
-                            ),
-                          ],
+                              Text(
+                                'ยกเลิก',
+                                style:
+                                    TextStyle(fontSize: 16, color: Colors.black),
+                              ),
+                            ],
+                          ),
                         ),
                       ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
             ),
           ),
@@ -364,7 +366,10 @@ class _ChatPageState extends State<ChatPage> {
 
               // Show Chat
               return SafeArea(
-                  child: Chat(
+                child: Chat(
+                theme: DefaultChatTheme(
+                    inputTextColor: Colors.black,
+                    ),
                 isAttachmentUploading: isUploading,
                 showUserNames: true,
                 messages: _messages,
