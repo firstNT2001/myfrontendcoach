@@ -245,23 +245,23 @@ class _editProfileCusState extends State<editProfileCus> {
                               ),
                             ),
                           ),
-                          IconButton(
-                            icon: const Icon(
-                              FontAwesomeIcons.key,
-                              // color: Colors.red,
-                            ),
-                            // pushNewScreen(
-                            //   context,
-                            //   screen: const ProfileUser(),
-                            //   withNavBar: true,
-                            // );
-                            onPressed: () {
-                              Get.to(() => GoogleAuthenticatorPage(
-                                    email: customer.first.email,
-                                    password: customer.first.password,
-                                  ));
-                            },
-                          ),
+                          // IconButton(
+                          //   icon: const Icon(
+                          //     FontAwesomeIcons.key,
+                          //     // color: Colors.red,
+                          //   ),
+                          //   // pushNewScreen(
+                          //   //   context,
+                          //   //   screen: const ProfileUser(),
+                          //   //   withNavBar: true,
+                          //   // );
+                          //   onPressed: () {
+                          //     Get.to(() => GoogleAuthenticatorPage(
+                          //           email: customer.first.email,
+                          //           password: customer.first.password,
+                          //         ));
+                          //   },
+                          // ),
                         ],
                       ),
                     ),
