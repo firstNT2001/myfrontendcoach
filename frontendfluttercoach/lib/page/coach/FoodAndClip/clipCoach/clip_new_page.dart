@@ -22,6 +22,7 @@ import '../../../../widget/dialogs.dart';
 import '../../../../widget/notificationBody.dart';
 import '../../../../widget/textField/wg_textField.dart';
 import '../../../../widget/textField/wg_textFieldLines.dart';
+import '../../../../widget/textField/wg_textField_int copy.dart';
 
 class ClipNewCoachPage extends StatefulWidget {
   const ClipNewCoachPage({super.key});
@@ -37,7 +38,9 @@ class _ClipNewCoachPageState extends State<ClipNewCoachPage> {
   String cid = '';
   //Controller
   final name = TextEditingController();
-  final amountPerSet = TextEditingController();
+  final amount = TextEditingController();
+  final perSet = TextEditingController();
+
   final details = TextEditingController();
 
   //Vdieo
@@ -111,9 +114,23 @@ class _ClipNewCoachPageState extends State<ClipNewCoachPage> {
                   controller: name,
                   labelText: 'ชื่อ',
                 ),
-                WidgetTextFieldString(
-                  controller: amountPerSet,
-                  labelText: 'จำนวนเซต',
+                Row(
+                  children: [
+                    Expanded(
+                      child: WidgetTextFieldInt(
+                        controller: perSet,
+                        labelText: 'จำนวนเซต',
+                        maxLength: 2,
+                      ),
+                    ),
+                    Expanded(
+                      child: WidgetTextFieldInt(
+                        controller: amount,
+                        labelText: 'ต่อครั้ง',
+                        maxLength: 5,
+                      ),
+                    ),
+                  ],
                 ),
                 WidgetTextFieldLines(
                   controller: details,
@@ -228,77 +245,21 @@ class _ClipNewCoachPageState extends State<ClipNewCoachPage> {
     );
   }
 
-  Padding inputClip() {
-    return Padding(
-        padding: EdgeInsets.only(top: MediaQuery.of(context).size.height / 3),
-        child: Container(
-          width: MediaQuery.of(context).size.width,
-          decoration: const BoxDecoration(
-              borderRadius: BorderRadius.only(
-                  topLeft: Radius.circular(20), topRight: Radius.circular(20)),
-              color: Colors.white),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Padding(
-                padding: const EdgeInsets.only(
-                    bottom: 18, top: 28, left: 20, right: 20),
-                child: WidgetTextFieldString(
-                  controller: name,
-                  labelText: 'ชื่อ',
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.only(bottom: 18, left: 20, right: 20),
-                child: WidgetTextFieldString(
-                  controller: amountPerSet,
-                  labelText: 'จำนวนเซต',
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.only(bottom: 18, left: 20, right: 20),
-                child: WidgetTextFieldLines(
-                  controller: details,
-                  labelText: 'รายละเอียดท่าออกกำลังกาย',
-                ),
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: [
-                  Padding(
-                    padding:
-                        const EdgeInsets.only(bottom: 8, left: 20, right: 23),
-                    child: Text(
-                      textErr,
-                      style:
-                          TextStyle(color: Theme.of(context).colorScheme.error),
-                    ),
-                  ),
-                ],
-              ),
-              Center(
-                child: Padding(
-                  padding:
-                      const EdgeInsets.only(bottom: 18, left: 20, right: 20),
-                  child: SizedBox(
-                      width: MediaQuery.of(context).size.width,
-                      child: button()),
-                ),
-              ),
-            ],
-          ),
-        ));
-  }
-
   FilledButton button() {
     return FilledButton(
         onPressed: () async {
           _controller.pause();
 
+
+          // for (int i = 0; i < splitted.length; i++) {
+          //   log(splitted[i]);
+          // }
+
           log(pathVdieo);
           log('message');
           if (name.text.isEmpty ||
-              amountPerSet.text.isEmpty ||
+              perSet.text.isEmpty ||
+              amount.text.isEmpty ||
               details.text.isEmpty) {
             setState(() {
               textErr = 'กรุณากรอกข้อมูลให้ครบ';
@@ -315,7 +276,7 @@ class _ClipNewCoachPageState extends State<ClipNewCoachPage> {
             if (pickedFile != null) await uploadFile();
             ListClipCoachIdPost listClipCoachIdPost = ListClipCoachIdPost(
                 name: name.text,
-                amountPerSet: amountPerSet.text,
+                amountPerSet: '${perSet.text} เซท ${amount.text} ครั้ง',
                 video: pathVdieo,
                 details: details.text);
             var insertClip = await _listClipServices.insertListClipByCoachID(
