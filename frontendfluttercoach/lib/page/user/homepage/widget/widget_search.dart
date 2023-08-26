@@ -4,6 +4,7 @@ import 'package:custom_rating_bar/custom_rating_bar.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:frontendfluttercoach/page/user/homepage/widget/widgetloadscorecoach.dart';
 import 'package:persistent_bottom_nav_bar_v2/persistent-tab-view.dart';
 import 'package:provider/provider.dart';
 
@@ -122,10 +123,7 @@ class _WidgetsearchState extends State<Widgetsearch> {
                         } else {
                           log("contro ว่าง");
                           coachService
-                              .coach(
-                                  nameCoach: '',
-                                  cid: "",
-                                  email: '')
+                              .coach(nameCoach: '', cid: "", email: '')
                               .then((coachdata) {
                             var datacoach = coachdata.data;
                             //var checkcoaches = coaches.length;
@@ -141,8 +139,7 @@ class _WidgetsearchState extends State<Widgetsearch> {
                             }
                           });
                           courseService
-                              .courseOpenSell(
-                                  cid: '', coID: '', name: '')
+                              .courseOpenSell(cid: '', coID: '', name: '')
                               .then((coursedata) {
                             var datacourse = coursedata.data;
                             courses = datacourse;
@@ -256,7 +253,7 @@ class _WidgetsearchState extends State<Widgetsearch> {
       var datacourse =
           await courseService.courseOpenSell(coID: '', cid: '', name: '');
       courses = datacourse.data;
-   
+
       var datacoach =
           await coachService.coach(cid: '', email: '', nameCoach: '');
       coaches = datacoach.data;
@@ -273,212 +270,229 @@ class _WidgetsearchState extends State<Widgetsearch> {
           return const Center(child: CircularProgressIndicator());
         } else {
           bool isVisibleTextFree = false;
-          for(int i=0;i<courses.length;i++){
-            
-            if(courses[i].price<=0){
+          for (int i = 0; i < courses.length; i++) {
+            if (courses[i].price <= 0) {
               isVisibleTextFree = true;
-            }else{
+            } else {
               isVisibleTextFree = false;
             }
-            log("TF = "+isVisibleTextFree.toString()+"Price"+courses[i].price.toString());
+            log("TF = " +
+                isVisibleTextFree.toString() +
+                "Price" +
+                courses[i].price.toString());
           }
-          
+
           return Column(
             children: courses
                 .map((listcours) => Padding(
-                  padding:
-                      const EdgeInsets.only(left: 10, right: 10, bottom: 20),
-                  child: InkWell(
-                    onTap: () {
-                      log("ID = "+listcours.coId.toString()+"TF = "+isVisibleTextFree.toString()+"Price"+listcours.price.toString());
-                      context.read<AppData>().idcourse = listcours.coId;
-                      pushNewScreen(
-                        context,
-                        screen: showCousePage(namecourse: listcours.name),
-                        withNavBar: true,
-                      );
-                    },
-                    child: Card(
-                      elevation: 10,
-                      child: Container(
-                        alignment: Alignment.center,
-                        width: double.infinity,
-                        child: AspectRatio(
-                          aspectRatio: 16 / 9,
-                          child: Stack(
-                            children: <Widget>[
-                              Container(
-                                alignment: Alignment.topCenter,
-                                child: AspectRatio(
-                                    aspectRatio: 16 / 9,
-                                    child: Container(
-                                      decoration: BoxDecoration(
-                                        color: Theme.of(context)
-                                            .colorScheme
-                                            .onPrimary,
-                                        image: DecorationImage(
-                                            image:
-                                                NetworkImage(listcours.image),
-                                            fit: BoxFit.cover),
-                                        borderRadius: BorderRadius.circular(20),
+                      padding: const EdgeInsets.only(
+                          left: 10, right: 10, bottom: 20),
+                      child: InkWell(
+                        onTap: () {
+                          log("ID = " +
+                              listcours.coId.toString() +
+                              "TF = " +
+                              isVisibleTextFree.toString() +
+                              "Price" +
+                              listcours.price.toString());
+                          context.read<AppData>().idcourse = listcours.coId;
+                          pushNewScreen(
+                            context,
+                            screen: showCousePage(namecourse: listcours.name),
+                            withNavBar: true,
+                          );
+                        },
+                        child: Card(
+                          elevation: 10,
+                          child: Container(
+                            alignment: Alignment.center,
+                            width: double.infinity,
+                            child: AspectRatio(
+                              aspectRatio: 16 / 9,
+                              child: Stack(
+                                children: <Widget>[
+                                  Container(
+                                    alignment: Alignment.topCenter,
+                                    child: AspectRatio(
+                                        aspectRatio: 16 / 9,
+                                        child: Container(
+                                          decoration: BoxDecoration(
+                                            color: Theme.of(context)
+                                                .colorScheme
+                                                .onPrimary,
+                                            image: DecorationImage(
+                                                image: NetworkImage(
+                                                    listcours.image),
+                                                fit: BoxFit.cover),
+                                            borderRadius:
+                                                BorderRadius.circular(20),
+                                          ),
+                                        )),
+                                    //color: Colors.white,
+                                  ),
+                                  Padding(
+                                      padding: EdgeInsets.only(
+                                        left:
+                                            MediaQuery.of(context).size.width *
+                                                0.78,
                                       ),
-                                    )),
-                                //color: Colors.white,
-                              ),
-                              Padding(
-                                padding: EdgeInsets.only(
-                                  left: MediaQuery.of(context).size.width *
-                                      0.78,
-                                ),
-                                child:  (listcours.price<=0)?
-                                  Align(
-                                  alignment: Alignment.topRight,
-                                  child: Container(
-                                    height: 65,
-                                    width: 65,
-                                    decoration: const BoxDecoration(
+                                      child: (listcours.price <= 0)
+                                          ? Align(
+                                              alignment: Alignment.topRight,
+                                              child: Container(
+                                                height: 65,
+                                                width: 65,
+                                                decoration: const BoxDecoration(
+                                                  gradient: LinearGradient(
+                                                    stops: [.5, .5],
+                                                    begin: Alignment.topRight,
+                                                    end: Alignment.bottomLeft,
+                                                    colors: [
+                                                      Color.fromARGB(
+                                                          255, 185, 0, 0),
+                                                      Colors
+                                                          .transparent, // top Right part
+                                                    ],
+                                                  ),
+                                                ),
+                                                child: Padding(
+                                                  padding: EdgeInsets.only(
+                                                      left:
+                                                          MediaQuery.of(context)
+                                                                  .size
+                                                                  .width *
+                                                              0.075,
+                                                      top: 7),
+                                                  child: Text("ฟรี",
+                                                      style: TextStyle(
+                                                          fontSize: 18,
+                                                          fontWeight:
+                                                              FontWeight.w600,
+                                                          color: Colors.white)),
+                                                ),
+                                              ),
+                                            )
+                                          : (listcours.price > 0)
+                                              ? Container()
+                                              : Container()),
+                                  Container(
+                                    padding: const EdgeInsets.all(5.0),
+                                    alignment: Alignment.bottomCenter,
+                                    decoration: BoxDecoration(
                                       gradient: LinearGradient(
-                                        stops: [.5, .5],
-                                        begin: Alignment.topRight,
-                                        end: Alignment.bottomLeft,
-                                        colors: [
-                                          Color.fromARGB(255, 185, 0, 0),
-                                          Colors.transparent, // top Right part
+                                        begin: Alignment.topCenter,
+                                        end: Alignment.bottomCenter,
+                                        colors: <Color>[
+                                          const Color.fromARGB(255, 0, 0, 0)
+                                              .withAlpha(0),
+                                          const Color.fromARGB(49, 0, 0, 0),
+                                          const Color.fromARGB(127, 0, 0, 0)
+                                          // const Color.fromARGB(255, 255, 255, 255)
+                                          //     .withAlpha(0),
+                                          // Color.fromARGB(39, 255, 255, 255),
+                                          // Color.fromARGB(121, 255, 255, 255)
                                         ],
                                       ),
-                                    ),
-                                    child:  Padding(
-                                      padding:
-                                          EdgeInsets.only(left: MediaQuery.of(context).size.width * 0.075, top: 7),
-                                      child: Text("ฟรี",
-                                          style: TextStyle(
-                                              fontSize: 18,
-                                              fontWeight: FontWeight.w600,
-                                              color: Colors.white)),
+                                      borderRadius: BorderRadius.circular(20),
                                     ),
                                   ),
-                                ):(listcours.price>0)?Container():Container()
-                                
-                               
-                              ),
-                              Container(
-                                padding: const EdgeInsets.all(5.0),
-                                alignment: Alignment.bottomCenter,
-                                decoration: BoxDecoration(
-                                  gradient: LinearGradient(
-                                    begin: Alignment.topCenter,
-                                    end: Alignment.bottomCenter,
-                                    colors: <Color>[
-                                      const Color.fromARGB(255, 0, 0, 0)
-                                          .withAlpha(0),
-                                      const Color.fromARGB(49, 0, 0, 0),
-                                      const Color.fromARGB(127, 0, 0, 0)
-                                      // const Color.fromARGB(255, 255, 255, 255)
-                                      //     .withAlpha(0),
-                                      // Color.fromARGB(39, 255, 255, 255),
-                                      // Color.fromARGB(121, 255, 255, 255)
-                                    ],
-                                  ),
-                                  borderRadius: BorderRadius.circular(20),
-                                ),
-                              ),
-                              Stack(
-                                children: [
-                                  Padding(
-                                    padding: const EdgeInsets.all(8.0),
-                                    child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      mainAxisAlignment: MainAxisAlignment.end,
-                                      children: [
-                                        Row(
+                                  Stack(
+                                    children: [
+                                      Padding(
+                                        padding: const EdgeInsets.all(8.0),
+                                        child: Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.end,
                                           children: [
-                                            Text(
-                                              listcours.name,
-                                              style: Theme.of(context)
-                                                  .textTheme
-                                                  .titleLarge!
-                                                  .copyWith(
-                                                      color: Colors.white),
+                                            Row(
+                                              children: [
+                                                Text(
+                                                  listcours.name,
+                                                  style: Theme.of(context)
+                                                      .textTheme
+                                                      .titleLarge!
+                                                      .copyWith(
+                                                          color: Colors.white),
+                                                ),
+                                              ],
+                                            ),
+                                            Row(
+                                              children: [
+                                                const Padding(
+                                                  padding:
+                                                      EdgeInsets.only(right: 8),
+                                                  child: Icon(
+                                                    FontAwesomeIcons.solidUser,
+                                                    size: 16.0,
+                                                    color: Colors.white,
+                                                  ),
+                                                ),
+                                                Text(
+                                                  listcours.coach.fullName,
+                                                  style: Theme.of(context)
+                                                      .textTheme
+                                                      .bodyLarge!
+                                                      .copyWith(
+                                                          color: Colors.white),
+                                                ),
+                                              ],
+                                            ),
+                                            RatingBar.readOnly(
+                                              isHalfAllowed: false,
+                                              filledIcon: FontAwesomeIcons.bolt,
+                                              size: 16,
+                                              emptyIcon: FontAwesomeIcons.bolt,
+                                              filledColor: Theme.of(context)
+                                                  .colorScheme
+                                                  .tertiaryContainer,
+                                              emptyColor: const Color.fromARGB(
+                                                  255, 245, 245, 245),
+                                              initialRating:
+                                                  double.parse(listcours.level),
+                                              maxRating: 3,
                                             ),
                                           ],
                                         ),
-                                        Row(
-                                          children: [
-                                            const Padding(
-                                              padding:
-                                                  EdgeInsets.only(right: 8),
-                                              child: Icon(
-                                                FontAwesomeIcons.solidUser,
-                                                size: 16.0,
-                                                color: Colors.white,
-                                              ),
+                                      ),
+                                      Container(
+                                          alignment: Alignment.bottomRight,
+                                          child: Container(
+                                            height: 45,
+                                            width: 45,
+                                            child: WidgetShowScore(
+                                              couseID:
+                                                  listcours.coId.toString(),
                                             ),
-                                            Text(
-                                              listcours.coach.fullName,
-                                              style: Theme.of(context)
-                                                  .textTheme
-                                                  .bodyLarge!
-                                                  .copyWith(
-                                                      color: Colors.white),
-                                            ),
-                                          ],
-                                        ),
-                                        RatingBar.readOnly(
-                                          isHalfAllowed: false,
-                                          filledIcon: FontAwesomeIcons.bolt,
-                                          size: 16,
-                                          emptyIcon: FontAwesomeIcons.bolt,
-                                          filledColor: Theme.of(context)
-                                              .colorScheme
-                                              .tertiaryContainer,
-                                          emptyColor: const Color.fromARGB(
-                                              255, 245, 245, 245),
-                                          initialRating:
-                                              double.parse(listcours.level),
-                                          maxRating: 3,
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                  Container(
-                                      alignment: Alignment.bottomRight,
-                                      child: Container(
-                                        height: 45,
-                                        width: 45,
-                                        child: WidgetShowScore(
-                                          couseID: listcours.coId.toString(),
-                                        ),
-                                      )),
-                                  // Positioned(
-                                  //   top: double.infinity,
-                                  //   child: WidgetShowScore(
-                                  //       couseID: listcours.coId.toString(),
-                                  //     ),)
+                                          )),
+                                      // Positioned(
+                                      //   top: double.infinity,
+                                      //   child: WidgetShowScore(
+                                      //       couseID: listcours.coId.toString(),
+                                      //     ),)
 
-                                  //     Align(
-                                  //   alignment: Alignment.bottomRight,
-                                  //   child: WidgetShowScore(
-                                  //           couseID: listcours.coId.toString(),
-                                  //         ),
-                                  // ),
+                                      //     Align(
+                                      //   alignment: Alignment.bottomRight,
+                                      //   child: WidgetShowScore(
+                                      //           couseID: listcours.coId.toString(),
+                                      //         ),
+                                      // ),
+                                    ],
+                                  )
                                 ],
-                              )
-                            ],
+                              ),
+                            ),
                           ),
                         ),
                       ),
-                    ),
-                  ),
-                )
-                    )
+                    ))
                 .toList(),
           );
         }
       },
     );
   }
-
 
   Widget loadcoach() {
     return FutureBuilder(
@@ -521,7 +535,8 @@ class _WidgetsearchState extends State<Widgetsearch> {
                                           image: DecorationImage(
                                               image: NetworkImage(coach.image),
                                               fit: BoxFit.cover),
-                                          borderRadius: BorderRadius.circular(20),
+                                          borderRadius:
+                                              BorderRadius.circular(20),
                                         ),
                                       )),
                                   //color: Colors.white,
@@ -550,7 +565,8 @@ class _WidgetsearchState extends State<Widgetsearch> {
                                 Padding(
                                   padding: const EdgeInsets.all(8.0),
                                   child: Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
                                     mainAxisAlignment: MainAxisAlignment.end,
                                     children: [
                                       Text(coach.fullName,
@@ -572,12 +588,20 @@ class _WidgetsearchState extends State<Widgetsearch> {
                                               style: Theme.of(context)
                                                   .textTheme
                                                   .bodyLarge!
-                                                  .copyWith(color: Colors.white)),
+                                                  .copyWith(
+                                                      color: Colors.white)),
                                         ],
                                       ),
                                     ],
                                   ),
-                                )
+                                ),
+                                  Container(
+                                      alignment: Alignment.bottomRight,
+                                      child: Container(
+                                        height: 45,
+                                        width: 45,
+                                        child: loadScorecoach(cid: coach.cid.toString())),
+                                      )
                               ],
                             ),
                           ),
