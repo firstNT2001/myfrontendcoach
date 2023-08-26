@@ -14,7 +14,7 @@ import '../../../../service/coach.dart';
 import '../../../../service/course.dart';
 import '../../../../service/provider/appdata.dart';
 import '../../cousepage.dart';
-import '../../profilecoach.dart';
+import '../../profilecoach/profilecoach.dart';
 
 class WidgetSearchtext extends StatefulWidget {
   const WidgetSearchtext({super.key});
