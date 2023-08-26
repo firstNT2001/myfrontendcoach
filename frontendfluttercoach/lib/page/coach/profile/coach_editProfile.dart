@@ -73,6 +73,28 @@ class _CoachEidtProfilePageState extends State<CoachEidtProfilePage> {
   String textErr = '';
   final _formKey = GlobalKey<FormState>();
   bool isValid = false;
+  final bankName = TextEditingController();
+  final List<String> listhand = [
+    'ธนาคารกรุงเทพ',
+    'ธนาคารกรุงไทย',
+    'ธนาคารกรุงศรีอยุธยา',
+    'ธนาคารกสิกรไทย',
+    'ธนาคารทิสโก้',
+    'ธนาคารเกียรตินาคินภัทร',
+    'ธนาคารซีไอเอ็มบี ไทย',
+    'ธนาคารทหารไทยธนชาต',
+    'ธนาคารไทยพาณิชย์',
+    'ธนาคารยูโอบี',
+    'ธนาคารแลนด์ แอนด์ เฮ้าส์',
+    'ธนาคารสแตนดาร์ดชาร์เตอร์ด (ไทย)',
+    'ธนาคารไอซีบีซี (ไทย)',
+    'ธนาคารไทยเครดิต เพื่อรายย่อย',
+    'ธนาคารเมกะ สากลพาณิชย์',
+    'ธนาคารแห่งประเทศจีน (ไทย)',
+    'ธนาคารเจพีมอร์แกน เชส',
+    'ธนาคารซิตี้แบงก์ เอ็น.เอ.'
+  ];
+
   @override
   void initState() {
     super.initState();
@@ -80,6 +102,7 @@ class _CoachEidtProfilePageState extends State<CoachEidtProfilePage> {
     _authService = context.read<AppData>().authService;
     loadCoachDataMethod = loadCoachData();
     number.text = '3842566266';
+    bankName.text = 'ธนาคารกรุงเทพ';
   }
 
   @override
@@ -341,6 +364,14 @@ class _CoachEidtProfilePageState extends State<CoachEidtProfilePage> {
                   ),
                   txtfildBirth(birthday, "วันเกิด"),
                   const Divider(endIndent: 20, indent: 20),
+                  Padding(
+                    padding: const EdgeInsets.only(left: 15, right: 15),
+                    child: WidgetDropdownString(
+                      title: 'ชื่อธนาคาร',
+                      selectedValue: bankName,
+                      listItems: listhand,
+                    ),
+                  ),
                   WidgetTextFieldInt(
                     controller: number,
                     labelText: 'เลขบัญชีธนาคาร',

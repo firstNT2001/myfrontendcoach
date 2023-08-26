@@ -22,6 +22,7 @@ import '../../model/response/md_Result.dart';
 import '../../service/auth.dart';
 import '../../service/provider/appdata.dart';
 import '../../widget/dropdown/wg_dropdown_notValue_string.dart';
+import '../../widget/dropdown/wg_dropdown_string.dart';
 import '../../widget/notificationBody.dart';
 import '../../widget/textField/wg_textField.dart';
 import '../../widget/textField/wg_textFieldLines.dart';
@@ -70,6 +71,28 @@ class _RegisterPageState extends State<RegisterPage> {
 
   String newbirht = '';
   String oldbirht = '';
+
+   final bankName = TextEditingController();
+  final List<String> listhand = [
+    'ธนาคารกรุงเทพ',
+    'ธนาคารกรุงไทย',
+    'ธนาคารกรุงศรีอยุธยา',
+    'ธนาคารกสิกรไทย',
+    'ธนาคารทิสโก้',
+    'ธนาคารเกียรตินาคินภัทร',
+    'ธนาคารซีไอเอ็มบี ไทย',
+    'ธนาคารทหารไทยธนชาต',
+    'ธนาคารไทยพาณิชย์',
+    'ธนาคารยูโอบี',
+    'ธนาคารแลนด์ แอนด์ เฮ้าส์',
+    'ธนาคารสแตนดาร์ดชาร์เตอร์ด (ไทย)',
+    'ธนาคารไอซีบีซี (ไทย)',
+    'ธนาคารไทยเครดิต เพื่อรายย่อย',
+    'ธนาคารเมกะ สากลพาณิชย์',
+    'ธนาคารแห่งประเทศจีน (ไทย)',
+    'ธนาคารเจพีมอร์แกน เชส',
+    'ธนาคารซิตี้แบงก์ เอ็น.เอ.'
+  ];
 
   //selectLevel
   // ignore: non_constant_identifier_names
@@ -293,6 +316,14 @@ class _RegisterPageState extends State<RegisterPage> {
         ),
       ),
       if (widget.isVisible == false) ...{
+        Padding(
+          padding: const EdgeInsets.only(left: 15, right: 15),
+          child: WidgetDropdownStringNotValue(
+            title: 'ชื่อธนาคาร',
+            selectedValue: bankName,
+            ListItems: listhand,
+          ),
+        ),
         WidgetTextFieldInt(
           controller: number,
           labelText: 'เลขบัญชีธนาคาร',

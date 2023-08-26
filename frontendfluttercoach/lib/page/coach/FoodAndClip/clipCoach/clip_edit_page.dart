@@ -23,6 +23,7 @@ import '../../../../widget/dialogs.dart';
 import '../../../../widget/notificationBody.dart';
 import '../../../../widget/textField/wg_textField.dart';
 import '../../../../widget/textField/wg_textFieldLines.dart';
+import '../../../../widget/textField/wg_textField_int copy.dart';
 
 class ClipEditCoachPage extends StatefulWidget {
   final int icpId;
@@ -41,8 +42,8 @@ class _ClipEditCoachPageState extends State<ClipEditCoachPage> {
   //Controller Clip
   TextEditingController name = TextEditingController();
   TextEditingController details = TextEditingController();
-  TextEditingController amountPerSet = TextEditingController();
-
+  final amount = TextEditingController();
+  final perSet = TextEditingController();
   //Vdieo
   PlatformFile? pickedFile;
   UploadTask? uploadTask;
@@ -71,6 +72,7 @@ class _ClipEditCoachPageState extends State<ClipEditCoachPage> {
 
     log(pickedFile.toString());
   }
+
   @override
   void dispose() {
     _videoSelectPlayerController.pause();
@@ -78,6 +80,7 @@ class _ClipEditCoachPageState extends State<ClipEditCoachPage> {
     print('Dispose used');
     super.dispose();
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -105,9 +108,23 @@ class _ClipEditCoachPageState extends State<ClipEditCoachPage> {
                   controller: name,
                   labelText: 'ชื่อ',
                 ),
-                WidgetTextFieldString(
-                  controller: amountPerSet,
-                  labelText: 'จำนวนเซต',
+                Row(
+                  children: [
+                    Expanded(
+                      child: WidgetTextFieldInt(
+                        controller: perSet,
+                        labelText: 'จำนวนเซต',
+                        maxLength: 2,
+                      ),
+                    ),
+                    Expanded(
+                      child: WidgetTextFieldInt(
+                        controller: amount,
+                        labelText: 'ต่อครั้ง',
+                        maxLength: 5,
+                      ),
+                    ),
+                  ],
                 ),
                 WidgetTextFieldLines(
                   controller: details,
@@ -245,7 +262,8 @@ class _ClipEditCoachPageState extends State<ClipEditCoachPage> {
           _videoSelectPlayerController.pause();
 
           if (name.text.isEmpty ||
-              amountPerSet.text.isEmpty ||
+              perSet.text.isEmpty ||
+              amount.text.isEmpty ||
               details.text.isEmpty) {
             setState(() {
               textErr = 'กรุณากรอกข้อมูลให้ครบ';
@@ -259,7 +277,7 @@ class _ClipEditCoachPageState extends State<ClipEditCoachPage> {
             if (pickedFile == null) pathVdieo = listclips.first.video;
             ListClipClipIdPut listClipCoachIdPut = ListClipClipIdPut(
                 name: name.text,
-                amountPerSet: amountPerSet.text,
+                amountPerSet: '${perSet.text} เซท ${amount.text} ครั้ง',
                 video: pathVdieo,
                 details: details.text,
                 coachId: context.read<AppData>().cid);
@@ -308,7 +326,13 @@ class _ClipEditCoachPageState extends State<ClipEditCoachPage> {
       log(listclips.first.video);
       name.text = listclips.first.name;
       details.text = listclips.first.details;
-      amountPerSet.text = listclips.first.amountPerSet;
+      String amountPerSet = listclips.first.amountPerSet;
+
+      List<String> words = amountPerSet.split(" ");
+
+      print('${words[0]} ${words[1]} ${words[2]} ${words[3]}');
+      perSet.text = words[0];
+      amount.text = words[2];
 
       _videoSelectPlayerController =
           VideoPlayerController.network(listclips.first.video)
