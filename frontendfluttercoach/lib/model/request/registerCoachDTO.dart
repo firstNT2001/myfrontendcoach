@@ -4,11 +4,25 @@
 
 import 'dart:convert';
 
-RegisterCoachDto? registerCoachDtoFromJson(String str) => RegisterCoachDto.fromJson(json.decode(str));
+RegisterCoachDto registerCoachDtoFromJson(String str) => RegisterCoachDto.fromJson(json.decode(str));
 
-String registerCoachDtoToJson(RegisterCoachDto? data) => json.encode(data!.toJson());
+String registerCoachDtoToJson(RegisterCoachDto data) => json.encode(data.toJson());
 
 class RegisterCoachDto {
+    String username;
+    String password;
+    String email;
+    String fullName;
+    String birthday;
+    String gender;
+    String phone;
+    String image;
+    String qualification;
+    String property;
+    String facebookId;
+    String bankName;
+    String idCard;
+
     RegisterCoachDto({
         required this.username,
         required this.password,
@@ -21,19 +35,9 @@ class RegisterCoachDto {
         required this.qualification,
         required this.property,
         required this.facebookId,
+        required this.bankName,
+        required this.idCard,
     });
-
-    String? username;
-    String? password;
-    String? email;
-    String? fullName;
-    String? birthday;
-    String? gender;
-    String? phone;
-    String? image;
-    String? qualification;
-    String? property;
-    String? facebookId;
 
     factory RegisterCoachDto.fromJson(Map<String, dynamic> json) => RegisterCoachDto(
         username: json["Username"],
@@ -46,7 +50,9 @@ class RegisterCoachDto {
         image: json["Image"],
         qualification: json["qualification"],
         property: json["property"],
-        facebookId: json["FacebookID"],
+        facebookId: json["facebookId"],
+        bankName: json["BankName"],
+        idCard: json["IdCard"],
     );
 
     Map<String, dynamic> toJson() => {
@@ -60,6 +66,8 @@ class RegisterCoachDto {
         "Image": image,
         "qualification": qualification,
         "property": property,
-        "FacebookID": facebookId,
+        "facebookId": facebookId,
+        "BankName": bankName,
+        "IdCard": idCard,
     };
 }

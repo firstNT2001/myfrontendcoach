@@ -9,6 +9,8 @@ import 'package:hex/hex.dart';
 import 'package:base32/base32.dart';
 import 'package:url_launcher/url_launcher.dart';
 
+import 'login.dart';
+
 class GoogleAuthenticatorPage extends StatefulWidget {
   const GoogleAuthenticatorPage(
       {super.key, required this.email, required this.password});
@@ -33,43 +35,42 @@ class _GoogleAuthenticatorPageState extends State<GoogleAuthenticatorPage> {
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              
               Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: Row(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        IconButton(
-                          icon: const Icon(
-                            FontAwesomeIcons.chevronLeft,
-                          ),
-                          onPressed: () {
-                            Get.back();
-                          },
-                        ),
-                        Padding(
-                          padding: EdgeInsets.only(top: 4,left: 15),
-                          child: Text(
-                            'สร้างรหัส',
-                            style: TextStyle(
-                                fontSize: 28, fontWeight: FontWeight.w500),
-                          ),
-                        ),
-                       
-                      ],
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    IconButton(
+                      icon: const Icon(
+                        FontAwesomeIcons.chevronLeft,
+                      ),
+                      onPressed: () {
+                        Get.back();
+                      },
                     ),
-              
+                    Padding(
+                      padding: EdgeInsets.only(top: 4, left: 15),
+                      child: Text(
+                        'สร้างรหัส',
+                        style: TextStyle(
+                            fontSize: 28, fontWeight: FontWeight.w500),
+                      ),
+                    ),
+                  ],
+                ),
               ),
-              SizedBox(height: 45,),
+              SizedBox(
+                height: 45,
+              ),
               Center(
                 child: Text(
                   'Google Authenticator',
                   style: Theme.of(context).textTheme.headlineMedium,
                 ),
               ),
-               
               Padding(
-                padding: const EdgeInsets.only(top:20 ,bottom: 18, left: 20, right: 20),
+                padding: const EdgeInsets.only(
+                    top: 20, bottom: 18, left: 20, right: 20),
                 child: SizedBox(
                   width: MediaQuery.of(context).size.width,
                   child: FilledButton(
@@ -110,6 +111,7 @@ class _GoogleAuthenticatorPageState extends State<GoogleAuthenticatorPage> {
                             onPressed: () {
                               GenOTP = getGoogleAuthenticatorUri(
                                   "Coaching", widget.email, widget.password);
+                              Get.to(() => const LoginPage());
                             },
                             child: Text("เข้าสู่ Application"))
                       ],
@@ -119,7 +121,7 @@ class _GoogleAuthenticatorPageState extends State<GoogleAuthenticatorPage> {
               ),
               Center(
                 child: Padding(
-                  padding: const EdgeInsets.only(top: 10,left: 15,right: 15),
+                  padding: const EdgeInsets.only(top: 10, left: 15, right: 15),
                   child: Text(
                     'ใช้ Google Authenticator เพื่อสร้างรหัสยืนยันตัวตนเมื่อลืมรหัสผ่าน',
                     style: Theme.of(context).textTheme.bodyLarge,

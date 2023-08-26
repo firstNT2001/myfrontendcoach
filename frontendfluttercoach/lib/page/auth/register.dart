@@ -32,6 +32,8 @@ import '../user/money/widgethistory/widget_history.dart';
 
 import 'package:crypto/crypto.dart';
 
+import 'GoogleAuthenticator.dart';
+
 class RegisterPage extends StatefulWidget {
   const RegisterPage({super.key, required this.isVisible});
   final bool isVisible;
@@ -72,7 +74,7 @@ class _RegisterPageState extends State<RegisterPage> {
   String newbirht = '';
   String oldbirht = '';
 
-   final bankName = TextEditingController();
+  final bankName = TextEditingController();
   final List<String> listhand = [
     'ธนาคารกรุงเทพ',
     'ธนาคารกรุงไทย',
@@ -450,7 +452,10 @@ class _RegisterPageState extends State<RegisterPage> {
             modelResult = result.data;
             stopLoading();
             if (modelResult.result == '1') {
-              Get.to(() => const LoginPage());
+              Get.to(() => GoogleAuthenticatorPage(
+                    email: email.text,
+                    password: password1.text,
+                  ));
             } else if (modelResult.result == '-14') {
               InAppNotification.show(
                 child: NotificationBody(
@@ -491,13 +496,19 @@ class _RegisterPageState extends State<RegisterPage> {
               birthday: newbirht,
               property: property.text,
               qualification: qualification.text,
-              facebookId: facebookID);
+              facebookId: facebookID,
+              bankName: bankName.text,
+              idCard: number.text);
           var result = await _authService.regCoach(request);
           modelResult = result.data;
           stopLoading();
           log('message' + modelResult.result);
           if (modelResult.result == '1') {
-            Get.to(() => const LoginPage());
+            // Get.to(() => const LoginPage());
+            Get.to(() => GoogleAuthenticatorPage(
+                  email: email.text,
+                  password: password1.text,
+                ));
           } else if (modelResult.result == '-14') {
             InAppNotification.show(
               child: NotificationBody(

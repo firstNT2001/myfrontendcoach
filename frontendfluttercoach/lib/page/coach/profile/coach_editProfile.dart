@@ -101,8 +101,6 @@ class _CoachEidtProfilePageState extends State<CoachEidtProfilePage> {
     _coachService = context.read<AppData>().coachService;
     _authService = context.read<AppData>().authService;
     loadCoachDataMethod = loadCoachData();
-    number.text = '3842566266';
-    bankName.text = 'ธนาคารกรุงเทพ';
   }
 
   @override
@@ -178,7 +176,9 @@ class _CoachEidtProfilePageState extends State<CoachEidtProfilePage> {
                 birthday: newbirht,
                 property: property.text,
                 qualification: qualification.text,
-                facebookId: coachs.first.facebookId);
+                facebookId: coachs.first.facebookId,
+                bankName: bankName.text,
+                idCard: number.text);
             log(jsonEncode(request));
             var result = await _authService.updateCoach(
                 // ignore: use_build_context_synchronously
@@ -249,6 +249,8 @@ class _CoachEidtProfilePageState extends State<CoachEidtProfilePage> {
       property.text = coachs.first.property;
       birthday.text = thaiDate(coachs.first.birthday);
       oldbirht = coachs.first.birthday;
+      number.text = coachs.first.idCard;
+      bankName.text = coachs.first.bankName;
       if (coachs.first.gender == '2') {
         selectedValue.text = LevelItems[0];
       } else {
