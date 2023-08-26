@@ -1,9 +1,12 @@
+import 'dart:ffi';
+
 import 'package:retrofit/retrofit.dart';
 import 'package:dio/dio.dart';
 
 import '../model/request/insertReview.dart';
 import '../model/response/md_Result.dart';
 import '../model/response/md_Review_get.dart';
+import '../model/response/scorcoach.dart';
 
 part 'generated/review.g.dart';
 
@@ -17,4 +20,8 @@ abstract class ReviewService {
   @POST("/review/{bid}")
   Future<HttpResponse<ModelResult>> insertreview(
       @Path() String bid, @Body() InsertReview insertReview);
+  
+  @GET("/review/{cid}")
+  Future<HttpResponse<Scorecoach>> scorecoach(
+      @Path("cid") String cid);
 }
