@@ -17,12 +17,15 @@ import 'package:string_validator/string_validator.dart';
 
 import '../../../model/request/course_courseID_put.dart';
 
+import '../../../model/request/day_dayID_put.dart';
 import '../../../model/response/md_Result.dart';
 import '../../../model/response/md_Review_get.dart';
 import '../../../model/response/md_coach_course_get.dart';
 
+import '../../../model/response/md_days.dart';
 import '../../../service/course.dart';
 
+import '../../../service/days.dart';
 import '../../../service/provider/appdata.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
@@ -53,6 +56,7 @@ class _CourseEditPageState extends State<CourseEditPage> {
   List<Course> courses = [];
 
   late ModelResult moduleResult;
+  late DaysService _daysService;
 
   //Review
   // late ReviewService _reviewService;
@@ -73,6 +77,7 @@ class _CourseEditPageState extends State<CourseEditPage> {
   int lavel = 0;
   int day = 0;
   String status = "";
+  List<ModelDay> modelDays = [];
 
   ///deleteCourse
 
@@ -105,6 +110,8 @@ class _CourseEditPageState extends State<CourseEditPage> {
     // 2.1 object ของ service โดยต้องส่ง baseUrl (จาก provider) เข้าไปด้วย
     // _reviewService = context.read<AppData>().reviewService;
     _courseService = context.read<AppData>().courseService;
+    _daysService = context.read<AppData>().daysService;
+    loadDaysDataAsync();
     loadDataMethod = loadDataAsync();
   }
 
@@ -182,11 +189,13 @@ class _CourseEditPageState extends State<CourseEditPage> {
                     Expanded(
                         child: textForimField(context, amount, 'จำนวนคน', 2)),
                     Expanded(
-                      child: WidgetTextFieldStringShow(
-                        controller: days,
-                        labelText: 'จำนวนวัน',
-                      ),
-                    ),
+                        child: textForimField(context, days, 'จำนวนวัน', 2)),
+                    // Expanded(
+                    //   child: WidgetTextFieldStringShow(
+                    //     controller: days,
+                    //     labelText: 'จำนวนวัน',
+                    //   ),
+                    // ),
                   ],
                 ),
               ),
@@ -387,10 +396,33 @@ class _CourseEditPageState extends State<CourseEditPage> {
     return FilledButton(
       //style: style,
       onPressed: () async {
+        int sumDays = 0;
         startLoading(context);
         _formKey.currentState!.validate();
         _formKey2.currentState!.validate();
+        log('${day} - ${days.text}');
+        sumDays = int.parse(days.text) - day;
 
+        if (sumDays.isNegative) {
+          log('${day} - ${sumDays}');
+
+          for (int i = day; i > int.parse(days.text); i--) {
+            log("sequence" + modelDays[i - 1].sequence.toString());
+
+            log(i.toString());
+            var result =
+                await _daysService.deleteDay(modelDays[i - 1].did.toString());
+          }
+          log('message');
+        } else {
+          for (int i = day; i < int.parse(days.text); i++) {
+            log(i.toString());
+            DayDayIdPut request = DayDayIdPut(sequence: i);
+            log(jsonEncode(request));
+            var response =
+                await _daysService.insertDayByCourseID(widget.coID, request);
+          }
+        }
         if (widget.isVisible == true) {
           if (selectedValue.text == 'ง่าย') {
             lavel = 1;
@@ -431,6 +463,7 @@ class _CourseEditPageState extends State<CourseEditPage> {
             });
             if (pickedImg != null) await uploadfile();
             if (pickedImg == null) profile = courses.first.image;
+
             CourseCourseIdPut updateCourseDTO = CourseCourseIdPut(
               name: name.text,
               details: details.text,
@@ -464,6 +497,7 @@ class _CourseEditPageState extends State<CourseEditPage> {
                 log('ponds');
                 setState(() {
                   loadDataMethod = loadDataAsync();
+                  loadDaysDataAsync();
                 });
               });
             } else {
@@ -477,6 +511,10 @@ class _CourseEditPageState extends State<CourseEditPage> {
                 onTap: () => print('Notification tapped!'),
                 duration: const Duration(milliseconds: 2000),
               );
+              setState(() {
+                loadDataMethod = loadDataAsync();
+                loadDaysDataAsync();
+              });
             }
           }
         }
@@ -497,9 +535,21 @@ class _CourseEditPageState extends State<CourseEditPage> {
     }
   }
 
+  Future<void> loadDaysDataAsync() async {
+    try {
+      log(widget.coID);
+      var res =
+          await _daysService.days(did: '', coID: widget.coID, sequence: '');
+      modelDays = res.data;
+    } catch (err) {
+      log('Error: $err');
+    }
+  }
+
   void data() {
     name.text = courses.first.name;
     details.text = courses.first.details;
+    day = courses.first.days;
     //level.text = courses.first.level;
     if (courses.first.level == '1') {
       selectedValue.text = LevelItems[0];
