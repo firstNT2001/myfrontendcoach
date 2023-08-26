@@ -73,13 +73,34 @@ class _CoachEidtProfilePageState extends State<CoachEidtProfilePage> {
   String textErr = '';
   final _formKey = GlobalKey<FormState>();
   bool isValid = false;
+  final bankName = TextEditingController();
+  final List<String> listhand = [
+    'ธนาคารกรุงเทพ',
+    'ธนาคารกรุงไทย',
+    'ธนาคารกรุงศรีอยุธยา',
+    'ธนาคารกสิกรไทย',
+    'ธนาคารทิสโก้',
+    'ธนาคารเกียรตินาคินภัทร',
+    'ธนาคารซีไอเอ็มบี ไทย',
+    'ธนาคารทหารไทยธนชาต',
+    'ธนาคารไทยพาณิชย์',
+    'ธนาคารยูโอบี',
+    'ธนาคารแลนด์ แอนด์ เฮ้าส์',
+    'ธนาคารสแตนดาร์ดชาร์เตอร์ด (ไทย)',
+    'ธนาคารไอซีบีซี (ไทย)',
+    'ธนาคารไทยเครดิต เพื่อรายย่อย',
+    'ธนาคารเมกะ สากลพาณิชย์',
+    'ธนาคารแห่งประเทศจีน (ไทย)',
+    'ธนาคารเจพีมอร์แกน เชส',
+    'ธนาคารซิตี้แบงก์ เอ็น.เอ.'
+  ];
+
   @override
   void initState() {
     super.initState();
     _coachService = context.read<AppData>().coachService;
     _authService = context.read<AppData>().authService;
     loadCoachDataMethod = loadCoachData();
-    number.text = '3842566266';
   }
 
   @override
@@ -155,7 +176,9 @@ class _CoachEidtProfilePageState extends State<CoachEidtProfilePage> {
                 birthday: newbirht,
                 property: property.text,
                 qualification: qualification.text,
-                facebookId: coachs.first.facebookId);
+                facebookId: coachs.first.facebookId,
+                bankName: bankName.text,
+                idCard: number.text);
             log(jsonEncode(request));
             var result = await _authService.updateCoach(
                 // ignore: use_build_context_synchronously
@@ -226,6 +249,8 @@ class _CoachEidtProfilePageState extends State<CoachEidtProfilePage> {
       property.text = coachs.first.property;
       birthday.text = thaiDate(coachs.first.birthday);
       oldbirht = coachs.first.birthday;
+      number.text = coachs.first.idCard;
+      bankName.text = coachs.first.bankName;
       if (coachs.first.gender == '2') {
         selectedValue.text = LevelItems[0];
       } else {
@@ -341,6 +366,14 @@ class _CoachEidtProfilePageState extends State<CoachEidtProfilePage> {
                   ),
                   txtfildBirth(birthday, "วันเกิด"),
                   const Divider(endIndent: 20, indent: 20),
+                  Padding(
+                    padding: const EdgeInsets.only(left: 15, right: 15),
+                    child: WidgetDropdownString(
+                      title: 'ชื่อธนาคาร',
+                      selectedValue: bankName,
+                      listItems: listhand,
+                    ),
+                  ),
                   WidgetTextFieldInt(
                     controller: number,
                     labelText: 'เลขบัญชีธนาคาร',
