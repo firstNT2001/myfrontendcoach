@@ -26,6 +26,7 @@ import '../../widget/dialogs.dart';
 import '../../widget/notificationBody.dart';
 import 'homepage/homepageUser.dart';
 import 'money/money.dart';
+import 'mycourse/Widget/widget_loadScore copy.dart';
 import 'mycourse/Widget/widget_loadScore.dart';
 import 'mycourse/Widget/widget_loadreview.dart';
 
@@ -193,7 +194,7 @@ class _showCousePageState extends State<showCousePage> {
                             padding: const EdgeInsets.only(right: 25, top: 15),
                             child: Align(
                               alignment: Alignment.topRight,
-                              child: WidgetShowScore(
+                              child: WidgetShowScoreincourse(
                                 couseID: courses.first.coId.toString(),
                               ),
                             ),
