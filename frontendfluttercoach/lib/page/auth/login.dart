@@ -231,7 +231,7 @@ class _LoginPageState extends State<LoginPage> {
                         ),
                         Padding(
                           padding: const EdgeInsets.only(
-                              left: 20, right: 20, top: 30, bottom: 22),
+                              left: 20, right: 20, top: 30, bottom: 15),
                           child: SizedBox(
                             width: double.infinity,
                             child: FilledButton.icon(
@@ -250,34 +250,34 @@ class _LoginPageState extends State<LoginPage> {
                                 )),
                           ),
                         ),
-                        const Padding(
-                            padding: EdgeInsets.only(
-                                left: 20, right: 20, bottom: 15),
-                            child: Divider()),
-                        const Text("เข้าสู่ระบบด้วยวิธีอื่น"),
-                        Padding(
-                          padding: const EdgeInsets.only(
-                              left: 20, right: 20, bottom: 10, top: 20),
-                          child: SizedBox(
-                            width: double.infinity,
-                            height: 45,
-                            child: ElevatedButton.icon(
-                                icon: const FaIcon(FontAwesomeIcons.facebookF,
-                                    size: 16),
-                                onPressed: () async {
-                                  loginFB(context);
-                                },
-                                style: ElevatedButton.styleFrom(
-                                    foregroundColor: Colors.white,
-                                    backgroundColor: const Color(
-                                        0xff39579A) // Text Color (Foreground color)
-                                    ),
-                                label: const Text(
-                                  'Login with Facebook',
-                                  //style: Theme.of(context).textTheme.titleMedium,
-                                )),
-                          ),
-                        ),
+                        // const Padding(
+                        //     padding: EdgeInsets.only(
+                        //         left: 20, right: 20, bottom: 15),
+                        //     child: Divider()),
+                        // const Text("เข้าสู่ระบบด้วยวิธีอื่น"),
+                        // Padding(
+                        //   padding: const EdgeInsets.only(
+                        //       left: 20, right: 20, bottom: 10, top: 20),
+                        //   child: SizedBox(
+                        //     width: double.infinity,
+                        //     height: 45,
+                        //     child: ElevatedButton.icon(
+                        //         icon: const FaIcon(FontAwesomeIcons.facebookF,
+                        //             size: 16),
+                        //         onPressed: () async {
+                        //           loginFB(context);
+                        //         },
+                        //         style: ElevatedButton.styleFrom(
+                        //             foregroundColor: Colors.white,
+                        //             backgroundColor: const Color(
+                        //                 0xff39579A) // Text Color (Foreground color)
+                        //             ),
+                        //         label: const Text(
+                        //           'Login with Facebook',
+                        //           //style: Theme.of(context).textTheme.titleMedium,
+                        //         )),
+                        //   ),
+                        // ),
                         TextButton(
                             onPressed: () {
                               register(context);
