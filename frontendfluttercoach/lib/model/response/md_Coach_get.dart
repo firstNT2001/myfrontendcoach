@@ -4,9 +4,9 @@
 
 import 'dart:convert';
 
-Coach coachFromJson(String str) => Coach.fromJson(json.decode(str));
+List<Coach> coachFromJson(String str) => List<Coach>.from(json.decode(str).map((x) => Coach.fromJson(x)));
 
-String coachToJson(Coach data) => json.encode(data.toJson());
+String coachToJson(List<Coach> data) => json.encode(List<dynamic>.from(data.map((x) => x.toJson())));
 
 class Coach {
     int cid;
@@ -22,8 +22,8 @@ class Coach {
     String property;
     String facebookId;
     int price;
-    dynamic buyings;
-    dynamic chats;
+    String bankName;
+    String idCard;
 
     Coach({
         required this.cid,
@@ -39,8 +39,8 @@ class Coach {
         required this.property,
         required this.facebookId,
         required this.price,
-        required this.buyings,
-        required this.chats,
+        required this.bankName,
+        required this.idCard,
     });
 
     factory Coach.fromJson(Map<String, dynamic> json) => Coach(
@@ -57,8 +57,8 @@ class Coach {
         property: json["Property"],
         facebookId: json["FacebookID"],
         price: json["Price"],
-        buyings: json["Buyings"],
-        chats: json["Chats"],
+        bankName: json["BankName"],
+        idCard: json["IdCard"],
     );
 
     Map<String, dynamic> toJson() => {
@@ -75,7 +75,7 @@ class Coach {
         "Property": property,
         "FacebookID": facebookId,
         "Price": price,
-        "Buyings": buyings,
-        "Chats": chats,
+        "BankName": bankName,
+        "IdCard": idCard,
     };
 }
